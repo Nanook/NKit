@@ -4,4 +4,4 @@ NKit 2 is multiplatform disc image processor written in C#/DotNet6.0. Primarily 
 
 *This is a placeholder for the code repo which is to pushed at a later date.*
 
-Check out the [Wiki](https://github.com/Nanook/NKit)
+Check out the [Wiki](https://github.com/Nanook/NKit/wiki)
