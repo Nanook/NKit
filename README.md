@@ -26,4 +26,4 @@ nkit -task convert image_1.wbfs image_2.iso folder_of_images archive_of_images.z
 See [the usage page](https://github.com/Nanook/NKit/wiki/Usage) for all arguments and details, and [the processing tasks page](https://github.com/Nanook/NKit/wiki/Processing-Tasks) for all currently supported tasks.
 
 ## Contact Us
-Need some help? You can check our [wiki](https://github.com/Nanook/NKit/wiki), or you can ask on [Discord](https://discord.gg/ruzenmk369).
+Need some help? You can check our [wiki](https://github.com/Nanook/NKit/wiki), or you can ask on [Discord](https://discord.gg/sZJtvZPT3f).
