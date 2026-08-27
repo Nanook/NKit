@@ -126,6 +126,8 @@ Process images directly from archives — no temp files, no extraction to disk:
 
 Releases are published to this repository. Check the [Releases](https://github.com/Nanook/NKit/releases) page for the latest builds.
 
+For documentation and setup instructions, see the [Wiki](https://github.com/Nanook/NKit/wiki).
+
 ---
 
 ## Source Code
