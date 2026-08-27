@@ -1,0 +1,33 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  Action Replay Ultimate Cheats fuer Enter the Matrix: Enter the Matrix
+  Action Replay Ultimate Cheats fuer Pokemon Colosseum: Pokemon Colosseum
+  Barnyard: Nickelodeon Barnyard
+  Chaos Field Expanded: Chaos Field
+  Dragon Ball Z: 'Dragon Ball Z: Budokai'
+  GT Cube: GT Cube
+  Wai Wai Golf: Ace Golf
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  '2 Games in 1: SpongeBob Movie + Battle for Bikini Bottom': 'SpongeBob SquarePants: Battle for Bikini Bottom'
+  '2 Games in 1: SpongeBob Movie + Tak 2: The Staff of Dreams': 'Nickelodeon Tak 2: The Staff of Dreams'
+  'Action Replay Ultimative Cheatcodes fuer Final Fantasy: Crystal Chronicles': 'Action Replay Ultimate Codes for Use with Final Fantasy: Crystal Chronicles'
+  Advance Connector (Unlicensed): Advance Game Port (Unlicensed)
+  Bomberman Land 2: Bomberman Generation
+  Donkey Konga 3: Donkey Konga
+  Jikkyou Powerful Major League: Major League Baseball 2K6
+  'Naruto: Clash of Ninja 3': 'Naruto: Clash of Ninja'
+  'Naruto: Clash of Ninja 4': 'Naruto: Clash of Ninja'
+  Nintendo GameCube Test/Aging Disc: 'Nintendo GameCube Preview Disc: May 2003'
+  'One Piece: Treasure Battle!': 'One Piece: Grand Battle! 3'
+  'Phantasy Star Online Episode I & II: Trial Edition': 'Phantasy Star Online Episode I & II'
+  'Phantasy Star Online Episode III: C.A.R.D. Revolution: Trial Edition': 'Phantasy Star Online Episode III: C.A.R.D. Revolution'
+  Pokemon Channel (Expansion Pack): Pokemon Channel
+  Pool Edge: Pool Paradise
+  Taxi 3: Crazy Taxi
+  'The Legend of Zelda: Ocarina of Time': 'The Legend of Zelda: Ocarina of Time & Master Quest'
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)

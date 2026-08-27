@@ -1,0 +1,755 @@
+# Nintendo - Wii U - OGMR Game Masks
+# Source: Nintendo - Wii U - Datfile (541) (2026-04-17 22-49-02).dat
+# Unique games: 228
+
+games:
+  - name: 83402 - CAT-I RTL MAY '14 USA-PT
+    masks:
+      - '^83402 - CAT-I RTL MAY ''14 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 81641 - DISC, CAT-I PIKMIN 3 EVENTRTLCANUSA
+    masks:
+      - '^81641 - DISC, CAT-I PIKMIN 3 EVENTRTLCANUSA(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 81642 - DISC, CAT-I PIKMIN 3 POST RTL
+    masks:
+      - '^81642 - DISC, CAT-I PIKMIN 3 POST RTL(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 100148 - DISC, CAT-I RTL AUG '14 USA-PT
+    masks:
+      - '^100148 - DISC, CAT-I RTL AUG ''14 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^102831 - DISC, CAT-I RTL AUG ''15 1-2 LTN-FL(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 102812 - DISC, CAT-I RTL AUG '15 USA-PT
+    masks:
+      - '^102812 - DISC, CAT-I RTL AUG ''15 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 101446 - DISC, CAT-I RTL DEC '14 USA-PT
+    masks:
+      - '^101446 - DISC, CAT-I RTL DEC ''14 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 79883 - DISC, CAT-I RTL JAN '13 USA
+    masks:
+      - '^79883 - DISC, CAT-I RTL JAN ''13 USA(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 83178 - DISC, CAT-I RTL MAR '14 USA-PT
+    masks:
+      - '^0103794 - DISC, CAT-I RTL MAR ''16 1-2 LTN-FL(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^83178 - DISC, CAT-I RTL MAR ''14 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 0103771 - DISC, CAT-I RTL MAR '16 USA-PT
+    masks:
+      - '^0103771 - DISC, CAT-I RTL MAR ''16 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 102079 - DISC, CAT-I RTL MAY '15 USA-PT
+    masks:
+      - '^102079 - DISC, CAT-I RTL MAY ''15 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^102091 - DISC, CAT-I RTL MAY ''15 1-2 LTN-FL(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^102405 - DISC, CAT-I RTL MAY ''15 2-2 LTN-FL(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 0100872 - DISC, CAT-I RTL NOV '14 USA-FL
+    masks:
+      - '^0100872 - DISC, CAT-I RTL NOV ''14 USA-FL(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 0100870 - DISC, CAT-I RTL NOV '14 USA-PT
+    masks:
+      - '^0100870 - DISC, CAT-I RTL NOV ''14 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 103292 - DISC, CAT-I RTL NOV '15 USA-PT
+    masks:
+      - '^103292 - DISC, CAT-I RTL NOV ''15 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 104571 - Disc, CAT-I RTL OCT '16 USA-PT
+    masks:
+      - '^104571 - Disc, CAT-I RTL OCT ''16 USA-PT(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 81854 - DISC, CAT-I UPDATE RTL AUG '13 USAWM
+    masks:
+      - '^81854 - DISC, CAT-I UPDATE RTL AUG ''13 USAWM(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ABC Wipeout 3
+    masks:
+      - '^ABC Wipeout 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'ABC Wipeout - Create & Crash'
+    masks:
+      - '^ABC Wipeout - Create & Crash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Adventure Time - Explore the Dungeon Because I Don''t Know!'
+    masks:
+      - '^Adventure Time - Explore the Dungeon Because I Don''t Know!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Adventure Time - Finn & Jake Investigations'
+    masks:
+      - '^Adventure Time - Finn & Jake Investigations(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Angry Birds Star Wars
+    masks:
+      - '^Angry Birds Star Wars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Angry Birds Trilogy
+    masks:
+      - '^Angry Birds Trilogy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Animal Crossing - Amiibo Festival
+    masks:
+      - '^Animal Crossing - Amiibo Festival(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Doubutsu no Mori - Amiibo Festival(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Art Academy - Atelier
+    masks:
+      - '^Art Academy - Atelier(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Jikkuri Egokoro Kyoushitsu(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Assassin's Creed III
+    masks:
+      - '^Assassin''s Creed III(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Assassin's Creed IV - Black Flag
+    masks:
+      - '^Assassin''s Creed IV - Black Flag(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Axiom Verge
+    masks:
+      - '^Axiom Verge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Baila Latino
+    masks:
+      - '^Baila Latino(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Barbie & Her Sisters - Puppy Rescue'
+    masks:
+      - '^Barbie & Her Sisters - Puppy Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Barbie Dreamhouse Party
+    masks:
+      - '^Barbie Dreamhouse Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman - Arkham City - Armored Edition
+    masks:
+      - '^Batman - Arkham City - Armored Edition(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Batman - Arkham City - Armoured Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman - Arkham Origins
+    masks:
+      - '^Batman - Arkham Origins(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bayonetta
+    masks:
+      - '^Bayonetta(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bayonetta 2
+    masks:
+      - '^Bayonetta 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ben 10 - Omniverse
+    masks:
+      - '^Ben 10 - Omniverse(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ben 10 - Omniverse 2
+    masks:
+      - '^Ben 10 - Omniverse 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Brunswick Pro Bowling
+    masks:
+      - '^Brunswick Pro Bowling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Big Game Hunter - Pro Hunts
+    masks:
+      - '^Cabela''s Big Game Hunter - Pro Hunts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Dangerous Hunts 2013
+    masks:
+      - '^Cabela''s Dangerous Hunts 2013(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Duty - Black Ops II
+    masks:
+      - '^Call of Duty - Black Ops II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Duty - Ghosts
+    masks:
+      - '^Call of Duty - Ghosts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Captain Toad - Treasure Tracker
+    masks:
+      - '^Captain Toad - Treasure Tracker(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Susume! Kinopio Taichou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cocoto Magic Circus 2
+    masks:
+      - '^Cocoto Magic Circus 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Darksiders II
+    masks:
+      - '^Darksiders II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Darksiders - Warmastered Edition
+    masks:
+      - '^Darksiders - Warmastered Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Demo Update 02-2015 - Smash Bros + Mario Party 10 - 9599F2B3
+    masks:
+      - '^Demo Update 02-2015 - Smash Bros \+ Mario Party 10 - 9599F2B3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Demo Update 07.12.15 - Mario Tennis - Ultra Smash - 5D107B28
+    masks:
+      - '^Demo Update 07\.12\.15 - Mario Tennis - Ultra Smash - 5D107B28(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Demo Update 08\.12\.15 - Mario Tennis - Ultra Smash - 34625865(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Demo Update 09-2014 - Captain Toad - 21174F94
+    masks:
+      - '^Demo Update 09-2014 - Captain Toad - 21174F94(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Demo Update 09-2014 - Hyrule Warriors - 12BFD3F7
+    masks:
+      - '^Demo Update 09-2014 - Hyrule Warriors - 12BFD3F7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Demo Update 30.06.16 - Mario & Sonic at the Rio 2016 Olympic Games - E903B956'
+    masks:
+      - '^Demo Update 30\.06\.16 - Mario & Sonic at the Rio 2016 Olympic Games - 00A62FC8(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Demo Update 30\.06\.16 - Mario & Sonic at the Rio 2016 Olympic Games - E903B956(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Deus Ex - Human Revolution - Director's Cut
+    masks:
+      - '^Deus Ex - Human Revolution - Director''s Cut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Devil's Third
+    masks:
+      - '^Devil''s Third(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney DuckTales - Remastered
+    masks:
+      - '^Disney DuckTales - Remastered(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Epic Mickey 2 - The Power of Two
+    masks:
+      - '^Disney Epic Mickey 2 - Futatsu no Chikara(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Epic Mickey 2 - The Power of Two(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Epic Mickey 2 - The Power of Two \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Infinity
+    masks:
+      - '^Disney Infinity(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Infinity 2.0 Edition
+    masks:
+      - '^Disney Infinity 2\.0 - Play Without Limits(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity 2\.0 - Play Without Limits \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity 2\.0 Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Infinity 3.0 Edition
+    masks:
+      - '^Disney Infinity 3\.0(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity 3\.0 - Play Without Limits(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity 3\.0 - Play Without Limits \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Infinity 3\.0 Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Phineas and Ferb - Quest for Cool Stuff
+    masks:
+      - '^Disney Phineas and Ferb - Quest for Cool Stuff(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney Planes
+    masks:
+      - '^Disney Planes(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Planes \(Russia\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney Planes \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Disney Planes - Fire & Rescue'
+    masks:
+      - '^Disney Planes - Fire & Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar Cars 3 - Driven to Win
+    masks:
+      - '^Disney-Pixar Cars 3 - Driven to Win(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Donkey Kong Country - Tropical Freeze
+    masks:
+      - '^Donkey Kong - Tropical Freeze(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Donkey Kong Country - Tropical Freeze(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dragon Quest X - 5000-nen no Tabiji - Haruka naru Kokyou e Online
+    masks:
+      - '^Dragon Quest X - 5000-nen no Tabiji - Haruka naru Kokyou e Online(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Dragon Quest X - All in One Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Dragon Quest X - All in One Package Version 1-Version 4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Dragon Quest X - Inishie no Ryuu no Denshou Online(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Dragon Quest X - Mezameshi Itsutsu no Shuzoku Online(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Dragon Quest X - Nemureru Yuusha to Michibiki no Meiyuu Online(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks How to Train Your Dragon 2
+    masks:
+      - '^DreamWorks How to Train Your Dragon 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Kung Fu Panda - Showdown of Legendary Legends
+    masks:
+      - '^DreamWorks Kung Fu Panda - Showdown of Legendary Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Penguins of Madagascar
+    masks:
+      - '^DreamWorks Penguins of Madagascar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Rise of the Guardians
+    masks:
+      - '^DreamWorks Rise of the Guardians(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'DreamWorks The Croods - Prehistoric Party!'
+    masks:
+      - '^DreamWorks The Croods - Prehistoric Party!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Turbo - Super Stunt Squad
+    masks:
+      - '^DreamWorks Turbo - Super Stunt Squad(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN Sports Connection
+    masks:
+      - '^ESPN Sports Connection(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Sports Connection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: F1 Race Stars - Powered Up Edition
+    masks:
+      - '^F1 Race Stars - Powered Up Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Family Party - 30 Great Games - Obstacle Arcade
+    masks:
+      - '^Family Party - 30 Great Games - Obstacle Arcade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Fast & Furious - Showdown'
+    masks:
+      - '^Fast & Furious - Showdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fast Racing Neo
+    masks:
+      - '^Fast Racing Neo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 13
+    masks:
+      - '^FIFA 13(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^FIFA 13 - World Class Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^FIFA Soccer 13(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Finding Teddy II - Definitive Edition
+    masks:
+      - '^Finding Teddy II - Definitive Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shin Hokuto Musou
+    masks:
+      - '^Shin Hokuto Musou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fit Music for Wii U
+    masks:
+      - '^Fit Music for Wii U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Fujiko F. Fujio Characters Daishuugou! SF Dotabata Party!!'
+    masks:
+      - '^Fujiko F\. Fujio Characters Daishuugou! SF Dotabata Party!!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Funky Barn
+    masks:
+      - '^Funky Barn(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Game & Wario'
+    masks:
+      - '^Game & Wario(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Game Party Champions
+    masks:
+      - '^Game Party Champions(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Giana Sisters - Twisted Dreams - Director's Cut
+    masks:
+      - '^Giana Sisters - Twisted Dreams - Director''s Cut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ginsei Shougi - Kyoutendo Toufuu Raijin
+    masks:
+      - '^Ginsei Shougi - Kyoutendo Toufuu Raijin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gotouchi Tetsudou - Gotouchi Chara to Nippon Zenkoku no Tabi
+    masks:
+      - '^Gotouchi Tetsudou - Gotouchi Chara to Nippon Zenkoku no Tabi(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Guitar Hero Live
+    masks:
+      - '^Guitar Hero Live(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hello Kitty Kruisers
+    masks:
+      - '^Hello Kitty Kruisers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hot Wheels - World's Best Driver
+    masks:
+      - '^Hot Wheels - World''s Best Driver(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hunter's Trophy 2 - Europa
+    masks:
+      - '^Hunter''s Trophy 2 - Europa(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hyrule Warriors
+    masks:
+      - '^Hyrule Warriors(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Zelda Musou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Injustice - Gods Among Us
+    masks:
+      - '^Injustice - Gods Among Us(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Injustice - Hero no Gekitotsu(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Jeopardy!'
+    masks:
+      - '^Jeopardy!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jett Tailfin
+    masks:
+      - '^Jett Tailfin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance Wii U
+    masks:
+      - '^Just Dance Wii U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2014
+    masks:
+      - '^Just Dance 2014(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2015
+    masks:
+      - '^Just Dance 2015(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2016
+    masks:
+      - '^Just Dance 2016(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2017
+    masks:
+      - '^Just Dance 2017(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2018
+    masks:
+      - '^Just Dance 2018(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 2019
+    masks:
+      - '^Just Dance 2019(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance 4
+    masks:
+      - '^Just Dance 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance Kids 2014
+    masks:
+      - '^Just Dance Kids 2014(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Dance - Disney Party 2
+    masks:
+      - '^Just Dance - Disney Party 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Kamen Rider Summonride!'
+    masks:
+      - '^Kamen Rider Summonride!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kamen Rider - Battride War II
+    masks:
+      - '^Kamen Rider - Battride War II(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Kamen Rider - Battride War II - Premium TV & Movie Sound Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kirby and the Rainbow Curse
+    masks:
+      - '^Kirby and the Rainbow Curse(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Kirby and the Rainbow Paintbrush(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Touch! Kirby Super Rainbow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legend of Kay - Anniversary
+    masks:
+      - '^Legend of Kay - Anniversary(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 007 Legends
+    masks:
+      - '^007 Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Batman 2 - DC Super Heroes
+    masks:
+      - '^LEGO Batman 2 - DC Super Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Batman 3 - Beyond Gotham
+    masks:
+      - '^LEGO Batman 3 - Beyond Gotham(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LEGO Batman 3 - The Game - Gotham kara Uchuu e(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO City Undercover
+    masks:
+      - '^LEGO City Undercover(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Dimensions
+    masks:
+      - '^LEGO Dimensions(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Jurassic World
+    masks:
+      - '^LEGO Jurassic World(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Marvel Avengers
+    masks:
+      - '^LEGO Marvel Avengers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Marvel Super Heroes
+    masks:
+      - '^LEGO Marvel Super Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LEGO Marvel Super Heroes - The Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Star Wars - The Force Awakens
+    masks:
+      - '^LEGO Star Wars - Force no Kakusei(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LEGO Star Wars - The Force Awakens(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO The Hobbit
+    masks:
+      - '^LEGO The Hobbit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Luv Me Buddies - Wonderland
+    masks:
+      - '^Luv Me Buddies - Wonderland(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 13
+    masks:
+      - '^Madden NFL 13(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Mario & Sonic at the Rio 2016 Olympic Games'
+    masks:
+      - '^Mario & Sonic at Rio Olympic(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Mario & Sonic at the Rio 2016 Olympic Games(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Mario & Sonic at the Sochi 2014 Olympic Winter Games'
+    masks:
+      - '^Mario & Sonic at the Sochi 2014 Olympic Winter Games(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Mario & Sonic at the Sochi Olympic(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mario Kart 8
+    masks:
+      - '^Mario Kart 8(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mario Party 10
+    masks:
+      - '^Mario Party 10(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mario Tennis - Ultra Smash
+    masks:
+      - '^Mario Tennis - Ultra Smash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mario vs. Donkey Kong - Minna de Mini Land
+    masks:
+      - '^Mario vs\. Donkey Kong - Minna de Mini Land(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Marvel Avengers - Battle for Earth
+    masks:
+      - '^Marvel Avengers - Battle for Earth(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mass Effect 3 - Special Edition
+    masks:
+      - '^Mass Effect 3 - Special Edition(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Mass Effect 3 - Tokubetsuban(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mighty No. 9
+    masks:
+      - '^Mighty No\. 9(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Minecraft - Story Mode - A Telltale Games Series - The Complete Adventure
+    masks:
+      - '^Minecraft - Story Mode - A Telltale Games Series - The Complete Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Minecraft - Wii U Edition
+    masks:
+      - '^Minecraft - Wii U Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster High - 13 Wishes
+    masks:
+      - '^Monster High - 13 Wishes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster High - New Ghoul in School
+    masks:
+      - '^Monster High - New Ghoul in School(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster Hunter 3 Ultimate
+    masks:
+      - '^Monster Hunter 3 Ultimate(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter 3G - HD Ver\.(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster Hunter Frontier G - Beginner's Package
+    masks:
+      - '^Monster Hunter Frontier G - Beginner''s Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G - Memorial Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G5 - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G6 - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G7 - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G8 - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier G9 - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monster Hunter Frontier GG - Premium Package(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA 2K13
+    masks:
+      - '^NBA 2K13(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Most Wanted U - A Criterion Game
+    masks:
+      - '^Need for Speed - Most Wanted U - A Criterion Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NES Remix Pack
+    masks:
+      - '^Famicom Remix 1 \+ 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^NES Remix Pack(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: New Super Luigi U
+    masks:
+      - '^New Super Luigi U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: New Super Mario Bros. U
+    masks:
+      - '^New Super Mario Bros\. U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: New Super Mario Bros. U + New Super Luigi U
+    masks:
+      - '^New Super Mario Bros\. U \+ New Super Luigi U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon SpongeBob SquarePants - Plankton's Robotic Revenge
+    masks:
+      - '^Nickelodeon SpongeBob SquarePants - Plankton''s Robotic Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ninja Gaiden 3 - Razor's Edge
+    masks:
+      - '^Ninja Gaiden 3 - Razor''s Edge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nintendo Land
+    masks:
+      - '^Nintendo Land(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: One Piece - Unlimited World Red
+    masks:
+      - '^One Piece - Unlimited World R(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^One Piece - Unlimited World Red(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pac-Man and the Ghostly Adventures
+    masks:
+      - '^Pac-Man and the Ghostly Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pac-Man and the Ghostly Adventures 2
+    masks:
+      - '^Pac-Man and the Ghostly Adventures 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Paper Mario - Color Splash
+    masks:
+      - '^Paper Mario - Color Splash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pikmin 3
+    masks:
+      - '^Pikmin 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pokken Tournament
+    masks:
+      - '^Pokken - Pokken Tournament(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Pokken Tournament(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project Zero - Maiden of Black Water
+    masks:
+      - '^Project Zero - Maiden of Black Water(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Zero - Nuregarasu no Miko(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Puyo Puyo Tetris
+    masks:
+      - '^Puyo Puyo Tetris(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rabbids Land
+    masks:
+      - '^Rabbids Land(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rapala Pro Bass Fishing
+    masks:
+      - '^Rapala Pro Bass Fishing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rayman Legends
+    masks:
+      - '^Rayman Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Resident Evil - Revelations
+    masks:
+      - '^Biohazard - Revelations - Unveiled Edition(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Resident Evil - Revelations(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rodea the Sky Soldier
+    masks:
+      - '^Rodea the Sky Soldier(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Runbow - Deluxe Edition
+    masks:
+      - '^Runbow - Deluxe Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Ryuu ga Gotoku 1 & 2 HD for Wii U'
+    masks:
+      - '^Ryuu ga Gotoku 1 & 2 HD for Wii U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sangokushi 12
+    masks:
+      - '^Sangokushi 12(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Sangokushi 12 with Power-Up Kit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Scribblenauts Unlimited
+    masks:
+      - '^Scribblenauts Unlimited(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Scribblenauts Unmasked - A DC Comics Adventure
+    masks:
+      - '^Scribblenauts Unmasked - A DC Comics Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shakedown - Hawaii
+    masks:
+      - '^Shakedown - Hawaii(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shantae - Half-Genie Hero
+    masks:
+      - '^Shantae - Half-Genie Hero(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shmup Collection
+    masks:
+      - '^Shmup Collection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shovel Knight
+    masks:
+      - '^Shovel Knight(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Simple Series for Wii U Vol. 1 - The Family Party
+    masks:
+      - '^Simple Series for Wii U Vol\. 1 - The Family Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sing Party
+    masks:
+      - '^Sing Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - Giants
+    masks:
+      - '^Skylanders - Giants(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - Imaginators
+    masks:
+      - '^Skylanders - Imaginators(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - Spyro's Adventure
+    masks:
+      - '^Skylanders - Spyro''s Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - SuperChargers
+    masks:
+      - '^Skylanders - SuperChargers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - Swap Force
+    masks:
+      - '^Skylanders - Swap Force(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Skylanders - Trap Team
+    masks:
+      - '^Skylanders - Trap Team(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sniper Elite V2
+    masks:
+      - '^Sniper Elite V2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Snoopy's Grand Adventure
+    masks:
+      - '^Snoopy''s Grand Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Sonic & All-Stars Racing Transformed'
+    masks:
+      - '^Sonic & All-Stars Racing Transformed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sonic Boom - Rise of Lyric
+    masks:
+      - '^Sonic Boom - Rise of Lyric(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Sonic Toon - Taiko no Hihou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sonic Lost World
+    masks:
+      - '^Sonic Lost World(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Splatoon
+    masks:
+      - '^Splatoon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Fox Guard
+    masks:
+      - '^Star Fox Guard(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Fox Zero
+    masks:
+      - '^Star Fox Zero(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SteamWorld Collection
+    masks:
+      - '^SteamWorld Collection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Super Mario 3D World
+    masks:
+      - '^Super Mario 3D World(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Super Mario Maker
+    masks:
+      - '^Super Mario Maker(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Super Smash Bros. for Wii U
+    masks:
+      - '^Dairantou Smash Brothers for Wii U(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Super Smash Bros\. for Wii U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Taiko no Tatsujin - Atsumete Tomodachi Daisakusen!'
+    masks:
+      - '^Taiko no Tatsujin - Atsumete Tomodachi Daisakusen!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Taiko no Tatsujin - Tokumori!'
+    masks:
+      - '^Taiko no Tatsujin - Tokumori!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Taiko no Tatsujin - Wii U Version!'
+    masks:
+      - '^Taiko no Tatsujin - Wii U Version!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Tank! Tank! Tank!'
+    masks:
+      - '^Tank! Tank! Tank!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tekken Tag Tournament 2 - Wii U Edition
+    masks:
+      - '^Tekken Tag Tournament 2 - Wii U Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Terraria
+    masks:
+      - '^Terraria(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Teslagrad
+    masks:
+      - '^Teslagrad(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Amazing Spider-Man 2, The
+    masks:
+      - '^Amazing Spider-Man 2, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Amazing Spider-Man, The - Ultimate Edition
+    masks:
+      - '^Amazing Spider-Man, The - Ultimate Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Book of Unwritten Tales 2, The
+    masks:
+      - '^Book of Unwritten Tales 2, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legend of Zelda, The - Breath of the Wild
+    masks:
+      - '^Legend of Zelda, The - Breath of the Wild(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Zelda no Densetsu - Breath of the Wild(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legend of Zelda, The - The Wind Waker HD
+    masks:
+      - '^Legend of Zelda, The - The Wind Waker HD(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Zelda no Densetsu - Kaze no Takt HD(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legend of Zelda, The - Twilight Princess HD
+    masks:
+      - '^Legend of Zelda, The - Twilight Princess HD(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Zelda no Densetsu - Twilight Princess HD(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Movie, The - Videogame
+    masks:
+      - '^LEGO Movie - The Game(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LEGO Movie, The - Videogame(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Smurfs 2, The
+    masks:
+      - '^Smurfs 2, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Voice, The - I Want You
+    masks:
+      - '^Voice, The - I Want You(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Walking Dead, The - Survival Instinct
+    masks:
+      - '^Walking Dead, The - Survival Instinct(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wonderful 101, The
+    masks:
+      - '^Wonderful 101, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tokyo Mirage Sessions FE
+    masks:
+      - '^Gen''ei Ibunroku FE(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tokyo Mirage Sessions FE(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Splinter Cell - Blacklist
+    masks:
+      - '^Tom Clancy''s Splinter Cell - Blacklist(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Transformers Prime - The Game
+    masks:
+      - '^Transformers Prime - The Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Transformers - Rise of the Dark Spark
+    masks:
+      - '^Transformers - Rise of the Dark Spark(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tumblestone
+    masks:
+      - '^Tumblestone(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.04.02
+    masks:
+      - '^Update - 2\.04\.02(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.05.00
+    masks:
+      - '^Update - 2\.05\.00(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.06.01
+    masks:
+      - '^Update - 2\.06\.01(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.06.02
+    masks:
+      - '^Update - 2\.06\.02(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.07.01
+    masks:
+      - '^Update - 2\.07\.01(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.07.03
+    masks:
+      - '^Update - 2\.07\.03(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.07.03 P1
+    masks:
+      - '^Update - 2\.07\.03 P1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Update - 2.08.02 Alpha
+    masks:
+      - '^Update - 2\.08\.02 Alpha(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Warriors Orochi 3 Hyper
+    masks:
+      - '^Musou Orochi 2 Hyper(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Warriors Orochi 3 Hyper(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Watch_Dogs
+    masks:
+      - '^Watch Dogs(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Watch_Dogs(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wheel of Fortune
+    masks:
+      - '^Wheel of Fortune(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wii Fit U
+    masks:
+      - '^Wii Fit U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wii Karaoke U
+    masks:
+      - '^Wii Karaoke UDisc\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Wii Karaoke U \(Japan\) \(Trial Disc\) \(Rev 1\)$'
+  - name: Wii Party U
+    masks:
+      - '^Wii Party U(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wii Sports Club
+    masks:
+      - '^Wii Sports Club(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xenoblade Chronicles X
+    masks:
+      - '^Xenoblade Chronicles X(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^XenobladeX(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Youkai Watch Dance - Just Dance Special Version
+    masks:
+      - '^Youkai Watch Dance - Just Dance Special Version(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Yoshi's Woolly World
+    masks:
+      - '^Yoshi Wool World(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Yoshi''s Woolly World(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Your Shape - Fitness Evolved 2013
+    masks:
+      - '^Your Shape - Fitness Evolved 2013(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ZombiU
+    masks:
+      - '^ZombiU(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zumba Fitness - World Party
+    masks:
+      - '^Zumba Fitness - World Party(?= \(|\.iso|\.bin|\.cue|$)'

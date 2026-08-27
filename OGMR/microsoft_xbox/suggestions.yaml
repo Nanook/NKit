@@ -1,0 +1,70 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  Disney-Pixar Die Unglaublichen: Disney-Pixar The Incredibles
+  Disney-Pixar Gli Incredibili: Disney-Pixar The Incredibles
+  Disney-Pixar Los Increibles: Disney-Pixar The Incredibles
+  Disney-Pixar Nemo-reul Chajaseo: Disney-Pixar Finding Nemo
+  Disneys Himmel und Huhn: 'Disney''s Chicken Little'
+  Halo Movies: Halo Movies
+  Sengoku Musou: Samurai Warriors
+  Shin Sangoku Musou 3: Dynasty Warriors 4
+  Shin Sangoku Musou 4: Dynasty Warriors 5
+  'Xbox Live Starter Kit Disc & Zunou Taisen Live': 'Xbox Live Starter Kit Disc & Zunou Taisen Live'
+  Xbox Magazine Ufficiale Game Disc 49: Xbox Magazine Ufficiale Game Disc 49
+  'Xbox Retailer''s Demo Disc Vol. 1': 'Xbox Retailer''s Demo Disc Vol. 1'
+  Zan Kabuki: Zan Kabuki
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  'Club Football 2005: Borussia Dortmund': 'Club Football 2005: AC Milan'
+  'Club Football 2005: Hamburger SV': 'Club Football 2005: AC Milan'
+  'Club Football 2005: Paris Saint-Germain': 'Club Football 2005: AC Milan'
+  'Club Football: Borussia Dortmund': 'Club Football 2005: AC Milan'
+  'Club Football: Hamburger SV': 'Club Football 2005: AC Milan'
+  'DreamWorks Shark Tale: Hajar som Hajar': DreamWorks Shark Tale
+  'Fatal Frame II: Crimson Butterfly': 'Fatal Frame II: Crimson Butterfly: Director''s Cut'
+  'Fatal Frame: Zero': Fatal Frame
+  'GoldenEye: Agente Corrupto': 'GoldenEye: Rogue Agent'
+  'GoldenEye: Au Service du Mal': 'GoldenEye: Rogue Agent'
+  'Guilty Gear XX Reload: The Midnight Carnival': 'Guilty Gear X2 Reload: The Midnight Carnival'
+  'Hello Kitty: Mission Rescue': 'Hello Kitty: Roller Rescue'
+  'Hitman: Silent Assassin': 'Hitman 2: Silent Assassin'
+  'Jade Empire: Hisui no Teikoku': Jade Empire
+  'Kurenai no Umi: Crimson Sea': Crimson Sea
+  'Lemony Snicket: Raetselhafte Ereignisse': 'Lemony Snicket''s A Series of Unfortunate Events'
+  'Medal of Honor: En Premiere Ligne': 'Medal of Honor: Frontline'
+  'Medal of Honor: Les Faucons de Guerre': 'Medal of Honor: European Assault'
+  'Medal of Honor: Soleil Levant': 'Medal of Honor: Rising Sun'
+  'Nickelodeon SpongeBob Schwammkopf: Der Film': 'Nickelodeon SpongeBob SquarePants: Battle for Bikini Bottom'
+  'Nickelodeon Tak: Die grosse Juju-Jagd': 'Nickelodeon Tak: The Great Juju Challenge'
+  'Phantasy Star Online: Episode I & II': 'Phantasy Star Online Episode I & II'
+  'Red Ninja: End of Honour': 'Red Ninja: End of Honor'
+  'Silent Hill 2: Saigo no Uta': 'Silent Hill 2: Inner Fears'
+  'Star Wars: Episode III: Die Rache der Sith': 'Star Wars: Episode III: Revenge of the Sith'
+  'Star Wars: Episode III: La Revanche des Sith': 'Star Wars: Episode III: Revenge of the Sith'
+  'Star Wars: La Guerra dei Cloni': 'Star Wars: The Clone Wars'
+  'Star Wars: Las Guerras Clon': 'Star Wars: The Clone Wars'
+  'Tenku: Freestyle Snowboarding': 'Amped: Freestyle Snowboarding'
+  'The Herr der Ringe: Das dritte Zeitalter': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Herr der Ringe: Die Rueckkehr des Koenigs': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Offizielle Xbox-Magazin: Cover-DVD 01-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'The Offizielle Xbox-Magazin: Cover-DVD 08-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'The Offizielle Xbox-Magazin: Cover-DVD 09-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'The Seigneur des Anneaux: Le Retour du Roi': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Seigneur des Anneaux: Le Tiers Age': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Senor de los Anillos: El Retorno del Rey': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Senor de los Anillos: La Tercera Edad': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Signore degli Anelli: Il Ritorno del Re': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'The Signore degli Anelli: La Terza Era': 'The Hobbit: The Prelude to the Lord of the Rings'
+  'UFC: Ultimate Fighting Championship 2: Tapout': 'UFC: Ultimate Fighting Championship: Tapout'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 02-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 04-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 05-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 06-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 10-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 11-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+  'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 12-2006': 'Xbox 360: Das Offizielle Xbox-Magazin: Demo Disk 03-2006'
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)

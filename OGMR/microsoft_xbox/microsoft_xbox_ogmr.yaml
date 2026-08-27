@@ -1,0 +1,4034 @@
+# Microsoft - Xbox - OGMR Game Masks
+# Source: Microsoft - Xbox - Datfile (2678) (2026-04-30 10-30-08).dat
+# Unique games: 1295
+
+games:
+  - name: 007 - Agent Under Fire
+    masks:
+      - '^007 - Agent Under Fire(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 007 - Everything or Nothing
+    masks:
+      - '^007 - Everything or Nothing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 007 - From Russia with Love
+    masks:
+      - '^007 - From Russia with Love(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 007 - Nightfire
+    masks:
+      - '^007 - Nightfire(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 187 - Ride or Die
+    masks:
+      - '^187 - Ride or Die(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Advent Rising
+    masks:
+      - '^Advent Rising(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Aeon Flux
+    masks:
+      - '^Aeon Flux(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AFL Live 2003
+    masks:
+      - '^AFL Live 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AFL Live 2004
+    masks:
+      - '^AFL Live 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AFL Live Premiership Edition
+    masks:
+      - '^AFL Live Premiership Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AFL Premiership
+    masks:
+      - '^AFL Premiership(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Aggressive Inline
+    masks:
+      - '^Aggressive Inline(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AirForce Delta Storm
+    masks:
+      - '^AirForce Delta II(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^AirForce Delta Storm(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Alias
+    masks:
+      - '^Alias(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Alien Hominid
+    masks:
+      - '^Alien Hominid(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Aliens Versus Predator - Extinction
+    masks:
+      - '^Aliens Versus Predator - Extinction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: All-Star Baseball 2003 featuring Derek Jeter
+    masks:
+      - '^All-Star Baseball 2003 featuring Derek Jeter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: All-Star Baseball 2004 featuring Derek Jeter
+    masks:
+      - '^All-Star Baseball 2004 featuring Derek Jeter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: All-Star Baseball 2005 featuring Derek Jeter
+    masks:
+      - '^All-Star Baseball 2005 featuring Derek Jeter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Alter Echo
+    masks:
+      - '^Alter Echo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: America's Army - Rise of a Soldier
+    masks:
+      - '^America''s Army - Rise of a Soldier(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: American Chopper
+    masks:
+      - '^American Chopper(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: American Chopper 2 - Full Throttle
+    masks:
+      - '^American Chopper 2 - Full Throttle(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: American McGee Presents Scrapland
+    masks:
+      - '^American McGee Presents Scrapland(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AMF Bowling 2004
+    masks:
+      - '^AMF Bowling 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AMF Xtreme Bowling
+    masks:
+      - '^AMF Xtreme Bowling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Amped 2
+    masks:
+      - '^Amped 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tenku 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Amped - Freestyle Snowboarding
+    masks:
+      - '^Amped - Freestyle Snowboarding(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tenku - Freestyle Snowboarding(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: AND 1 Streetball
+    masks:
+      - '^AND 1 Streetball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Angelic Concert
+    masks:
+      - '^Angelic Concert(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Animaniacs - The Great Edgar Hunt
+    masks:
+      - '^Animaniacs - The Great Edgar Hunt(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Antz Extreme Racing
+    masks:
+      - '^Antz Extreme Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Aoi Namida
+    masks:
+      - '^Aoi Namida(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Apex
+    masks:
+      - '^Apex(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Aquaman - Battle for Atlantis
+    masks:
+      - '^Aquaman - Battle for Atlantis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Arctic Thunder
+    masks:
+      - '^Arctic Thunder(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Area 51
+    masks:
+      - '^Area 51(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Arena Football
+    masks:
+      - '^Arena Football(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Armed and Dangerous
+    masks:
+      - '^Armed and Dangerous(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Army Men - Major Malfunction
+    masks:
+      - '^Army Men - Major Malfunction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Army Men - Sarge's War
+    masks:
+      - '^Army Men - Sarge''s War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Arx Fatalis
+    masks:
+      - '^Arx Fatalis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Atari Anthology
+    masks:
+      - '^Atari Anthology(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ATV - Quad Power Racing 2
+    masks:
+      - '^ATV - Quad Power Racing 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: August 2003 External Recovery
+    masks:
+      - '^August 2003 External Recovery \(Build 5659\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Auto Modellista
+    masks:
+      - '^Auto Modellista(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Azurik - Rise of Perathia
+    masks:
+      - '^Azurik - Rise of Perathia(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Backyard Wrestling 2 - There Goes the Neighborhood
+    masks:
+      - '^Backyard Wrestling 2 - There Goes the Neighborhood(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Backyard Wrestling - Don't Try This at Home
+    masks:
+      - '^Backyard Wrestling - Don''t Try This at Home(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bad Boys II
+    masks:
+      - '^Bad Boys II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bad Boys - Miami Takedown
+    masks:
+      - '^Bad Boys - Miami Takedown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Baldur's Gate - Dark Alliance
+    masks:
+      - '^Baldur''s Gate - Dark Alliance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Baldur's Gate - Dark Alliance II
+    masks:
+      - '^Baldur''s Gate - Dark Alliance II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Barbarian
+    masks:
+      - '^Barbarian(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Barbie Horse Adventures - Wild Horse Rescue
+    masks:
+      - '^Barbie Horse Adventures - Wild Horse Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bass Pro Shops - Trophy Bass 2007
+    masks:
+      - '^Bass Pro Shops - Trophy Bass 2007(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bass Pro Shops - Trophy Hunter 2007
+    masks:
+      - '^Bass Pro Shops - Trophy Hunter 2007(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman Begins
+    masks:
+      - '^Batman Begins(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman - Dark Tomorrow
+    masks:
+      - '^Batman - Dark Tomorrow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman - Rise of Sin Tzu
+    masks:
+      - '^Batman - Rise of Sin Tzu(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Batman - Vengeance
+    masks:
+      - '^Batman - Vengeance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Battle Engine Aquila
+    masks:
+      - '^Battle Engine Aquila(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Battlefield 2 - Modern Combat
+    masks:
+      - '^Battlefield 2 - Modern Combat(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Battlestar Galactica
+    masks:
+      - '^Battlestar Galactica(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Beat Down - Fists of Vengeance
+    masks:
+      - '^Beat Down(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Beat Down - Fists of Vengeance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Beyond Good & Evil'
+    masks:
+      - '^Beyond Good & Evil(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bicycle Casino Includes - Texas Hold'em
+    masks:
+      - '^Bicycle Casino Includes - Texas Hold''em(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Big Bumpin'
+    masks:
+      - '^Big Bumpin''(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Big Mutha Truckers
+    masks:
+      - '^Big Mutha Truckers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Big Mutha Truckers 2
+    masks:
+      - '^Big Mutha Truckers 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Big Mutha Truckers 2 - Truck Me Harder
+    masks:
+      - '^Big Mutha Truckers 2 - Truck Me Harder(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bionicle
+    masks:
+      - '^Bionicle(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bistro Cupid
+    masks:
+      - '^Bistro Cupid(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bistro Cupid 2
+    masks:
+      - '^Bistro Cupid 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Black
+    masks:
+      - '^Black(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Black Stone - Magic & Steel'
+    masks:
+      - '^Black Stone - Magic & Steel(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blade II
+    masks:
+      - '^Blade II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blazing Angels - Squadrons of WWII
+    masks:
+      - '^Blazing Angels - Squadrons of WWII(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Blinx 2 - Masters of Time & Space'
+    masks:
+      - '^Blinx 2 - Masters of Time & Space(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blinx - The Time Sweeper
+    masks:
+      - '^Blinx - The Time Sweeper(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blitz - The League
+    masks:
+      - '^Blitz - The League(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blood Omen 2 - The Legacy of Kain Series
+    masks:
+      - '^Blood Omen 2 - The Legacy of Kain Series(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blood Wake
+    masks:
+      - '^Blood Wake(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: BloodRayne
+    masks:
+      - '^BloodRayne(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: BloodRayne 2
+    masks:
+      - '^BloodRayne 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bloody Roar - Extreme
+    masks:
+      - '^Bloody Roar - Extreme(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Blowout
+    masks:
+      - '^Blowout(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: BMX XXX
+    masks:
+      - '^BMX XXX(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Braveknight - Leverant Eiyuuden
+    masks:
+      - '^Braveknight - Leverant Eiyuuden(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Braveknight - Leverant Yeongungjeon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Break Nine - World Billiards Tournament
+    masks:
+      - '^Break Nine - World Billiards Tournament(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Breakdown
+    masks:
+      - '^Breakdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Breeders' Cup - World Thoroughbred Championships
+    masks:
+      - '^Breeders'' Cup - World Thoroughbred Championships(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Brian Lara International Cricket 2005
+    masks:
+      - '^Brian Lara International Cricket 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Broken Sword - The Sleeping Dragon
+    masks:
+      - '^Broken Sword - The Sleeping Dragon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Brothers in Arms - Earned in Blood
+    masks:
+      - '^Brothers in Arms - Earned in Blood(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Brothers in Arms - Road to Hill 30
+    masks:
+      - '^Brothers in Arms - Road to Hill 30(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bruce Lee - Quest of the Dragon
+    masks:
+      - '^Bruce Lee - Quest of the Dragon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Brute Force
+    masks:
+      - '^Brute Force(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Buffy the Vampire Slayer
+    masks:
+      - '^Buffy the Vampire Slayer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Buffy the Vampire Slayer - Chaos Bleeds
+    masks:
+      - '^Buffy the Vampire Slayer - Chaos Bleeds(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 100 Bullets
+    masks:
+      - '^100 Bullets(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Burnout
+    masks:
+      - '^Burnout(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Burnout 2 - Point of Impact
+    masks:
+      - '^Burnout 2 - Point of Impact(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Burnout 3 - Takedown
+    masks:
+      - '^Burnout 3 - Takedown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Burnout Revenge
+    masks:
+      - '^Burnout Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: C.A.T - Cyber Attack Team
+    masks:
+      - '^C\.A\.T - Cyber Attack Team(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Big Game Hunter 2005 Adventures
+    masks:
+      - '^Cabela''s Big Game Hunter 2005 Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Dangerous Hunts
+    masks:
+      - '^Cabela''s Dangerous Hunts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Dangerous Hunts 2
+    masks:
+      - '^Cabela''s Dangerous Hunts 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Deer Hunt - 2004 Season
+    masks:
+      - '^Cabela''s Deer Hunt - 2004 Season(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Deer Hunt - 2005 Season
+    masks:
+      - '^Cabela''s Deer Hunt - 2005 Season(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cabela's Outdoor Adventures
+    masks:
+      - '^Cabela''s Outdoor Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Cthulhu - Dark Corners of the Earth
+    masks:
+      - '^Call of Cthulhu - Dark Corners of the Earth(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Duty 2 - Big Red One
+    masks:
+      - '^Call of Duty 2 - Big Red One(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Call of Duty 2 - Big Red Onetor''s Edition\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Duty 3
+    masks:
+      - '^Call of Duty 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Call of Duty - Finest Hour
+    masks:
+      - '^Call of Duty - Finest Hour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Capcom Classics Collection Vol. 1
+    masks:
+      - '^Capcom Classics Collection Vol\. 1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Capcom Classics Collection Vol. 2
+    masks:
+      - '^Capcom Classics Collection Vol\. 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Capcom Fighting Evolution
+    masks:
+      - '^Capcom Fighting Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Capcom vs. SNK 2 EO
+    masks:
+      - '^Capcom vs\. SNK 2 EO(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Capcom vs. SNK 2 EO - Mark of the Millennium 2001
+    masks:
+      - '^Capcom vs\. SNK 2 EO - Mark of the Millennium 2001(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Carmen Sandiego - The Secret of the Stolen Drums
+    masks:
+      - '^Carmen Sandiego - The Secret of the Stolen Drums(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Carve
+    masks:
+      - '^Carve(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Castlevania - Curse of Darkness
+    masks:
+      - '^Castlevania - Curse of Darkness(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Catwoman
+    masks:
+      - '^Catwoman(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cel Damage
+    masks:
+      - '^Cel Damage(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 50 Cent - Bulletproof
+    masks:
+      - '^50 Cent - Bulletproof(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Championship Bowling
+    masks:
+      - '^Championship Bowling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Championship Manager 2006
+    masks:
+      - '^Championship Manager 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Championship Manager 5
+    masks:
+      - '^Championship Manager 5(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Scudetto 5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Championship Manager - Season 01-02
+    masks:
+      - '^Championship Manager - Season 01-02(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Championship Manager - Season 02-03
+    masks:
+      - '^Championship Manager - Season 02-03(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Charlie and the Chocolate Factory
+    masks:
+      - '^Charlie and the Chocolate Factory(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Chase - Hollywood Stunt Driver
+    masks:
+      - '^Chase - Hollywood Stunt Driver(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Chessmaster
+    masks:
+      - '^Chessmaster(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Chicago Enforcer
+    masks:
+      - '^Chicago Enforcer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Circus Drive
+    masks:
+      - '^Circus Drive(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Circus Maximus - Chariot Wars
+    masks:
+      - '^Circus Maximus - Chariot Wars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Classified - The Sentinel Crisis
+    masks:
+      - '^Classified - The Sentinel Crisis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Close Combat - First to Fight - United States Marines
+    masks:
+      - '^Close Combat - First to Fight - United States Marines(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Borussia Dortmund
+    masks:
+      - '^Club Football - Borussia Dortmund(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Club Football - Hamburger SV(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Borussia Dortmund
+    masks:
+      - '^Club Football 2005 - Borussia Dortmund(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Club Football 2005 - Hamburger SV(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Club Football 2005 - Paris Saint-Germain(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - AC Milan
+    masks:
+      - '^Club Football 2005 - AC Milan(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Ajax Amsterdam
+    masks:
+      - '^Club Football 2005 - Ajax Amsterdam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Arsenal
+    masks:
+      - '^Club Football 2005 - Arsenal(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Aston Villa
+    masks:
+      - '^Club Football 2005 - Aston Villa(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Birmingham City
+    masks:
+      - '^Club Football 2005 - Birmingham City(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Celtic FC
+    masks:
+      - '^Club Football 2005 - Celtic FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Chelsea FC
+    masks:
+      - '^Club Football 2005 - Chelsea FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - FC Barcelona
+    masks:
+      - '^Club Football 2005 - FC Barcelona(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - FC Bayern Muenchen
+    masks:
+      - '^Club Football 2005 - FC Bayern Muenchen(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - FC Internazionale
+    masks:
+      - '^Club Football 2005 - FC Internazionale(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Juventus
+    masks:
+      - '^Club Football 2005 - Juventus(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Liverpool FC
+    masks:
+      - '^Club Football 2005 - Liverpool FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Manchester United
+    masks:
+      - '^Club Football 2005 - Manchester United(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Newcastle United
+    masks:
+      - '^Club Football 2005 - Newcastle United(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Olympique de Marseille
+    masks:
+      - '^Club Football 2005 - Olympique de Marseille(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Rangers FC
+    masks:
+      - '^Club Football 2005 - Rangers FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Real Madrid
+    masks:
+      - '^Club Football 2005 - Real Madrid(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football 2005 - Tottenham Hotspur
+    masks:
+      - '^Club Football 2005 - Tottenham Hotspur(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - AC Milan
+    masks:
+      - '^Club Football - AC Milan(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Ajax Amsterdam
+    masks:
+      - '^Club Football - Ajax Amsterdam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Arsenal
+    masks:
+      - '^Club Football - Arsenal(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Aston Villa
+    masks:
+      - '^Club Football - Aston Villa(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Celtic FC
+    masks:
+      - '^Club Football - Celtic FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Chelsea FC
+    masks:
+      - '^Club Football - Chelsea FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - FC Barcelona
+    masks:
+      - '^Club Football - FC Barcelona(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - FC Bayern Muenchen
+    masks:
+      - '^Club Football - FC Bayern Muenchen(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - FC Internazionale
+    masks:
+      - '^Club Football - FC Internazionale(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Juventus
+    masks:
+      - '^Club Football - Juventus(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Leeds United
+    masks:
+      - '^Club Football - Leeds United(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Liverpool FC
+    masks:
+      - '^Club Football - Liverpool FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Manchester United
+    masks:
+      - '^Club Football - Manchester United(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Rangers FC
+    masks:
+      - '^Club Football - Rangers FC(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Club Football - Real Madrid
+    masks:
+      - '^Club Football - Real Madrid(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Codename - Kids Next Door - Operation - V.I.D.E.O.G.A.M.E.
+    masks:
+      - '^Codename - Kids Next Door - Operation - V\.I\.D\.E\.O\.G\.A\.M\.E\.(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cold Fear
+    masks:
+      - '^Cold Fear(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cold War
+    masks:
+      - '^Cold War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Colin McRae Rally 04
+    masks:
+      - '^Colin McRae Rally 04(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Colin McRae Rally 2005
+    masks:
+      - '^Colin McRae Rally 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Colin McRae Rally 3
+    masks:
+      - '^Colin McRae Rally 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: College Hoops 2K6
+    masks:
+      - '^College Hoops 2K6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: College Hoops 2K7
+    masks:
+      - '^College Hoops 2K7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Combat Elite - WWII Paratroopers
+    masks:
+      - '^Combat Elite - WWII Paratroopers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Combat - Task Force 121
+    masks:
+      - '^Combat - Task Force 121(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Commandos 2 - Men of Courage
+    masks:
+      - '^Commandos 2 - Men of Courage(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Commandos - Strike Force
+    masks:
+      - '^Commandos - Strike Force(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conan
+    masks:
+      - '^Conan(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Desert Storm
+    masks:
+      - '^Conflict - Desert Storm(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Desert Storm II
+    masks:
+      - '^Conflict - Desert Storm II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Desert Storm II - Back to Baghdad
+    masks:
+      - '^Conflict - Desert Storm II - Back to Baghdad(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Global Storm
+    masks:
+      - '^Conflict - Global Storm(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Global Terror
+    masks:
+      - '^Conflict - Global Terror(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conflict - Vietnam
+    masks:
+      - '^Conflict - Vietnam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Conker - Live & Reloaded'
+    masks:
+      - '^Conker - Live & Reloaded(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Conspiracy - Weapons of Mass Destruction
+    masks:
+      - '^Conspiracy - Weapons of Mass Destruction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Constantine
+    masks:
+      - '^Constantine(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Corvette
+    masks:
+      - '^Corvette(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Counter Terrorist Special Forces - Fire for Effect
+    masks:
+      - '^Counter Terrorist Special Forces - Fire for Effect(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Counter-Strike
+    masks:
+      - '^Counter-Strike(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash
+    masks:
+      - '^Crash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash 'n' Burn
+    masks:
+      - '^Crash ''n'' Burn(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash Bandicoot - The Wrath of Cortex
+    masks:
+      - '^Crash Bandicoot - The Wrath of Cortex(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Crash Bandicoot 4 - Sakuretsu! Majin Power(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash Nitro Kart
+    masks:
+      - '^Crash Nitro Kart(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash Tag Team Racing
+    masks:
+      - '^Crash Tag Team Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crash Twinsanity
+    masks:
+      - '^Crash Twinsanity(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crazy Taxi 3
+    masks:
+      - '^Crazy Taxi 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crazy Taxi 3 - High Roller
+    masks:
+      - '^Crazy Taxi 3 - High Roller(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cricket 2005
+    masks:
+      - '^Cricket 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crime Life - Gang Wars
+    masks:
+      - '^Crime Life - Gang Wars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crimson Sea
+    masks:
+      - '^Crimson Sea(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Kurenai no Umi - Crimson Sea(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crimson Skies - High Road to Revenge
+    masks:
+      - '^Crimson Skies - High Road to Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crouching Tiger, Hidden Dragon
+    masks:
+      - '^Crouching Tiger, Hidden Dragon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Crusty Demons
+    masks:
+      - '^Crusty Demons(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: CSI - Crime Scene Investigation
+    masks:
+      - '^CSI - Crime Scene Investigation(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Curious George
+    masks:
+      - '^Curious George(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Curse - The Eye of Isis
+    masks:
+      - '^Curse - The Eye of Isis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dai Senryaku VII - Modern Military Tactics
+    masks:
+      - '^Dai Senryaku VII - Modern Military Tactics(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Daisenryaku VII
+    masks:
+      - '^Daisenryaku VII(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dakar 2
+    masks:
+      - '^Dakar 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dakar 2 - The World's Ultimate Rally
+    masks:
+      - '^Dakar 2 - The World''s Ultimate Rally(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dance Dance Revolution Ultramix
+    masks:
+      - '^Dance Dance Revolution Ultramix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dance Dance Revolution Ultramix 2
+    masks:
+      - '^Dance Dance Revolution Ultramix 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dance Dance Revolution Ultramix 3
+    masks:
+      - '^Dance Dance Revolution Ultramix 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dance Dance Revolution Ultramix 4
+    masks:
+      - '^Dance Dance Revolution Ultramix 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dance-UK
+    masks:
+      - '^Dance-UK(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dancing Stage Unleashed
+    masks:
+      - '^Dancing Stage Unleashed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dancing Stage Unleashed 2
+    masks:
+      - '^Dancing Stage Unleashed 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dancing Stage Unleashed 3
+    masks:
+      - '^Dancing Stage Unleashed 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dark Summit
+    masks:
+      - '^Dark Summit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Darkwatch
+    masks:
+      - '^Darkwatch(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 01-2006
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 01-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 08-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 09-2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 03-2006
+    masks:
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 02-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 03-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 04-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 05-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 06-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 10-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 11-2006(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox 360 - Das Offizielle Xbox-Magazin - Demo Disk 12-2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dave Mirra Freestyle BMX 2
+    masks:
+      - '^Dave Mirra Freestyle BMX 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: David Beckham Soccer
+    masks:
+      - '^David Beckham Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead Man's Hand
+    masks:
+      - '^Dead Man''s Hand(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead or Alive 1 Ultimate
+    masks:
+      - '^Dead or Alive 1 Ultimate(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead or Alive 2 Ultimate
+    masks:
+      - '^Dead or Alive 2 Ultimate(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead or Alive 3
+    masks:
+      - '^Dead or Alive 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead or Alive Xtreme Beach Volleyball
+    masks:
+      - '^Dead or Alive Xtreme Beach Volleyball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead to Rights
+    masks:
+      - '^Dead to Rights(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dead to Rights II
+    masks:
+      - '^Dead to Rights II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Deadly Skies
+    masks:
+      - '^Deadly Skies(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Deathrow
+    masks:
+      - '^Deathrow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Def Jam - Fight for NY
+    masks:
+      - '^Def Jam - Fight for NY(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Defender
+    masks:
+      - '^Defender(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Delta Force - Black Hawk Down
+    masks:
+      - '^Delta Force - Black Hawk Down(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dennou Taisen - DroneZ
+    masks:
+      - '^Dennou Taisen - DroneZ(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Destroy All Humans!'
+    masks:
+      - '^Destroy All Humans!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Destroy All Humans! 2'
+    masks:
+      - '^Destroy All Humans! 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Deus Ex - Invisible War
+    masks:
+      - '^Deus Ex - Invisible War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Die Hard - Vendetta
+    masks:
+      - '^Die Hard - Vendetta(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Digimon Rumble Arena 2
+    masks:
+      - '^Digimon Battle Chronicle(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Digimon Rumble Arena 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Digimon World 4
+    masks:
+      - '^Digimon World 4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Digimon World X(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dino Crisis 3
+    masks:
+      - '^Dino Crisis 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dinosaur Hunting - Ushinawareta Daichi
+    masks:
+      - '^Dinosaur Hunting - Ushinawareta Daichi(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dinotopia - The Sunstone Odyssey
+    masks:
+      - '^Dinotopia - The Sunstone Odyssey(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney's Chicken Little
+    masks:
+      - '^Disney''s Chicken Little(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disneys Himmel und Huhn(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney's Extreme Skate Adventure
+    masks:
+      - '^Disney''s Extreme Skate Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney's The Haunted Mansion
+    masks:
+      - '^Disney''s The Haunted Mansion(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar Cars
+    masks:
+      - '^Disney-Pixar Cars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar Finding Nemo
+    masks:
+      - '^Disney-Pixar A Procura de Nemo(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Finding Nemo(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Finding Nemo \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Nemo-reul Chajaseo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar Ratatouille
+    masks:
+      - '^Disney-Pixar Ratatouille(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar The Incredibles
+    masks:
+      - '^Disney-Pixar Die Unglaublichen(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Gli Incredibili(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Los Increibles(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar Mr\. Incredible(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar The Incredibles(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Disney-Pixar The Incredibles \(Scandinavia\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Disney-Pixar The Incredibles - Rise of the Underminer
+    masks:
+      - '^Disney-Pixar The Incredibles - Rise of the Underminer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Doom 3
+    masks:
+      - '^Doom 3(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Doom 3dition\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Doom 3llector''s Edition\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Doom 3 - Resurrection of Evil
+    masks:
+      - '^Doom 3 - Resurrection of Evil(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Double-S.T.E.A.L
+    masks:
+      - '^Double-S\.T\.E\.A\.L(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Double-S.T.E.A.L - The Second Clash
+    masks:
+      - '^Double-S\.T\.E\.A\.L - The Second Clash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dr. Muto
+    masks:
+      - '^Dr\. Muto(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dr. Seuss' The Cat in the Hat
+    masks:
+      - '^Dr\. Seuss'' The Cat in the Hat(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dragon Ball Z - Sagas
+    masks:
+      - '^Dragon Ball Z - Sagas(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dragon's Lair 3D - Return to the Lair
+    masks:
+      - '^Dragon''s Lair 3D - Return to the Lair(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Drake of the 99 Dragons
+    masks:
+      - '^Drake of the 99 Dragons(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dreamfall - The Longest Journey
+    masks:
+      - '^Dreamfall - The Longest Journey(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Madagascar
+    masks:
+      - '^DreamWorks Madagascar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Over the Hedge
+    masks:
+      - '^DreamWorks Over the Hedge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Shark Tale
+    masks:
+      - '^DreamWorks Shark Tale(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^DreamWorks Shark Tale - Hajar som Hajar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DreamWorks Shrek - SuperSlam
+    masks:
+      - '^DreamWorks Shrek - SuperSlam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Drihoo
+    masks:
+      - '^Drihoo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Driv3r
+    masks:
+      - '^Driv3r(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Driver - Parallel Lines
+    masks:
+      - '^Driver - Parallel Lines(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DTM Race Driver 2 - Ultimate Racing Simulator
+    masks:
+      - '^DTM Race Driver 2 - Ultimate Racing Simulator(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DTM Race Driver 3
+    masks:
+      - '^DTM Race Driver 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DTM Race Driver Live
+    masks:
+      - '^DTM Race Driver Live(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: DTM Race Driver - Director's Cut
+    masks:
+      - '^DTM Race Driver - Director''s Cut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Dungeons & Dragons - Heroes'
+    masks:
+      - '^Dungeons & Dragons - Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dynasty Warriors 3
+    masks:
+      - '^Dynasty Warriors 3(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Shin Sangoku Musou 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dynasty Warriors 4
+    masks:
+      - '^Dynasty Warriors 4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Shin Sangoku Musou 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dynasty Warriors 5
+    masks:
+      - '^Dynasty Warriors 5(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Shin Sangoku Musou 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ed, Edd n Eddy - The Mis-Edventures
+    masks:
+      - '^Ed, Edd n Eddy - The Mis-Edventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Egg Mania - Eggstreme Madness
+    masks:
+      - '^Egg Mania - Eggstreme Madness(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Egg Mania - Tsukande! Mawashite! Dossun Puzzle!!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Eggo Mania
+    masks:
+      - '^Eggo Mania(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Enclave
+    masks:
+      - '^Enclave(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: England International Football - 2004 Edition
+    masks:
+      - '^England International Football - 2004 Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Enter the Matrix
+    masks:
+      - '^Enter the Matrix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Eragon
+    masks:
+      - '^Eragon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN College Hoops
+    masks:
+      - '^ESPN College Hoops(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN College Hoops 2K5
+    masks:
+      - '^ESPN College Hoops 2K5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN International Winter Sports
+    masks:
+      - '^ESPN International Winter Sports(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN International Winter Sports 2002
+    masks:
+      - '^ESPN International Winter Sports 2002(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Hyper Sports 2002 Winter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN Major League Baseball
+    masks:
+      - '^ESPN Major League Baseball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN MLS ExtraTime 2002
+    masks:
+      - '^ESPN MLS ExtraTime 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NBA 2K5
+    masks:
+      - '^ESPN NBA 2K5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NBA 2Night 2002
+    masks:
+      - '^ESPN NBA 2Night 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NBA Basketball
+    masks:
+      - '^ESPN NBA Basketball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NFL 2K5
+    masks:
+      - '^ESPN NFL 2K5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NFL Football
+    masks:
+      - '^ESPN NFL Football(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NFL PrimeTime 2002
+    masks:
+      - '^ESPN NFL PrimeTime 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NHL 2K5
+    masks:
+      - '^ESPN NHL 2K5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ESPN NHL Hockey
+    masks:
+      - '^ESPN NHL Hockey(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Evil Dead - A Fistful of Boomstick
+    masks:
+      - '^Evil Dead - A Fistful of Boomstick(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Evil Dead - Regeneration
+    masks:
+      - '^Evil Dead - Regeneration(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ex-Chaser
+    masks:
+      - '^Ex-Chaser(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Exaskeleton
+    masks:
+      - '^Exaskeleton(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: F1 2001
+    masks:
+      - '^F1 2001(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: F1 2002
+    masks:
+      - '^F1 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: F1 Career Challenge
+    masks:
+      - '^F1 Career Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fable
+    masks:
+      - '^Fable(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Fableted Edition Bonus DVD\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fable - The Lost Chapters
+    masks:
+      - '^Fable - The Lost Chapters(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fahrenheit
+    masks:
+      - '^Fahrenheit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fallout - Brotherhood of Steel
+    masks:
+      - '^Fallout - Brotherhood of Steel(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Family Guy - Video Game!'
+    masks:
+      - '^Family Guy - Video Game!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fantastic 4
+    masks:
+      - '^Fantastic 4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Fantastici 4, I(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Far Cry Instincts
+    masks:
+      - '^Far Cry Instincts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Far Cry Instincts - Evolution
+    masks:
+      - '^Far Cry Instincts - Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fatal Frame
+    masks:
+      - '^Fatal Frame(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Fatal Frame - Zero(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Fatal Frame - Zero Special Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fatal Frame II - Crimson Butterfly - Director's Cut
+    masks:
+      - '^Fatal Frame II - Crimson Butterfly(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Fatal Frame II - Crimson Butterfly - Director''s Cut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA 06
+    masks:
+      - '^FIFA 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA 07
+    masks:
+      - '^FIFA 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Football 2003
+    masks:
+      - '^FIFA Football 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Football 2004
+    masks:
+      - '^FIFA Football 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Football 2005
+    masks:
+      - '^FIFA Football 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 06
+    masks:
+      - '^FIFA Soccer 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 07
+    masks:
+      - '^FIFA Soccer 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 2003
+    masks:
+      - '^FIFA Soccer 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 2004
+    masks:
+      - '^FIFA Soccer 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Soccer 2005
+    masks:
+      - '^FIFA Soccer 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Street
+    masks:
+      - '^FIFA Street(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA Street 2
+    masks:
+      - '^FIFA Street 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 2002 FIFA World Cup
+    masks:
+      - '^2002 FIFA World Cup(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FIFA World Cup Germany 2006
+    masks:
+      - '^FIFA World Cup Germany 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fight Club
+    masks:
+      - '^Fight Club(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fight Night 2004
+    masks:
+      - '^Fight Night 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fight Night Round 2
+    masks:
+      - '^Fight Night Round 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fight Night Round 3
+    masks:
+      - '^Fight Night Round 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FILA World Tour Tennis
+    masks:
+      - '^FILA World Tour Tennis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Final Fight - Streetwise
+    masks:
+      - '^Final Fight - Streetwise(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FireBlade
+    masks:
+      - '^FireBlade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FlatOut
+    masks:
+      - '^FlatOut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: FlatOut 2
+    masks:
+      - '^FlatOut 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Flight Academy
+    masks:
+      - '^Flight Academy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ford Mustang - The Legend Lives
+    masks:
+      - '^Ford Mustang - The Legend Lives(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ford Racing 2
+    masks:
+      - '^Ford Racing 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ford Racing 3
+    masks:
+      - '^Ford Racing 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ford Street Racing
+    masks:
+      - '^Ford Street Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ford vs. Chevy
+    masks:
+      - '^Ford vs\. Chevy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Forgotten Realms - Demon Stone
+    masks:
+      - '^Forgotten Realms - Demon Stone(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Forza Motorsport
+    masks:
+      - '^Forza Motorsport(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Forza Motorsport & Xbox Live Arcade'
+    masks:
+      - '^Forza Motorsport & Xbox Live Arcade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Frankie Dettori Racing
+    masks:
+      - '^Frankie Dettori Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Freaky Flyers
+    masks:
+      - '^Freaky Flyers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Freedom Fighters
+    masks:
+      - '^Freedom Fighters(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Freestyle Metal X
+    masks:
+      - '^Freestyle Metal X(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Freestyle Street Soccer
+    masks:
+      - '^Freestyle Street Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Frogger Beyond
+    masks:
+      - '^Frogger Beyond(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Frogger - Ancient Shadow
+    masks:
+      - '^Frogger - Ancient Shadow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Full Spectrum Warrior
+    masks:
+      - '^Full Spectrum Warrior(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Full Spectrum Warrior - Ten Hammers
+    masks:
+      - '^Full Spectrum Warrior - Ten Hammers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Furious Karting
+    masks:
+      - '^Furious Karting(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Futurama
+    masks:
+      - '^Futurama(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Future Tactics - The Uprising
+    masks:
+      - '^Future Tactics - The Uprising(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fuzion Frenzy
+    masks:
+      - '^Fuzion Frenzy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Galaxy Angel
+    masks:
+      - '^Galaxy Angel(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Galleon
+    masks:
+      - '^Galleon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: GangBusters
+    masks:
+      - '^GangBusters(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gauntlet - Dark Legacy
+    masks:
+      - '^Gauntlet - Dark Legacy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gauntlet - Seven Sorrows
+    masks:
+      - '^Gauntlet - Seven Sorrows(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gene Troopers
+    masks:
+      - '^Gene Troopers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Genma Onimusha
+    masks:
+      - '^Genma Onimusha(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ghost Master - The Gravenville Chronicles
+    masks:
+      - '^Ghost Master - The Gravenville Chronicles(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gladiator - Sword of Vengeance
+    masks:
+      - '^Gladiator - Schwert der Rache(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Gladiator - Sword of Vengeance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gladius
+    masks:
+      - '^Gladius(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Goblin Commander - Unleash the Horde
+    masks:
+      - '^Goblin Commander - Unleash the Horde(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Godzilla - Destroy All Monsters Melee
+    masks:
+      - '^Godzilla - Destroy All Monsters Melee(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Godzilla - Save the Earth
+    masks:
+      - '^Godzilla - Save the Earth(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: GoldenEye - Rogue Agent
+    masks:
+      - '^GoldenEye - Agente Corrupto(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^GoldenEye - Au Service du Mal(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^GoldenEye - Rogue Agent(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Gotcha!'
+    masks:
+      - '^Gotcha!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Grabbed by the Ghoulies
+    masks:
+      - '^Grabbed by the Ghoulies(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Grand Theft Auto III
+    masks:
+      - '^Grand Theft Auto III(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Grand Theft Auto - San Andreas
+    masks:
+      - '^Grand Theft Auto - San Andreas(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Grand Theft Auto - Vice City
+    masks:
+      - '^Grand Theft Auto - Vice City(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gravity Games Bike - Street. Vert. Dirt.
+    masks:
+      - '^Gravity Games Bike - Street\. Vert\. Dirt\.(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Greg Hastings' Tournament Paintball
+    masks:
+      - '^Greg Hastings'' Tournament Paintball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Greg Hastings' Tournament Paintball Max'd
+    masks:
+      - '^Greg Hastings'' Tournament Paintball Max''d(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Grooverider - Slot Car Thunder
+    masks:
+      - '^Grooverider - Slot Car Thunder(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Group S Challenge
+    masks:
+      - '^Group S Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gui Yi
+    masks:
+      - '^Gui Yi(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Guilty Gear Isuka
+    masks:
+      - '^Guilty Gear Isuka(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Guilty Gear X2 Reload - The Midnight Carnival
+    masks:
+      - '^Guilty Gear X2 Reload - The Midnight Carnival(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Guilty Gear XX Reload - The Midnight Carnival(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gun
+    masks:
+      - '^Gun(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gungriffon - Allied Strike
+    masks:
+      - '^Gungriffon - Allied Strike(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gunmetal
+    masks:
+      - '^Gunmetal(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Gunvalkyrie
+    masks:
+      - '^Gunvalkyrie(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Half-Life 2
+    masks:
+      - '^Half-Life 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Halo 2
+    masks:
+      - '^Halo 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Halo 2iplayer Alpha\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Halo 2iplayer Beta\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Halo 2 Multiplayer Map Pack
+    masks:
+      - '^Halo 2 Multiplayer Map Pack(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Halo Movies
+    masks:
+      - '^Halo Movies(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Halo - Combat Evolved
+    masks:
+      - '^Halo(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Halo - Combat Evolved(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Halo - Jeonjaengui Seomak(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter and the Chamber of Secrets
+    masks:
+      - '^Harry Potter and the Chamber of Secrets(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter and the Goblet of Fire
+    masks:
+      - '^Harry Potter and the Goblet of Fire(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter and the Philosopher's Stone
+    masks:
+      - '^Harry Potter and the Philosopher''s Stone(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter and the Prisoner of Azkaban
+    masks:
+      - '^Harry Potter and the Prisoner of Azkaban(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter and the Sorcerer's Stone
+    masks:
+      - '^Harry Potter and the Sorcerer''s Stone(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Harry Potter - Quidditch World Cup
+    masks:
+      - '^Harry Potter - Quidditch World Cup(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Headhunter - Redemption
+    masks:
+      - '^Headhunter - Redemption(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hello Kitty - Roller Rescue
+    masks:
+      - '^Hello Kitty - Mission Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Hello Kitty - Roller Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Heroes of the Pacific
+    masks:
+      - '^Heroes of the Pacific(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: High Heat Major League Baseball 2004
+    masks:
+      - '^High Heat Major League Baseball 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: High Rollers Casino
+    masks:
+      - '^High Rollers Casino(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hitman 2 - Silent Assassin
+    masks:
+      - '^Hitman - Silent Assassin(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Hitman 2 - Silent Assassin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hitman - Blood Money
+    masks:
+      - '^Hitman - Blood Money(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hitman - Contracts
+    masks:
+      - '^Hitman - Contracts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hot Wheels - Stunt Track Challenge
+    masks:
+      - '^Hot Wheels - Stunt Track Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hulk
+    masks:
+      - '^Hulk(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hummer Badlands
+    masks:
+      - '^Hummer Badlands(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hunter - The Reckoning
+    masks:
+      - '^Hunter - The Reckoning(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hunter - The Reckoning - Redeemer
+    masks:
+      - '^Hunter - The Reckoning - Redeemer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: I-Ninja
+    masks:
+      - '^I-Ninja(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ice Age 2 - The Meltdown
+    masks:
+      - '^Ice Age 2 - The Meltdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: IHRA Drag Racing 2004
+    masks:
+      - '^IHRA Drag Racing 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: IHRA Drag Racing - Sportsman Edition
+    masks:
+      - '^IHRA Drag Racing - Sportsman Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: IHRA Professional Drag Racing 2005
+    masks:
+      - '^IHRA Professional Drag Racing 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Indiana Jones and the Emperor's Tomb
+    masks:
+      - '^Indiana Jones and the Emperor''s Tomb(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Indigo Prophecy
+    masks:
+      - '^Indigo Prophecy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: IndyCar Series
+    masks:
+      - '^IndyCar Series(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: IndyCar Series 2005
+    masks:
+      - '^IndyCar Series 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Innocent Tears
+    masks:
+      - '^Innocent Tears(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Inside Pitch 2003
+    masks:
+      - '^Inside Pitch 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Intellivision Lives!'
+    masks:
+      - '^Intellivision Lives!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: International Superstar Soccer 2
+    masks:
+      - '^International Superstar Soccer 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Jikkyou World Soccer 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Iron Phoenix
+    masks:
+      - '^Iron Phoenix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jacked
+    masks:
+      - '^Jacked(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jade Empire
+    masks:
+      - '^Jade Empire(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Jade Empire - Hisui no Teikoku(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: James Cameron's Dark Angel
+    masks:
+      - '^James Cameron''s Dark Angel(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jaws Unleashed
+    masks:
+      - '^Jaws Unleashed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jockey's Road
+    masks:
+      - '^Jockey''s Road(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: JSRF - Jet Set Radio Future
+    masks:
+      - '^JSRF - Jet Set Radio Future(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Judge Dredd - Dredd vs. Death
+    masks:
+      - '^Judge Dredd - Dredd vs\. Death(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Juiced
+    masks:
+      - '^Juiced(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Jurassic Park - Operation Genesis
+    masks:
+      - '^Jurassic Park - Operation Genesis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Just Cause
+    masks:
+      - '^Just Cause(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Justice League Heroes
+    masks:
+      - '^Justice League Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kabuki Warriors
+    masks:
+      - '^Kabuki Warriors(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kakuto Chojin
+    masks:
+      - '^Kakuto Chojin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kao the Kangaroo - Round 2
+    masks:
+      - '^Kao the Kangaroo - Round 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Karaoke Revolution
+    masks:
+      - '^Karaoke Revolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Karaoke Revolution Party
+    masks:
+      - '^Karaoke Revolution Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kelly Slater's Pro Surfer
+    masks:
+      - '^Kelly Slater''s Pro Surfer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kikou Heidan J-Phoenix +
+    masks:
+      - '^Kikou Heidan J-Phoenix \+(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kill Switch
+    masks:
+      - '^Kill Switch(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: King Arthur
+    masks:
+      - '^King Arthur(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kingdom Under Fire - Heroes
+    masks:
+      - '^Kingdom Under Fire - Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kingdom Under Fire - The Crusaders
+    masks:
+      - '^Kingdom Under Fire - The Crusaders(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Knight's Apprentice - Memorick's Adventures
+    masks:
+      - '^Knight''s Apprentice - Memorick''s Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Knights of the Temple II
+    masks:
+      - '^Knights of the Temple II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Knights of the Temple - Infernal Crusade
+    masks:
+      - '^Knights of the Temple - Infernal Crusade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Knockout Kings 2002
+    masks:
+      - '^Knockout Kings 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: KOF - Maximum Impact - Maniax
+    masks:
+      - '^KOF - Maximum Impact - Maniax(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Kung Fu Chaos
+    masks:
+      - '^Kung Fu Chaos(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Kung Fu Panic(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: L.A. Rush
+    masks:
+      - '^L\.A\. Rush(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lakemasters - Bass Fishing Game
+    masks:
+      - '^Lakemasters - Bass Fishing Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lamborghini
+    masks:
+      - '^Lamborghini(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Land of the Dead - Road to Fiddler's Green
+    masks:
+      - '^Land of the Dead - Road to Fiddler''s Green(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lara Croft Tomb Raider - Legend
+    masks:
+      - '^Lara Croft Tomb Raider - Legend(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Largo Winch - Empire Under Threat
+    masks:
+      - '^Largo Winch - Empire Under Threat(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legacy of Kain - Defiance
+    masks:
+      - '^Legacy of Kain - Defiance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legends of Wrestling
+    masks:
+      - '^Legends of Wrestling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legends of Wrestling II
+    masks:
+      - '^Legends of Wrestling II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Star Wars II - The Original Trilogy
+    masks:
+      - '^LEGO Star Wars II - The Original Trilogy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Star Wars - The Video Game
+    masks:
+      - '^LEGO Star Wars - The Video Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LEGO Super Soccer Adventure
+    masks:
+      - '^LEGO Super Soccer Adventure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Leisure Suit Larry - Magna Cum Laude
+    masks:
+      - '^Leisure Suit Larry - Magna Cum Laude(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lemony Snicket's A Series of Unfortunate Events
+    masks:
+      - '^Desastreuses Aventures des Orphelins Baudelaire, Les - D''Apres Lemony Snicket(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Lemony Snicket - Raetselhafte Ereignisse(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Lemony Snicket''s A Series of Unfortunate Events(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Serie de Catastroficas Desdichas de Lemony Snicket, Una(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Links 2004
+    masks:
+      - '^Links 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LMA Manager 2003
+    masks:
+      - '^BDFL Manager 2003(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Football Manager Campionato 2003(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LMA Manager 2003(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Manager de Liga 2003(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Roger Lemerre - La Selection des Champions 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LMA Manager 2004
+    masks:
+      - '^BDFL Manager 2004(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Football Manager Campionato 2004(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LMA Manager 2004(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Manager de Liga 2004(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Roger Lemerre - La Selection des Champions 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LMA Manager 2005
+    masks:
+      - '^BDFL Manager 2005(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Football Manager Campionato 2005(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^LMA Manager 2005(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Manager de Liga 2005(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Roger Lemerre - La Selection des Champions 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LMA Manager 2006
+    masks:
+      - '^LMA Manager 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Loons - The Fight for Fame
+    masks:
+      - '^Loons - The Fight for Fame(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lotus Challenge
+    masks:
+      - '^Lotus Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: LucasArts Xbox Experience Volume 01
+    masks:
+      - '^LucasArts Xbox Experience Volume 01(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mace Griffin - Bounty Hunter
+    masks:
+      - '^Mace Griffin - Bounty Hunter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mad Dash Racing
+    masks:
+      - '^Mad Dash Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 06
+    masks:
+      - '^Madden NFL 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 07
+    masks:
+      - '^Madden NFL 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 08
+    masks:
+      - '^Madden NFL 08(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 09
+    masks:
+      - '^Madden NFL 09(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 2002
+    masks:
+      - '^Madden NFL 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 2003
+    masks:
+      - '^Madden NFL 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 2004
+    masks:
+      - '^Madden NFL 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Madden NFL 2005
+    masks:
+      - '^Madden NFL 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mafia
+    masks:
+      - '^Mafia(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Magatama
+    masks:
+      - '^Magatama(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Magi Death Fight!'
+    masks:
+      - '^Magi Death Fight!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Magic - The Gathering - Battlegrounds
+    masks:
+      - '^Magic - The Gathering - Battlegrounds(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Major League Baseball 2K5
+    masks:
+      - '^Major League Baseball 2K5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Major League Baseball 2K5 - World Series Edition
+    masks:
+      - '^Major League Baseball 2K5 - World Series Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Major League Baseball 2K6
+    masks:
+      - '^Major League Baseball 2K6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Major League Baseball 2K7
+    masks:
+      - '^Major League Baseball 2K7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Malice
+    masks:
+      - '^Malice(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Manchester United Manager 2005
+    masks:
+      - '^Manchester United Manager 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Manhunt
+    masks:
+      - '^Manhunt(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Marc Ecko's Getting Up - Contents Under Pressure
+    masks:
+      - '^Marc Ecko''s Getting Up - Contents Under Pressure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Marvel Nemesis - Rise of the Imperfects
+    masks:
+      - '^Marvel Nemesis - Rise of the Imperfects(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Marvel vs. Capcom 2 - New Age of Heroes
+    masks:
+      - '^Marvel vs\. Capcom 2 - New Age of Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Marvel - Ultimate Alliance
+    masks:
+      - '^Marvel - Ultimate Alliance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mashed - Drive to Survive
+    masks:
+      - '^Mashed - Drive to Survive(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mashed - Fully Loaded
+    masks:
+      - '^Mashed - Fully Loaded(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mat Hoffman's Pro BMX 2
+    masks:
+      - '^Mat Hoffman''s Pro BMX 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Max Payne
+    masks:
+      - '^Max Payne(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Max Payne 2 - The Fall of Max Payne
+    masks:
+      - '^Max Payne 2 - The Fall of Max Payne(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Maximum Chase
+    masks:
+      - '^Maximum Chase(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MechAssault
+    masks:
+      - '^MechAssault(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MechAssault 2 - Lone Wolf
+    masks:
+      - '^MechAssault 2 - Lone Wolf(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'MechAssault 2 - Lone Wolf & OutRun 2'
+    masks:
+      - '^MechAssault 2 - Lone Wolf & OutRun 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Medal of Honor - European Assault
+    masks:
+      - '^Medal of Honor - European Assault(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Medal of Honor - Les Faucons de Guerre(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Medal of Honor - Frontline
+    masks:
+      - '^Medal of Honor - En Premiere Ligne(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Medal of Honor - Frontline(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Medal of Honor - Rising Sun
+    masks:
+      - '^Medal of Honor - Rising Sun(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Medal of Honor - Soleil Levant(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mega Man Anniversary Collection
+    masks:
+      - '^Mega Man Anniversary Collection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Men of Valor
+    masks:
+      - '^Men of Valor(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mercenaries
+    masks:
+      - '^Mercenaries(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Arms - Glitch in the System
+    masks:
+      - '^Metal Arms - Glitch in the System(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Dungeon
+    masks:
+      - '^Metal Dungeon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Gear Solid 2 - Substance
+    masks:
+      - '^Metal Gear Solid 2 - Substance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Slug 3
+    masks:
+      - '^Metal Slug 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Slug 4
+    masks:
+      - '^Metal Slug 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Slug 5
+    masks:
+      - '^Metal Slug 5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Metal Wolf Chaos
+    masks:
+      - '^Metal Wolf Chaos(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Miami Vice
+    masks:
+      - '^Miami Vice(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Micro Machines
+    masks:
+      - '^Micro Machines(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Microsoft Game Studios New Year 2005
+    masks:
+      - '^Microsoft Game Studios New Year 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Microsoft Windows Media Center Extender for Xbox
+    masks:
+      - '^Microsoft Windows Media Center Extender for Xbox(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Microsoft Windows Media Center Extender for Xbox v1.01
+    masks:
+      - '^Microsoft Windows Media Center Extender for Xbox v1\.01(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midnight Club 3 - DUB Edition
+    masks:
+      - '^Midnight Club 3 - DUB Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midnight Club 3 - DUB Edition Remix
+    masks:
+      - '^Midnight Club 3 - DUB Edition Remix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midnight Club II
+    masks:
+      - '^Midnight Club II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midtown Madness 3
+    masks:
+      - '^Midtown Madness 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midway Arcade Treasures
+    masks:
+      - '^Midway Arcade Treasures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midway Arcade Treasures 2
+    masks:
+      - '^Midway Arcade Treasures 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Midway Arcade Treasures 3
+    masks:
+      - '^Midway Arcade Treasures 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Migong Zhengfuzhe
+    masks:
+      - '^Migong Zhengfuzhe(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mike Tyson Heavyweight Boxing
+    masks:
+      - '^Mike Tyson Heavyweight Boxing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Minority Report - Everybody Runs
+    masks:
+      - '^Minority Report - Everybody Runs(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Minority Report - Le Futur vous Rattrape(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mission - Impossible - Operation Surma
+    masks:
+      - '^Mission - Impossible - Operation Surma(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MLB SlugFest 2003
+    masks:
+      - '^MLB SlugFest 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MLB SlugFest 2004
+    masks:
+      - '^MLB SlugFest 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MLB SlugFest 2006
+    masks:
+      - '^MLB SlugFest 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MLB SlugFest - Loaded
+    masks:
+      - '^MLB SlugFest - Loaded(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Mojo!'
+    masks:
+      - '^Mojo!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monopoly Party
+    masks:
+      - '^Monopoly Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster 4x4 - World Circuit
+    masks:
+      - '^Monster 4x4 - World Circuit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Monster Garage
+    masks:
+      - '^Monster Garage(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mortal Kombat - Armageddon
+    masks:
+      - '^Mortal Kombat - Armageddon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mortal Kombat - Deadly Alliance
+    masks:
+      - '^Mortal Kombat - Deadly Alliance(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mortal Kombat - Deception
+    masks:
+      - '^Mortal Kombat - Deception(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Mortal Kombat - Deceptionector''s Edition Bonus Disc\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Mortal Kombat - Shaolin Monks
+    masks:
+      - '^Mortal Kombat - Shaolin Monks(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Motocross Mania 3
+    masks:
+      - '^Motocross Mania 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MotoGP
+    masks:
+      - '^MotoGP(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MotoGP 2
+    masks:
+      - '^MotoGP 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^MotoGP URT2 Online Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MotoGP - Ultimate Racing Technology 3
+    masks:
+      - '^MotoGP - Ultimate Racing Technology 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Motor Trend Presents Lotus Challenge
+    masks:
+      - '^Motor Trend Presents Lotus Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MTV Celebrity Deathmatch
+    masks:
+      - '^MTV Celebrity Deathmatch(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MTV Music Generator 3
+    masks:
+      - '^MTV Music Generator 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MTV Music Generator 3 - This Is the Remix
+    masks:
+      - '^MTV Music Generator 3 - This Is the Remix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MTX Mototrax
+    masks:
+      - '^MTX Mototrax(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Murakumo - Renegade Mech Pursuit
+    masks:
+      - '^Murakumo(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Murakumo - Renegade Mech Pursuit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Muzzle Flash
+    masks:
+      - '^Muzzle Flash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MVP 06 NCAA Baseball
+    masks:
+      - '^MVP 06 NCAA Baseball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MVP Baseball 2003
+    masks:
+      - '^MVP Baseball 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MVP Baseball 2004
+    masks:
+      - '^MVP Baseball 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MVP Baseball 2005
+    masks:
+      - '^MVP Baseball 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MX 2002 featuring Ricky Carmichael
+    masks:
+      - '^MX 2002 featuring Ricky Carmichael(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MX SuperFly
+    masks:
+      - '^MX SuperFly(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MX Unleashed
+    masks:
+      - '^MX Unleashed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MX vs. ATV Unleashed
+    masks:
+      - '^MX vs\. ATV Unleashed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: MX World Tour featuring Jamie Little
+    masks:
+      - '^MX World Tour featuring Jamie Little(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Myst III - Exile
+    masks:
+      - '^Myst III - Exile(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Myst IV - Revelation
+    masks:
+      - '^Myst IV - Revelation(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'N.U.D.E.@ - Natural Ultimate Digital Experiment'
+    masks:
+      - '^N\.U\.D\.E\.@ - Natural Ultimate Digital Experiment(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nakajima Tetsuya no Othello Seminar
+    masks:
+      - '^Nakajima Tetsuya no Othello Seminar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Namco Museum
+    masks:
+      - '^Namco Museum(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Namco Museum 50th Anniversary
+    masks:
+      - '^Namco Museum 50th Anniversary(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Narc
+    masks:
+      - '^Narc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR 06 - Total Team Control
+    masks:
+      - '^NASCAR 06 - Total Team Control(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR 07
+    masks:
+      - '^NASCAR 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR 2005 - Chase for the Cup
+    masks:
+      - '^NASCAR 2005 - Chase for the Cup(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR Heat 2002
+    masks:
+      - '^NASCAR Heat 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR Thunder 2002
+    masks:
+      - '^NASCAR Thunder 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR Thunder 2003
+    masks:
+      - '^NASCAR Thunder 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NASCAR Thunder 2004
+    masks:
+      - '^NASCAR Thunder 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA 2K2
+    masks:
+      - '^NBA 2K2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA 2K3
+    masks:
+      - '^NBA 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA 2K6
+    masks:
+      - '^NBA 2K6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA 2K7
+    masks:
+      - '^NBA 2K7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Ballers
+    masks:
+      - '^NBA Ballers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Ballers - Phenom
+    masks:
+      - '^NBA Ballers - Phenom(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Ballers - Phenom - The $100K Tournament
+    masks:
+      - '^NBA Ballers - Phenom - The \$100K Tournament(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Inside Drive 2002
+    masks:
+      - '^NBA Inside Drive 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Inside Drive 2003
+    masks:
+      - '^NBA Inside Drive 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Inside Drive 2004
+    masks:
+      - '^NBA Inside Drive 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Jam
+    masks:
+      - '^NBA Jam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 06
+    masks:
+      - '^NBA Live 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 07
+    masks:
+      - '^NBA Live 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 2002
+    masks:
+      - '^NBA Live 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 2003
+    masks:
+      - '^NBA Live 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 2004
+    masks:
+      - '^NBA Live 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Live 2005
+    masks:
+      - '^NBA Live 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Starting Five
+    masks:
+      - '^NBA Starting Five(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Street V3
+    masks:
+      - '^NBA Street V3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NBA Street Vol. 2
+    masks:
+      - '^NBA Street Vol\. 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA College Basketball 2K3
+    masks:
+      - '^NCAA College Basketball 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA College Football 2K3
+    masks:
+      - '^NCAA College Football 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 06
+    masks:
+      - '^NCAA Football 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 07
+    masks:
+      - '^NCAA Football 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 08
+    masks:
+      - '^NCAA Football 08(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 2003
+    masks:
+      - '^NCAA Football 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 2004
+    masks:
+      - '^NCAA Football 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA Football 2005
+    masks:
+      - '^NCAA Football 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'NCAA Football 2005 & Top Spin'
+    masks:
+      - '^NCAA Football 2005 & Top Spin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA March Madness 06
+    masks:
+      - '^NCAA March Madness 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA March Madness 2004
+    masks:
+      - '^NCAA March Madness 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NCAA March Madness 2005
+    masks:
+      - '^NCAA March Madness 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Carbon
+    masks:
+      - '^Need for Speed - Carbon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Hot Pursuit 2
+    masks:
+      - '^Need for Speed - Hot Pursuit 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Most Wanted
+    masks:
+      - '^Need for Speed - Most Wanted(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Most Wanted - Black Edition
+    masks:
+      - '^Need for Speed - Most Wanted - Black Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Underground
+    masks:
+      - '^Need for Speed - Underground(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Need for Speed - Underground 2
+    masks:
+      - '^Need for Speed - Underground 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Neighbours from Hell
+    masks:
+      - '^Neighbours from Hell(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: New Legends
+    masks:
+      - '^New Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nezmix
+    masks:
+      - '^Nezmix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL 2K2
+    masks:
+      - '^NFL 2K2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL 2K3
+    masks:
+      - '^NFL 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Blitz 2002
+    masks:
+      - '^NFL Blitz 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Blitz 2003
+    masks:
+      - '^NFL Blitz 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Blitz Pro
+    masks:
+      - '^NFL Blitz Pro(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Fever 2002
+    masks:
+      - '^NFL Fever 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Fever 2003
+    masks:
+      - '^NFL Fever 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Fever 2004
+    masks:
+      - '^NFL Fever 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Head Coach
+    masks:
+      - '^NFL Head Coach(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Street
+    masks:
+      - '^NFL Street(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NFL Street 2
+    masks:
+      - '^NFL Street 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 06
+    masks:
+      - '^NHL 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 07
+    masks:
+      - '^NHL 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2002
+    masks:
+      - '^NHL 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2003
+    masks:
+      - '^NHL 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2004
+    masks:
+      - '^NHL 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2005
+    masks:
+      - '^NHL 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2K3
+    masks:
+      - '^NHL 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2K6
+    masks:
+      - '^NHL 2K6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL 2K7
+    masks:
+      - '^NHL 2K7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL Hitz 2002
+    masks:
+      - '^NHL Hitz 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL Hitz 2003
+    masks:
+      - '^NHL Hitz 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL Hitz Pro
+    masks:
+      - '^NHL Hitz Pro(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: NHL Rivals 2004
+    masks:
+      - '^NHL Rivals 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon Avatar - The Last Airbender
+    masks:
+      - '^Nickelodeon Avatar - The Last Airbender(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon Party Blast
+    masks:
+      - '^Nickelodeon Party Blast(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom
+    masks:
+      - '^Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Nickelodeon SpongeBob SquarePants - Lights, Camera, Pants!'
+    masks:
+      - '^Nickelodeon SpongeBob SquarePants - Lights, Camera, Pants!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon Tak 2 - The Staff of Dreams
+    masks:
+      - '^Nickelodeon Tak 2 - The Staff of Dreams(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon Tak - The Great Juju Challenge
+    masks:
+      - '^Nickelodeon Tak - Die grosse Juju-Jagd(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Nickelodeon Tak - The Great Juju Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nickelodeon The SpongeBob SquarePants Movie
+    masks:
+      - '^Nickelodeon SpongeBob Schwammkopf - Der Film(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Nickelodeon The SpongeBob SquarePants Movie(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Night Caster II - Equinox
+    masks:
+      - '^Night Caster II - Equinox(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Night Caster - Defeat the Darkness
+    masks:
+      - '^Night Caster - Defeat the Darkness(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ninja Gaiden
+    masks:
+      - '^Ninja Gaiden(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ninja Gaiden Black
+    masks:
+      - '^Ninja Gaiden Black(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Ninja Gaiden Video & Dead or Alive X-Treme Beach Volleyball Video & DOA 3 Bonus Materials'
+    masks:
+      - '^Ninja Gaiden Video & Dead or Alive X-Treme Beach Volleyball Video & DOA 3 Bonus Materials(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Nobunaga no Yabou - Ranseiki
+    masks:
+      - '^Nobunaga no Yabou - Ranseiki(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Obscure
+    masks:
+      - '^Obscure(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Oddworld - Munch's Oddysee
+    masks:
+      - '^Oddworld - Munch''s Oddysee(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Oddworld - Stranger's Wrath
+    masks:
+      - '^Oddworld - La Fureur de l''Etranger(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Oddworld - Stranger''s Wrath(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Oddworld - Strangers Vergeltung(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Off-Road - Wide Open
+    masks:
+      - '^Off-Road - Wide Open(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Best of Xbox Game Demos Vol. 1
+    masks:
+      - '^Official Xbox Magazine Best of Xbox Game Demos Vol\. 1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 01
+    masks:
+      - '^Official Xbox Magazine Game Disc 01(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 02
+    masks:
+      - '^Official Xbox Magazine Game Disc 02(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 03
+    masks:
+      - '^Official Xbox Magazine Game Disc 03(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 04
+    masks:
+      - '^Official Xbox Magazine Game Disc 04(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 05
+    masks:
+      - '^Official Xbox Magazine Game Disc 05(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 06
+    masks:
+      - '^Official Xbox Magazine Game Disc 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 07
+    masks:
+      - '^Official Xbox Magazine Game Disc 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 08
+    masks:
+      - '^Official Xbox Magazine Game Disc 08(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 09
+    masks:
+      - '^Official Xbox Magazine Game Disc 09(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 10
+    masks:
+      - '^Official Xbox Magazine Game Disc 10(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 11
+    masks:
+      - '^Official Xbox Magazine Game Disc 11(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 12
+    masks:
+      - '^Official Xbox Magazine Game Disc 12(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 13
+    masks:
+      - '^Official Xbox Magazine Game Disc 13(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 14
+    masks:
+      - '^Official Xbox Magazine Game Disc 14(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 15
+    masks:
+      - '^Official Xbox Magazine Game Disc 15(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 16
+    masks:
+      - '^Official Xbox Magazine Game Disc 16(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 17
+    masks:
+      - '^Official Xbox Magazine Game Disc 17(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 18
+    masks:
+      - '^Official Xbox Magazine Game Disc 18(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 19
+    masks:
+      - '^Official Xbox Magazine Game Disc 19(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 20
+    masks:
+      - '^Official Xbox Magazine Game Disc 20(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 21
+    masks:
+      - '^Official Xbox Magazine Game Disc 21(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 22
+    masks:
+      - '^Official Xbox Magazine Game Disc 22(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 23
+    masks:
+      - '^Official Xbox Magazine Game Disc 23(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 24
+    masks:
+      - '^Official Xbox Magazine Game Disc 24(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 25
+    masks:
+      - '^Official Xbox Magazine Game Disc 25(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 26
+    masks:
+      - '^Official Xbox Magazine Game Disc 26(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 27
+    masks:
+      - '^Official Xbox Magazine Game Disc 27(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 28
+    masks:
+      - '^Official Xbox Magazine Game Disc 28(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 29
+    masks:
+      - '^Official Xbox Magazine Game Disc 29(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 30
+    masks:
+      - '^Official Xbox Magazine Game Disc 30(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 31
+    masks:
+      - '^Official Xbox Magazine Game Disc 31(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 32
+    masks:
+      - '^Official Xbox Magazine Game Disc 32(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 33
+    masks:
+      - '^Official Xbox Magazine Game Disc 33(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 34
+    masks:
+      - '^Official Xbox Magazine Game Disc 34(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 35
+    masks:
+      - '^Official Xbox Magazine Game Disc 35(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 36
+    masks:
+      - '^Official Xbox Magazine Game Disc 36(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 37
+    masks:
+      - '^Official Xbox Magazine Game Disc 37(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 38
+    masks:
+      - '^Official Xbox Magazine Game Disc 38(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 39
+    masks:
+      - '^Official Xbox Magazine Game Disc 39(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 40
+    masks:
+      - '^Official Xbox Magazine Game Disc 40(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 41
+    masks:
+      - '^Official Xbox Magazine Game Disc 41(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 42
+    masks:
+      - '^Official Xbox Magazine Game Disc 42(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 43
+    masks:
+      - '^Official Xbox Magazine Game Disc 43(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 44
+    masks:
+      - '^Official Xbox Magazine Game Disc 44(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 45
+    masks:
+      - '^Official Xbox Magazine Game Disc 45(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 46
+    masks:
+      - '^Official Xbox Magazine Game Disc 46(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 47
+    masks:
+      - '^Official Xbox Magazine Game Disc 47(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 48
+    masks:
+      - '^Official Xbox Magazine Game Disc 48(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 49
+    masks:
+      - '^Official Xbox Magazine Game Disc 49(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 50
+    masks:
+      - '^Official Xbox Magazine Game Disc 50(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 51
+    masks:
+      - '^Official Xbox Magazine Game Disc 51(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 52
+    masks:
+      - '^Official Xbox Magazine Game Disc 52(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 53
+    masks:
+      - '^Official Xbox Magazine Game Disc 53(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 54
+    masks:
+      - '^Official Xbox Magazine Game Disc 54(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 55
+    masks:
+      - '^Official Xbox Magazine Game Disc 55(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 56
+    masks:
+      - '^Official Xbox Magazine Game Disc 56(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 57
+    masks:
+      - '^Official Xbox Magazine Game Disc 57(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 58
+    masks:
+      - '^Official Xbox Magazine Game Disc 58(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 59
+    masks:
+      - '^Official Xbox Magazine Game Disc 59(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 60
+    masks:
+      - '^Official Xbox Magazine Game Disc 60(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 61
+    masks:
+      - '^Official Xbox Magazine Game Disc 61(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 62
+    masks:
+      - '^Official Xbox Magazine Game Disc 62(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 63
+    masks:
+      - '^Official Xbox Magazine Game Disc 63(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Magazine Game Disc 64
+    masks:
+      - '^Official Xbox Magazine Game Disc 64(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Open Season
+    masks:
+      - '^Open Season(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Operation Flashpoint - Elite
+    masks:
+      - '^Operation Flashpoint - Elite(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Operation WinBack 2 - Project Poseidon
+    masks:
+      - '^Operation WinBack 2 - Project Poseidon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Otogi 2 - Immortal Warriors
+    masks:
+      - '^Otogi - Hyakki Toubatsu Emaki(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Otogi 2 - Immortal Warriors(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Otogi - Myth of Demons
+    masks:
+      - '^Otogi(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Otogi - Myth of Demons(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Golf
+    masks:
+      - '^Outlaw Golf(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Golf 2
+    masks:
+      - '^Outlaw Golf 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Golf - 9 Holes of X-Mas
+    masks:
+      - '^Outlaw Golf - 9 Holes of X-Mas(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Golf - 9 More Holes of X-Mas
+    masks:
+      - '^Outlaw Golf - 9 More Holes of X-Mas(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Golf - Holiday Golf
+    masks:
+      - '^Outlaw Golf - Holiday Golf(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Tennis
+    masks:
+      - '^Outlaw Tennis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Volleyball
+    masks:
+      - '^Outlaw Volleyball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Outlaw Volleyball - Red Hot
+    masks:
+      - '^Outlaw Volleyball - Red Hot(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: OutRun 2
+    masks:
+      - '^OutRun 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: OutRun 2006 - Coast 2 Coast
+    masks:
+      - '^OutRun 2006 - Coast 2 Coast(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pac-Man World 2
+    masks:
+      - '^Pac-Man World 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pac-Man World 3
+    masks:
+      - '^Pac-Man World 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Painkiller - Hell Wars
+    masks:
+      - '^Painkiller - Hell Wars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Panzer Dragoon Orta
+    masks:
+      - '^Panzer Dragoon Orta(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Panzer Elite Action - Fields of Glory
+    masks:
+      - '^Panzer Elite Action - Fields of Glory(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pariah
+    masks:
+      - '^Pariah(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Peter Jackson's King Kong - The Official Game of the Movie
+    masks:
+      - '^Peter Jackson''s King Kong - The Official Game of the Movie(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Petit Copter
+    masks:
+      - '^Petit Copter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Phantasy Star Online Episode I & II'
+    masks:
+      - '^Phantasy Star Online - Episode I & II(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Phantasy Star Online Episode I & II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Phantom Crash
+    masks:
+      - '^Phantom Crash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Phantom Dust
+    masks:
+      - '^Phantom Dust(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pilot Down - Behind Enemy Lines
+    masks:
+      - '^Pilot Down - Behind Enemy Lines(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pinball Hall of Fame - The Gottlieb Collection
+    masks:
+      - '^Pinball Hall of Fame - The Gottlieb Collection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pirates of the Caribbean
+    masks:
+      - '^Pirates of the Caribbean(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pirates - The Legend of Black Kat
+    masks:
+      - '^Pirates - The Legend of Black Kat(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pitfall - The Lost Expedition
+    masks:
+      - '^Pitfall - The Lost Expedition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Playboy - The Mansion
+    masks:
+      - '^Playboy - The Mansion(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Plus Plumb 2
+    masks:
+      - '^Plus Plumb 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: PocketBike Racer
+    masks:
+      - '^PocketBike Racer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pool Shark 2
+    masks:
+      - '^Pool Shark 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Power Drome
+    masks:
+      - '^Power Drome(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Powerdrome
+    masks:
+      - '^Powerdrome(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Predator - Concrete Jungle
+    masks:
+      - '^Predator - Concrete Jungle(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Prince of Persia - The Sands of Time
+    masks:
+      - '^Prince of Persia - Kenshi no Kokoro(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Prince of Persia - The Sands of Time(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Prince of Persia - The Two Thrones
+    masks:
+      - '^Prince of Persia - The Two Thrones(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Prince of Persia - Warrior Within
+    masks:
+      - '^Prince of Persia - Warrior Within(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Prisoner of War
+    masks:
+      - '^Prisoner of War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pro Beach Soccer
+    masks:
+      - '^Pro Beach Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pro Cast - Sports Fishing Game
+    masks:
+      - '^Pro Cast - Sports Fishing Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Soccer Winning Eleven 8 - International
+    masks:
+      - '^Pro Evolution Soccer 4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^World Soccer Winning Eleven 8 - International(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Soccer Winning Eleven 9
+    masks:
+      - '^Pro Evolution Soccer 5(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^World Soccer Winning Eleven 9(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pro Fishing Challenge
+    masks:
+      - '^Pro Fishing Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pro Race Driver
+    masks:
+      - '^Pro Race Driver(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pro Tennis WTA Tour
+    masks:
+      - '^Pro Tennis WTA Tour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project Gotham Racing
+    masks:
+      - '^Project Gotham - World Street Racer(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Project Gotham Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project Gotham Racing 2
+    masks:
+      - '^Project Gotham Racing 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Project Gotham Racing 20 Edition\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Project Gotham Racing 2m Edition\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project Zero
+    masks:
+      - '^Project Zero(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project Zero II - Crimson Butterfly - Director's Cut
+    masks:
+      - '^Project Zero II - Crimson Butterfly - Director''s Cut(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Project - Snowblind
+    masks:
+      - '^Project - Snowblind(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ProStroke Golf - World Tour 2007
+    masks:
+      - '^ProStroke Golf - World Tour 2007(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Psi-Ops - The Mindgate Conspiracy
+    masks:
+      - '^Psi-Ops - The Mindgate Conspiracy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Psychonauts
+    masks:
+      - '^Psychonauts(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Psyvariar 2 - Extend Edition
+    masks:
+      - '^Psyvariar 2 - Extend Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pulse Racer
+    masks:
+      - '^Pulse Racer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pump It Up - Exceed
+    masks:
+      - '^Pump It Up - Exceed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Pure Pinball
+    masks:
+      - '^Pure Pinball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Puyo Pop Fever
+    masks:
+      - '^Puyo Pop Fever(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Puyo Puyo Fever(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Quantum Redshift
+    masks:
+      - '^Quantum Redshift(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Quantum Redshift - Chou Kousoku Kuukan Battle Race(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: R-Racing
+    masks:
+      - '^R-Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: R-Racing Evolution
+    masks:
+      - '^R-Racing Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^R-Racing Evolution - Life in the Fast Lane(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Racing Evoluzione
+    masks:
+      - '^Racing Evoluzione(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RalliSport Challenge
+    masks:
+      - '^RalliSport Challenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RalliSport Challenge 2
+    masks:
+      - '^RalliSport Challenge 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rally Fusion - Race of Champions
+    masks:
+      - '^Rally Fusion - Race of Champions(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rapala Pro Fishing
+    masks:
+      - '^Rapala Pro Fishing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rayman 3 - Hoodlum Havoc
+    masks:
+      - '^Rayman 3 - Hoodlum Havoc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rayman Arena
+    masks:
+      - '^Rayman Arena(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Raze's Hell
+    masks:
+      - '^Raze''s Hell(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Re-Volt
+    masks:
+      - '^Re-Volt(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Real World Golf
+    masks:
+      - '^Real World Golf(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Red Dead Revolver
+    masks:
+      - '^Red Dead Revolver(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Red Faction II
+    masks:
+      - '^Red Faction II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Red Ninja - End of Honor
+    masks:
+      - '^Red Ninja - End of Honor(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Red Ninja - End of Honour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RedCard
+    masks:
+      - '^RedCard(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RedCard 20-03
+    masks:
+      - '^RedCard 20-03(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Reign of Fire
+    masks:
+      - '^Reign of Fire(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rent a Hero No. 1
+    masks:
+      - '^Rent a Hero No\. 1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Reservoir Dogs
+    masks:
+      - '^Reservoir Dogs(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Return to Castle Wolfenstein - Tides of War
+    masks:
+      - '^Return to Castle Wolfenstein - Tides of War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Richard Burns Rally
+    masks:
+      - '^Richard Burns Rally(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ricky Ponting International Cricket 2005
+    masks:
+      - '^Ricky Ponting International Cricket 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RLH - Run Like Hell
+    masks:
+      - '^RLH - Run Like Hell(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RoadKill
+    masks:
+      - '^RoadKill(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Robin Hood - Defender of the Crown
+    masks:
+      - '^Robin Hood - Defender of the Crown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RoboCop
+    masks:
+      - '^RoboCop(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Robot Wars - Extreme Destruction
+    masks:
+      - '^Robot Wars - Extreme Destruction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Robotech - Battlecry
+    masks:
+      - '^Robotech - Battlecry(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Robotech - Invasion
+    masks:
+      - '^Robotech - Invasion(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Robots
+    masks:
+      - '^Robots(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rocky
+    masks:
+      - '^Rocky(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rocky Legends
+    masks:
+      - '^Rocky Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rogue Ops
+    masks:
+      - '^Rogue Ops(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rogue Trooper
+    masks:
+      - '^Rogue Trooper(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RollerCoaster Tycoon
+    masks:
+      - '^RollerCoaster Tycoon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rolling
+    masks:
+      - '^Rolling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Room Zoom - Race for Impact
+    masks:
+      - '^Room Zoom - Race for Impact(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: RPM Tuning
+    masks:
+      - '^RPM Tuning(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rugby 06
+    masks:
+      - '^Rugby 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rugby 2005
+    masks:
+      - '^Rugby 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rugby Challenge 2006
+    masks:
+      - '^Rugby Challenge 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rugby League
+    masks:
+      - '^Rugby League(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Rugby League 2
+    masks:
+      - '^Rugby League 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Samurai Shodown V
+    masks:
+      - '^Samurai Shodown V(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Samurai Warriors
+    masks:
+      - '^Samurai Warriors(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Sengoku Musou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Scaler
+    masks:
+      - '^Scaler(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SCAR - Squadra Corse Alfa Romeo
+    masks:
+      - '^SCAR - Squadra Corse Alfa Romeo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Scarface - The World Is Yours
+    masks:
+      - '^Scarface - The World Is Yours(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Scooby-Doo! Mystery Mayhem'
+    masks:
+      - '^Scooby-Doo! Mystery Mayhem(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Scooby-Doo! Night of 100 Frights'
+    masks:
+      - '^Scooby-Doo! Night of 100 Frights(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Scooby-Doo! Unmasked'
+    masks:
+      - '^Scooby-Doo! Unmasked(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SeaBlade
+    masks:
+      - '^SeaBlade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SeaWorld Adventure Parks - Shamu's Deep Sea Adventures
+    masks:
+      - '^SeaWorld Adventure Parks - Shamu''s Deep Sea Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Second Sight
+    masks:
+      - '^Second Sight(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Secret Weapons over Normandy
+    masks:
+      - '^Secret Weapons over Normandy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sega GT 2002
+    masks:
+      - '^Sega GT 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Sega GT 2002 & JSRF - Jet Set Radio Future'
+    masks:
+      - '^Sega GT 2002 & JSRF - Jet Set Radio Future(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sega GT Online
+    masks:
+      - '^Sega GT Online(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sega Soccer Slam
+    masks:
+      - '^Sega Soccer Slam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sensible Soccer 2006
+    masks:
+      - '^Sensible Soccer 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sentou Yousei Yukikaze - Yousei no Mau Sora
+    masks:
+      - '^Sentou Yousei Yukikaze - Yousei no Mau Sora(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Serious Sam
+    masks:
+      - '^Serious Sam(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Serious Sam II
+    masks:
+      - '^Serious Sam II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shadow of Memories
+    masks:
+      - '^Shadow of Memories(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shadow Ops - Red Mercury
+    masks:
+      - '^Shadow Ops - Red Mercury(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shadow the Hedgehog
+    masks:
+      - '^Shadow the Hedgehog(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shattered Union
+    masks:
+      - '^Shattered Union(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: ShellShock - Nam '67
+    masks:
+      - '^ShellShock - Nam ''67(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shenmue II
+    masks:
+      - '^Shenmue II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shikigami no Shiro
+    masks:
+      - '^Shikigami no Shiro(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shikigami no Shiro Evolution
+    masks:
+      - '^Shikigami no Shiro Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shikigami no Shiro II
+    masks:
+      - '^Shikigami no Shiro II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shin Megami Tensei - Nine
+    masks:
+      - '^Shin Megami Tensei - Nine(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shinchou Mahjong
+    masks:
+      - '^Shinchou Mahjong(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Showdown - Legends of Wrestling
+    masks:
+      - '^Showdown - Legends of Wrestling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shrek
+    masks:
+      - '^Shrek(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shrek 2
+    masks:
+      - '^Shrek 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Shrek Super Party
+    masks:
+      - '^Shrek Super Party(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Sid Meier''s Pirates!'
+    masks:
+      - '^Sid Meier''s Pirates!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Silent Hill 2 - Inner Fears
+    masks:
+      - '^Silent Hill 2 - Inner Fears(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Silent Hill 2 - Restless Dreams
+    masks:
+      - '^Silent Hill 2 - Restless Dreams(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Silent Hill 2 - Saigo no Uta(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Silent Hill 4 - The Room
+    masks:
+      - '^Silent Hill 4 - The Room(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Silent Scope Complete
+    masks:
+      - '^Silent Scope Complete(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ski Racing 2005
+    masks:
+      - '^Ski Racing 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ski Racing 2006
+    masks:
+      - '^Ski Racing 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Slam Tennis
+    masks:
+      - '^Slam Tennis(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Smashing Drive
+    masks:
+      - '^Smashing Drive(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sneak King
+    masks:
+      - '^Sneak King(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sneakers
+    masks:
+      - '^Sneakers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sniper Elite
+    masks:
+      - '^Sniper Elite(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SNK vs. Capcom - SVC Chaos
+    masks:
+      - '^SNK vs\. Capcom - SVC Chaos(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Soldier of Fortune II - Double Helix
+    masks:
+      - '^Soldier of Fortune II - Double Helix(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sonic Heroes
+    masks:
+      - '^Sonic Heroes(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sonic Mega Collection Plus
+    masks:
+      - '^Sonic Mega Collection Plus(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sonic Riders
+    masks:
+      - '^Sonic Riders(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Soulcalibur II
+    masks:
+      - '^Soulcalibur II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spartan - Total Warrior
+    masks:
+      - '^Spartan - Total Warrior(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spawn - Armageddon
+    masks:
+      - '^Spawn - Armageddon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Speed Kings
+    masks:
+      - '^Speed Kings(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sphinx and the Cursed Mummy
+    masks:
+      - '^Sphinx and the Cursed Mummy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spider-Man
+    masks:
+      - '^Spider-Man(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spider-Man 2
+    masks:
+      - '^Spider-Man 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spikeout - Battle Street
+    masks:
+      - '^Spikeout - Battle Street(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Splashdown
+    masks:
+      - '^Splashdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Splat Magazine Renegade Paintball
+    masks:
+      - '^Splat Magazine Renegade Paintball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spy vs. Spy
+    masks:
+      - '^Spy vs\. Spy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SpyHunter
+    masks:
+      - '^SpyHunter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SpyHunter 2
+    masks:
+      - '^SpyHunter 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SpyHunter - Nowhere to Run
+    masks:
+      - '^SpyHunter - Nowhere to Run(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Spyro - A Hero's Tail
+    masks:
+      - '^Spyro - A Hero''s Tail(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SRS - Street Racing Syndicate
+    masks:
+      - '^SRS - Street Racing Syndicate(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SSX 3
+    masks:
+      - '^SSX 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SSX on Tour
+    masks:
+      - '^SSX on Tour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SSX Tricky
+    masks:
+      - '^SSX Tricky(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Stacked with Daniel Negreanu
+    masks:
+      - '^Stacked with Daniel Negreanu(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Stake - Fortune Fighters
+    masks:
+      - '^Stake - Fortune Fighters(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Trek - Shattered Universe
+    masks:
+      - '^Star Trek - Shattered Universe(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Battlefront
+    masks:
+      - '^Star Wars - Battlefront(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Battlefront II
+    masks:
+      - '^Star Wars - Battlefront II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Episode III - Revenge of the Sith
+    masks:
+      - '^Star Wars - Episode III - Die Rache der Sith(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - Episode III - La Revanche des Sith(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - Episode III - Revenge of the Sith(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Jedi Knight II - Jedi Outcast
+    masks:
+      - '^Star Wars - Jedi Knight II - Jedi Outcast(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Jedi Knight - Jedi Academy
+    masks:
+      - '^Star Wars - Jedi Knight - Jedi Academy(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Jedi Starfighter
+    masks:
+      - '^Star Wars - Jedi Starfighter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Knights of the Old Republic
+    masks:
+      - '^Star Wars - Caballeros de la Antigua Republica(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - Knights of the Old Republic(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Knights of the Old Republic II - The Sith Lords
+    masks:
+      - '^Star Wars - Caballeros de la Antigua Republica II - Los Senores Sith(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - Knights of the Old Republic II - The Sith Lords(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Obi-Wan
+    masks:
+      - '^Star Wars - Obi-Wan(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Republic Commando
+    masks:
+      - '^Star Wars - Republic Commando(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - Starfighter Special Edition
+    masks:
+      - '^Star Wars - Starfighter Special Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Star Wars - The Clone Wars
+    masks:
+      - '^Star Wars - La Guerra dei Cloni(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - Las Guerras Clon(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Star Wars - The Clone Wars(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Star Wars - The Clone Wars & Tetris Worlds'
+    masks:
+      - '^Star Wars - The Clone Wars & Tetris Worlds(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Starsky & Hutch'
+    masks:
+      - '^Starsky & Hutch(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: State of Emergency
+    masks:
+      - '^State of Emergency(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Steel Battalion
+    masks:
+      - '^Steel Battalion(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tekki(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Still Life
+    masks:
+      - '^Still Life(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Stolen
+    masks:
+      - '^Stolen(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Street Fighter Anniversary Collection
+    masks:
+      - '^Street Fighter Anniversary Collection(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Street Hoops
+    masks:
+      - '^Street Hoops(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Strike Force Bowling
+    masks:
+      - '^Strike Force Bowling(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Stubbs the Zombie in Rebel Without a Pulse
+    masks:
+      - '^Stubbs the Zombie in Rebel Without a Pulse(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sudeki
+    masks:
+      - '^Sudeki(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Sudeki - Sennen no Akatsuki no Monogatari(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Super Bubble Pop
+    masks:
+      - '^Super Bubble Pop(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Super Monkey Ball Deluxe
+    masks:
+      - '^Super Monkey Ball Deluxe(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Superman Returns
+    masks:
+      - '^Superman Returns(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Superman - The Man of Steel
+    masks:
+      - '^Superman - The Man of Steel(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SWAT - Global Strike Team
+    masks:
+      - '^SWAT - Global Strike Team(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: SX Superstar
+    masks:
+      - '^SX Superstar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Syberia
+    masks:
+      - '^Syberia(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Syberia II
+    masks:
+      - '^Syberia II(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Taito Legends
+    masks:
+      - '^Taito Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Taito Legends 2
+    masks:
+      - '^Taito Legends 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Takahashi Junko no Mahjong Seminar
+    masks:
+      - '^Takahashi Junko no Mahjong Seminar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tao Feng - Fist of the Lotus
+    masks:
+      - '^Tao Feng - Fist of the Lotus(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Taz - Wanted
+    masks:
+      - '^Taz - Wanted(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TD Overdrive - The Brotherhood of Speed
+    masks:
+      - '^TD Overdrive - The Brotherhood of Speed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tecmo Classic Arcade
+    masks:
+      - '^Tecmo Classic Arcade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Teen Titans
+    masks:
+      - '^Teen Titans(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Teenage Mutant Ninja Turtles
+    masks:
+      - '^Teenage Mutant Ninja Turtles(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Teenage Mutant Ninja Turtles 2 - Battle Nexus
+    masks:
+      - '^Teenage Mutant Ninja Turtles 2 - Battle Nexus(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Teenage Mutant Ninja Turtles 3 - Mutant Nightmare
+    masks:
+      - '^Teenage Mutant Ninja Turtles 3 - Mutant Nightmare(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tekki Taisen - Steel Battalion - Line of Contact
+    masks:
+      - '^Tekki Taisen - Steel Battalion - Line of Contact(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tenchu - Return from Darkness
+    masks:
+      - '^Tenchu - Return from Darkness(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tenchu 3 - Kaiki no Shou(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tenerezza
+    masks:
+      - '^Tenerezza(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tennis Masters Series 2003
+    masks:
+      - '^Tennis Masters Series 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Terminator 3 - Rise of the Machines
+    masks:
+      - '^Terminator 3 - Rise of the Machines(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Terminator 3 - The Redemption
+    masks:
+      - '^Terminator 3 - The Redemption(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Test Drive
+    masks:
+      - '^Test Drive(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Test Drive Off-Road - Wide Open
+    masks:
+      - '^Test Drive Off-Road - Wide Open(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Test Drive - Eve of Destruction
+    masks:
+      - '^Test Drive - Eve of Destruction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Test Equipment Boot Loader Utility
+    masks:
+      - '^Test Equipment Boot Loader Utility(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tetris Worlds
+    masks:
+      - '^Tetris Worlds(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Tetris Worldsne Enabled\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 100 Best Xbox Games Game Disc, The
+    masks:
+      - '^100 Best Xbox Games Game Disc, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 20 Best Xbox Action Games Game Disc, The
+    masks:
+      - '^20 Best Xbox Action Games Game Disc, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bard's Tale, The
+    masks:
+      - '^Bard''s Tale, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Baseball 2002, The - Battle Ball Park Sengen
+    masks:
+      - '^Baseball 2002, The - Battle Ball Park Sengen(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Bible Game, The
+    masks:
+      - '^Bible Game, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Cat in the Hat, The
+    masks:
+      - '^Cat in the Hat, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Chronicles of Narnia, The - The Lion, the Witch and the Wardrobe
+    masks:
+      - '^Chronicles of Narnia, The - The Lion, the Witch and the Wardrobe(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Chroniken von Narnia, Die - Der Koenig von Narnia(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Monde de Narnia, Le - Chapitre 1 - Le Lion, la Sorciere Blanche et l''Armoire Magique(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Chronicles of Riddick, The - Escape from Butcher Bay
+    masks:
+      - '^Chronicles of Riddick, The - Escape from Butcher Bay(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Da Vinci Code, The
+    masks:
+      - '^Da Vinci Code, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Dukes of Hazzard, The - Return of the General Lee
+    masks:
+      - '^Dukes of Hazzard, The - Return of the General Lee(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Elder Scrolls III, The - Morrowind
+    masks:
+      - '^Elder Scrolls III, The - Morrowind(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Elder Scrolls III, The - Morrowind - Game of the Year Edition
+    masks:
+      - '^Elder Scrolls III, The - Morrowind - Game of the Year Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Fairly OddParents, The - Breakin' da Rules
+    masks:
+      - '^Fairly OddParents, The - Breakin'' da Rules(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Godfather, The
+    masks:
+      - '^Godfather, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Godfather, The - The Game
+    masks:
+      - '^Godfather, The - The Game(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Padrino, El(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Padrino, Il(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Parrain, Le(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Pate, Der(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Great Escape, The
+    masks:
+      - '^Great Escape, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Guy Game, The
+    masks:
+      - '^Guy Game, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hobbit, The - The Prelude to the Lord of the Rings
+    masks:
+      - '^Hobbit, The - The Prelude to the Lord of the Rings(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: House of the Dead III, The
+    masks:
+      - '^House of the Dead III, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Hustle, The - Detroit Streets
+    masks:
+      - '^Hustle, The - Detroit Streets(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Incredible Hulk, The - Ultimate Destruction
+    masks:
+      - '^Incredible Hulk, The - Ultimate Destruction(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Italian Job, The
+    masks:
+      - '^Italian Job, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: King of Fighters 2002, The
+    masks:
+      - '^King of Fighters 2002, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: King of Fighters 2003, The
+    masks:
+      - '^King of Fighters 2003, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: King of Fighters, The - Neowave
+    masks:
+      - '^King of Fighters, The - Neowave(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Legend of Spyro, The - A New Beginning
+    masks:
+      - '^Legend of Spyro, The - A New Beginning(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lord of the Rings, The - The Fellowship of the Ring
+    masks:
+      - '^Lord of the Rings, The - The Fellowship of the Ring(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lord of the Rings, The - The Return of the King
+    masks:
+      - '^Herr der Ringe, Der - Die Rueckkehr des Koenigs(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Lord of the Rings, The - The Return of the King(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Seigneur des Anneaux, Le - Le Retour du Roi(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Senor de los Anillos, El - El Retorno del Rey(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Signore degli Anelli, Il - Il Ritorno del Re(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lord of the Rings, The - The Third Age
+    masks:
+      - '^Herr der Ringe, Der - Das dritte Zeitalter(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Lord of the Rings, The - The Third Age(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Seigneur des Anneaux, Le - Le Tiers Age(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Senor de los Anillos, El - La Tercera Edad(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Signore degli Anelli, Il - La Terza Era(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Lord of the Rings, The - The Two Towers
+    masks:
+      - '^Lord of the Rings, The - The Two Towers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Magazine Officiel Xbox, Le - Hors-serie Numero 10
+    masks:
+      - '^Magazine Officiel Xbox, Le - Hors-serie Numero 10(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Magazine Officiel Xbox, Le - Hors-serie Numero 9
+    masks:
+      - '^Magazine Officiel Xbox, Le - Hors-serie Numero 9(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Magazine Officiel Xbox, Le - Hors-serie Solutions Numero 08
+    masks:
+      - '^Magazine Officiel Xbox, Le - Hors-serie Solutions Numero 08(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Matrix, The - Path of Neo
+    masks:
+      - '^Matrix, The - Path of Neo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox 50 Best Games, The
+    masks:
+      - '^Official Xbox 50 Best Games, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Best Ever Games, The
+    masks:
+      - '^Official Xbox Best Ever Games, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Live Disc, The
+    masks:
+      - '^Official Xbox Live Disc, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Playable Cheats, The
+    masks:
+      - '^Official Xbox Playable Cheats, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Official Xbox Starter Pack 2004, The
+    masks:
+      - '^Official Xbox Starter Pack 2004, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 01-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 01-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 01-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 01-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 02-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 02-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 03-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 03-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 04-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 04-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 04-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 04-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 05-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 05-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 06-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 06-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 06-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 06-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 06-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 06-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 07-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 07-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 07-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 07-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 07-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 07-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 08-2002
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 08-2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 08-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 08-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 08-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 08-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 09-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 09-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 09-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 09-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 10-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 10-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 10-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 10-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 10-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 10-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 11-2002
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 11-2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 11-2003
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 11-2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 11-2004
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 11-2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 11-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 11-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 12-2002
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 12-2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Offizielle Xbox-Magazin, Das - Cover-DVD 12-2005
+    masks:
+      - '^Offizielle Xbox-Magazin, Das - Cover-DVD 12-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Punisher, The
+    masks:
+      - '^Punisher, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Red Star, The
+    masks:
+      - '^Red Star, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Simpsons, The - Hit & Run'
+    masks:
+      - '^Simpsons, The - Hit & Run(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Simpsons, The - Road Rage
+    masks:
+      - '^Simpsons, The - Road Rage(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sims, The
+    masks:
+      - '^Sims, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sims 2, The
+    masks:
+      - '^Sims 2, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Sims, The - Bustin' Out
+    masks:
+      - '^Sims, The - Bustin'' Out(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Suffering, The
+    masks:
+      - '^Suffering, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Suffering, The - Ties That Bind
+    masks:
+      - '^Suffering, The - Ties That Bind \(Austria, Switzerland\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Suffering, The - Ties That Bind(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Terminator, The - Dawn of Fate
+    masks:
+      - '^Terminator, The - Dawn of Fate(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Thing, The
+    masks:
+      - '^Thing, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tour de France, Le
+    masks:
+      - '^Tour de France, Le(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultimate Halo Companion DVD Set, The
+    masks:
+      - '^Ultimate Halo Companion DVD Set, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultimate Selection, The
+    masks:
+      - '^Ultimate Selection, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Urbz, The - Sims in the City
+    masks:
+      - '^Urbz, The - Sims in the City(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Warriors, The
+    masks:
+      - '^Warriors, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wild Rings, The
+    masks:
+      - '^Wild Rings, The(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Thief - Deadly Shadows
+    masks:
+      - '^Thief - Deadly Shadows(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Thousand Land
+    masks:
+      - '^Thousand Land(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Thrillville
+    masks:
+      - '^Thrillville(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tiger Woods PGA Tour 06
+    masks:
+      - '^Tiger Woods PGA Tour 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tiger Woods PGA Tour 07
+    masks:
+      - '^Tiger Woods PGA Tour 07(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tiger Woods PGA Tour 2003
+    masks:
+      - '^Tiger Woods PGA Tour 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tiger Woods PGA Tour 2004
+    masks:
+      - '^Tiger Woods PGA Tour 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tiger Woods PGA Tour 2005
+    masks:
+      - '^Tiger Woods PGA Tour 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tim Burton's The Nightmare Before Christmas - Oogie's Revenge
+    masks:
+      - '^Tim Burton''s The Nightmare Before Christmas - Oogie''s Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TimeSplitters 2
+    masks:
+      - '^TimeSplitters 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TimeSplitters - Future Perfect
+    masks:
+      - '^TimeSplitters - Future Perfect(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TMNT - Mutant Melee
+    masks:
+      - '^TMNT - Mutant Melee(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 25 to Life
+    masks:
+      - '^25 to Life(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TOCA Race Driver
+    masks:
+      - '^TOCA Race Driver(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^TOCA Race DriverEnabled\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^TOCA Race Driver Enabled\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TOCA Race Driver 2
+    masks:
+      - '^TOCA Race Driver 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TOCA Race Driver 3
+    masks:
+      - '^TOCA Race Driver 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'ToeJam & Earl III - Mission to Earth'
+    masks:
+      - '^ToeJam & Earl III - Mission to Earth(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom and Jerry in War of the Whiskers
+    masks:
+      - '^Tom and Jerry in War of the Whiskers(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Ghost Recon
+    masks:
+      - '^Tom Clancy''s Ghost Recon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Ghost Recon 2
+    masks:
+      - '^Tom Clancy''s Ghost Recon 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Ghost Recon 2 - Summit Strike
+    masks:
+      - '^Tom Clancy''s Ghost Recon 2 - Summit Strike(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Ghost Recon - Advanced Warfighter
+    masks:
+      - '^Tom Clancy''s Ghost Recon - Advanced Warfighter(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Ghost Recon - Island Thunder
+    masks:
+      - '^Tom Clancy''s Ghost Recon - Island Thunder(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Rainbow Six 3
+    masks:
+      - '^Tom Clancy''s Rainbow Six 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Rainbow Six 3 - Black Arrow
+    masks:
+      - '^Tom Clancy''s Rainbow Six 3 - Black Arrow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Rainbow Six - Critical Hour
+    masks:
+      - '^Tom Clancy''s Rainbow Six - Critical Hour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Rainbow Six - Lockdown
+    masks:
+      - '^Tom Clancy''s Rainbow Six - Lockdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Splinter Cell
+    masks:
+      - '^Tom Clancy''s Splinter Cell(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Splinter Cell - Chaos Theory
+    masks:
+      - '^Tom Clancy''s Splinter Cell - Chaos Theory(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Splinter Cell - Double Agent
+    masks:
+      - '^Tom Clancy''s Splinter Cell - Double Agent(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tom Clancy's Splinter Cell - Pandora Tomorrow
+    masks:
+      - '^Tom Clancy''s Splinter Cell - Pandora Tomorrow(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's American Wasteland
+    masks:
+      - '^Tony Hawk''s American Wasteland(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Pro Skater 2x
+    masks:
+      - '^Tony Hawk''s Pro Skater 2x(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Pro Skater 3
+    masks:
+      - '^Tony Hawk''s Pro Skater 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Pro Skater 4
+    masks:
+      - '^Tony Hawk''s Pro Skater 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Project 8
+    masks:
+      - '^Tony Hawk''s Project 8(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Underground
+    masks:
+      - '^Tony Hawk''s Underground(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tony Hawk's Underground 2
+    masks:
+      - '^Tony Hawk''s Underground 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Top Gear - RPM Tuning
+    masks:
+      - '^Top Gear - RPM Tuning(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Top Spin
+    masks:
+      - '^Top Spin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Top Spin & Amped 2'
+    masks:
+      - '^Top Spin & Amped 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Torino 2006
+    masks:
+      - '^Torino 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tork - Prehistoric Punk
+    masks:
+      - '^Tork - Prehistoric Punk(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Total Club Manager 2004
+    masks:
+      - '^Total Club Manager 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Total Club Manager 2005
+    masks:
+      - '^Entraineur 5, L'' - Saison 04-05(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Total Club Manager 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Total Immersion Racing
+    masks:
+      - '^Total Immersion Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Total Overdose
+    masks:
+      - '^Total Overdose(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Totaled!'
+    masks:
+      - '^Totaled!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Touge R
+    masks:
+      - '^Touge R(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Toxic Grind
+    masks:
+      - '^Toxic Grind(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TransWorld Snowboarding
+    masks:
+      - '^TransWorld Snowboarding(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: TransWorld Surf
+    masks:
+      - '^TransWorld Surf(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Triangle Again
+    masks:
+      - '^Triangle Again(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Triangle Again 2
+    masks:
+      - '^Triangle Again 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Trigger Man
+    masks:
+      - '^Trigger Man(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Triple Play 2002
+    masks:
+      - '^Triple Play 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Trivial Pursuit - Unhinged
+    masks:
+      - '^Trivial Pursuit - Unhinged(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Tron 2.0 - Killer App
+    masks:
+      - '^Tron 2\.0 - Killer App(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: True Crime - New York City
+    masks:
+      - '^True Crime - New York City(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: True Crime - Streets of LA
+    masks:
+      - '^True Crime - Streets of LA(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Turok - Evolution
+    masks:
+      - '^Turok - Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ty the Tasmanian Tiger
+    masks:
+      - '^Ty the Tasmanian Tiger(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ty the Tasmanian Tiger 2 - Bush Rescue
+    masks:
+      - '^Ty the Tasmanian Tiger 2 - Bush Rescue(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ty the Tasmanian Tiger - Night of the Quinkan
+    masks:
+      - '^Ty the Tasmanian Tiger - Night of the Quinkan(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: UEFA Champions League 2004-2005
+    masks:
+      - '^UEFA Champions League 2004-2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: UEFA Euro 2004 - Portugal
+    masks:
+      - '^UEFA Euro 2004 - Portugal(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: UFC - Ultimate Fighting Championship - Tapout
+    masks:
+      - '^UFC - Ultimate Fighting Championship - Tapout(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: UFC - Ultimate Fighting Championship - Tapout 2
+    masks:
+      - '^UFC - Ultimate Fighting Championship - Tapout 2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^UFC - Ultimate Fighting Championship 2 - Tapout(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultimate Beach Soccer
+    masks:
+      - '^Ultimate Beach Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultimate Pro Pinball
+    masks:
+      - '^Ultimate Pro Pinball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultimate Spider-Man
+    masks:
+      - '^Ultimate Spider-Man(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Ultra Bust-A-Move
+    masks:
+      - '^Ultra Bust-A-Move(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Ultra Puzzle Bobble(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Umezawa Yukari no Igo Seminar
+    masks:
+      - '^Umezawa Yukari no Igo Seminar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Unreal Championship
+    masks:
+      - '^Unreal Championship(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Unreal Championship 2 - The Liandri Conflict
+    masks:
+      - '^Unreal Championship 2 - The Liandri Conflict(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Unreal II - The Awakening
+    masks:
+      - '^Unreal II - The Awakening(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Urban Chaos - Riot Response
+    masks:
+      - '^Urban Chaos - Riot Response(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Urban Freestyle Soccer
+    masks:
+      - '^Urban Freestyle Soccer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: V-Rally 3
+    masks:
+      - '^V-Rally 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: V8 Supercars Australia 2
+    masks:
+      - '^V8 Supercars Australia 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: V8 Supercars Australia 3
+    masks:
+      - '^V8 Supercars Australia 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: V8 Supercars Australia - Race Driver
+    masks:
+      - '^V8 Supercars Australia - Race Driver(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^V8 Supercars Australia - Race Driverbled\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Van Helsing
+    masks:
+      - '^Van Helsing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Vexx
+    masks:
+      - '^Vexx(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Vietcong - Purple Haze
+    masks:
+      - '^Vietcong - Purple Haze(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Virtual Pool - Tournament Edition
+    masks:
+      - '^Virtual Pool - Tournament Edition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Volvo - Drive for Life
+    masks:
+      - '^Volvo - Drive for Life(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Voodoo Vince
+    masks:
+      - '^Voodoo Vince(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wakeboarding Unleashed featuring Shaun Murray
+    masks:
+      - '^Wakeboarding Unleashed featuring Shaun Murray(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Wallace & Gromit in Project Zoo'
+    masks:
+      - '^Wallace & Gromit in Project Zoo(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Wallace & Gromit - The Curse of the Were-Rabbit'
+    masks:
+      - '^Wallace & Gromit - The Curse of the Were-Rabbit(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WarPath
+    masks:
+      - '^WarPath(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WCR - World Championship Rugby
+    masks:
+      - '^WCR - World Championship Rugby(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Whacked!'
+    masks:
+      - '^Whacked!(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Whiplash
+    masks:
+      - '^Whiplash(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Whiteout
+    masks:
+      - '^Whiteout(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WinBack 2 - Project Poseidon
+    masks:
+      - '^WinBack 2 - Project Poseidon(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wings of War
+    masks:
+      - '^Wings of War(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Winter X Games Snowboarding 2
+    masks:
+      - '^Winter X Games Snowboarding 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Winter X Games Snowboarding 2002
+    masks:
+      - '^ESPN Winter X Games Snowboarding 2002(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Winter X Games Snowboarding 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Without Warning
+    masks:
+      - '^Without Warning(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Championship Poker
+    masks:
+      - '^World Championship Poker(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Championship Poker 2 featuring Howard Lederer
+    masks:
+      - '^World Championship Poker 2 featuring Howard Lederer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Championship Pool 2004
+    masks:
+      - '^World Championship Pool 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Championship Snooker 2003
+    masks:
+      - '^World Championship Snooker 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Championship Snooker 2004
+    masks:
+      - '^World Championship Snooker 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Poker Tour
+    masks:
+      - '^World Poker Tour(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Racing
+    masks:
+      - '^World Racing(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Racing 2
+    masks:
+      - '^World Racing 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Series Baseball
+    masks:
+      - '^World Series Baseball(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Series Baseball 2K3
+    masks:
+      - '^World Series Baseball 2K3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Series of Poker
+    masks:
+      - '^World Series of Poker(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World Snooker Championship 2005
+    masks:
+      - '^World Snooker Championship 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World War II Combat - Iwo Jima
+    masks:
+      - '^World War II Combat - Iwo Jima(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: World War II Combat - Road to Berlin
+    masks:
+      - '^World War II Combat - Road to Berlin(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Worms 3D
+    masks:
+      - '^Worms 3D(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Worms 4 - Mayhem
+    masks:
+      - '^Worms 4 - Mayhem(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Worms Forts - Under Siege
+    masks:
+      - '^Worms Forts - Under Siege(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wrath Unleashed
+    masks:
+      - '^Wrath Unleashed(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Wreckless - The Yakuza Missions
+    masks:
+      - '^Wreckless - Mission Yakusas(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Wreckless - The Yakuza Missions(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WTA Tour Tennis
+    masks:
+      - '^WTA Tour Tennis(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^WTA Tour Tennis Pro Evolution(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WWE Raw
+    masks:
+      - '^WWE Raw(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WWE Raw 2
+    masks:
+      - '^WWE Raw 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WWE WrestleMania 21
+    masks:
+      - '^WWE WrestleMania 21(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: WWF Raw
+    masks:
+      - '^WWF Raw(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X-Men 2 - Wolverine's Revenge
+    masks:
+      - '^X-Men 2 - Wolverine''s Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X-Men Legends
+    masks:
+      - '^X-Men Legends(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X-Men Legends II - Rise of Apocalypse
+    masks:
+      - '^X-Men Legends II - Rise of Apocalypse(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X-Men - Next Dimension
+    masks:
+      - '^X-Men - Next Dimension(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X-Men - The Official Game
+    masks:
+      - '^X-Men - The Official Game(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: X2 - Wolverine's Revenge
+    masks:
+      - '^X2 - Wolverine''s Revenge(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 4x4 Evo 2
+    masks:
+      - '^4x4 Evo 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - Den Officiella Xbox-Tidningen Nr 1 - April 06
+    masks:
+      - '^Xbox 360 - Den Officiella Xbox-Tidningen Nr 1 - April 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - Den Officiella Xbox-Tidningen Nr 2 - Juni 06
+    masks:
+      - '^Xbox 360 - Den Officiella Xbox-Tidningen Nr 2 - Juni 06(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Australian Xbox Magazine Issue 05 - August 2006
+    masks:
+      - '^Xbox 360 - The Official Australian Xbox Magazine Issue 05 - August 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 03 - December 2005
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 03 - December 2005(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 04 - February 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 04 - February 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 05 - March 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 05 - March 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 06 - April 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 06 - April 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 07 - May 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 07 - May 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 08 - June 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 08 - June 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 09 - July 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 09 - July 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 10 - August 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 10 - August 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 11 - September 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 11 - September 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 12 - October 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 12 - October 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - The Official Xbox Magazine Issue 13 - November 2006
+    masks:
+      - '^Xbox 360 - The Official Xbox Magazine Issue 13 - November 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox 360 - Xbox Magazine Ufficiale Numero 57 - Luglio 2006
+    masks:
+      - '^Xbox 360 - Xbox Magazine Ufficiale Numero 57 - Luglio 2006(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc
+    masks:
+      - '^Xbox Demo Disc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 1.2
+    masks:
+      - '^Xbox Demo Disc Version 1\.2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 1.3
+    masks:
+      - '^Xbox Demo Disc Version 1\.3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 2.2
+    masks:
+      - '^Xbox Demo Disc Version 2\.2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 2.2a
+    masks:
+      - '^Xbox Demo Disc Version 2\.2a(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 2.3
+    masks:
+      - '^Xbox Demo Disc Version 2\.3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 2.4
+    masks:
+      - '^Xbox Demo Disc Version 2\.4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 2.5
+    masks:
+      - '^Xbox Demo Disc Version 2\.5(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 2\.5 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.0
+    masks:
+      - '^Xbox Demo Disc Version 3\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.1
+    masks:
+      - '^Xbox Demo Disc Version 3\.1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.2
+    masks:
+      - '^Xbox Demo Disc Version 3\.2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.3
+    masks:
+      - '^Xbox Demo Disc Version 3\.3(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 3\.3 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.4
+    masks:
+      - '^Xbox Demo Disc Version 3\.4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 3\.4 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.5
+    masks:
+      - '^Xbox Demo Disc Version 3\.5(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 3\.5 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 3.6
+    masks:
+      - '^Xbox Demo Disc Version 3\.6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.0
+    masks:
+      - '^Xbox Demo Disc Version 4\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.1
+    masks:
+      - '^Xbox Demo Disc Version 4\.1(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 4\.1 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.2
+    masks:
+      - '^Xbox Demo Disc Version 4\.2(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 4\.2 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.3
+    masks:
+      - '^Xbox Demo Disc Version 4\.3(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disc Version 4\.3 RP-M\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.4
+    masks:
+      - '^Xbox Demo Disc Version 4\.4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.5
+    masks:
+      - '^Xbox Demo Disc Version 4\.5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disc Version 4.6
+    masks:
+      - '^Xbox Demo Disc Version 4\.6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk European Version 1.1
+    masks:
+      - '^Xbox Demo Disk European Version 1\.1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 1.0
+    masks:
+      - '^Xbox Demo Disk Version 1\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 1.1
+    masks:
+      - '^Xbox Demo Disk Version 1\.1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 1.4
+    masks:
+      - '^Xbox Demo Disk Version 1\.4(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disk Version 1\.4Stop\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 13
+    masks:
+      - '^Xbox Demo Disk Version 13(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 14
+    masks:
+      - '^Xbox Demo Disk Version 14(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 2.0
+    masks:
+      - '^Xbox Demo Disk Version 2\.0(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox Demo Disk Version 2\.0Stop\)(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 2.1
+    masks:
+      - '^Xbox Demo Disk Version 2\.1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 3.0
+    masks:
+      - '^Xbox Demo Disk Version 3\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 4.0
+    masks:
+      - '^Xbox Demo Disk Version 4\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 4.0A
+    masks:
+      - '^Xbox Demo Disk Version 4\.0A(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 5.0
+    masks:
+      - '^Xbox Demo Disk Version 5\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 7.0
+    masks:
+      - '^Xbox Demo Disk Version 7\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 8
+    masks:
+      - '^Xbox Demo Disk Version 8(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Demo Disk Version 9.0
+    masks:
+      - '^Xbox Demo Disk Version 9\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition
+    masks:
+      - '^Xbox Exhibition(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 2
+    masks:
+      - '^Xbox Exhibition Volume 2(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 3
+    masks:
+      - '^Xbox Exhibition Volume 3(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 4
+    masks:
+      - '^Xbox Exhibition Volume 4(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 5
+    masks:
+      - '^Xbox Exhibition Volume 5(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 6
+    masks:
+      - '^Xbox Exhibition Volume 6(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Exhibition Volume 7
+    masks:
+      - '^Xbox Exhibition Volume 7(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Hardware Refresh Disc
+    masks:
+      - '^Xbox Hardware Refresh Disc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Line-up Movies 2002 Summer
+    masks:
+      - '^Xbox Line-up Movies 2002 Summer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Live Arcade
+    masks:
+      - '^Xbox Live Arcade(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Live Beta Starter Kit Disc
+    masks:
+      - '^Xbox Live Beta Starter Kit Disc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Live Beta Starter Kit Disc v. 1.0
+    masks:
+      - '^Xbox Live Beta Starter Kit Disc v\. 1\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Live Starter Kit Disc
+    masks:
+      - '^Xbox Live Starter Kit Disc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Xbox Live Starter Kit Disc & Zunou Taisen Live'
+    masks:
+      - '^Xbox Live Starter Kit Disc & Zunou Taisen Live(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Magazine Ufficiale Game Disc 49
+    masks:
+      - '^Xbox Magazine Ufficiale Game Disc 49(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Music Mixer
+    masks:
+      - '^Xbox Music Mixer(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Playable Starter Pack 2003
+    masks:
+      - '^Xbox Playable Starter Pack 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Retailer's Demo Disc Vol. 1
+    masks:
+      - '^Xbox Retailer''s Demo Disc Vol\. 1(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox the Best of Demo Disk Version 10.0
+    masks:
+      - '^Xbox the Best of Demo Disk Version 10\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Video Chat
+    masks:
+      - '^Xbox Video Chat(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox Wireless Adapter Setup v1.0
+    masks:
+      - '^Xbox Wireless Adapter Setup v1\.0(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - February 2003
+    masks:
+      - '^Xbox-ism - February 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - New Year 2003
+    masks:
+      - '^Xbox-ism - New Year 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - New Year 2004
+    masks:
+      - '^Xbox-ism - New Year 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Spring 2003
+    masks:
+      - '^Xbox-ism - Spring 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Spring 2004
+    masks:
+      - '^Xbox-ism - Spring 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Summer 2004
+    masks:
+      - '^Xbox-ism - Summer 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - TGS2002 Playable Disc
+    masks:
+      - '^Xbox-ism - TGS2002 Playable Disc(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Tokyo Game Show 2003
+    masks:
+      - '^Xbox-ism - Tokyo Game Show 2003ikenban\)(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^Xbox-ism - Tokyo Game Show 2003 \(Japan\) \(Disc 1\) \(Eizou-shuu \+ Taikenban\)$'
+  - name: Xbox-ism - Tokyo Game Show 2004
+    masks:
+      - '^Xbox-ism - Tokyo Game Show 2004(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Winter 2002
+    masks:
+      - '^Xbox-ism - Winter 2002(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xbox-ism - Winter 2003
+    masks:
+      - '^Xbox-ism - Winter 2003(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: XGRA - Extreme G Racing Association
+    masks:
+      - '^XGRA - Extreme G Racing Association(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xiaolin Showdown
+    masks:
+      - '^Xiaolin Showdown(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: XIII
+    masks:
+      - '^XIII(?= \(|\.iso|\.bin|\.cue|$)'
+      - '^XIII - Daitouryou o Koroshita Otoko(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Xyanide
+    masks:
+      - '^Xyanide(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Yager
+    masks:
+      - '^Yager(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Yetisports Arctic Adventures
+    masks:
+      - '^Yetisports Arctic Adventures(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Yonenaga Kunio no Shougi Seminar
+    masks:
+      - '^Yonenaga Kunio no Shougi Seminar(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Yourself!Fitness'
+    masks:
+      - '^Yourself!Fitness(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: 'Yu-Gi-Oh! The Dawn of Destiny'
+    masks:
+      - '^Yu-Gi-Oh! The Dawn of Destiny(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zan Kabuki
+    masks:
+      - '^Zan Kabuki(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zapper
+    masks:
+      - '^Zapper(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zathura
+    masks:
+      - '^Zathura(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zillernet
+    masks:
+      - '^Zillernet(?= \(|\.iso|\.bin|\.cue|$)'
+  - name: Zunou Taisen Live
+    masks:
+      - '^Zunou Taisen Live(?= \(|\.iso|\.bin|\.cue|$)'

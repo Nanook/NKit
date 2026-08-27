@@ -1,0 +1,51 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  Bomberman: Bomberman
+  'Disney High School Musical Dance!': 'Disney High School Musical 3: Senior Year Dance!'
+  Fitness Party: 'Family Party: Fitness Fun'
+  Inazuma Eleven Strikers 2012 Xtreme: Inazuma Eleven Strikers 2012 Xtreme
+  Jikkyou Powerful Major League 3: Jikkyou Powerful Major League 3
+  Karaoke Joysound Wii DX: Karaoke Joysound
+  Karaoke Joysound Wii Super DX: Karaoke Joysound
+  Metroid Prime: Metroid Prime
+  Milestone Shooting Collection 2: Ultimate Shooting Collection
+  Monster Hunter G: Monster Hunter G
+  Rainbow Pop: Balloon Pop
+  Speed Racer: 'Speed Racer: The Videogame'
+  Tetris Party Premium: Tetris Party Deluxe
+  The Voice of Germany: The Voice
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  Aquarius Baseball: 'Backyard Baseball ''09'
+  'Dance Dance Revolution: Music Fit': Dance Dance Revolution
+  Galileo Family Quiz: Family Quiz
+  'Inazuma Eleven Go: Strikers 2013': Inazuma Eleven Strikers
+  Just Dance Wii 2: Just Dance
+  K-Pop Dance Festival: Dance Party Pop Hits
+  'Kamen Rider: Climax Heroes W': 'Kamen Rider: Dragon Knight'
+  'Let''s Sing 10': 'Let''s Sing'
+  'Let''s Sing 2019': 'Let''s Sing'
+  'Let''s Sing 5': 'Let''s Sing'
+  'Let''s Sing 6': 'Let''s Sing'
+  'Let''s Sing 7': 'Let''s Sing'
+  'Let''s Sing 8': 'Let''s Sing'
+  'Let''s Sing 9': 'Let''s Sing'
+  'Metroid Prime 2: Echoes': 'Metroid Prime 3: Corruption'
+  Party Game Box 100: Game Party
+  Petanque Master: Fishing Master
+  'RTL Winter Sports 2008: The Ultimate Challenge': 'Winter Sports 2008: The Ultimate Challenge'
+  'Sengoku Basara 2: Heroes: Double Pack': 'Sengoku Basara: Samurai Heroes'
+  'Sengoku Basara 3: Utage': 'Sengoku Basara: Samurai Heroes'
+  'Tele 7 Jeux: Mots Fleches': 'Tele 7 Jeux: Mots Croises'
+  'The Voice of Germany: I Want You': 'The Voice: I Want You'
+  'The Voice of Germany: Volume 2': The Voice
+  'The Voice: Volume 2': The Voice
+  'The Voice: Volume 3': The Voice
+  We Sing Deutsche Hits: 'Disney Sing It: Family Hits'
+  We Sing Deutsche Hits 2: 'Disney Sing It: Family Hits'
+  'Yetisports: Penguin Party Island': 'Summer Sports 2: Island Sports Party'
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)

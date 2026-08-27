@@ -1,0 +1,18 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  'Ryuu ga Gotoku 1 & 2 HD for Wii U': 'Ryuu ga Gotoku 1 & 2 HD for Wii U'
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  '0103794: DISC, CAT-I RTL MAR ''16 1-2 LTN-FL': '83178: DISC, CAT-I RTL MAR ''14 USA-PT'
+  '102091: DISC, CAT-I RTL MAY ''15 1-2 LTN-FL': '102079: DISC, CAT-I RTL MAY ''15 USA-PT'
+  '102405: DISC, CAT-I RTL MAY ''15 2-2 LTN-FL': '102079: DISC, CAT-I RTL MAY ''15 USA-PT'
+  '102831: DISC, CAT-I RTL AUG ''15 1-2 LTN-FL': '100148: DISC, CAT-I RTL AUG ''14 USA-PT'
+  'Demo Update 08.12.15: Mario Tennis: Ultra Smash: 34625865': 'Demo Update 07.12.15: Mario Tennis: Ultra Smash: 5D107B28'
+  'Demo Update 30.06.16: Mario & Sonic at the Rio 2016 Olympic Games: 00A62FC8': 'Demo Update 30.06.16: Mario & Sonic at the Rio 2016 Olympic Games: E903B956'
+  Just Dance: Just Dance 2014
+  Monster Hunter Frontier G: Monster Hunter 3 Ultimate
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)

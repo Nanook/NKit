@@ -1,0 +1,45 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  # (translations added directly to translations.yaml)
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  'Atelier Sophie: The Alchemist of the Mysterious Book': 'Atelier Ayesha: The Alchemist of Dusk'
+  'Deception IV: The Nightmare Princess': 'R.U.S.E.: The Art of Deception'
+  'Dynasty Warriors 8: Empires': 'Dynasty Warriors 6: Empires'
+  Dynasty Warriors Online: Dynasty Warriors 6
+  Dynasty Warriors Online Z: Dynasty Warriors 6
+  'Dynasty Warriors: Eiketsuden': Dynasty Warriors 6
+  'Dynasty Warriors: Strikeforce 2': 'Dynasty Warriors: Strikeforce'
+  'Gran Turismo HD: Install Disc': Gran Turismo 5
+  'JoJo''s Bizarre Adventure: Eyes of Heaven': 'JoJo''s Bizarre Adventure: All Star Battle'
+  'Metal Gear Solid: Peace Walker: HD Edition': 'Metal Gear Solid 4: Guns of the Patriots'
+  Mobile Suit Gundam UC: 'Mobile Suit Gundam: Crossfire'
+  'Mobile Suit Gundam: Extreme Vs.': 'Mobile Suit Gundam: Crossfire'
+  'Mobile Suit Gundam: Extreme Vs. Full Boost': 'Mobile Suit Gundam: Crossfire'
+  'Mobile Suit Gundam: Side Stories': 'Mobile Suit Gundam: Crossfire'
+  'Resident Evil 0: HD Remaster': Resident Evil 5
+  'Resident Evil: Chronicles HD Collection': Resident Evil 5
+  'Resident Evil: HD Remaster': Resident Evil 5
+  'Samurai Warriors 3: Empires': 'Dynasty Warriors 6: Empires'
+  Samurai Warriors 3Z: Afro Samurai
+  Samurai Warriors 4: Afro Samurai
+  Samurai Warriors 4-II: Afro Samurai
+  'Samurai Warriors 4: Empires': 'Dynasty Warriors 6: Empires'
+  'Sengoku Basara 4: Sumeragi': 'Sengoku Basara: Samurai Heroes'
+  SingStar Frozen: SingStar
+  'The 40 Principales: Karaoke Party': 'Start the Party!'
+  'The Legend of Heroes: Trails in the Sky FC HD': 'The Legend of Heroes: Trails of Cold Steel'
+  'The Legend of Heroes: Trails in the Sky SC HD': 'The Legend of Heroes: Trails of Cold Steel'
+  'The Legend of Heroes: Trails in the Sky the 3rd HD': 'The Legend of Heroes: Trails of Cold Steel'
+  'Virtua Tennis: Live Match!': Virtua Tennis 2009
+  Warriors Orochi Z: Warriors Orochi 3
+  Yakuza 0: Yakuza 3
+  Yakuza 5: Yakuza 3
+  Yakuza Kiwami: Yakuza 3
+  'Yakuza: Ishin!': Yakuza 3
+  'Yakuza: Kenzan!': Yakuza 3
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)

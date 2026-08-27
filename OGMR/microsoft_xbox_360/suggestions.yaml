@@ -1,0 +1,29 @@
+# Accepted suggestions - loaded as translations by dat_grouper.py
+translations:
+  Bullet Soul: Bullet Soul
+  DoDonPachi Saidaioujou: DoDonPachi Saidaioujou
+  Gal Gun: Gal Gun
+  'Otomedius Excellent!': 'Otomedius Excellent!'
+  'Otomedius Gorgeous!': 'Otomedius Gorgeous!'
+  Super Star: Super Star
+  Watch Dogs: Watch Dogs
+  Xbox 360 Hard Drive Transfer Disc: Hard Drive Transfer Disc
+  Zoids Alternative: Zoids Assault
+
+# Rejected suggestions - verified incorrect, will not be re-suggested
+rejected:
+  'Champion Jockey: Gallop Racer & GI Jockey': 'Champion Jockey: G1 Jockey & Gallop Racer'
+  Darkstalkers Resurrection: DoDonPachi Resurrection
+  'Phantom: Phantom of Inferno': 'Dante''s Inferno'
+  'Resident Evil: Revival Selection': Resident Evil 5
+  'Tenpo-you Demo Disc for Xbox 360: February 2009 Issue': 'Xbox 360: The Official Xbox Magazine Issue 43: February 2009'
+  'Tenpo-you Demo Disc for Xbox 360: July 2006 Issue': 'Xbox 360: The Official Xbox Magazine Issue 09: July 2006'
+  'Tenpo-you Demo Disc for Xbox 360: May 2008 Issue': 'Xbox 360: The Official Xbox Magazine Issue 33: May 2008'
+  'Tenpo-you Demo Disc for Xbox 360: September 2008 Issue': 'Xbox 360: The Official Xbox Magazine Issue 37: September 2008'
+  'Xbox 360: La Revista Oficial De Xbox: No 02': 'Minecraft: Xbox 360 Edition'
+  'Xbox 360: The Experience Disc Version 5.0': The Experience Disc Version 1.0
+  'Xbox 360: Xbox Magazine Ufficiale Numero 64: Gennaio 2007': 'Xbox 360: Xbox Magazine Ufficiale Numero 97: Agosto 2009'
+
+# Pending suggestions - not yet reviewed
+pending:
+  # (all reviewed)
