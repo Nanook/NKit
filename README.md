@@ -171,7 +171,7 @@ NKit 2 reads the legacy nkit.iso/nkit.gcz format but no longer writes it. RVZ re
 | | |
 |---|---|
 | Discord | https://discord.gg/YT792u5yWJ |
-| Ko-fi (Donate) | https://ko-fi.com/nanook_ |
+| Ko-fi (Donate) | https://ko-fi.com/nanook_|
 | Ko-fi (Sponsor) | https://ko-fi.com/nanook_/tiers |
 | YouTube | https://www.youtube.com/@nanook_nkit |
 | NKDS Launch Video | https://youtu.be/s1tzQhFwMS4 |
