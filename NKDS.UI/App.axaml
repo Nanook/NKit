@@ -1,0 +1,52 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NkdsUi.App"
+             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:controls="using:NkdsUi.Views.Controls"
+             RequestedThemeVariant="Dark">
+	<Application.DataTemplates>
+		<DataTemplate DataType="vm:ImageListViewModel">
+			<controls:ImageListControl/>
+		</DataTemplate>
+		<DataTemplate DataType="vm:ComparisonPanelViewModel">
+			<controls:ComparisonPanelControl/>
+		</DataTemplate>
+		<DataTemplate DataType="vm:CommonFilesPanelViewModel">
+			<controls:CommonFilesPanelControl/>
+		</DataTemplate>
+	</Application.DataTemplates>
+	<Application.Resources>
+		<FontFamily x:Key="NkdsDefaultFontFamily">/Assets/Fonts/#Roboto</FontFamily>
+		<!-- Required by Avalonia.Controls.DataGrid Fluent theme when using Material.Avalonia -->
+		<SolidColorBrush x:Key="SystemControlTransparentBrush" Color="#FF1E1E1E"/>
+	</Application.Resources>
+	<Application.Styles>
+		<themes:MaterialTheme PrimaryColor="Purple" SecondaryColor="Lime" />
+		<materialIcons:MaterialIconStyles />
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="{DynamicResource NkdsDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="FontFamily" Value="{DynamicResource NkdsDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<Style Selector="AccessText">
+			<Setter Property="FontFamily" Value="{DynamicResource NkdsDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<!-- Dialog confirm button: green like NKit.Ui Go button -->
+		<Style Selector="Button.dialogConfirm">
+			<Setter Property="Background" Value="Green"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<!-- Dialog cancel/secondary button: purple (Material primary) -->
+		<Style Selector="Button.dialogCancel">
+			<Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Application.Styles>
+</Application>

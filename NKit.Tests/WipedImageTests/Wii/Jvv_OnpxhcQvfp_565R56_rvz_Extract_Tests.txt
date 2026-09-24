@@ -1,0 +1,40 @@
+3cb925ba	100	/UPDATE/disc/header.bin
+2dceef72	20	/UPDATE/disc/region.bin
+dd667267	2a4	/UPDATE/ticket.bin
+4df6bb08	208	/UPDATE/tmd.bin
+8854b804	a00	/UPDATE/cert.bin
+e0a97e16	18000	/UPDATE/h3.bin
+da4000b2	440	/UPDATE/sys/boot.bin
+ddca6b3c	2000	/UPDATE/sys/bi2.bin
+d58e4ce1	341bc	/UPDATE/sys/apploader.img
+83bc6a4f	140	/UPDATE/sys/main.dol
+9b17286e	7c	/UPDATE/sys/fst.bin
+302fc747	24e00	/UPDATE/files/_flf/OBBG7-19-i7-cebq.wad
+b07cbf6c	189b80	/UPDATE/files/_flf/VBF61-19-i702-cebq.wad
+b30a4edf	420	/UPDATE/files/__hcqngr.inf
+3cb925ba	100	/DATA/disc/header.bin
+2dceef72	20	/DATA/disc/region.bin
+7d33364a	2a4	/DATA/ticket.bin
+792c7e19	208	/DATA/tmd.bin
+8854b804	a00	/DATA/cert.bin
+34b409e1	18000	/DATA/h3.bin
+cd4f3553	440	/DATA/sys/boot.bin
+ddca6b3c	2000	/DATA/sys/bi2.bin
+dd8f382e	3441c	/DATA/sys/apploader.img
+b1fcd62a	146d60	/DATA/sys/main.dol
+c8ea661d	a0	/DATA/sys/fst.bin
+e8b8467d	fc0	/DATA/files/qripregf/qhzzl-pyf.wad
+958390ce	11c0	/DATA/files/qripregf/qhzzl-ybp.wad
+d615db90	136000	/DATA/files/ivrjre/pbagragGrfgQ.wad
+011ffca6	8000	/DATA/files/mmmmmmmm.zzz
+UPDATE/disc
+UPDATE
+UPDATE/sys
+UPDATE/files/_flf
+UPDATE/files
+DATA/disc
+DATA
+DATA/sys
+DATA/files/qripregf
+DATA/files/ivrjre
+DATA/files

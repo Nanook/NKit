@@ -1,0 +1,292 @@
+# NKit Configuration File
+# Please read - https://github.com/Nanook/NKit/wiki/Usage for the most up to date documentation
+
+# This config file is yaml - https://www.tutorialspoint.com/yaml/yaml_basics.htm
+
+#v1.0 - First versioned config [input: now supports single value and list]
+#v1.1 - Added fixextract task info
+#v1.2 - Updated to use $configPath$ and $userPath$ for better organization
+#v1.3 - Bundle-with-config approach: portable-first, consistent naming
+#v2.0 - Canonical CLI names (input/output/format/mask/...). Legacy names (in/out/convert/extract/...)
+#       are still accepted for backward compatibility.
+
+# NKit can use this config for base settings, overridable with command-line options. The config keys
+# are the same as the command-line long options. e.g.
+#  nkit convert file.iso
+#  nkit convert "file name.iso" --config other.yaml
+#  nkit convert "file name.iso" --config n --format wbfs     # no-config mode
+#
+# Per-system overrides on the command line use a <system>: prefix on the value, e.g.
+#  nkit convert roms\ --format wii:rvz:19 --format gamecube:wbfs:y
+
+# All directories for config values can be relative or absolute. The following Keywords are supported:
+#     $appPath$       - path of the launched exe
+#     $configPath$    - config directory (portable mode: exe directory, user mode: user config directory)
+#     $userPath$      - user data directory for logs, scans, results
+#                       (portable mode: exe directory, user mode: user home directory)
+#     $task$          - task being performed
+#     $system$        - system being processed
+#     $date$          - Current date as yyyymmdd
+#     $timestamp$     - Current time as yyyymmddhhmmss
+
+# CONFIGURATION MODES:
+# - PORTABLE MODE (preferred): Config file next to executable (nkit.yaml)
+#   Everything in one directory - perfect for zip distributions, package managers
+# - SYSTEM MODE (fallback): Config in system directories when portable mode not available
+
+# -- GLOBAL CONFIGURATION -----------------------------------------------------------------------------------------
+
+# Task to perform (this is the command verb on the command line, e.g. `nkit convert ...`)
+# Options: [convert, dedupe, expand, extract, fix, scan, verify, fixextract]
+#     convert      : converts files to the format specified in the "sys:xxxx" section
+#     dedupe       : deduplicates images into a DataStore
+#     expand       : expands files to full images
+#     extract      : extracts filesystem contents to subdirectory based on the input filename
+#     fix          : for supported systems, recovers files to fully expanded images
+#     fixextract   : for supported systems, extracts files used by the fix task to restore them
+#     scan         : analyze files and save xml blueprints of image layout and filesystems
+#     verify       : verify using internal image checksums, dats and nkit scans
+task: 
+
+# Input file or directory to process. Keywords and masks (* and ?) are supported.
+# CLI: --input / -in (also positional).  Legacy config name: in
+# Default: Nothing. Must be specified here, command line, or a file/directory dropped onto the exe.
+# Example: Y:\Wii\*.nkit.gcz
+input: 
+
+# Output directory.  CLI: --output / -out.  Legacy config name: out
+# Default: Blank (defaults to input directory)
+output: 
+
+# Rename output images to a matched dat entry.  CLI: --dat-match.  Legacy: outAsDatMatch
+# Options: [y, n]
+# Default: n
+dat-match: n
+
+# folders or archives of set dats
+dats:
+  redump: 
+  tosec: 
+  nointro: 
+
+# Limit processing to a specific system.  CLI: --system / -sys
+# Options: See "sys:xxxx" sections below. Leave blank for all systems.
+system: 
+
+# Scan directories recursively?  CLI: --recursive / -r.  Legacy: r
+# Options: [y, n]
+# Default: y
+recursive: y
+
+# Scan archives?  CLI: --no-archives / -na (to disable).  Legacy: arc
+# Options: [y, n]
+# Default: y
+archives: y
+
+# Verify results?  CLI: --verify / -v
+# Options: [y, n, dat]
+# Default: y
+verify: y
+
+# Temporary working directory.  CLI: --temp / -t.  Legacy: tmp
+# Default: Blank (defaults to output directory)
+temp: 
+
+# Delete source file on successful processing + verify (convert/expand) - not for archives
+# CLI: --delete-processed / -dp.  Legacy: deleteProcessed
+# Options: [y, n]
+# Default: n
+delete-processed: n
+
+# If the output file exists, skip processing (convert/expand)
+# CLI: --skip-if-completed / -sc.  Legacy: skipIfCompleted
+# Options: [y, n]
+# Default: n
+skip-if-completed: n
+
+# Output directory to save full image scans.  CLI: --scan-out / -so.  Legacy: scanOut
+# Default: $appPath$/scans/$system$/$task$
+# Notes:
+#  - Used for saving optional scans during tasks convert, expand, extract, dedupe, and fix
+#  - If the scan task does not have a specified output directory, then the scan-out path is used
+scan-out: $appPath$/scans/$system$/$task$
+
+# Directory to lookup scans for verifying 'input' files of the same name
+# CLI: --scan-in / -si.  Legacy: scanIn
+# Default: $appPath$/scans/$system$/$task$
+scan-in: $appPath$/scans/$system$/$task$
+
+# Logging levels.  CLI: --console-level / -cl and --log-level / -ll.  Legacy: consoleLevel, logOutLevel
+# Options: [none, info, detail, error, debug]
+# Default: info
+console-level: info
+log-level: info
+
+# Log file path.  CLI: --log / -l.  Legacy: logOut
+# Default: $appPath$/logs/$date$_log.txt
+log: $appPath$/logs/$date$_log.txt
+
+# Save results to a summary file?  CLI: --results / -rs
+# Options: [y, n]
+# Default: y
+results: y
+
+# Directory to save summary files.  CLI: --results-out / -ro.  Legacy: resultsOut
+# Default: $appPath$/logs/results/$system$_$task$_results.txt
+results-out: $appPath$/logs/results/$system$_$task$_results.txt
+
+# Dedupe configuration - format: <setName>:<shardSize>:<blockSize>:<auxMode>.  CLI: --dedupe / -dd
+# All parts are optional. Examples:
+#   dedupe:                     - all defaults (system name, 50GiB shards, 64KiB blocks)
+#   dedupe: mySet               - custom set name, rest defaults
+#   dedupe: :100g:128k:n        - default set name, 100GiB shards, 128KiB blocks, no aux store
+#   dedupe: mySet:50g:64k:y     - all specified
+# Default: (empty = all defaults - no aux mode)
+dedupe:
+
+# -- SYSTEM SPECIFIC CONFIGURATION --------------------------------------------------------------------------------
+
+# nkit supports the following systems. These config items help read, verify and fix images.
+# On the command line the same names are used, and any may be scoped per-system with a <system>: prefix.
+# base-in      - if a file cannot be auto-detected for a system, files in this path are categorized to it
+#              - CLI: --base-in / -bi.  Legacy: baseInPath
+# keys         - directory or zip/rar/7z/gzip arc mask. Latest modified match is used.  CLI: --keys / -k
+#              - e.g. path/directoryOfWiiUkeyFiles   or   path/WiiUKeys*.zip
+# dat          - zip/rar/7z/gzip arc mask and/or dat mask. Latest modified match is used.  CLI: --dat / -d
+#              - e.g. path/Dats/WiiDats*.zip//*.dat   or   path/directoryOfWiiDats//*.dat
+# fix-info     - path to a yaml for systems that support the Fix task.  CLI: --fix-info / -fi.  Legacy: fixInfo
+# fix-files    - path to NKit recovery files (as used/created by nkit v1).  CLI: --fix-files / -ff.  Legacy: fixFiles
+# format       - convert format; ':' separated params, optional. See comments.  CLI: --format / -f.  Legacy: convert
+# mask         - extract selection flags:pattern - m=mask, r=regex, i=case-insensitive.  CLI: --mask / -m.  Legacy: extract
+#              - use --forensic (CLI) to also extract image parts with addresses
+#              - e.g. mi:*.txt|*.png  or  ri:^(.*\.txt|.*\.png)$
+# dedupe       - per-system override of the global dedupe setting. Format: <setName>:<shardSize>:<blockSize>:<auxMode>
+#              - Append :y as the 4th part to auto-create an aux store if one does not exist
+#              - e.g. wii:50g:64k:y
+# ogmr         - path to an OGMR (One Game Many ROMs) YAML for per-file routing during dedupe.  Legacy: 1gmr
+#              - e.g. $configPath$/ogmr/wii-games.ogmr.yaml
+
+sys:
+  xbox:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat
+    mask: ri:.*
+    format: iso
+    #format: xiso            #rewritten xdvdfs iso
+  xbox360:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat
+    mask: ri:.*
+    format: iso
+  gamecube:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    fix-info: $configPath$/fix/fix_$system$.yaml
+    fix-files: $configPath$/fix/$system$
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: rvz:zstd:19:128k:16  #format:encoding(zstd):level(19):blockSize(128k):parallelism(16)
+    #format: rvz:lzma:9:128k:16  #format:encoding:level(9):blockSize(128k):parallelism(16)
+    #format: rvz:none:128k:4     #format:encoding:blockSize(128k):parallelism(4)
+    #format: wbfs:y              #format:lossless(y)
+    #format: ciso:y              #format:lossless(y)
+  wii:
+    dedupe:
+    ogmr:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    fix-info: $configPath$/fix/fix_$system$.yaml
+    fix-files: $configPath$/fix/$system$
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: rvz:zstd:19:128k:16  #format:encoding(zstd):level(19):blockSize(128k):parallelism(16)
+    #format: rvz:lzma:9:128k:16  #format:encoding:level(9):blockSize(128k):parallelism(16)
+    #format: rvz:none:128k:4     #format:encoding:blockSize(128k):parallelism(4)
+    #format: wbfs:y              #format:lossless(y)
+    #format: ciso:y              #format:lossless(y)
+  wiiu:
+    dedupe:
+    ogmr:
+    base-in: 
+    keys: $configPath$/keys/$system$/*.zip           #remove *.zip if using a directory of keys
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: wux
+  ps1:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+  ps2:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    #ps2 format has 2 in 1: iso format / cue format joined by '/'
+    format: cso:9:16k:4/cue:split    #format:level(9):blockSize(16k):parallelism(4)/cue:split(or joined)
+    #format: zso::16k:4/cue:split    #format:level(ignored):blockSize(16k):parallelism(4)/cue:split(or joined)
+  ps3:
+    base-in: 
+    keys: $configPath$/keys/$system$/*.zip           #remove *.zip if using a directory of keys
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    fix-info: $configPath$/fix/fix_ps3.yaml          #required to skip overlapped files - temp fix
+    fix-files: $configPath$/fix/$system$             #ird files
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: deciso
+    #format: cso:9:16k:4         #format:level(9):blockSize(16k):parallelism(4)
+    #format: zso::16k:4          #format:level(ignored):blockSize(16k):parallelism(4)
+  psp:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cso:9:2k:4           #format:level(9):blockSize(2k):parallelism(4)
+    #format: zso::2k:4           #format:level(ignored):blockSize(2k):parallelism(4)
+  dreamcast:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    fix-info: $configPath$/fix/fix_dreamcast.yaml    #required for accurate audio alignment
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue|gdi) - cue=redump, gdi=tosec
+  saturn:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+  segaCd:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+  cdi: 
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+  pcEngine:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+  default:
+    base-in: 
+    dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
+    mask: mi:*                   #select all files - mask mode
+    #mask: ri:^(.*)$             #select all files - regex mode
+    format: cue                  #format(cue:split or cue:joined)
+    #format: cue:joined
+    #format: cso:9:2k:4          #format:level(9):blockSize(2k):parallelism(4)
+    #format: zso:12:2k:4         #format:level(12):blockSize(2k):parallelism(4)

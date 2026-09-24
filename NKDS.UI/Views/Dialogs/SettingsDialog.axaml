@@ -1,0 +1,428 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:conv="using:NkdsUi.Converters"
+        xmlns:models="using:NkdsUi.Models"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="560" d:DesignHeight="620"
+        x:Class="NkdsUi.Views.Dialogs.SettingsDialog"
+        x:DataType="vm:SettingsDialogViewModel"
+        Width="560" Height="620"
+        MinWidth="480" MinHeight="400"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/NkdsIcon.ico"
+        Title="Settings">
+
+    <DockPanel Margin="16">
+        <!-- Footer with Apply and Close buttons -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="0,12,0,0"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                    <Button Content="OK"
+                            Command="{Binding OkCommand}"/>
+                    <Button Content="Cancel"
+                            Classes="dialogCancel"
+                            Command="{Binding CancelCommand}"/>
+                </StackPanel>
+                <Panel/>
+            </DockPanel>
+        </Border>
+
+        <!-- Tabbed Content -->
+        <TabControl Margin="0,0,0,8">
+
+            <!-- General Tab (existing content) -->
+            <TabItem Header="General">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,12,0,0">
+                    <StackPanel Spacing="20" Margin="0,0,0,8">
+
+                        <!-- OS File Associations Section -->
+                        <StackPanel Spacing="12"
+                                    IsVisible="{Binding IsFileAssociationsSupported}">
+                            <!-- Section Header -->
+                            <TextBlock Text="OS File Associations"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                            <DockPanel>
+                                <StackPanel DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="8">
+                                    <Button Content="All"
+                                            Command="{Binding SelectAllCommand}"
+                                            Padding="8,2"
+                                            FontSize="11"/>
+                                    <Button Content="None"
+                                            Command="{Binding SelectNoneCommand}"
+                                            Padding="8,2"
+                                            FontSize="11"/>
+                                </StackPanel>
+                                <Border Height="1" Background="{DynamicResource MaterialDividerBrush}"
+                                        VerticalAlignment="Center"/>
+                            </DockPanel>
+
+                            <!-- Directory Context Menu Group -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="{Binding DirectoryContextMenuLabel}"
+                                           FontWeight="Medium"
+                                           Opacity="0.85"/>
+                                <Border Padding="12,8"
+                                        CornerRadius="4"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource MaterialDividerBrush}">
+                                    <ItemsControl ItemsSource="{Binding DirectoryEntries}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:AssociationEntryViewModel">
+                                                <StackPanel Spacing="2" Margin="0,2">
+                                                    <!-- Loading indicator -->
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Spacing="6"
+                                                                IsVisible="{Binding IsLoading}">
+                                                        <TextBlock Text="{Binding Label}"
+                                                                   Opacity="0.6"/>
+                                                        <TextBlock Text="— Querying..."
+                                                                   Opacity="0.5"
+                                                                   FontStyle="Italic"/>
+                                                    </StackPanel>
+                                                    <!-- Checkbox (when not loading) -->
+                                                    <CheckBox IsChecked="{Binding IsChecked}"
+                                                              Content="{Binding Label}"
+                                                              IsEnabled="{Binding CanToggle}"
+                                                              IsVisible="{Binding !IsLoading}"/>
+                                                    <!-- Stale warning -->
+                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                               Foreground="Orange"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsStale}"
+                                                               Margin="24,0,0,0"/>
+                                                    <!-- Operation in progress -->
+                                                    <TextBlock Text="Working..."
+                                                               FontStyle="Italic"
+                                                               Opacity="0.6"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsOperationInProgress}"
+                                                               Margin="24,0,0,0"/>
+                                                    <!-- Error message -->
+                                                    <TextBlock Text="{Binding ErrorMessage}"
+                                                               Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                               Margin="24,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- .nkds File Context Menu Group -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text=".nkds File Context Menu"
+                                           FontWeight="Medium"
+                                           Opacity="0.85"/>
+                                <Border Padding="12,8"
+                                        CornerRadius="4"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource MaterialDividerBrush}">
+                                    <ItemsControl ItemsSource="{Binding FileEntries}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:AssociationEntryViewModel">
+                                                <StackPanel Spacing="2" Margin="0,2">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Spacing="6"
+                                                                IsVisible="{Binding IsLoading}">
+                                                        <TextBlock Text="{Binding Label}"
+                                                                   Opacity="0.6"/>
+                                                        <TextBlock Text="— Querying..."
+                                                                   Opacity="0.5"
+                                                                   FontStyle="Italic"/>
+                                                    </StackPanel>
+                                                    <CheckBox IsChecked="{Binding IsChecked}"
+                                                              Content="{Binding Label}"
+                                                              IsEnabled="{Binding CanToggle}"
+                                                              IsVisible="{Binding !IsLoading}"/>
+                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                               Foreground="Orange"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsStale}"
+                                                               Margin="24,0,0,0"/>
+                                                    <TextBlock Text="Working..."
+                                                               FontStyle="Italic"
+                                                               Opacity="0.6"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsOperationInProgress}"
+                                                               Margin="24,0,0,0"/>
+                                                    <TextBlock Text="{Binding ErrorMessage}"
+                                                               Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                               Margin="24,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- .nkds Double-Click Group -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text=".nkds Double-Click"
+                                           FontWeight="Medium"
+                                           Opacity="0.85"/>
+                                <Border Padding="12,8"
+                                        CornerRadius="4"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource MaterialDividerBrush}">
+                                    <ItemsControl ItemsSource="{Binding DoubleClickEntries}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:AssociationEntryViewModel">
+                                                <StackPanel Spacing="2" Margin="0,2">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Spacing="6"
+                                                                IsVisible="{Binding IsLoading}">
+                                                        <TextBlock Text="{Binding Label}"
+                                                                   Opacity="0.6"/>
+                                                        <TextBlock Text="— Querying..."
+                                                                   Opacity="0.5"
+                                                                   FontStyle="Italic"/>
+                                                    </StackPanel>
+                                                    <CheckBox IsChecked="{Binding IsChecked}"
+                                                              Content="{Binding Label}"
+                                                              IsEnabled="{Binding CanToggle}"
+                                                              IsVisible="{Binding !IsLoading}"/>
+                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                               Foreground="Orange"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsStale}"
+                                                               Margin="24,0,0,0"/>
+                                                    <TextBlock Text="Working..."
+                                                               FontStyle="Italic"
+                                                               Opacity="0.6"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding IsOperationInProgress}"
+                                                               Margin="24,0,0,0"/>
+                                                    <TextBlock Text="{Binding ErrorMessage}"
+                                                               Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                               Margin="24,0,0,0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Window Decorations Section (Linux only) -->
+                        <StackPanel Spacing="12"
+                                    IsVisible="{Binding ShowWindowDecorations}">
+                            <!-- Section Header -->
+                            <TextBlock Text="Window Decorations"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                            <Border Height="1" Background="{DynamicResource MaterialDividerBrush}"/>
+
+                            <!-- Radio buttons for decoration mode -->
+                            <StackPanel Spacing="8" Margin="4,0,0,0">
+                                <RadioButton Content="Client-Side Decorations"
+                                             GroupName="DecorationMode"
+                                             IsChecked="{Binding SelectedDecorationMode, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static models:WindowDecorationMode.ClientSideDecorations}}"/>
+                                <RadioButton Content="Native Title Bar"
+                                             GroupName="DecorationMode"
+                                             IsChecked="{Binding SelectedDecorationMode, Converter={x:Static conv:EnumToBoolConverter.Instance}, ConverterParameter={x:Static models:WindowDecorationMode.NativeTitleBar}}"/>
+                            </StackPanel>
+
+                            <!-- Restart notice -->
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="6"
+                                        IsVisible="{Binding ShowRestartNotice}"
+                                        Margin="4,0,0,0">
+                                <TextBlock Text="ⓘ"
+                                           Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Restart required for changes to take effect"
+                                           Opacity="0.85"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Keys & Fix Files Tab -->
+            <TabItem Header="Keys &amp; Fix Files">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,12,0,0"
+                              DataContext="{Binding KeysFixFilesTab}"
+                              x:DataType="vm:KeysFixFilesTabViewModel">
+                    <StackPanel Spacing="10" Margin="0,0,0,8">
+                        <StackPanel.Styles>
+                            <Style Selector="Button.PathButton">
+                                <Setter Property="Height" Value="30"/>
+                                <Setter Property="Width" Value="30"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </StackPanel.Styles>
+
+                        <!-- WiiU Keys -->
+                        <TextBlock Text="WiiU Keys"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Grid ColumnDefinitions="*, 40, 40">
+                            <TextBox Grid.Column="0" Text="{Binding WiiUKeysPath}"
+                                     PlaceholderText="keys/wiiu/*.zip"
+                                     ToolTip.Tip="Path to keys folder or archive. Supports masks e.g. keys/wiiu/*.zip"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseWiiUKeysCommand}"
+                                    ToolTip.Tip="Select keys folder">
+                                <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                            </Button>
+                            <Button Grid.Column="2" Classes="PathButton" Command="{Binding BrowseWiiUKeysArchiveCommand}"
+                                    ToolTip.Tip="Select keys archive (zip, 7z, rar)">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- PS3 Keys -->
+                        <TextBlock Text="PS3 Keys"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,6,0,0"/>
+                        <Grid ColumnDefinitions="*, 40, 40">
+                            <TextBox Grid.Column="0" Text="{Binding Ps3KeysPath}"
+                                     PlaceholderText="keys/ps3/*.zip"
+                                     ToolTip.Tip="Path to keys folder or archive. Supports masks e.g. keys/ps3/*.zip"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowsePs3KeysCommand}"
+                                    ToolTip.Tip="Select keys folder">
+                                <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                            </Button>
+                            <Button Grid.Column="2" Classes="PathButton" Command="{Binding BrowsePs3KeysArchiveCommand}"
+                                    ToolTip.Tip="Select keys archive (zip, 7z, rar)">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- GameCube Fix Section -->
+                        <TextBlock Text="GameCube Fix"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,6,0,0"/>
+                        <Grid ColumnDefinitions="*, 40">
+                            <TextBox Grid.Column="0" Text="{Binding GameCubeFixInfoPath}"
+                                     PlaceholderText="fix/fix_gamecube.yaml"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.GameCubeFixInfoTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseGameCubeFixInfoCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.GameCubeFixInfoTooltip}">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+                        <!-- GameCube Fix Files - hidden (not currently used by NKDS) -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
+                            <TextBox Grid.Column="0" Text="{Binding GameCubeFixFilesPath}"
+                                     PlaceholderText="fix/gamecube"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.GameCubeFixFilesTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseGameCubeFixFilesCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.GameCubeFixFilesTooltip}">
+                                <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Wii Fix Section -->
+                        <TextBlock Text="Wii Fix"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,6,0,0"/>
+                        <!-- Wii Fix Info - hidden (not currently used by NKDS) -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
+                            <TextBox Grid.Column="0" Text="{Binding WiiFixInfoPath}"
+                                     PlaceholderText="fix/fix_wii.yaml"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixInfoTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseWiiFixInfoCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixInfoTooltip}">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+                        <Grid ColumnDefinitions="*, 40">
+                            <TextBox Grid.Column="0" Text="{Binding WiiFixFilesPath}"
+                                     PlaceholderText="fix/wii"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixFilesTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseWiiFixFilesCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixFilesTooltip}">
+                                <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- PS3 Fix Section -->
+                        <TextBlock Text="PS3 Fix"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,6,0,0"/>
+                        <Grid ColumnDefinitions="*, 40">
+                            <TextBox Grid.Column="0" Text="{Binding Ps3FixInfoPath}"
+                                     PlaceholderText="fix/fix_ps3.yaml"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.Ps3FixInfoTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowsePs3FixInfoCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.Ps3FixInfoTooltip}">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+                        <!-- PS3 Fix Files - hidden (not currently used by NKDS) -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
+                            <TextBox Grid.Column="0" Text="{Binding Ps3FixFilesPath}"
+                                     PlaceholderText="fix/ps3"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.Ps3FixFilesTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowsePs3FixFilesCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.Ps3FixFilesTooltip}">
+                                <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Dreamcast Fix Section -->
+                        <TextBlock Text="Dreamcast Fix"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Margin="0,6,0,0"/>
+                        <Grid ColumnDefinitions="*, 40">
+                            <TextBox Grid.Column="0" Text="{Binding DreamcastFixInfoPath}"
+                                     PlaceholderText="fix/fix_dreamcast.yaml"
+                                     ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.DreamcastFixInfoTooltip}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseDreamcastFixInfoCommand}"
+                                    ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.DreamcastFixInfoTooltip}">
+                                <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Reset to Defaults -->
+                        <Button Content="Reset to Defaults"
+                                Command="{Binding ResetToDefaultsCommand}"
+                                HorizontalAlignment="Left"
+                                Padding="12,4"
+                                Margin="0,8,0,0"/>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>

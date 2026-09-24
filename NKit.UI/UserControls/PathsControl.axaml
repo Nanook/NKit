@@ -1,0 +1,200 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:local="clr-namespace:NKit.Ui.ViewModels"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             mc:Ignorable="d" d:DesignWidth="540" d:DesignHeight="460"
+             x:Class="NKit.Ui.UserControls.PathsControl"
+             x:DataType="local:PathsControlViewModel">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalAlignment="Stretch"
+                  Theme="{StaticResource MaterialModernScrollViewer}">
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="3,5,10,5">
+			<StackPanel.Styles>
+				<Style Selector="TextBox">
+					<Setter Property="UseFloatingWatermark" Value="True"></Setter>
+					<Setter Property="MinWidth" Value="300" />
+				</Style>
+				<Style Selector="Button.PathButton">
+					<Setter Property="Height" Value="30"></Setter>
+					<Setter Property="Width" Value="30"></Setter>
+					<Setter Property="VerticalAlignment" Value="Bottom" />
+					<Setter Property="Margin" Value="5,5,0,0" />
+				</Style>
+				<Style Selector="TextBlock.SectionHeader">
+					<Setter Property="FontWeight" Value="Bold" />
+					<Setter Property="FontSize" Value="16" />
+					<Setter Property="Margin" Value="0,8,0,3" />
+				</Style>
+				<Style Selector="Border.SectionContainer">
+					<Setter Property="BorderBrush" Value="DarkGray" />
+					<Setter Property="BorderThickness" Value="1" />
+					<Setter Property="CornerRadius" Value="3" />
+					<Setter Property="Padding" Value="8" />
+					<Setter Property="Margin" Value="0,0,0,8" />
+					<Setter Property="Background" Value="{DynamicResource MaterialCardBackgroundBrush}" />
+				</Style>
+			</StackPanel.Styles>
+
+			<!-- User Path Info -->
+            <SelectableTextBlock FontSize="12" Margin="0,0,0,10" TextWrapping="NoWrap"  tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_RootPath}">
+                <Run Text="Root Path: "/><Run Text="{Binding UserPath}" FontWeight="Bold"/>
+            </SelectableTextBlock>
+
+            <!-- =========================== BASIC PATHS SECTION =========================== -->
+            <TextBlock Text="Basic Paths" Classes="SectionHeader"/>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <!-- Base In -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Base In Path" Text="{Binding Settings.BaseInPath_Display}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_BaseInPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectBaseInFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectBaseIn}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Out -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" Text="{Binding Settings.OutPath}" wpf:TextFieldAssist.Label="Out Path" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_OutPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectOutputFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectOutput}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Temp Folder-->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Temp Folder Path" Text="{Binding Settings.TmpPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_TmpPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectTempFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectTemp}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- =========================== SCAN PATHS SECTION =========================== -->
+            <TextBlock Text="Scan Paths" Classes="SectionHeader"/>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <!-- Scan In -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Scan In Path" Text="{Binding Settings.ScanInPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_ScanInPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectScanInFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectScanIn}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Scan Out -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Scan Out Path" Text="{Binding Settings.ScanOutPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_ScanOutPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectScanOutFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectScanOut}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+
+            <!-- =========================== FIX CONFIGURATION SECTION =========================== -->
+            <StackPanel IsVisible="{Binding IsFixInfoPathEnabled}">
+                <TextBlock Text="Fix Configuration" Classes="SectionHeader"/>
+                <Border Classes="SectionContainer">
+                    <StackPanel Orientation="Vertical" Spacing="8">
+                        <!-- Fix Info -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="{Binding IsFixInfoPathEnabled}">
+                            <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Fix Info Path" Text="{Binding Settings.FixInfoPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_FixInfoPath}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Click="OnSelectFixInfoFileClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectFixInfo}">
+                                <avalonia:MaterialIcon Kind="FileOutline" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Fix Files -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="{Binding IsFixFilesPathEnabled}">
+                            <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Fix Files Path" Text="{Binding Settings.FixFilesPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_FixFilesPath}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Click="OnSelectFixFilesFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectFixFiles}">
+                                <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- =========================== KEYS CONFIGURATION SECTION =========================== -->
+            <StackPanel IsVisible="{Binding IsKeysPathEnabled}">
+                <TextBlock Text="Keys (.key, .dkey, .keys, keys.txt)" Classes="SectionHeader"/>
+                <Border Classes="SectionContainer">
+                    <StackPanel Orientation="Vertical" Spacing="8">
+                        <!-- Keys Path (single field - supports folder path or path with archive mask e.g. keys/*.zip) -->
+                        <Grid ColumnDefinitions="*, 40, 40">
+                            <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Keys Path" Text="{Binding Settings.KeysPath}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_KeysPath}"/>
+                            <Button Grid.Column="1" Classes="PathButton" Click="OnSelectKeysPathClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectKeys}">
+                                <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                            </Button>
+                            <Button Grid.Column="2" Classes="PathButton" Click="OnSelectKeysArchiveClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectKeysArchive}">
+                                <avalonia:MaterialIcon Kind="FileOutline" Width="20" Height="20"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- =========================== DAT COLLECTIONS SECTION =========================== -->
+            <TextBlock Text="Dat Collections (Global)" Classes="SectionHeader"/>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <!-- Redump Dats -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Redump DATs Path" Text="{Binding Settings.RedumpDatsPath_Display}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_RedumpDatsPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectRedumpDatsFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectRedumpDats}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- NoIntro Dats -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="NoIntro DATs Path" Text="{Binding Settings.NoIntroDatsPath_Display}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_NoIntroDatsPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectNoIntroDatsFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectNoIntroDats}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- TOSEC Dats -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="TOSEC DATs Path" Text="{Binding Settings.TosecDatsPath_Display}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_TosecDatsPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectTosecDatsFolderClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectTosecDats}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- =========================== DAT CONFIGURATION SECTION =========================== -->
+            <TextBlock Text="DAT Configuration" Classes="SectionHeader"/>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <!-- Dat Path -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="DAT Path" Text="{Binding Settings.DatPath_Manual_Display}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_DatPath}"/>
+                        <Button Grid.Column="1" Classes="PathButton" Click="OnSelectDatPathClicked" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Button_SelectDatPath}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Dat Archive Mask -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Archive Mask (optional archive mode)" Text="{Binding Settings.DatArchiveMask}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_DatArchiveMask}"/>
+                    </Grid>
+
+                    <!-- Dat Mask -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="DAT Mask (supports folder and archives)" Text="{Binding Settings.DatMask}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_DatMask}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

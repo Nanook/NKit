@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net10.0;net8.0;netstandard2.1</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="NKitDataStore.Tests" />
+    <InternalsVisibleTo Include="NKit.Tests" />
+    <InternalsVisibleTo Include="NKitLib" />
+    <InternalsVisibleTo Include="NKDSLib" />
+    <!-- Remaining app grant: the NKDS.UI block-comparison and hash-cache diagnostics reach
+         DataStore.DataAccess (IDataStoreDataAccess) directly. Promote to a clean public facade
+         when NKDS gets a dedicated public-API pass, then this grant can be removed. -->
+    <InternalsVisibleTo Include="nkds-ui" />
+    <InternalsVisibleTo Include="NKDS.Converter" />
+    <InternalsVisibleTo Include="NKDS.Converter.Tests" />
+    <InternalsVisibleTo Include="NkdsDump" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GrindCore" Version="0.9.0" />
+  </ItemGroup>
+
+</Project>

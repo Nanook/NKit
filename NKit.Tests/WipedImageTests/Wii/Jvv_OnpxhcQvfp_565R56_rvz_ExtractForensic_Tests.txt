@@ -1,0 +1,28 @@
+d05db85d	50000	/000000000_ImageHeader/Data.bin
+db15b374	20000	/000050000_PartitionHeader/Data.bin
+da4000b2	440	/000070000_FileSystem/__boot.bin
+ddca6b3c	2000	/000070000_FileSystem/__bi2.bin
+d58e4ce1	341bc	/000070000_FileSystem/__apploader.img
+83bc6a4f	140	/000070000_FileSystem/__main.dol
+9b17286e	7c	/000070000_FileSystem/__fst.bin
+302fc747	24e00	/000070000_FileSystem/_flf/OBBG7-19-i7-cebq.wad
+b07cbf6c	189b80	/000070000_FileSystem/_flf/VBF61-19-i702-cebq.wad
+b30a4edf	420	/000070000_FileSystem/__hcqngr.inf
+bb9811f5	20000	/00F800000_PartitionHeader/Data.bin
+cd4f3553	440	/00F820000_FileSystem/__boot.bin
+ddca6b3c	2000	/00F820000_FileSystem/__bi2.bin
+dd8f382e	3441c	/00F820000_FileSystem/__apploader.img
+b1fcd62a	146d60	/00F820000_FileSystem/__main.dol
+c8ea661d	a0	/00F820000_FileSystem/__fst.bin
+e8b8467d	fc0	/00F820000_FileSystem/qripregf/qhzzl-pyf.wad
+958390ce	11c0	/00F820000_FileSystem/qripregf/qhzzl-ybp.wad
+d615db90	136000	/00F820000_FileSystem/ivrjre/pbagragGrfgQ.wad
+011ffca6	8000	/00F820000_FileSystem/mmmmmmmm.zzz
+000000000_ImageHeader
+000050000_PartitionHeader
+000070000_FileSystem
+000070000_FileSystem/_flf
+00F800000_PartitionHeader
+00F820000_FileSystem
+00F820000_FileSystem/qripregf
+00F820000_FileSystem/ivrjre

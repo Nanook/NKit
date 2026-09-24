@@ -13,9 +13,6 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-# Mono auto generated files
-mono_crash.*
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -29,7 +26,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-[Ll]ogs/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -43,10 +39,9 @@ Generated\ Files/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-# NUnit
+# NUNIT
 *.VisualState.xml
 TestResult.xml
-nunit-*.xml
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
@@ -127,6 +122,9 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
+# JustCode is a .NET coding add-in
+.JustCode
+
 # TeamCity is a build add-in
 _TeamCity*
 
@@ -184,8 +182,6 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
-# NuGet Symbol Packages
-*.snupkg
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
@@ -210,8 +206,6 @@ BundleArtifacts/
 Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
-*.appxbundle
-*.appxupload
 
 # Visual Studio cache files
 # files ending in .cache can be ignored
@@ -261,9 +255,7 @@ ServiceFabricBackup/
 *.bim.layout
 *.bim_*.settings
 *.rptproj.rsuser
-*- [Bb]ackup.rdl
-*- [Bb]ackup ([0-9]).rdl
-*- [Bb]ackup ([0-9][0-9]).rdl
+*- Backup*.rdl
 
 # Microsoft Fakes
 FakesAssemblies/
@@ -298,6 +290,10 @@ paket-files/
 
 # FAKE - F# Make
 .fake/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
 
 # CodeRush personal settings
 .cr/personal
@@ -343,8 +339,78 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
-# Backup folder for Package Reference Convert tool in Visual Studio 2017
-MigrationBackup/
+# NKit UI - exclude Settings.json
+Settings.json
 
-# Ionide (cross platform F# VS Code tools) working folder
-.ionide/
+# GrindCore native libs downloaded at build time (CI + build regenerate this)
+.grindcore-native/
+
+# Local build output — zips + working dirs produced by build/build-all.ps1
+build-output/
+
+# Windows build artefacts that land in repo root (build.ps1 before move to build-output/)
+# Patterns cover both the zip file AND any extracted folder with the same base name
+NKit_CLI_win-x64_*
+NKit_UI_win-x64_*
+NKit_win-x64_*
+
+# Linux localbuild intermediate output (Docker build working dir, gitignored in full)
+localbuild/
+
+# Build logs that land in repo root
+aot-build.log
+docker-build.log
+*.host.*.log
+
+# kiro scratch runner
+kiro-run.ps1
+
+# NKit development scratch / private dirs — never in public repo
+NKitVault/
+Wiki/
+.kiro/
+.nuget/
+.cache/
+publish/
+TestResults/
+
+# Root scratch files
+Todo.txt
+UiTodo.txt
+NKit\ TODO.txt
+AppUsage.txt
+Issues.txt
+Gotchas.txt
+ImageNotes.txt
+GitSubTree.txt
+Engine.txt
+SamySuggestions.txt
+UIPublishNotes.txt
+UIReleaseNotes.txt
+region_files.txt
+TESTS.md
+diff.txt
+test.txt
+test-output.txt
+preprocessed.xml
+probe.cs
+cleanse-analysis.ps1
+cleanse-analysis.out.txt
+publish-diagnostic.log
+publish-NKitUI.binlog
+nkit_debug.log
+debug-mac.sh
+transferring
+CACHED
+
+# Personal dev config — never ship
+NKitApp/nkit-dev.yaml
+NKit.UI/nkit-ui-dev.yaml
+
+
+# Visual Studio launch settings contain personal machine paths — never ship
+**/Properties/launchSettings.json
+
+# Sub-project solution files — use NKit.slnx only
+Tmds.Fuse/Tmds.Fuse.sln
+XboxKit/XboxKit.sln

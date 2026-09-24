@@ -1,0 +1,15 @@
+DATA/sys/fst.bin	65624658
+DATA/sys/main.dol	AAF11F03
+DATA/sys/apploader.img	84A996C6
+DATA/sys/bi2.bin	4819D6F4
+DATA/sys/boot.bin	B231C936
+DATA/disc/region.bin	190A55AD
+DATA/disc/header.bin	EE1A184B
+DATA/h3.bin	FB89FD3C
+DATA/cert.bin	BF34F23D
+DATA/tmd.bin	36630B67
+DATA/ticket.bin	7C2F8DBA
+DATA/files/File1	613287c6
+DATA/files/Subfolder/File2	d4de8064
+DATA/files/Subfolder/File3	b87a82fa
+DATA/files/File4	64778961

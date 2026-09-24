@@ -1,0 +1,14 @@
+efb2cb75	13800	/pqv_tgeP7
+c71c0011	1000	/pqv_tgeP7_qngn
+cfdc5447	25000	/pqv_tgeP7q
+d8f49994	2000	/pqv_pi_pc
+8a258aec	3000	/pqv_ohzcre
+16d13407	c000	/pqv_aiehv
+96871995	8800	/pqv_aiehv_erf
+e14994ba	334	/ohzcre.map
+fb51bab4	148800	/ohzcre.rtf
+e4c10e3d	5fbd000	/rai.rtf
+1dcdf777	41	/pbclevtug
+2d28a891	150	/pyf_nofgenpg
+6fd57465	3ff	/pyf_ovoyvb
+

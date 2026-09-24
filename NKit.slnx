@@ -1,0 +1,122 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Deploy" />
+    <BuildType Name="Release" />
+    <BuildType Name="ReleaseTest" />
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="README.md" />
+    <File Path="TRADEMARK.md" />
+    <File Path="LICENSE" />
+  </Folder>
+  <Folder Name="/OGMR/">
+    <File Path="OGMR/README.md" />
+    <File Path="OGMR/dat_grouper.py" />
+  </Folder>
+  <Folder Name="/OGMR/microsoft_xbox/">
+    <File Path="OGMR/microsoft_xbox/microsoft_xbox_ogmr.yaml" />
+    <File Path="OGMR/microsoft_xbox/suggestions.yaml" />
+    <File Path="OGMR/microsoft_xbox/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/microsoft_xbox_360/">
+    <File Path="OGMR/microsoft_xbox_360/microsoft_xbox_360_ogmr.yaml" />
+    <File Path="OGMR/microsoft_xbox_360/suggestions.yaml" />
+    <File Path="OGMR/microsoft_xbox_360/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/nintendo_gamecube/">
+    <File Path="OGMR/nintendo_gamecube/nintendo_gamecube_ogmr.yaml" />
+    <File Path="OGMR/nintendo_gamecube/suggestions.yaml" />
+    <File Path="OGMR/nintendo_gamecube/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/nintendo_wii/">
+    <File Path="OGMR/nintendo_wii/nintendo_wii_ogmr.yaml" />
+    <File Path="OGMR/nintendo_wii/suggestions.yaml" />
+    <File Path="OGMR/nintendo_wii/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/nintendo_wiiu/">
+    <File Path="OGMR/nintendo_wiiu/nintendo_wiiu_ogmr.yaml" />
+    <File Path="OGMR/nintendo_wiiu/suggestions.yaml" />
+    <File Path="OGMR/nintendo_wiiu/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/sony_ps1/">
+    <File Path="OGMR/sony_ps1/sony_ps1_ogmr.yaml" />
+    <File Path="OGMR/sony_ps1/suggestions.yaml" />
+    <File Path="OGMR/sony_ps1/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/sony_ps2/">
+    <File Path="OGMR/sony_ps2/sony_ps2_ogmr.yaml" />
+    <File Path="OGMR/sony_ps2/suggestions.yaml" />
+    <File Path="OGMR/sony_ps2/translations.yaml" />
+  </Folder>
+  <Folder Name="/OGMR/sony_ps3/">
+    <File Path="OGMR/sony_ps3/sony_ps3_ogmr.yaml" />
+    <File Path="OGMR/sony_ps3/suggestions.yaml" />
+    <File Path="OGMR/sony_ps3/translations.yaml" />
+  </Folder>
+  <Project Path="NKDS.Converter.Tests/NKDS.Converter.Tests.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKDS.Converter/NKDS.Converter.csproj">
+    <BuildType Solution="Deploy|*" Project="Release" />
+    <BuildType Solution="ReleaseTest|*" Project="Release" />
+  </Project>
+  <Project Path="NKDS.UI/NKDS.UI.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKDS/NKDS.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Release" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKDSApp/NKDSApp.csproj">
+    <BuildType Solution="Deploy|*" Project="Release" />
+    <BuildType Solution="ReleaseTest|*" Project="Release" />
+  </Project>
+  <Project Path="NKDS.Tests/NKDS.Tests.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKit.SampleProcessingApp/NKit.SampleProcessingApp.csproj">
+    <BuildType Solution="Deploy|*" Project="Debug" />
+    <BuildType Solution="ReleaseTest|*" Project="Debug" />
+  </Project>
+  <Project Path="NKit.Tests/NKit.Tests.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+    <Build Solution="Release|Any CPU" Project="false" />
+  </Project>
+  <Project Path="NKit.UI/NKit.UI.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+  </Project>
+  <Project Path="NKit/NKit.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Debug" />
+  </Project>
+  <Project Path="NKitApp/NKitApp.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKitCore/NKitCore.csproj">
+    <BuildType Solution="Deploy|*" Project="Release" />
+    <BuildType Solution="ReleaseTest|*" Project="Release" />
+  </Project>
+  <Project Path="NKitDataStore.Tests/NKitDataStore.Tests.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Release" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKitDataStore/NKitDataStore.csproj">
+    <BuildType Solution="Deploy|Any CPU" Project="Release" />
+    <BuildType Solution="ReleaseTest|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="NKitStream/NKitStream.csproj">
+    <BuildType Solution="Deploy|*" Project="Release" />
+    <BuildType Solution="ReleaseTest|*" Project="Release" />
+  </Project>
+  <Project Path="Tmds.Fuse/src/Tmds.Fuse/Tmds.Fuse.csproj">
+    <BuildType Solution="Deploy|*" Project="Release" />
+    <BuildType Solution="ReleaseTest|*" Project="Release" />
+  </Project>
+</Solution>

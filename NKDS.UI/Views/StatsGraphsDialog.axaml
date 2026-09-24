@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:converters="using:NkdsUi.Converters"
+        x:Class="NkdsUi.Views.StatsGraphsDialog"
+        x:DataType="vm:StatsGraphsViewModel"
+        Icon="/Assets/NkdsIcon.ico"
+        Title="Storage Analysis"
+        Width="500" Height="540"
+        WindowStartupLocation="CenterOwner">
+    <Grid ColumnDefinitions="60,*" Margin="20">
+        <!-- Left: Vertical stacked bar -->
+        <Border Grid.Column="0" CornerRadius="4" ClipToBounds="True" Margin="0,0,15,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="{Binding CreateableRemovedSegment, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                    <RowDefinition Height="{Binding DedupSavedSegment, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                    <RowDefinition Height="{Binding CompressionSavedSegment, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                    <RowDefinition Height="{Binding StoredSegment, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#4CAF50"/>
+                <Border Grid.Row="1" Background="#9C27B0"/>
+                <Border Grid.Row="2" Background="#2196F3"/>
+                <Border Grid.Row="3" Background="#FF9800"/>
+            </Grid>
+        </Border>
+
+        <!-- Right: Stats table -->
+        <ScrollViewer Grid.Column="1">
+            <StackPanel Spacing="6">
+                <!-- Title -->
+                <TextBlock Text="Storage Analysis" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <!-- Original Size -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Original Size" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TotalImageSizeDisplay}" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,0">
+                    <TextBlock Text="Block References" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TotalBlockRefs, StringFormat='{}{0:N0}'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Border Height="1" Background="{DynamicResource MaterialDividerBrush}" Margin="0,6"/>
+
+                <!-- Step 1: Saved Space -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Width="10" Height="10" Background="#4CAF50" CornerRadius="2" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Grid.Column="1" Text="Saved Space" Foreground="#4CAF50" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="2" Text="{Binding JunkRemovedDisplay}" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Recreatable data discarded (padding, nulls, compression)" Opacity="0.5" FontSize="11"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Saved" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding JunkRemovalPct, StringFormat='{}{0:F1}%'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Border Height="1" Background="{DynamicResource MaterialDividerBrush}" Margin="0,6"/>
+
+                <!-- Step 2: Shared Blocks (Deduplication) -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Width="10" Height="10" Background="#9C27B0" CornerRadius="2" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Grid.Column="1" Text="Sharing Saved" Foreground="#9C27B0" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="2" Text="{Binding DedupSavingsDisplay}" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Duplicate blocks stored once, shared between images" Opacity="0.5" FontSize="11"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Saved" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding DedupReductionPct, StringFormat='{}{0:F1}%'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Unique Blocks" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding UniqueBlocks, StringFormat='{}{0:N0}'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Border Height="1" Background="{DynamicResource MaterialDividerBrush}" Margin="0,6"/>
+
+                <!-- Step 3: Shrunk (Compression) -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Width="10" Height="10" Background="#2196F3" CornerRadius="2" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Grid.Column="1" Text="Compression Saved" Foreground="#2196F3" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="2" Text="{Binding CompressionSavingsDisplay}" FontWeight="Bold" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Compression shrunk blocks to reduce storage further" Opacity="0.5" FontSize="11"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Saved" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding CompressionReductionPct, StringFormat='{}{0:F1}%'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Shrunk Blocks" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Opacity="0.7" HorizontalAlignment="Right">
+                        <Run Text="{Binding CompressedBlocks, StringFormat='{}{0:N0}', Mode=OneWay}"/><Run Text=" ("/><Run Text="{Binding CompressedBlocksPct, StringFormat='{}{0:F1}%', Mode=OneWay}"/><Run Text=")"/>
+                    </TextBlock>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Incompressible Blocks" Opacity="0.7"/>
+                    <TextBlock Grid.Column="1" Text="{Binding UncompressedBlocks, StringFormat='{}{0:N0}'}" Opacity="0.7" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Border Height="1" Background="{DynamicResource MaterialDividerBrush}" Margin="0,6"/>
+
+                <!-- Final Result -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Width="10" Height="10" Background="#FF9800" CornerRadius="2" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Grid.Column="1" Text="Final Stored" Foreground="#FF9800" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="2" Text="{Binding AfterCompressionSizeDisplay}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Total Saved" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TotalReductionPct, StringFormat='{}{0:F1}%'}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" Margin="18,0,0,0">
+                    <TextBlock Text="Size of Original" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="{Binding FinalRatioDisplay}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

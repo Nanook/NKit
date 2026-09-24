@@ -1,0 +1,24 @@
+# Force LF line endings for all text files — no CRLF anywhere in this repo.
+# This ensures shell scripts, C# source, YAML, etc. all use LF on checkout
+# regardless of OS or git.core.autocrlf setting.
+
+* text=auto eol=lf
+
+# Explicitly mark binary files so git never touches them
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.ico  binary
+*.zip  binary
+*.7z   binary
+*.gz   binary
+*.nupkg binary
+*.dll  binary
+*.exe  binary
+*.so   binary
+*.a    binary
+*.lib  binary
+*.dylib binary
+*.pdb  binary
+*.p7s  binary
+*.sha512 binary

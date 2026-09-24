@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="NKit.Ui.UserControls.UiOptionsControl"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="400"
+             x:DataType="vm:UiOptionsControlViewModel">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Theme="{StaticResource MaterialModernScrollViewer}">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="0,0,0,5">
+            <Label Content="Status Filters:" Margin="0,5,0,0" FontWeight="Bold" />
+            <Grid RowDefinitions="30,30,30,30,30,30" Margin="5,5,5,5">
+                <CheckBox Grid.Row="0" IsChecked="{Binding UiSettings.ShowQueued}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="ClockTimeThreeOutline" Foreground="White" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Queued" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowQueued}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="1" IsChecked="{Binding UiSettings.ShowProcessing}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="Autorenew" Foreground="LightBlue" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Processing" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowProcessing}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="2" IsChecked="{Binding UiSettings.ShowCancelled}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="Cancel" Foreground="Red" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Cancelled" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowCancelled}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="3" IsChecked="{Binding UiSettings.ShowSkipped}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="HelpCircleOutline" Foreground="Orange" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Skipped" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowSkipped}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="4" IsChecked="{Binding UiSettings.ShowFailed}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="AlertCircleOutline" Foreground="Red" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Failed" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowFailed}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="5" IsChecked="{Binding UiSettings.ShowCompleted}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="CheckCircleOutline" Foreground="Green" Margin="0,0,5,0"/>
+                        <TextBlock Text="Show Completed" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ShowCompleted}" />
+                    </StackPanel>
+                </CheckBox>
+            </Grid>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="0,0,0,5">
+            <Label Content="File Queue:" FontWeight="Bold" />
+            <Grid RowDefinitions="30,30,30,30" Margin="5,5,5,5">
+                <CheckBox Grid.Row="0" IsChecked="{Binding UiSettings.ReprocessSkippedFiles}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="HelpCircleOutline" Foreground="Orange" Margin="0,0,5,0"/>
+                        <TextBlock Text="Reprocess Skipped Files" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ReprocessSkippedFiles}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="1" IsChecked="{Binding UiSettings.ReprocessFailedFiles}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="AlertCircleOutline" Foreground="Red" Margin="0,0,5,0"/>
+                        <TextBlock Text="Reprocess Failed Files" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ReprocessFailedFiles}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="2" IsChecked="{Binding UiSettings.ReprocessCompletedFiles}">
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="CheckCircleOutline" Foreground="Green" Margin="0,0,5,0"/>
+                        <TextBlock Text="Reprocess Completed Files" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ReprocessCompletedFiles}" />
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox Grid.Row="3" IsChecked="{Binding UiSettings.PersistFileQueue}"><TextBlock Text="Persist File Queue" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_PersistFileQueue}"/></CheckBox>
+            </Grid>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="0,0,0,5">
+            <Label Content="Console Output:" FontWeight="Bold" />
+            <Grid RowDefinitions="30,30" Margin="5,5,5,5">
+                <CheckBox Grid.Row="0" IsChecked="{Binding UiSettings.ConsoleOutputAutoScroll}"><TextBlock Text="Auto-Scroll" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ConsoleOutputAutoScroll}"/></CheckBox>
+                <CheckBox Grid.Row="1" IsChecked="{Binding UiSettings.ConsoleOutputWrapText}"><TextBlock Text="Wrap Text" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Ui_ConsoleOutputWrapText}"/></CheckBox>
+            </Grid>
+        </StackPanel>
+        <!-- Tooltip option -->
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="0,10,0,0">
+            <Label Content="UI Options:" FontWeight="Bold"/>
+            <CheckBox IsChecked="{Binding UiSettings.ShowTooltips}" Content="Show tooltips" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.General_ShowTooltips}"/>
+        </StackPanel>
+        <!-- Linux Window Decoration Mode (visible only on Linux) -->
+        <StackPanel Orientation="Vertical" Spacing="4" Margin="0,10,0,0"
+                    IsVisible="{OnPlatform False, Linux=True}">
+            <Label Content="Window Decorations (Linux):" FontWeight="Bold"/>
+            <CheckBox IsChecked="{Binding UseNativeTitleBar}" Content="Use native OS title bar (requires restart)"/>
+        </StackPanel>
+    </StackPanel>
+    </ScrollViewer>
+</UserControl>

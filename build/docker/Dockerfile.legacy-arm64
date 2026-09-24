@@ -1,0 +1,25 @@
+FROM ubuntu:18.04
+
+# Install build prerequisites
+RUN apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      curl ca-certificates gnupg2 apt-transport-https software-properties-common \
+      build-essential clang pkg-config zlib1g-dev libssl-dev libicu-dev file zip libunwind8 gettext \
+      libatomic1 gcc libgcc-7-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add LLVM-12 (Ubuntu 18.04 stock clang lacks lld; LLVM-12 provides it for ARM64)
+RUN curl -sSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main" > /etc/apt/sources.list.d/llvm.list && \
+    apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends clang-12 lld-12 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install .NET SDK via dotnet-install script
+ENV DOTNET_INSTALL_DIR=/usr/share/dotnet
+RUN curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
+    bash /tmp/dotnet-install.sh --channel 10.0 --install-dir "$DOTNET_INSTALL_DIR" --architecture arm64 && \
+    rm -f /tmp/dotnet-install.sh
+
+ENV PATH="$DOTNET_INSTALL_DIR:$PATH"
+WORKDIR /workspace

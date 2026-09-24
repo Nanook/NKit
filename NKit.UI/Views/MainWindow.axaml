@@ -1,0 +1,179 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NKit.Ui.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:uc="clr-namespace:NKit.Ui.UserControls"
+		xmlns:cnv="clr-namespace:NKit.Ui.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		Width="1200" MinWidth="1200" MinHeight="720"
+        x:Class="NKit.Ui.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/NKitLogo.ico"
+		WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        Title="">
+
+    <Window.Resources>
+        <cnv:SafeSvgPathConverter x:Key="SafeSvgPathConverter"/>
+    </Window.Resources>
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+	<!-- Ensures bottom of windows isn't truncated when in full screen. -->
+	<Window.Styles>
+		<Style Selector="Window[WindowState=Maximized]">
+			<Setter Property="Padding" Value="8" />
+		</Style>
+	</Window.Styles>
+	<Panel>
+	<Grid RowDefinitions="90, *" ColumnDefinitions="160, *" Margin="0,5,0,0">
+		<!-- Window caption buttons (Linux only — Windows/macOS provide their own) -->
+		<StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="0"
+		            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"
+		            Name="LinuxCaptionButtons"
+		            IsVisible="{OnPlatform False, Linux=True}">
+			<Button Click="minimizeWindow" Background="Transparent" BorderThickness="0"
+			        Width="36" Height="36" Padding="0" Cursor="Hand">
+				<TextBlock Text="─" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			</Button>
+			<Button Click="maximizeWindow" Background="Transparent" BorderThickness="0"
+			        Width="36" Height="36" Padding="0" Cursor="Hand">
+				<TextBlock Text="□" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			</Button>
+			<Button Click="closeWindow" Background="Transparent" BorderThickness="0"
+			        Width="36" Height="36" Padding="0" Cursor="Hand">
+				<TextBlock Text="✕" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"
+				           Foreground="#F44336"/>
+			</Button>
+		</StackPanel>
+		<!-- Title bar drag area (Linux only) -->
+		<Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="Transparent"
+		        PointerPressed="titleBar_PointerPressed"
+		        IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"
+		        ZIndex="-1"/>
+		<Svg Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Path="avares://nkit-ui/Assets/NKitLogo.svg" Margin="5,10,0,0" ToolTip.Tip="{Binding NKitVersion}"/>
+		<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0,5,0">
+			<ListBox
+				Name="lboxTasks"
+				ItemsSource="{Binding TaskTypes}"
+				SelectedItem="{Binding SelectedTask}"
+				SelectionChanged="task_OnSelectionChanged"
+				Tapped="task_OnTapped"
+				Grid.Row="1"
+				SelectionMode="Single"
+				ScrollViewer.VerticalScrollBarVisibility="Disabled">
+				<ListBox.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal"/>
+					</ItemsPanelTemplate>
+				</ListBox.ItemsPanel>
+				<ListBox.Styles>
+					<Style Selector="ListBoxItem:selected > Border">
+						<Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+						<Setter Property="ToolTip.Tip" Value="{Binding}"/>
+					</Style>
+					<!-- Cross-platform press/hover feedback (Windows provides this natively; Linux/macOS need explicit styles) -->
+					<Style Selector="ListBoxItem:not(:selected):pointerover > Border">
+						<Setter Property="Background" Value="#1ACE93D8"/>
+					</Style>
+					<Style Selector="ListBoxItem:pressed > Border">
+						<Setter Property="Background" Value="#33CE93D8"/>
+					</Style>
+				</ListBox.Styles>
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Border
+							BorderThickness="1"
+							BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+							CornerRadius="4"
+							Height="75"
+							Width="115"
+							Padding="5">
+							<StackPanel Orientation="Vertical">
+								<Svg Path="{Binding, Converter={StaticResource SafeSvgPathConverter}, ConverterParameter='Tasks'}" 
+								     Height="35" Width="35" Margin="5,5,5,5" ToolTip.Tip="{Binding}" />
+								<TextBlock Text="{Binding}" FontFamily="/Assets/Fonts/Chromia.otf#Chromia" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+							</StackPanel>
+						</Border>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+		<Grid Grid.Row="1" RowDefinitions="* 68">
+			<ScrollViewer Grid.Row="0" Margin="5,5,0,0" Theme="{StaticResource MaterialModernScrollViewer}">
+				<ListBox
+				Name="lboxSystems"
+				Margin="0,0,5,0"
+					ItemsSource="{Binding SystemTypes}"
+					SelectionChanged="system_OnSelectionChanged"
+					Grid.Row="1" SelectionMode="Single"
+					ScrollViewer.VerticalScrollBarVisibility="Auto"
+					SelectedItem="{Binding SelectedSystem}">
+					<ListBox.Styles>
+						<Style Selector="ListBoxItem:selected > Border">
+							<Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+						</Style>
+						<!-- Cross-platform press/hover feedback (Windows provides this natively; Linux/macOS need explicit styles) -->
+						<Style Selector="ListBoxItem:not(:selected):pointerover > Border">
+							<Setter Property="Background" Value="#1ACE93D8"/>
+						</Style>
+						<Style Selector="ListBoxItem:pressed > Border">
+							<Setter Property="Background" Value="#33CE93D8"/>
+						</Style>
+					</ListBox.Styles>
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Border
+								BorderThickness="1"
+								BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+								CornerRadius="4"
+								Height="60"
+								Padding="2">
+								<Svg Path="{Binding, Converter={StaticResource SafeSvgPathConverter}, ConverterParameter='Systems'}" 
+								     Margin="5,5,5,10" ToolTip.Tip="{Binding}" />
+							</Border>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</ScrollViewer>
+			<StackPanel Grid.Row="1" Height="40" VerticalAlignment="Center" Margin="0,0,0,5">
+				<Path Stroke="LightGray" StrokeThickness="1" Data="M10,-7 150,-7" />
+				<TextBox Classes="Solo" Foreground="{Binding FilterTextColour}" UseFloatingPlaceholder="False" PlaceholderText="Filter Systems..." KeyUp="filter_KeyUp" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" />
+				<Path Stroke="LightGray" StrokeThickness="1" Data="M10,12 150,12" />
+			</StackPanel>
+		</Grid>
+		<uc:ProcessFilesControl Name="ucProcessFilesControl" Grid.Column="1" Grid.Row="1" Padding="5"/>
+	</Grid>
+
+        <!-- Resize grips (Linux only — on top of content for hit-testing) -->
+        <Border Height="5" VerticalAlignment="Top" Cursor="TopSide"
+                PointerPressed="resizeN_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Height="5" VerticalAlignment="Bottom" Cursor="BottomSide"
+                PointerPressed="resizeS_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="5" HorizontalAlignment="Left" Cursor="LeftSide"
+                PointerPressed="resizeW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="5" HorizontalAlignment="Right" Cursor="RightSide"
+                PointerPressed="resizeE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="BottomRightCorner"
+                PointerPressed="resizeSE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="BottomLeftCorner"
+                PointerPressed="resizeSW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="TopRightCorner"
+                PointerPressed="resizeNE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="TopLeftCorner"
+                PointerPressed="resizeNW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+
+	</Panel>
+</Window>

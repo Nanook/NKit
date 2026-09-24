@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<AssemblyName>nkds</AssemblyName>
+		<TargetFramework>net10.0</TargetFramework>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<SelfContained>false</SelfContained>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>false</IsTestProject>
+
+		<!-- Default runtime identifier when not specified -->
+		<RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</RuntimeIdentifier>
+		<PlatformTarget Condition=" '$(RuntimeIdentifier)' == 'win-x64' or '$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'osx-x64' ">x64</PlatformTarget>
+		<PlatformTarget Condition=" '$(RuntimeIdentifier)' == 'win-arm64' or '$(RuntimeIdentifier)' == 'linux-arm64' or  '$(RuntimeIdentifier)' == 'osx-arm64' ">arm64</PlatformTarget>
+		<PlatformTarget Condition=" '$(RuntimeIdentifier)' == 'win-x86' or '$(RuntimeIdentifier)' == 'linux-x86' ">x86</PlatformTarget>
+		<PlatformTarget Condition=" '$(RuntimeIdentifier)' == 'linux-arm' ">arm</PlatformTarget>
+		<RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
+		
+		<!-- Suppress AOT and trim analysis warnings -->
+		<NoWarn>$(NoWarn);IL2104;IL3053;IL2026;IL2036</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="NKitDataStore.Tests" />
+		<InternalsVisibleTo Include="nkds-ui" />
+		<InternalsVisibleTo Include="NKit.Tests" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<PublishAot>true</PublishAot>
+		<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+		<TrimMode>link</TrimMode>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcOptimizationPreference>Size</IlcOptimizationPreference>
+		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+	</PropertyGroup>
+
+	<!-- Static link GrindCore native library during AOT publish (eliminates separate .so/.dll at runtime) -->
+	<ItemGroup Condition="'$(GrindCoreStaticLink)' != 'false'">
+		<DirectPInvoke Include="GrindCore" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/11" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/12" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/13" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/14" />
+		<LinkerArg Include="-latomic" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="/FORCE:MULTIPLE" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<DefineConstants Condition=" '$(RuntimeIdentifier)' == 'win-x64' ">WIN_X64;TRACE</DefineConstants>
+		<DefineConstants Condition=" '$(RuntimeIdentifier)' == 'win-x86' or '$(RuntimeIdentifier)' == 'linux-arm' or '$(RuntimeIdentifier)' == 'linux-x86' ">IS_32BIT</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+		<PackageReference Include="Spectre.Console" Version="0.57.2" />
+	</ItemGroup>
+
+	<!-- Spectre IPrompter implementation — AOT-safe interactive prompting for the nkds CLI. -->
+	<ItemGroup>
+		<Compile Include="Cli\\SpectrePrompter.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NKDS\NKDS.csproj" />
+	</ItemGroup>
+
+</Project>

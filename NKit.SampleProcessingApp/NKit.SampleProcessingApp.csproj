@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    NKit.SampleProcessingApp
+    ========================
+    A reference CONSUMER of the NKit library, demonstrating the intended embedding model:
+    configure a task + source, process, and receive the processed section blocks via a
+    per-section callback WITHOUT NKit writing to disk. The consumer owns the sink.
+
+    DESIGN ROLE: this project references NKit as an EXTERNAL consumer would - with NO
+    InternalsVisibleTo grant. Anything it cannot reach is a genuine gap in the public API.
+    Kept in the solution so it compiles in CI as a living contract test: it breaks the
+    moment the public surface loses something an embedder needs.
+
+    See NKitVault/10 Refactor/Public API and Embedding Model.md.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Nanook.NKit.SampleProcessingApp</RootNamespace>
+    <AssemblyName>NKit.SampleProcessingApp</AssemblyName>
+    <!-- No InternalsVisibleTo is granted TO this project by NKit - intentional. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NKit\NKit.csproj" />
+  </ItemGroup>
+
+</Project>

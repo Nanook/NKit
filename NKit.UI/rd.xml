@@ -1,0 +1,19 @@
+﻿<Directives>
+	<Application>
+		<Assembly Name="Avalonia.Controls.DataGrid" Dynamic="Required All" />
+		<Assembly Name="Material.Avalonia" Dynamic="Required All" />
+		<Assembly Name="Material.Avalonia.DataGrid" Dynamic="Required All" />
+		<Assembly Name="Material.Icons.Avalonia" Dynamic="Required All" />
+		<Assembly Name="Svg.Controls.Skia.Avalonia" Dynamic="Required All" />
+		<!-- Additional assemblies to preserve to prevent runtime issues from trimming -->
+		<Assembly Name="ReactiveUI.Avalonia" Dynamic="Required All" />
+		<Assembly Name="ReactiveUI" Dynamic="Required All" />
+		<Assembly Name="ExCSS" Dynamic="Required All" />
+		<Assembly Name="Material.Styles" Dynamic="Required All" />
+		<Assembly Name="Newtonsoft.Json" Dynamic="Required All" />
+		<Assembly Name="YamlDotNet" Dynamic="Required All" />
+		<Assembly Name="Microsoft.CSharp" Dynamic="Required All" />
+		<Assembly Name="System.Linq.Expressions" Dynamic="Required All" />
+		<Assembly Name="System.Private.Xml" Dynamic="Required All" />
+	</Application>
+</Directives>

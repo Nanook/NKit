@@ -1,0 +1,22 @@
+NKit UI Configuration
+=====================
+
+Concept
+-------
+- Portable mode (default): when a nkit-ui.yaml file exists next to the nkit-ui executable. Packaged ZIPs include a local config, so extracting the ZIP runs in portable mode by default.
+- System mode: when there is no local nkit-ui.yaml (e.g., package manager installs). The UI uses the OS user config area and creates one on first run.
+- Removing the local nkit-ui.yaml switches the app from portable mode to system mode; placing a local nkit-ui.yaml enables portable mode.
+
+File lookup order
+-----------------
+1. Portable: Local config next to executable: nkit-ui.yaml
+2. System: User config directory
+   - Windows: %APPDATA%\nkit\nkit-ui.yaml
+   - Linux: ~/.config/nkit/nkit-ui.yaml
+   - macOS: ~/Documents/nkit/nkit-ui.yaml
+3. Built-in defaults
+
+First run behavior
+------------------
+- Packaged ZIPs include a local nkit-ui.yaml (except macOS .app bundles), so extracting the ZIP runs the UI in portable mode and will create the folder structure (dats, fix, keys, logs, etc.) next to the executable on first run.
+- If no local config is present, the UI defaults to system mode and will create a system config and the folder structure in the user config location on first run.

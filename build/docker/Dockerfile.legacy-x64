@@ -1,0 +1,17 @@
+FROM ubuntu:18.04
+
+# Install build prerequisites
+RUN apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      curl ca-certificates libunwind8 gettext apt-transport-https gnupg2 \
+      build-essential clang lld pkg-config zlib1g-dev libssl-dev libicu-dev file zip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install .NET SDK via dotnet-install script
+ENV DOTNET_INSTALL_DIR=/usr/share/dotnet
+RUN curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && \
+    bash /tmp/dotnet-install.sh --channel 10.0 --install-dir "$DOTNET_INSTALL_DIR" --architecture x64 && \
+    rm -f /tmp/dotnet-install.sh
+
+ENV PATH="$DOTNET_INSTALL_DIR:$PATH"
+WORKDIR /workspace

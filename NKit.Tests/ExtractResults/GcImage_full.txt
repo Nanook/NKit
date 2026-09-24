@@ -1,0 +1,9 @@
+sys/fst.bin	42A1E7EE
+sys/main.dol	AAF11F03
+sys/apploader.img	84A996C6
+sys/bi2.bin	4819D6F4
+sys/boot.bin	F80F6BCB
+files/File1	613287c6
+files/Subfolder/File2	d4de8064
+files/Subfolder/File3	b87a82fa
+files/File4	64778961

@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:uc="clr-namespace:NKit.Ui.UserControls"
+			 xmlns:vmconv="clr-namespace:NKit.Ui.ViewModels.TaskSettings.Convert"
+			 xmlns:ucconv="clr-namespace:NKit.Ui.UserControls.TaskSettings.Convert"
+			 xmlns:vmts="clr-namespace:NKit.Ui.ViewModels.TaskSettings"
+			 xmlns:vm="clr-namespace:NKit.Ui.ViewModels"
+			 xmlns:ucts="clr-namespace:NKit.Ui.UserControls.TaskSettings"
+			 xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="455"
+             x:Class="NKit.Ui.UserControls.SettingsControl"
+			 x:DataType="vm:SettingsControlViewModel">
+	<TabControl Name="tcOptions" 
+				SelectedIndex="{Binding SelectedTabIndex}" 
+				Margin="4"
+				Width="400">
+		<TabControl.Styles>
+			<Style Selector="TabItem:selected > TextBlock">
+				<Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"/>
+			</Style>
+		</TabControl.Styles>
+		<TabControl.Items>
+			<TabItem Name="Scan" IsVisible="{Binding $parent.DataContext.IsScanSelected}">
+				<TabItem.Header>
+					<TextBlock Text="Scan&#x0a;Options" Height="35" TextAlignment="Center" FontWeight="Bold"/>
+				</TabItem.Header>
+				<ucts:ScanSettingsControl />
+			</TabItem>
+			<TabItem Name="Dedupe" IsVisible="{Binding $parent.DataContext.IsDedupeSelected}">
+				<TabItem.Header>
+					<TextBlock Text="Dedupe&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<ucts:DedupeSettingsControl />
+			</TabItem>
+			<TabItem Name="Fix" IsVisible="{Binding $parent.DataContext.IsFixSelected}">
+				<TabItem.Header>
+					<TextBlock Text="Fix&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<ucts:FixSettingsControl />
+			</TabItem>
+			<TabItem Name="Convert" IsVisible="{Binding $parent.DataContext.IsConvertSelected}">
+				<TabItem.Header>
+					<TextBlock Text="Convert&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<ucts:ConvertSettingsControl />
+			</TabItem>
+			<TabItem Name="Extract" IsVisible="{Binding $parent.DataContext.IsExtractSelected}" >
+				<TabItem.Header>
+					<TextBlock Text="Extract&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<ucts:ExtractSettingsControl IsVisible="{Binding $parent.DataContext.IsExtractSelected}" />
+			</TabItem>
+			<TabItem Name="Verify" IsVisible="{Binding $parent.DataContext.IsVerifySelected}" >
+				<TabItem.Header>
+					<TextBlock Text="Verify&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<ucts:VerifySettingsControl IsVisible="{Binding $parent.DataContext.IsVerifySelected}" />
+			</TabItem>
+			<TabItem Name="Processing">
+				<TabItem.Header>
+					<TextBlock Text="Process&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+					<uc:ProcessingOptionsControl Name="ucProcessingOptionsControl" />
+				</TabItem>
+			<TabItem Name="Paths">
+				<TabItem.Header>
+					<TextBlock Text="System&#x0a;Paths" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<uc:PathsControl Name="ucPathsControl" />
+			</TabItem>
+			<TabItem Name="UI">
+				<TabItem.Header>
+					<TextBlock Text="UI&#x0a;Options" TextWrapping="Wrap" Height="35" TextAlignment="Center" FontWeight="Bold" />
+				</TabItem.Header>
+				<uc:UiOptionsControl Name="ucUiOptionsControl" />
+			</TabItem>
+		</TabControl.Items>
+	</TabControl>
+</UserControl>

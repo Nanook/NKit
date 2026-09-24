@@ -1,0 +1,147 @@
+Set:
+  GameCube_Test.nkds:
+    info:
+      - {version: 0x10000, shard_size: 0x0, block_size: 0x10000, max_offset_blocks: 0x150}  # Version: 0.1.0
+    image:
+      - {id: 0x1, name: SingleArea_NoStride, size: 0x100000, xxhash64: 0xAABBCCDDEEFF0011, crc32: 0xAABBCCDD, system_id: 0x1, format_id: 0x3}
+    area:
+      - {id: 0x1, image_id: 0x1, offset: 0x0, size: 0x440, crc32: 0x12345678, xxhash64: 0x1234567890ABCDEF, stride_block_size: null, stride_data_offset: null, stride_data_length: null, section_size: 0x200000, metadata: [0x01, 0x0F, 0x0B, 0x00, 0x49, 0x6D, 0x61, 0x67, 0x65, 0x48, 0x65, 0x61, 0x64, 0x65, 0x72]}  # FsType=ImageHeader
+      - {id: 0x2, image_id: 0x1, offset: 0x440, size: 0xFFBC0, crc32: 0x87654321, xxhash64: 0xFEDCBA0987654321, stride_block_size: null, stride_data_offset: null, stride_data_length: null, section_size: 0x200000, metadata: [0x05, 0x0B, 0x01, 0x00, 0x30, 0x0D, 0x01, 0x00, 0x30, 0x0F, 0x0A, 0x00, 0x46, 0x69, 0x6C, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x1A, 0x04, 0x00, 0x47, 0x41, 0x4C, 0x45, 0x1B, 0x01, 0x00, 0x30]}  # DiscNo=0, Partition=0, FsType=FileSystem, JunkID=GALE, JunkLeadingNulls=0
+    offset:
+      - {image_id: 0x1, offset: 0x0, size: 0x440, type_id: 0x2, offset_start: 0x0, blocks: [0x01, 0xEC, 0x35, 0x7F, 0x82, 0x50, 0x55, 0x1B, 0x7F, 0xE9, 0xF3, 0x35]}
+      - {image_id: 0x1, offset: 0x440, size: 0x1000, type_id: 0x1, offset_start: 0x440, blocks: [0xA4, 0xF6, 0x6A, 0x18, 0xBE, 0x64, 0x6E, 0x0F, 0x82, 0x20, 0x91, 0xA2]}
+    block:
+      - {hash: [0x01, 0xEC, 0x35, 0x7F, 0x82, 0x50, 0x55, 0x1B, 0x7F, 0xE9, 0xF3, 0x35], file_id: 0x0, offset: 0x0, length: 0x20}
+      - {hash: [0xA4, 0xF6, 0x6A, 0x18, 0xBE, 0x64, 0x6E, 0x0F, 0x82, 0x20, 0x91, 0xA2], file_id: 0x0, offset: 0x20, length: 0x115}
+
+# ===========================================
+# Storage Statistics
+# ===========================================
+# SetName: GameCube_Test
+# ImageCount: 1
+#
+# Database Files:
+#   DatabaseFileCount: 1
+#   TotalDatabaseFileSize: 4.00 KB (4,096 bytes)
+#
+# Logical Data Sizes:
+#   TotalImageDataSize: 1.00 MB (1,048,576 bytes)
+#   EstimatedUncompressedSize: 128.00 KB (131,072 bytes)
+#
+# Physical Storage:
+#   TotalPhysicalBlockStorage: 309 B (309 bytes)
+#   BlockSize: 64.00 KB (65,536 bytes)
+#
+# Block Statistics:
+#   UniqueBlocksStored: 2
+#   TotalBlockReferences: 2
+#   CompressedBlocks: 2 (100.0%)
+#   UncompressedBlocks: 0 (0.0%)
+#
+# Compression Statistics:
+#   AverageCompressedBlockSize: 154 B (154 bytes)
+#   AverageUncompressedBlockSize: 0 B (0 bytes)
+#   CompressionRatio: 0.002 (99.8% reduction)
+#   CompressionSavings: 127.70 KB (130,763 bytes)
+#
+# Deduplication Statistics:
+#   DeduplicationRatio: 1.00x (blocks reused 1.00 times on average)
+#   DeduplicationSavings: 0 B (0 bytes)
+#
+# Overall Efficiency:
+#   OverallStorageEfficiency: 0.000 (100.0% total reduction)
+#   TotalStorageSaved: 1023.70 KB (1,048,267 bytes)
+#   DatabaseOverhead: 3.70 KB (92.5% of file size)
+#
+
+
+# Enum Values (for reference - not stored in database):
+#
+# BlockType:
+#   0x0 = Other
+#   0x1 = File
+#   0x2 = FormatData
+#   0x3 = FileSystem
+#   0x4 = BlockPadding
+#   0x5 = NJunk
+#   0x6 = XFiller
+#
+# ImageFormat:
+#   0x0 = Unknown
+#   0x1 = Xbox
+#   0x2 = PS3
+#   0x3 = Wii
+#
+# System:
+#   0x0 = Default
+#   0x1 = GameCube
+#   0x2 = Wii
+#   0x3 = WiiU
+#   0x4 = PS1
+#   0x5 = PS2
+#   0x6 = PS3
+#   0x7 = PSP
+#   0x8 = Xbox
+#   0x9 = Xbox360
+#   0xA = Dreamcast
+#   0xB = Saturn
+#   0xC = SegaCD
+#   0xD = CDi
+#   0xE = PCEngine
+#
+# AreaValueType:
+#   0x0 = FileName
+#   0x1 = FileTimeStamp
+#   0x2 = FileAttributes
+#   0x3 = App
+#   0x4 = AreaOffsetBase
+#   0x5 = BlockSize
+#   0x6 = CommonKeyCrc
+#   0x7 = ContentHeaders
+#   0x8 = ContentIndex
+#   0x9 = ContentSha
+#   0xA = DecryptionValid
+#   0xB = DiscNo
+#   0xC = Duration
+#   0xD = Partition
+#   0xE = Encrypted
+#   0xF = FsType
+#   0x10 = HasFileSystem
+#   0x11 = HashRoot
+#   0x12 = HashSize
+#   0x13 = Hashes
+#   0x14 = HeaderCrc
+#   0x15 = HeaderDate
+#   0x16 = HeaderSize
+#   0x17 = HeaderXxHash
+#   0x18 = ID
+#   0x19 = JunkEndNullsOffset
+#   0x1A = JunkID
+#   0x1B = JunkLeadingNulls
+#   0x1C = KeyCrc
+#   0x1D = MissingFiles
+#   0x1E = PartitionType
+#   0x1F = Partitions
+#   0x20 = PhysicalOffset
+#   0x21 = PvdSectorCount
+#   0x22 = Region
+#   0x23 = RepeatedContentIndex
+#   0x24 = Revision
+#   0x25 = Session
+#   0x26 = SessionOffsetBase
+#   0x27 = Signed
+#   0x28 = SystemDataCrc
+#   0x29 = ThreeKey
+#   0x2A = Title
+#   0x2B = TitleId
+#   0x2C = TitleKeyCrc
+#   0x2D = TitleKeyMissing
+#   0x2E = TmdVersion
+#   0x2F = Track
+#   0x30 = UpdatePartitionRemoved
+#   0x31 = Version
+#   0x32 = VolumeId
+#   0x33 = AuxFileType
+#   0x34 = AuxFileName
+#   0x35 = Type
+#

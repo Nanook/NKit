@@ -1,0 +1,137 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<Nullable>disable</Nullable>
+		<AssemblyName>nkit-ui</AssemblyName>
+		<ApplicationIcon>Assets\NKitLogo.ico</ApplicationIcon>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<!--<TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>-->
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(PlatformName)</RuntimeIdentifier>
+		<OutputType Condition="'$(TargetFramework)'!='net6.0-macos'">WinExe</OutputType>
+		<Configurations>Debug;Release;ReleaseTest</Configurations>
+		<!-- Ensure copy-local lock file assemblies are produced for AOT publish -->
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!-- Suppress AOT and trim analysis warnings -->
+		<NoWarn>$(NoWarn);IL2104;IL3053;IL2026;IL2036;IL3050</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PublishAot>true</PublishAot>
+		<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+		<TrimMode>link</TrimMode>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcOptimizationPreference>Size</IlcOptimizationPreference>
+		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+	</PropertyGroup>
+
+	<!-- Static link GrindCore native library during AOT publish (eliminates separate .so/.dll at runtime) -->
+	<ItemGroup Condition="'$(GrindCoreStaticLink)' != 'false'">
+		<DirectPInvoke Include="GrindCore" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/11" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/12" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/13" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/14" />
+		<LinkerArg Include="-latomic" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="/FORCE:MULTIPLE" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<TrimmerRootDescriptor Include="$(MSBuildThisFileDirectory)rd.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="rd.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\Fonts\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+		<!-- Avalonia.Diagnostics was removed in Avalonia 12; Dev Tools are now separate (Avalonia Accelerate) -->
+		<PackageReference Include="Material.Avalonia" Version="3.20.0" />
+		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.20.0" />
+		<PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
+		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.2" />
+
+
+		<PackageReference Include="YamlDotNet" Version="18.1.0" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Compile Update="UserControls\ProcessingOptionsControl.axaml.cs">
+			<DependentUpon>ProcessingOptionsControl.axaml</DependentUpon>
+		</Compile>
+		<Compile Update="UserControls\ProcessFilesControl.axaml.cs">
+			<DependentUpon>ProcessFilesControl.axaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NKit\NKit.csproj" />
+	</ItemGroup>
+
+	<!-- Include nkit.ui.yaml config file for portable mode -->
+	<ItemGroup>
+		<Content Include="nkit-ui.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="ConfigInfo.txt">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<!-- Create defaults directory structure during publish (not for macOS - uses bundle Resources) -->
+	<Target Name="CreateDefaultsStructure" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' != 'osx-x64' AND '$(RuntimeIdentifier)' != 'osx-arm64'">
+		<Message Text="Creating defaults directory structure for GUI app..." Importance="high" />
+		
+		<!-- Create defaults directory -->
+		<MakeDir Directories="$(PublishDir)defaults" />
+		<MakeDir Directories="$(PublishDir)defaults\fix" />
+		
+		<!-- Copy fix files from NKit project output to defaults/fix ONLY (not root) -->
+		<ItemGroup>
+			<SourceFixFiles Include="$(PublishDir)defaults\fix\*.yaml" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SourceFixFiles)" DestinationFolder="$(PublishDir)defaults\fix" Condition="Exists('$(PublishDir)defaults\fix')" />
+		
+		<!-- Remove fix files from root - they should only be in defaults -->
+		<RemoveDir Directories="$(PublishDir)defaults\fix" />
+		
+		<Message Text="✅ Defaults directory structure created for GUI app (fix files in defaults only)" Importance="high" />
+	</Target>
+</Project>

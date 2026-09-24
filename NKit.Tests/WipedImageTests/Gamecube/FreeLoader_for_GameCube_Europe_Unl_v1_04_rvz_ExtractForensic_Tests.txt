@@ -1,0 +1,6 @@
+356e4550	440	/000000000_FileSystem/__boot.bin
+ef903a88	2000	/000000000_FileSystem/__bi2.bin
+ed67c608	14bc0	/000000000_FileSystem/__apploader.img
+66f7eb47	24	/000000000_FileSystem/__fst.bin
+38a8b5e1	1960	/000000000_FileSystem/opening.bnr
+000000000_FileSystem

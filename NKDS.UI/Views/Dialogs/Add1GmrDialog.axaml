@@ -1,0 +1,273 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        x:Class="NkdsUi.Views.Dialogs.Add1GmrDialog"
+        x:DataType="vm:Add1GmrDialogViewModel"
+        Title="Add 1GMR"
+        Icon="/Assets/NkdsIcon.ico"
+        Width="700" Height="650"
+        MinWidth="600" MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        DragDrop.AllowDrop="True">
+
+    <DockPanel Margin="24">
+        <!-- Header -->
+        <TextBlock DockPanel.Dock="Top" Text="Add 1GMR" FontSize="18" FontWeight="Bold" Margin="0,0,0,16"/>
+
+        <!-- YAML Row -->
+        <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,16">
+            <TextBlock Text="YAML:" FontWeight="SemiBold" Opacity="0.85"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Right"
+                        Classes="Flat"
+                        Command="{Binding BrowseYamlCommand}"
+                        Height="30" Width="30" Padding="0"
+                        VerticalAlignment="Center"
+                        Margin="8,0,0,0"
+                        ToolTip.Tip="Select YAML file">
+                    <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                </Button>
+                <Panel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right"
+                                Content="▾"
+                                Classes="Flat"
+                                Width="28"
+                                Padding="0"
+                                x:Name="YamlHistoryButton"/>
+                        <TextBox Text="{Binding OgmrYamlPath, Mode=TwoWay}"
+                                 PlaceholderText="Select 1GMR YAML file..."
+                                 x:Name="YamlPathTextBox"/>
+                    </DockPanel>
+                    <Popup x:Name="YamlHistoryPopup"
+                           PlacementTarget="{Binding #YamlPathTextBox}"
+                           Placement="Bottom"
+                           IsOpen="False"
+                           MaxHeight="250"
+                           Width="{Binding #YamlPathTextBox.Bounds.Width}">
+                        <Border Background="#2D2D2D"
+                                BorderBrush="{DynamicResource MaterialDividerBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <ListBox x:Name="YamlHistoryList"
+                                     ItemsSource="{Binding OgmrYamlHistory}"
+                                     SelectionMode="Single"/>
+                        </Border>
+                    </Popup>
+                </Panel>
+            </DockPanel>
+            <TextBlock Text="{Binding OgmrYamlStatus}"
+                       IsVisible="{Binding OgmrYamlStatus, Converter={x:Static ObjectConverters.IsNotNull}}"
+                       FontSize="12"
+                       Opacity="0.7"
+                       Margin="0,2,0,0"/>
+        </StackPanel>
+
+        <!-- Bottom section (docked to bottom so DataGrid fills remaining space) -->
+        <StackPanel DockPanel.Dock="Bottom" Spacing="12" Margin="0,16,0,0">
+            <!-- Summary -->
+            <TextBlock Text="{Binding SummaryText}"
+                       Opacity="0.85"
+                       FontSize="13"/>
+
+            <!-- Output Row -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Output:" FontWeight="SemiBold" Opacity="0.85"/>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right"
+                            Classes="Flat"
+                            Command="{Binding BrowseOutputFolderCommand}"
+                            Height="30" Width="30" Padding="0"
+                            VerticalAlignment="Center"
+                            Margin="8,0,0,0"
+                            ToolTip.Tip="Select output folder">
+                        <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                    </Button>
+                    <Panel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right"
+                                    Content="▾"
+                                    Classes="Flat"
+                                    Width="28"
+                                    Padding="0"
+                                    x:Name="OutputHistoryButton"/>
+                            <TextBox Text="{Binding OutputFolder, Mode=TwoWay}"
+                                     PlaceholderText="Select output directory..."
+                                     x:Name="OutputDirTextBox"/>
+                        </DockPanel>
+                        <Popup x:Name="OutputHistoryPopup"
+                               PlacementTarget="{Binding #OutputDirTextBox}"
+                               Placement="Bottom"
+                               IsOpen="False"
+                               MaxHeight="250"
+                               Width="{Binding #OutputDirTextBox.Bounds.Width}">
+                            <Border Background="#2D2D2D"
+                                    BorderBrush="{DynamicResource MaterialDividerBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <ListBox x:Name="OutputHistoryList"
+                                         ItemsSource="{Binding OutputFolderHistory}"
+                                         SelectionMode="Single"/>
+                            </Border>
+                        </Popup>
+                    </Panel>
+                </DockPanel>
+            </StackPanel>
+
+            <!-- Size Options -->
+            <StackPanel Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="Shard Size:" Width="80" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding ShardSizeOptions}"
+                                  SelectedItem="{Binding SelectedShardSize, Mode=TwoWay}"
+                                  Width="160" Height="30"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="Block Size:" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding BlockSizeOptions}"
+                                  SelectedItem="{Binding SelectedBlockSize, Mode=TwoWay}"
+                                  Width="160" Height="30"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Spacing="4">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="Aux Mode:" Width="80" VerticalAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding IsAuxMode}"
+                                  IsEnabled="{Binding IsAuxEditable}"
+                                  VerticalAlignment="Center"
+                                  ToolTip.Tip="Create an aux store (.aux.nkds) for update partitions"/>
+                        <TextBox Text="{Binding AuxSetName, Mode=TwoWay}"
+                                 PlaceholderText="Aux set name..."
+                                 Width="200"
+                                 IsEnabled="{Binding IsAuxEditable}"
+                                 IsVisible="{Binding IsAuxMode}"
+                                 ToolTip.Tip="Filename for the aux store"/>
+                    </StackPanel>
+                    <TextBlock Text="Existing aux store found in output folder"
+                               IsVisible="{Binding IsAuxExisting}"
+                               FontSize="11"
+                               Opacity="0.6"
+                               Margin="90,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Validation Message -->
+            <TextBlock Text="{Binding ValidationMessage}"
+                       IsVisible="{Binding ValidationMessage, Converter={x:Static ObjectConverters.IsNotNull}}"
+                       Foreground="#F44336"
+                       FontSize="12"/>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
+                <Button Content="OK"
+                        Command="{Binding ConfirmCommand}"
+                        Width="90"
+                        Classes="dialogConfirm"/>
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Width="90"
+                        Classes="dialogCancel"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Images Section (fills remaining space) -->
+        <DockPanel Margin="0,0,0,0" DragDrop.AllowDrop="True">
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,4">
+                <TextBlock Text="Images:" FontWeight="SemiBold" Opacity="0.85" VerticalAlignment="Center"/>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8">
+                    <Button Classes="Flat"
+                            Command="{Binding BrowseImagesCommand}"
+                            Height="30" Padding="6,0"
+                            VerticalAlignment="Center"
+                            ToolTip.Tip="Select image files">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="Add" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="Flat"
+                            Command="{Binding BrowseDirectoryCommand}"
+                            Height="30" Padding="6,0"
+                            VerticalAlignment="Center"
+                            ToolTip.Tip="Select a folder to add all image files recursively">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18" VerticalAlignment="Center"/>
+                            <TextBlock Text="Add Directory" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <Panel/>
+            </DockPanel>
+            <Grid DragDrop.AllowDrop="True">
+                <DataGrid x:Name="ImagesDataGrid"
+                      ItemsSource="{Binding MatchedFiles}"
+                      IsReadOnly="True"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      RowHeight="26"
+                      BorderBrush="{DynamicResource MaterialDividerBrush}"
+                      BorderThickness="1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name"
+                                        Binding="{Binding FileName}"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="1GMR Set"
+                                        Binding="{Binding MatchedSetName}"
+                                        Width="*"/>
+                </DataGrid.Columns>
+                <DataGrid.Styles>
+                    <Style Selector="DataGridColumnHeader">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#333333"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="6,4"/>
+                        <Setter Property="MinHeight" Value="28"/>
+                        <Setter Property="SeparatorBrush" Value="#555555"/>
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding SeparatorBrush}"
+                                        BorderThickness="0,0,1,0"
+                                        Padding="{TemplateBinding Padding}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <ContentPresenter Content="{TemplateBinding Content}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                          HorizontalContentAlignment="Left"
+                                                          VerticalContentAlignment="Center"/>
+                                        <Thumb Name="PART_RightHeaderGripper"
+                                               Grid.Column="1"
+                                               Width="4"
+                                               Background="Transparent"
+                                               Cursor="SizeWestEast"
+                                               Margin="0"/>
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                    <Style Selector="DataGridRow">
+                        <Setter Property="Opacity" Value="1.0"/>
+                    </Style>
+                    <Style Selector="DataGridRow.unmatched">
+                        <Setter Property="Opacity" Value="0.4"/>
+                    </Style>
+                </DataGrid.Styles>
+            </DataGrid>
+                <!-- Drop hint shown when no images are loaded -->
+                <TextBlock Text="Drop image files here or click Add"
+                           IsVisible="{Binding !MatchedFileCount}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Opacity="0.4"
+                           FontSize="13"
+                           IsHitTestVisible="False"/>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</Window>
