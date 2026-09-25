@@ -333,6 +333,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         merge-multiple: true
+        path: artifacts
 
     - name: Generate release info
       id: release_info
@@ -390,7 +391,7 @@ jobs:
         echo "body_path=release_body.md" >> $GITHUB_OUTPUT
 
     - name: Flatten artifacts to working dir
-      run: find . -mindepth 2 -name '*.zip' -exec mv {} . \; 2>/dev/null || true
+      run: find artifacts -name '*.zip' -exec mv {} . \; 2>/dev/null || true
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
