@@ -134,7 +134,7 @@ jobs:
       shell: bash
       run: |
         echo "Downloading GrindCore native libraries (latest release)..."
-        DOWNLOAD_URL=$(curl -sL "https://api.github.com/repos/Nanook/GrindCore/releases/latest" | grep -o '"browser_download_url": *"[^"]*grindcore\.zip"' | cut -d'"' -f4)
+        DOWNLOAD_URL=$(curl -sL -H "Authorization: Bearer ${{ github.token }}" "https://api.github.com/repos/Nanook/GrindCore/releases/latest" | grep -o '"browser_download_url": *"[^"]*grindcore\.zip"' | cut -d'"' -f4)
         if [ -z "$DOWNLOAD_URL" ]; then
           echo "Could not find grindcore.zip in latest GrindCore release"
           exit 1
