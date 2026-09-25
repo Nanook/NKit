@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:models="using:NkdsUi.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="400"
+             x:Class="NkdsUi.Views.Controls.CommonFilesPanelControl"
+             x:DataType="vm:CommonFilesPanelViewModel"
+             IsVisible="{Binding IsVisible}">
+
+    <Design.DataContext>
+        <vm:CommonFilesPanelViewModel/>
+    </Design.DataContext>
+
+    <Border Padding="8" BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource MaterialDividerBrush}">
+        <DockPanel>
+            <!-- Header -->
+            <TextBlock DockPanel.Dock="Top"
+                       Text="Common Files"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+
+            <!-- Progress indicator when computing -->
+            <ProgressBar DockPanel.Dock="Top"
+                         IsIndeterminate="True"
+                         IsVisible="{Binding IsComputing}"
+                         Background="#447B1FA2"
+                         Foreground="#CE93D8"
+                         Margin="0,0,0,8"/>
+
+            <!-- Message display (no shared content or errors) -->
+            <TextBlock DockPanel.Dock="Top"
+                       Text="{Binding Message}"
+                       IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       TextWrapping="Wrap"
+                       Opacity="0.7"
+                       Margin="0,0,0,8"/>
+
+            <!-- Results list -->
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding CommonFiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:CommonFileModel">
+                            <Border Padding="4,6" Margin="0,0,0,4"
+                                    Background="{DynamicResource MaterialCardBrush}"
+                                    CornerRadius="4">
+                                <StackPanel Spacing="2">
+                                    <!-- File display name -->
+                                    <TextBlock Text="{Binding DisplayName}"
+                                               FontWeight="Medium"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <!-- Shared block count and total size -->
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Opacity="0.7">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} blocks">
+                                                    <Binding Path="SharedBlockCount"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock Opacity="0.7"
+                                                   Text="{Binding TotalSizeBytes, StringFormat={}{0:N0} bytes}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -126,28 +126,27 @@ Process images directly from archives — no temp files, no extraction to disk:
 
 Releases are published to this repository. Check the [Releases](https://github.com/Nanook/NKit/releases) page for the latest builds.
 
-For documentation and setup instructions, see the [Wiki](https://github.com/Nanook/NKit/wiki).
-
 ---
 
 ## Source Code
 
-The source is currently in a private repository while a final refactor is completed. **It will be made public soon.** The code has been in active development for nearly 10 years and I want it in a clean state before opening it up.
+The source is here: [github.com/Nanook/NKit](https://github.com/Nanook/NKit). Nearly 10 years of development, now open.
 
-In the meantime:
-- Releases are available and fully functional
-- Bugs and feature requests are welcome on [Discord](https://discord.gg/YT792u5yWJ)
-- No pull requests yet — the codebase is still moving and I don't want contributors working against a shifting foundation
+Bug reports and feature requests: open a [GitHub Issue](https://github.com/Nanook/NKit/issues).  
+Contributions: see [Contributing](https://github.com/Nanook/NKit/wiki/Contributing) in the wiki.
 
 ---
 
 ## FAQ
 
 **Q: When will the source code be released?**
-Soon. The core is done and stable — I'm cleaning up the codebase so it's presentable and maintainable by others. I'll announce it on Discord.
+It's public now — you're looking at it.
 
 **Q: Can I contribute?**
-Not yet. Once the source is public, contributions will be welcome. For now, testing and feedback on Discord is the most valuable help.
+Yes. See [Contributing](https://github.com/Nanook/NKit/wiki/Contributing) for how to build, test, and submit a PR.
+
+**Q: Where do I report bugs?**
+[GitHub Issues](https://github.com/Nanook/NKit/issues) is the primary channel. [Discord](https://discord.gg/YT792u5yWJ) is good for questions and discussion.
 
 **Q: Is this free?**
 Yes, always. NKit and NKDS are a hobby and a gift to the communities I enjoy being part of. If you'd like to support the work, you can [buy me a beer](https://ko-fi.com/nanook_) or [sponsor me](https://ko-fi.com/nanook_/tiers).
@@ -159,7 +158,7 @@ The DataStore (add/mount/export) currently supports GameCube, Wii, and Wii U. Mo
 No. All releases are native AOT binaries — fully self-contained.
 
 **Q: Where do I report bugs?**
-On [Discord](https://discord.gg/YT792u5yWJ). Once the source is public, GitHub Issues will be the primary channel.
+[GitHub Issues](https://github.com/Nanook/NKit/issues) is the primary channel. [Discord](https://discord.gg/YT792u5yWJ) is good for questions and discussion.
 
 **Q: What about NKit 1 / the old nkit.iso format?**
 NKit 2 reads the legacy nkit.iso/nkit.gcz format but no longer writes it. RVZ replaced it as the recommended compressed format. Use NKit 2 to convert your old nkit files to RVZ.
@@ -180,7 +179,7 @@ NKit 2 reads the legacy nkit.iso/nkit.gcz format but no longer writes it. RVZ re
 
 ## License
 
-License will be announced with the source code release.
+MIT — see [LICENSE](LICENSE).
 
 ---
 

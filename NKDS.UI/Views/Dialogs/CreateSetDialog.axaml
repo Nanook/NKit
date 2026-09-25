@@ -1,0 +1,132 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        x:Class="NkdsUi.Views.Dialogs.CreateSetDialog"
+        x:DataType="vm:CreateSetDialogViewModel"
+        Title="Create Set"
+        Icon="/Assets/NkdsIcon.ico"
+        Width="550" MinWidth="550" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <StackPanel Margin="24" Spacing="16">
+        <TextBlock Text="Create New Set" FontSize="18" FontWeight="Bold"/>
+
+        <Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="3" Padding="12" Background="#2A2A2A">
+            <StackPanel Spacing="12">
+                <!-- Folder Path -->
+                <StackPanel Spacing="4">
+                    <DockPanel>
+                        <Label Content="Folder:" Width="110" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                        <Button DockPanel.Dock="Right"
+                                Classes="Flat"
+                                Command="{Binding BrowseCommand}"
+                                Height="30" Width="30" Padding="0"
+                                VerticalAlignment="Center"
+                                Margin="8,0,0,0"
+                                ToolTip.Tip="Select DataStore folder">
+                            <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                        </Button>
+                        <Panel>
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right"
+                                        Content="▾"
+                                        Classes="Flat"
+                                        Width="28"
+                                        Padding="0"
+                                        x:Name="FolderHistoryButton"/>
+                                <TextBox Text="{Binding FolderPath, Mode=TwoWay}"
+                                         MaxLength="260"
+                                         PlaceholderText="Select or type folder path..."
+                                         x:Name="FolderPathTextBox"/>
+                            </DockPanel>
+                            <Popup x:Name="FolderHistoryPopup"
+                                   PlacementTarget="{Binding #FolderPathTextBox}"
+                                   Placement="Bottom"
+                                   IsOpen="False"
+                                   MaxHeight="250"
+                                   Width="{Binding #FolderPathTextBox.Bounds.Width}">
+                                <Border Background="#2D2D2D"
+                                        BorderBrush="{DynamicResource MaterialDividerBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                    <ListBox x:Name="FolderHistoryList"
+                                             ItemsSource="{Binding DataStoreHistory}"
+                                             SelectionMode="Single"/>
+                                </Border>
+                            </Popup>
+                        </Panel>
+                    </DockPanel>
+                    <TextBlock Text="{Binding FolderPathError}"
+                               IsVisible="{Binding FolderPathError, Converter={x:Static ObjectConverters.IsNotNull}}"
+                               Foreground="#F44336"
+                               FontSize="12"
+                               Margin="120,0,0,0"/>
+                </StackPanel>
+
+                <!-- Set Name -->
+                <DockPanel>
+                    <Label Content="Set Name:" Width="110" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                    <TextBox Text="{Binding SetName, Mode=TwoWay}"
+                             PlaceholderText="Enter set name..."/>
+                </DockPanel>
+                <TextBlock Text="{Binding SetNameError}"
+                           IsVisible="{Binding SetNameError, Converter={x:Static ObjectConverters.IsNotNull}}"
+                           Foreground="#F44336"
+                           FontSize="12"
+                           Margin="120,-6,0,0"/>
+
+                <!-- Shard Size -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Label Content="Shard Size:" Width="110" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding ShardSizeOptions}"
+                              SelectedItem="{Binding SelectedShardSize, Mode=TwoWay}"
+                              Width="200" Height="30"/>
+                </StackPanel>
+
+                <!-- Block Size -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Label Content="Block Size:" Width="110" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding BlockSizeOptions}"
+                              SelectedItem="{Binding SelectedBlockSize, Mode=TwoWay}"
+                              Width="200" Height="30"/>
+                </StackPanel>
+
+                <!-- Aux Mode -->
+                <StackPanel Spacing="4">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="Aux Mode:" Width="110" VerticalAlignment="Center"/>
+                        <CheckBox IsChecked="{Binding IsAuxMode}"
+                                  IsEnabled="{Binding IsAuxEditable}"
+                                  VerticalAlignment="Center"
+                                  ToolTip.Tip="Create an aux store (.aux.nkds) for update partitions"/>
+                        <TextBox Text="{Binding AuxSetName, Mode=TwoWay}"
+                                 PlaceholderText="Aux set name..."
+                                 Width="170"
+                                 IsEnabled="{Binding IsAuxEditable}"
+                                 IsVisible="{Binding IsAuxMode}"
+                                 ToolTip.Tip="Filename for the aux store"/>
+                    </StackPanel>
+                    <TextBlock Text="Existing aux store found in folder"
+                               IsVisible="{Binding IsAuxExisting}"
+                               FontSize="11"
+                               Opacity="0.6"
+                               Margin="120,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
+            <Button Content="Create"
+                    Command="{Binding ConfirmCommand}"
+                    Width="90"
+                    Classes="dialogConfirm"/>
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Width="90"
+                    Classes="dialogCancel"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

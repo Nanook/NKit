@@ -1,0 +1,465 @@
+db223c74	8000	/000000000_FstBlock/Data.bin
+63387e20	2c6	/000008000_FileSystem/code/app.xml
+3f58ef94	1043	/000010000_FileSystem/code/cos.xml
+d38bcef0	2481	/000018000_FileSystem/meta/meta.xml
+bc5dc396	12c3f0	/000048000_FileSystem/meta/bootDrcTex.tga
+4456508c	34c568	/000048000_FileSystem/meta/bootSound.btsnd
+1b2308bf	2a3030	/000048000_FileSystem/meta/bootTvTex.tga
+1cbbd2d8	10030	/000048000_FileSystem/meta/iconTex.tga
+aa6496f1	13b38	/000B78000_FileSystem/meta/bootMovie.h264
+daf09ab1	6fbc	/000C88000_FileSystem/meta/bootLogoTex.tga
+2d611892	19f4c7	/000D98000_FileSystem/meta/Manual.bfma
+083f4799	17ad80	/001FE8000_FileSystem/code/VESSEL.rpx
+09f85737	23	/002168000_FileSystem/content/BuildInfo.txt
+e5f8c527	257	/002168000_FileSystem/content/config/Ucfze0.242.ini
+b774c8c9	441	/002168000_FileSystem/content/config.ini
+fc890c72	3d69	/002168000_FileSystem/content/data/fonts/courier12.fnt
+e5c2a1c8	2bfe	/002168000_FileSystem/content/data/fonts/courier12_0.png
+2bd0b55d	a79	/002168000_FileSystem/content/data/fonts/target20.fnt
+24b57343	ac6	/002168000_FileSystem/content/data/fonts/target20_0.png
+ccbf2b8e	9c0	/002168000_FileSystem/content/data/shaders/default.gshbin
+6403ed59	cd0	/002168000_FileSystem/content/data/shaders/sprite.gshbin
+db309a6c	ac0	/002168000_FileSystem/content/data/shaders/text.gshbin
+021fbd98	ed0	/002168000_FileSystem/content/data/shaders/tilemap.gshbin
+506b7878	26b	/002168000_FileSystem/content/data-sync/animations/bilinear_off.sceneanim
+506b7878	26b	/002168000_FileSystem/content/data-sync/animations/bilinear_on.sceneanim
+ca8e4f49	1b4	/002168000_FileSystem/content/data-sync/animations/button_back_clicked.sceneanim
+ca8e4f49	1b4	/002168000_FileSystem/content/data-sync/animations/button_clicked.sceneanim
+0d15f915	144	/002168000_FileSystem/content/data-sync/animations/button_focused.sceneanim
+0d15f915	144	/002168000_FileSystem/content/data-sync/animations/button_pressed.sceneanim
+8096ede7	4dd	/002168000_FileSystem/content/data-sync/animations/camera_drc_down.sceneanim
+8096ede7	4dd	/002168000_FileSystem/content/data-sync/animations/camera_drc_up.sceneanim
+41de7746	13bc	/002168000_FileSystem/content/data-sync/animations/close_settings.sceneanim
+36c30406	15ac	/002168000_FileSystem/content/data-sync/animations/close_vcmenu.sceneanim
+94d3989c	3b0	/002168000_FileSystem/content/data-sync/animations/drc_button_flash.sceneanim
+c07de4e9	14b	/002168000_FileSystem/content/data-sync/animations/drc_panel_bottom_pressed.sceneanim
+c07de4e9	14b	/002168000_FileSystem/content/data-sync/animations/drc_panel_top_pressed.sceneanim
+b08fc600	890	/002168000_FileSystem/content/data-sync/animations/hide_balloon.sceneanim
+b334ecf9	978	/002168000_FileSystem/content/data-sync/animations/hide_icon.sceneanim
+622f9c3d	1b8	/002168000_FileSystem/content/data-sync/animations/keyconfig/arrow_clicked.sceneanim
+b00a708f	13e	/002168000_FileSystem/content/data-sync/animations/keyconfig/arrow_pressed.sceneanim
+3a708018	20e	/002168000_FileSystem/content/data-sync/animations/keyconfig/button1_clicked.sceneanim
+c671fb07	137	/002168000_FileSystem/content/data-sync/animations/keyconfig/button1_pressed.sceneanim
+90ab996f	220	/002168000_FileSystem/content/data-sync/animations/keyconfig/button2_l_clicked.sceneanim
+24f769dd	139	/002168000_FileSystem/content/data-sync/animations/keyconfig/button2_l_pressed.sceneanim
+3a708018	20e	/002168000_FileSystem/content/data-sync/animations/keyconfig/button2_r_clicked.sceneanim
+c671fb07	137	/002168000_FileSystem/content/data-sync/animations/keyconfig/button2_r_pressed.sceneanim
+ad62511d	214	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_l_clicked.sceneanim
+24f769dd	139	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_l_pressed.sceneanim
+8650d618	202	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_m_clicked.sceneanim
+30dbcbf1	133	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_m_pressed.sceneanim
+3a708018	20e	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_r_clicked.sceneanim
+c671fb07	137	/002168000_FileSystem/content/data-sync/animations/keyconfig/button3_r_pressed.sceneanim
+abbd2456	8c8	/002168000_FileSystem/content/data-sync/animations/keyconfig/hide_controller.sceneanim
+067c163e	1f00	/002168000_FileSystem/content/data-sync/animations/keyconfig/scrolling_list_down.sceneanim
+32c5f669	230	/002168000_FileSystem/content/data-sync/animations/keyconfig/select_controller_button_clicked.sceneanim
+b00a708f	13e	/002168000_FileSystem/content/data-sync/animations/keyconfig/select_controller_button_pressed.sceneanim
+de420f9f	93e	/002168000_FileSystem/content/data-sync/animations/keyconfig/show_controller.sceneanim
+b0c23e1b	427	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_confirmreset_selectrealkey.sceneanim
+ea2e117a	2941	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_mainpage_selectcontroller.sceneanim
+4f57656f	107e	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_selectcontroller_mainpage.sceneanim
+25ed932a	250c	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_selectcontroller_selectrealkey.sceneanim
+4fa1d798	2044	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_selectrealkey_confirmreset.sceneanim
+a93cb69c	23fc	/002168000_FileSystem/content/data-sync/animations/keyconfig/transition_selectrealkey_selectvirtualkey.sceneanim
+f18eaf56	152	/002168000_FileSystem/content/data-sync/animations/label_clicked.sceneanim
+2d28a891	150	/002168000_FileSystem/content/data-sync/animations/label_pressed.sceneanim
+4dd40994	14e	/002168000_FileSystem/content/data-sync/animations/label_released.sceneanim
+f8c49098	3a1b	/002168000_FileSystem/content/data-sync/animations/layout_move_left.sceneanim
+ac2c1543	3a07	/002168000_FileSystem/content/data-sync/animations/layout_move_right.sceneanim
+750d9cfa	1feb	/002168000_FileSystem/content/data-sync/animations/layout_switch_alt_bottom.sceneanim
+750d9cfa	1feb	/002168000_FileSystem/content/data-sync/animations/layout_switch_alt_top.sceneanim
+698f3abd	3fb	/002168000_FileSystem/content/data-sync/animations/main_button_clicked.sceneanim
+1f31aad8	7aa	/002168000_FileSystem/content/data-sync/animations/main_button_pressed.sceneanim
+30da5093	10e	/002168000_FileSystem/content/data-sync/animations/menu_fadeout.sceneanim
+212be7ab	13d6	/002168000_FileSystem/content/data-sync/animations/open_settings.sceneanim
+fe2ef28c	13f7	/002168000_FileSystem/content/data-sync/animations/open_vcmenu.sceneanim
+fec2fcc8	1e8e	/002168000_FileSystem/content/data-sync/animations/popup_close.sceneanim
+06f7f45f	1e86	/002168000_FileSystem/content/data-sync/animations/popup_close_cancel.sceneanim
+13191f92	1be0	/002168000_FileSystem/content/data-sync/animations/popup_close_transition.sceneanim
+43f21c83	1f04	/002168000_FileSystem/content/data-sync/animations/popup_open.sceneanim
+45948759	f30	/002168000_FileSystem/content/data-sync/animations/popup_open_transition.sceneanim
+45948759	f30	/002168000_FileSystem/content/data-sync/animations/popup_open_transition_saving.sceneanim
+72bce270	156	/002168000_FileSystem/content/data-sync/animations/r_stick_pressed.sceneanim
+1725faba	3f4	/002168000_FileSystem/content/data-sync/animations/saving_dialog.sceneanim
+188a63bc	84b	/002168000_FileSystem/content/data-sync/animations/show_balloon.sceneanim
+7696da92	a1b	/002168000_FileSystem/content/data-sync/animations/show_icon.sceneanim
+2e7a33f6	210	/002168000_FileSystem/content/data-sync/animations/switch_bilinear.sceneanim
+c74fe19a	32a	/002168000_FileSystem/content/data-sync/animations/touch_banned_pressed.sceneanim
+15ddb4ed	14362	/002168000_FileSystem/content/data-sync/defaultscene.scene
+de4efd67	75be	/002168000_FileSystem/content/data-sync/dependencies.json
+90d9f768	2b90	/002168000_FileSystem/content/data-sync/dialogs/popup_2_messages_2_buttons.scene
+acf13e09	1dfb	/002168000_FileSystem/content/data-sync/dialogs/popup_first_message.scene
+14da80e4	289c	/002168000_FileSystem/content/data-sync/dialogs/popup_keyconfig_confirm.scene
+635733a5	3186	/002168000_FileSystem/content/data-sync/dialogs/popup_load_restorepoint.scene
+b6859760	1c35	/002168000_FileSystem/content/data-sync/dialogs/popup_load_success.scene
+585ec4f1	286f	/002168000_FileSystem/content/data-sync/dialogs/popup_reset.scene
+caf94dac	2848	/002168000_FileSystem/content/data-sync/dialogs/popup_save_restorepoint.scene
+176f447a	2d68	/002168000_FileSystem/content/data-sync/dialogs/popup_save_restorepoint_exist.scene
+8be26bd0	221a	/002168000_FileSystem/content/data-sync/dialogs/popup_save_success.scene
+9577816e	1175	/002168000_FileSystem/content/data-sync/fonts/arial_22.fnt
+798212d3	80b8	/002168000_FileSystem/content/data-sync/fonts/arial_22_0.png
+deb789f7	11f7	/002168000_FileSystem/content/data-sync/fonts/arial_24.fnt
+bf74abe9	946d	/002168000_FileSystem/content/data-sync/fonts/arial_24_0.png
+fc890c72	3d69	/002168000_FileSystem/content/data-sync/fonts/courier12.fnt
+e5c2a1c8	2bfe	/002168000_FileSystem/content/data-sync/fonts/courier12_0.png
+d0cc07ee	3b4e	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_22.fnt
+b6767b30	31e93	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_22_0.png
+587ab74d	458a	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_24.fnt
+01e58d48	4645e	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_24_0.png
+587ab74d	458a	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_26.fnt
+08f9e4bc	48bc7	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_26_0.png
+3467301f	4be8	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_28.fnt
+1d743585	57f4c	/002168000_FileSystem/content/data-sync/fonts/nintendo_ntlg_28_0.png
+2bd0b55d	a79	/002168000_FileSystem/content/data-sync/fonts/target20.fnt
+24b57343	ac6	/002168000_FileSystem/content/data-sync/fonts/target20_0.png
+dbbb0447	c25	/002168000_FileSystem/content/data-sync/images/background.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/bottom_background_ph.png
+10aa0aa3	87bb	/002168000_FileSystem/content/data-sync/images/keyconfig_bg.png
+64879255	212a	/002168000_FileSystem/content/data-sync/images/layout_bg.png
+f851670e	33747	/002168000_FileSystem/content/data-sync/images/ref/vessel_nus_initial_setting.png
+603aa991	3fa35	/002168000_FileSystem/content/data-sync/images/ref/vessel_nus_keyconfig.png
+80f4d469	4002d	/002168000_FileSystem/content/data-sync/images/ref/vessel_nus_keyconfig2.png
+0b14b65a	50bb3	/002168000_FileSystem/content/data-sync/images/ref/vessel_vcmenu_graphicresource_main_ref.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/save_bottom_ph.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/save_up_ph.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/screen_bottom_ph.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/screen_up_ph.png
+7d61d7aa	adc	/002168000_FileSystem/content/data-sync/images/top_background_ph.png
+b381cf16	762	/002168000_FileSystem/content/data-sync/images/vcmenus_common_1.json
+9c80cec3	923ea	/002168000_FileSystem/content/data-sync/images/vcmenus_common_1.png
+8b090405	16d	/002168000_FileSystem/content/data-sync/images/vcmenus_common_2.json
+9d27d363	32e99	/002168000_FileSystem/content/data-sync/images/vcmenus_common_2.png
+4f1a0f31	166	/002168000_FileSystem/content/data-sync/images/vcmenus_ntr.json
+6548c466	fb68	/002168000_FileSystem/content/data-sync/images/vcmenus_ntr.png
+c1ce9a47	636	/002168000_FileSystem/content/data-sync/images/vcmenus_nus.json
+1135b41f	45670	/002168000_FileSystem/content/data-sync/images/vcmenus_nus.png
+6895a53e	47c	/002168000_FileSystem/content/data-sync/images/vcmenus_nus_controllers.json
+9341f7ec	fe422	/002168000_FileSystem/content/data-sync/images/vcmenus_nus_controllers.png
+979e19c7	304	/002168000_FileSystem/content/data-sync/init.json
+2dcdf764	1a625	/002168000_FileSystem/content/data-sync/prefabs/keyconfig.scene
+da988e5f	590c	/002168000_FileSystem/content/data-sync/prefabs/scrolling_list.scene
+f47a8379	481	/002168000_FileSystem/content/data-sync/scripts/core/core.lua
+978c8317	db	/002168000_FileSystem/content/data-sync/scripts/core/math.lua
+8a9be94e	23f	/002168000_FileSystem/content/data-sync/scripts/core/table.lua
+28e2c72c	5efd	/002168000_FileSystem/content/data-sync/scripts/gui/gui.lua
+1bc5f697	1474	/002168000_FileSystem/content/data-sync/scripts/gui/gui_button.lua
+70fcf19c	b8e	/002168000_FileSystem/content/data-sync/scripts/gui/gui_button_no_pressed_enter.lua
+8a27e1dc	846	/002168000_FileSystem/content/data-sync/scripts/gui/gui_button_turbo.lua
+dcb965d2	17bd	/002168000_FileSystem/content/data-sync/scripts/gui/gui_check.lua
+a805fbd9	34ae	/002168000_FileSystem/content/data-sync/scripts/gui/gui_element.lua
+ed78a615	5d05	/002168000_FileSystem/content/data-sync/scripts/gui/gui_inputs.lua
+6c3d33a8	b54	/002168000_FileSystem/content/data-sync/scripts/gui/gui_list.lua
+6e95c7d3	13a7	/002168000_FileSystem/content/data-sync/scripts/gui/gui_popup.lua
+7d122c2e	52b0	/002168000_FileSystem/content/data-sync/scripts/gui/gui_scroll.lua
+f07a8cd3	46	/002168000_FileSystem/content/data-sync/scripts/gui/gui_selectable.lua
+5cb220b1	260e	/002168000_FileSystem/content/data-sync/scripts/gui/gui_slider.lua
+ff5e6ce9	1211	/002168000_FileSystem/content/data-sync/scripts/keyconfig/controller.lua
+4c88af0c	bc2f	/002168000_FileSystem/content/data-sync/scripts/keyconfig/keyconfig.lua
+9cf0e84f	1229	/002168000_FileSystem/content/data-sync/scripts/keyconfig/linkline.lua
+ee95b637	272e	/002168000_FileSystem/content/data-sync/scripts/keyconfig/scrollinglist.lua
+5ad03f3a	aad	/002168000_FileSystem/content/data-sync/scripts/layouts.lua
+4693712c	6cbe	/002168000_FileSystem/content/data-sync/scripts/mainpage.lua
+ff3ac5ae	168a	/002168000_FileSystem/content/data-sync/scripts/popups.lua
+a9f13e18	d4d	/002168000_FileSystem/content/data-sync/scripts/utils.lua
+b9a88960	14b2	/002168000_FileSystem/content/data-sync/scripts/vc_methods.lua
+b2345ffd	2704	/002168000_FileSystem/content/data-sync/scripts/vcmenus.lua
+062adcf0	6028	/002168000_FileSystem/content/data-sync/strings/de/strings.json
+e2985d97	586c	/002168000_FileSystem/content/data-sync/strings/en/strings.json
+6ee05e5f	583f	/002168000_FileSystem/content/data-sync/strings/en_gb/strings.json
+0c9c93b8	5dda	/002168000_FileSystem/content/data-sync/strings/es/strings.json
+d6f8387b	5f72	/002168000_FileSystem/content/data-sync/strings/es_es/strings.json
+062adcf0	6028	/002168000_FileSystem/content/data-sync/strings/eur_de/strings.json
+6ee05e5f	583f	/002168000_FileSystem/content/data-sync/strings/eur_en/strings.json
+d6f8387b	5f72	/002168000_FileSystem/content/data-sync/strings/eur_es/strings.json
+46103cfc	61eb	/002168000_FileSystem/content/data-sync/strings/eur_fr/strings.json
+e6cedd9a	64fe	/002168000_FileSystem/content/data-sync/strings/eur_it/strings.json
+4ab8d761	6224	/002168000_FileSystem/content/data-sync/strings/eur_nl/strings.json
+752b9dc9	5d7e	/002168000_FileSystem/content/data-sync/strings/eur_pt/strings.json
+de4efd67	75be	/002168000_FileSystem/content/data-sync/strings/eur_ru/strings.json
+459de850	6392	/002168000_FileSystem/content/data-sync/strings/fr/strings.json
+46103cfc	61eb	/002168000_FileSystem/content/data-sync/strings/fr_fr/strings.json
+e6cedd9a	64fe	/002168000_FileSystem/content/data-sync/strings/it/strings.json
+2d1e99e8	6733	/002168000_FileSystem/content/data-sync/strings/ja/strings.json
+2d1e99e8	6733	/002168000_FileSystem/content/data-sync/strings/jpn_ja/strings.json
+4ab8d761	6224	/002168000_FileSystem/content/data-sync/strings/nl/strings.json
+0c64b6d2	59c1	/002168000_FileSystem/content/data-sync/strings/pt/strings.json
+752b9dc9	5d7e	/002168000_FileSystem/content/data-sync/strings/pt_pt/strings.json
+de4efd67	75be	/002168000_FileSystem/content/data-sync/strings/ru/strings.json
+6683b82f	4c57	/002168000_FileSystem/content/data-sync/strings/strings.json
+e2985d97	586c	/002168000_FileSystem/content/data-sync/strings/usa_en/strings.json
+0c9c93b8	5dda	/002168000_FileSystem/content/data-sync/strings/usa_es/strings.json
+459de850	6392	/002168000_FileSystem/content/data-sync/strings/usa_fr/strings.json
+0c64b6d2	59c1	/002168000_FileSystem/content/data-sync/strings/usa_pt/strings.json
+d7d514e1	2e0828	/002168000_FileSystem/content/FrameLayout.arc
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/CHN_sc/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/CHN_sc/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/CHN_sc/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_au/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_au/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_au/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_cs/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_cs/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_cs/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_da/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_da/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_da/VCM.msbt
+3a8b93be	fa0	/002168000_FileSystem/content/Message_CAT/EUR_de/ERR.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_CAT/EUR_de/SYS.msbt
+cd2c44fd	2630	/002168000_FileSystem/content/Message_CAT/EUR_de/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_el/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_el/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_el/VCM.msbt
+ac811a46	db0	/002168000_FileSystem/content/Message_CAT/EUR_en/ERR.msbt
+b3864d94	e50	/002168000_FileSystem/content/Message_CAT/EUR_en/SYS.msbt
+efc89491	2270	/002168000_FileSystem/content/Message_CAT/EUR_en/VCM.msbt
+83beacc3	ef0	/002168000_FileSystem/content/Message_CAT/EUR_es/ERR.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_CAT/EUR_es/SYS.msbt
+60ba6323	24f0	/002168000_FileSystem/content/Message_CAT/EUR_es/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_fi/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_fi/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_fi/VCM.msbt
+495f5f66	e90	/002168000_FileSystem/content/Message_CAT/EUR_fr/ERR.msbt
+d5cddd6b	e60	/002168000_FileSystem/content/Message_CAT/EUR_fr/SYS.msbt
+0e28558f	2600	/002168000_FileSystem/content/Message_CAT/EUR_fr/VCM.msbt
+70d00c63	f40	/002168000_FileSystem/content/Message_CAT/EUR_it/ERR.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_CAT/EUR_it/SYS.msbt
+a1a30772	25b0	/002168000_FileSystem/content/Message_CAT/EUR_it/VCM.msbt
+434ef3b0	f10	/002168000_FileSystem/content/Message_CAT/EUR_nl/ERR.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_CAT/EUR_nl/SYS.msbt
+84ee3e99	25f0	/002168000_FileSystem/content/Message_CAT/EUR_nl/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_no/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_no/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_no/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_pl/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_pl/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_pl/VCM.msbt
+0060d068	e30	/002168000_FileSystem/content/Message_CAT/EUR_pt/ERR.msbt
+ea2ac23d	e40	/002168000_FileSystem/content/Message_CAT/EUR_pt/SYS.msbt
+083f3107	2520	/002168000_FileSystem/content/Message_CAT/EUR_pt/VCM.msbt
+ac811a46	db0	/002168000_FileSystem/content/Message_CAT/EUR_ru/ERR.msbt
+d5cddd6b	e60	/002168000_FileSystem/content/Message_CAT/EUR_ru/SYS.msbt
+2c3fdd8d	2570	/002168000_FileSystem/content/Message_CAT/EUR_ru/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_sv/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_sv/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_sv/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/EUR_tr/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/EUR_tr/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/EUR_tr/VCM.msbt
+87b48984	8f0	/002168000_FileSystem/content/Message_CAT/JPN_ja/ERR.msbt
+ea2ac23d	e40	/002168000_FileSystem/content/Message_CAT/JPN_ja/SYS.msbt
+412e03f7	1ba0	/002168000_FileSystem/content/Message_CAT/JPN_ja/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/KOR_ko/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/KOR_ko/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/KOR_ko/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/TWN_en/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/TWN_en/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/TWN_en/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_CAT/TWN_tc/ERR.msbt
+bb05dfa8	ce0	/002168000_FileSystem/content/Message_CAT/TWN_tc/SYS.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_CAT/TWN_tc/VCM.msbt
+65044fce	d60	/002168000_FileSystem/content/Message_CAT/USA_en/ERR.msbt
+d5cddd6b	e60	/002168000_FileSystem/content/Message_CAT/USA_en/SYS.msbt
+86f449cb	22a0	/002168000_FileSystem/content/Message_CAT/USA_en/VCM.msbt
+70d00c63	f40	/002168000_FileSystem/content/Message_CAT/USA_es/ERR.msbt
+d5cddd6b	e60	/002168000_FileSystem/content/Message_CAT/USA_es/SYS.msbt
+dfc74d23	2650	/002168000_FileSystem/content/Message_CAT/USA_es/VCM.msbt
+83beacc3	ef0	/002168000_FileSystem/content/Message_CAT/USA_fr/ERR.msbt
+b3864d94	e50	/002168000_FileSystem/content/Message_CAT/USA_fr/SYS.msbt
+da6d1ba9	26c0	/002168000_FileSystem/content/Message_CAT/USA_fr/VCM.msbt
+2ab9f846	d70	/002168000_FileSystem/content/Message_CAT/USA_pt/ERR.msbt
+ea2ac23d	e40	/002168000_FileSystem/content/Message_CAT/USA_pt/SYS.msbt
+e3fd5ff7	2420	/002168000_FileSystem/content/Message_CAT/USA_pt/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/CHN_sc/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/CHN_sc/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/CHN_sc/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_au/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_au/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_au/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_cs/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_cs/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_cs/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_da/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_da/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_da/VCM.msbt
+3a8b93be	fa0	/002168000_FileSystem/content/Message_PC/EUR_de/ERR.msbt
+0060d068	e30	/002168000_FileSystem/content/Message_PC/EUR_de/SYS.msbt
+849edbb2	2760	/002168000_FileSystem/content/Message_PC/EUR_de/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_el/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_el/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_el/VCM.msbt
+ac811a46	db0	/002168000_FileSystem/content/Message_PC/EUR_en/ERR.msbt
+975c6e7b	e10	/002168000_FileSystem/content/Message_PC/EUR_en/SYS.msbt
+ff83ad39	2390	/002168000_FileSystem/content/Message_PC/EUR_en/VCM.msbt
+83beacc3	ef0	/002168000_FileSystem/content/Message_PC/EUR_es/ERR.msbt
+d5cddd6b	e60	/002168000_FileSystem/content/Message_PC/EUR_es/SYS.msbt
+cd2c44fd	2630	/002168000_FileSystem/content/Message_PC/EUR_es/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_fi/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_fi/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_fi/VCM.msbt
+495f5f66	e90	/002168000_FileSystem/content/Message_PC/EUR_fr/ERR.msbt
+a2ab5142	e20	/002168000_FileSystem/content/Message_PC/EUR_fr/SYS.msbt
+3df9bcb8	2780	/002168000_FileSystem/content/Message_PC/EUR_fr/VCM.msbt
+45948759	f30	/002168000_FileSystem/content/Message_PC/EUR_it/ERR.msbt
+a2ab5142	e20	/002168000_FileSystem/content/Message_PC/EUR_it/SYS.msbt
+28907ad0	26e0	/002168000_FileSystem/content/Message_PC/EUR_it/VCM.msbt
+cad93467	f00	/002168000_FileSystem/content/Message_PC/EUR_nl/ERR.msbt
+ea2ac23d	e40	/002168000_FileSystem/content/Message_PC/EUR_nl/SYS.msbt
+15f08269	26f0	/002168000_FileSystem/content/Message_PC/EUR_nl/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_no/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_no/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_no/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_pl/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_pl/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_pl/VCM.msbt
+0060d068	e30	/002168000_FileSystem/content/Message_PC/EUR_pt/ERR.msbt
+975c6e7b	e10	/002168000_FileSystem/content/Message_PC/EUR_pt/SYS.msbt
+d7dc3b30	2680	/002168000_FileSystem/content/Message_PC/EUR_pt/VCM.msbt
+ac811a46	db0	/002168000_FileSystem/content/Message_PC/EUR_ru/ERR.msbt
+a2ab5142	e20	/002168000_FileSystem/content/Message_PC/EUR_ru/SYS.msbt
+da6d1ba9	26c0	/002168000_FileSystem/content/Message_PC/EUR_ru/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_sv/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_sv/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_sv/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/EUR_tr/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/EUR_tr/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/EUR_tr/VCM.msbt
+2f2acb90	8e0	/002168000_FileSystem/content/Message_PC/JPN_ja/ERR.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_PC/JPN_ja/SYS.msbt
+ab418a6e	1c50	/002168000_FileSystem/content/Message_PC/JPN_ja/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/KOR_ko/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/KOR_ko/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/KOR_ko/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/TWN_en/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/TWN_en/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/TWN_en/VCM.msbt
+67c7db9c	510	/002168000_FileSystem/content/Message_PC/TWN_tc/ERR.msbt
+626836f5	ca0	/002168000_FileSystem/content/Message_PC/TWN_tc/SYS.msbt
+72ce42d7	e70	/002168000_FileSystem/content/Message_PC/TWN_tc/VCM.msbt
+660bf284	d50	/002168000_FileSystem/content/Message_PC/USA_en/ERR.msbt
+aaf11d2d	de0	/002168000_FileSystem/content/Message_PC/USA_en/SYS.msbt
+9b43edf1	2380	/002168000_FileSystem/content/Message_PC/USA_en/VCM.msbt
+70d00c63	f40	/002168000_FileSystem/content/Message_PC/USA_es/ERR.msbt
+3b82887c	e00	/002168000_FileSystem/content/Message_PC/USA_es/SYS.msbt
+263abedf	2720	/002168000_FileSystem/content/Message_PC/USA_es/VCM.msbt
+83beacc3	ef0	/002168000_FileSystem/content/Message_PC/USA_fr/ERR.msbt
+97fa2a27	df0	/002168000_FileSystem/content/Message_PC/USA_fr/SYS.msbt
+7287aa35	2790	/002168000_FileSystem/content/Message_PC/USA_fr/VCM.msbt
+65044fce	d60	/002168000_FileSystem/content/Message_PC/USA_pt/ERR.msbt
+aaf11d2d	de0	/002168000_FileSystem/content/Message_PC/USA_pt/SYS.msbt
+4113f63a	24a0	/002168000_FileSystem/content/Message_PC/USA_pt/VCM.msbt
+a47ca14a	1000000	/002168000_FileSystem/content/rom/Ucfze0.242
+b1f02ae1	1ab5	/002168000_FileSystem/content/shader.frag
+4374f29d	27b	/002168000_FileSystem/content/shader.vert
+de8e5ce7	1a08	/002168000_FileSystem/content/shaders/font_BuildinShader.gsh
+8dd5c836	204c0	/002168000_FileSystem/content/shaders/lyt_BuildinShader.gsh
+53209bc5	be34	/002168000_FileSystem/content/shaders/n64Shader.gsh
+92440db7	c8ec	/002168000_FileSystem/content/shaders/n64ShaderEx.gsh
+1f0ff9f5	c034	/002168000_FileSystem/content/shaders/n64ShaderFognew.gsh
+a96c9304	8c130	/002168000_FileSystem/content/snd/common/wiiu_shared.bfsar
+000000000_FstBlock
+000008000_FileSystem/code
+000010000_FileSystem/code
+000018000_FileSystem/meta
+000048000_FileSystem/meta
+000B78000_FileSystem/meta
+000C88000_FileSystem/meta
+000D98000_FileSystem/meta
+001FE8000_FileSystem/code
+002168000_FileSystem/content
+002168000_FileSystem/content/config
+002168000_FileSystem/content/data/fonts
+002168000_FileSystem/content/data/shaders
+002168000_FileSystem/content/data-sync/animations
+002168000_FileSystem/content/data-sync/animations/keyconfig
+002168000_FileSystem/content/data-sync
+002168000_FileSystem/content/data-sync/dialogs
+002168000_FileSystem/content/data-sync/fonts
+002168000_FileSystem/content/data-sync/images
+002168000_FileSystem/content/data-sync/images/ref
+002168000_FileSystem/content/data-sync/prefabs
+002168000_FileSystem/content/data-sync/scripts/core
+002168000_FileSystem/content/data-sync/scripts/gui
+002168000_FileSystem/content/data-sync/scripts/keyconfig
+002168000_FileSystem/content/data-sync/scripts
+002168000_FileSystem/content/data-sync/strings/de
+002168000_FileSystem/content/data-sync/strings/en
+002168000_FileSystem/content/data-sync/strings/en_gb
+002168000_FileSystem/content/data-sync/strings/es
+002168000_FileSystem/content/data-sync/strings/es_es
+002168000_FileSystem/content/data-sync/strings/eur_de
+002168000_FileSystem/content/data-sync/strings/eur_en
+002168000_FileSystem/content/data-sync/strings/eur_es
+002168000_FileSystem/content/data-sync/strings/eur_fr
+002168000_FileSystem/content/data-sync/strings/eur_it
+002168000_FileSystem/content/data-sync/strings/eur_nl
+002168000_FileSystem/content/data-sync/strings/eur_pt
+002168000_FileSystem/content/data-sync/strings/eur_ru
+002168000_FileSystem/content/data-sync/strings/fr
+002168000_FileSystem/content/data-sync/strings/fr_fr
+002168000_FileSystem/content/data-sync/strings/it
+002168000_FileSystem/content/data-sync/strings/ja
+002168000_FileSystem/content/data-sync/strings/jpn_ja
+002168000_FileSystem/content/data-sync/strings/nl
+002168000_FileSystem/content/data-sync/strings/pt
+002168000_FileSystem/content/data-sync/strings/pt_pt
+002168000_FileSystem/content/data-sync/strings/ru
+002168000_FileSystem/content/data-sync/strings
+002168000_FileSystem/content/data-sync/strings/usa_en
+002168000_FileSystem/content/data-sync/strings/usa_es
+002168000_FileSystem/content/data-sync/strings/usa_fr
+002168000_FileSystem/content/data-sync/strings/usa_pt
+002168000_FileSystem/content/Message_CAT/CHN_sc
+002168000_FileSystem/content/Message_CAT/EUR_au
+002168000_FileSystem/content/Message_CAT/EUR_cs
+002168000_FileSystem/content/Message_CAT/EUR_da
+002168000_FileSystem/content/Message_CAT/EUR_de
+002168000_FileSystem/content/Message_CAT/EUR_el
+002168000_FileSystem/content/Message_CAT/EUR_en
+002168000_FileSystem/content/Message_CAT/EUR_es
+002168000_FileSystem/content/Message_CAT/EUR_fi
+002168000_FileSystem/content/Message_CAT/EUR_fr
+002168000_FileSystem/content/Message_CAT/EUR_it
+002168000_FileSystem/content/Message_CAT/EUR_nl
+002168000_FileSystem/content/Message_CAT/EUR_no
+002168000_FileSystem/content/Message_CAT/EUR_pl
+002168000_FileSystem/content/Message_CAT/EUR_pt
+002168000_FileSystem/content/Message_CAT/EUR_ru
+002168000_FileSystem/content/Message_CAT/EUR_sv
+002168000_FileSystem/content/Message_CAT/EUR_tr
+002168000_FileSystem/content/Message_CAT/JPN_ja
+002168000_FileSystem/content/Message_CAT/KOR_ko
+002168000_FileSystem/content/Message_CAT/TWN_en
+002168000_FileSystem/content/Message_CAT/TWN_tc
+002168000_FileSystem/content/Message_CAT/USA_en
+002168000_FileSystem/content/Message_CAT/USA_es
+002168000_FileSystem/content/Message_CAT/USA_fr
+002168000_FileSystem/content/Message_CAT/USA_pt
+002168000_FileSystem/content/Message_PC/CHN_sc
+002168000_FileSystem/content/Message_PC/EUR_au
+002168000_FileSystem/content/Message_PC/EUR_cs
+002168000_FileSystem/content/Message_PC/EUR_da
+002168000_FileSystem/content/Message_PC/EUR_de
+002168000_FileSystem/content/Message_PC/EUR_el
+002168000_FileSystem/content/Message_PC/EUR_en
+002168000_FileSystem/content/Message_PC/EUR_es
+002168000_FileSystem/content/Message_PC/EUR_fi
+002168000_FileSystem/content/Message_PC/EUR_fr
+002168000_FileSystem/content/Message_PC/EUR_it
+002168000_FileSystem/content/Message_PC/EUR_nl
+002168000_FileSystem/content/Message_PC/EUR_no
+002168000_FileSystem/content/Message_PC/EUR_pl
+002168000_FileSystem/content/Message_PC/EUR_pt
+002168000_FileSystem/content/Message_PC/EUR_ru
+002168000_FileSystem/content/Message_PC/EUR_sv
+002168000_FileSystem/content/Message_PC/EUR_tr
+002168000_FileSystem/content/Message_PC/JPN_ja
+002168000_FileSystem/content/Message_PC/KOR_ko
+002168000_FileSystem/content/Message_PC/TWN_en
+002168000_FileSystem/content/Message_PC/TWN_tc
+002168000_FileSystem/content/Message_PC/USA_en
+002168000_FileSystem/content/Message_PC/USA_es
+002168000_FileSystem/content/Message_PC/USA_fr
+002168000_FileSystem/content/Message_PC/USA_pt
+002168000_FileSystem/content/rom
+002168000_FileSystem/content/shaders
+002168000_FileSystem/content/snd/common

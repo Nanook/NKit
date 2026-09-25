@@ -1,0 +1,302 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:converters="using:NkdsUi.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+             x:Class="NkdsUi.Views.Controls.ImageListControl"
+             x:DataType="vm:ImageListViewModel">
+
+    <Design.DataContext>
+        <vm:ImageListViewModel/>
+    </Design.DataContext>
+
+    <DockPanel DragDrop.AllowDrop="True">
+        <!-- Comparison Mode Banner (visible only when IsComparisonMode is true) -->
+        <Border DockPanel.Dock="Top"
+                IsVisible="{Binding IsComparisonMode}"
+                Background="#2E7B1FA2"
+                BorderThickness="0,0,0,2"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                Padding="8,6">
+            <TextBlock x:CompileBindings="False"
+                       Text="{Binding DataContext.ComparisonMode.StatusText,
+                             RelativeSource={RelativeSource AncestorType=Window}}"
+                       Foreground="{DynamicResource PrimaryHueLightBrush}"
+                       FontWeight="SemiBold"
+                       FontSize="13"/>
+        </Border>
+
+        <!-- Status Bar at the bottom -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="8,4"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} images">
+                            <Binding Path="TotalImageCount"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} selected">
+                            <Binding Path="SelectedImageCount"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock x:CompileBindings="False"
+                           Text="{Binding DataContext.StatsCalculation.TotalSummaryText,
+                                 RelativeSource={RelativeSource AncestorType=Window}}"
+                           Opacity="0.8"/>
+                <TextBlock x:CompileBindings="False"
+                           Text="{Binding DataContext.StatsCalculation.SelectedSummaryText,
+                                 RelativeSource={RelativeSource AncestorType=Window}}"
+                           Opacity="0.8"/>
+            </StackPanel>
+        </Border>
+
+        <!-- DataGrid filling the remaining space -->
+        <DataGrid x:Name="ImageDataGrid"
+                  ItemsSource="{Binding FilteredImages}"
+                  SelectionMode="Extended"
+                  CanUserSortColumns="False"
+                  CanUserResizeColumns="True"
+                  CanUserReorderColumns="True"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Horizontal"
+                  AutoGenerateColumns="False"
+                  FontSize="12"
+                  RowHeight="24"
+                  DragDrop.AllowDrop="True"
+                  Background="Transparent">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add Processing">
+                        <MenuItem Header="Process All Cancelled Items" Command="{Binding ProcessAllAddCancelledCommand}"/>
+                        <MenuItem Header="Clear All Cancelled Items" Command="{Binding ClearAllAddCancelledCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Process Selected" Command="{Binding ProcessAddCancelledCommand}"/>
+                        <MenuItem Header="Clear Selected" Command="{Binding ClearAddCancelledCommand}"/>
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#333333"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Padding" Value="4,4,2,4"/>
+                    <Setter Property="MinHeight" Value="0"/>
+                    <Setter Property="SeparatorBrush" Value="#555555"/>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding SeparatorBrush}"
+                                    BorderThickness="0,0,1,0"
+                                    Padding="{TemplateBinding Padding}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      HorizontalContentAlignment="Left"
+                                                      VerticalContentAlignment="Center"/>
+                                    <Thumb Name="PART_RightHeaderGripper"
+                                           Grid.Column="1"
+                                           Width="4"
+                                           Background="Transparent"
+                                           Cursor="SizeWestEast"
+                                           Margin="0"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="DataGridRow:selected">
+                    <Setter Property="Background" Value="#AA7B1FA2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+                <Style Selector="DataGridRow:selected DataGridCell">
+                    <Setter Property="Background" Value="#AA7B1FA2"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+                <Style Selector="DataGridRow:selected DataGridCell TextBlock">
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#AA7B1FA2"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#557B1FA2"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow:pointerover DataGridCell">
+                    <Setter Property="Background" Value="#557B1FA2"/>
+                </Style>
+            </DataGrid.Styles>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding Name}"
+                                    Width="350"
+                                    Tag="Name"/>
+                <DataGridTextColumn Header="System"
+                                    Binding="{Binding System}"
+                                    Width="100"
+                                    Tag="System"/>
+                <DataGridTextColumn Header="Set"
+                                    Binding="{Binding SetName}"
+                                    Width="150"
+                                    Tag="SetName"/>
+                <DataGridTextColumn Header="Size"
+                                    Binding="{Binding SizeDisplay}"
+                                    Width="100"
+                                    Tag="Size"/>
+                <DataGridTextColumn Header="Format"
+                                    Binding="{Binding FormatDisplay}"
+                                    Width="80"
+                                    Tag="Format"/>
+                <DataGridTextColumn Header="Removed"
+                                    Binding="{Binding RemovedDisplay}"
+                                    Width="70"
+                                    Tag="Removed"/>
+                <DataGridTemplateColumn Header="Status" Width="110" Tag="VerifyResult">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <TextBlock Text="{Binding StatusDisplay}"
+                                       Foreground="{Binding StatusColor}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="4,0"
+                                       ToolTip.Tip="{Binding VerifyMethod}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="CRC32"
+                                    Binding="{Binding Crc32Hex}"
+                                    Width="95"
+                                    Tag="Crc32"/>
+                <DataGridTextColumn Header="XxHash64"
+                                    Binding="{Binding XxHash64Hex}"
+                                    Width="160"
+                                    Tag="XxHash64"/>
+                <DataGridTemplateColumn Header="Analysis" Width="150" Tag="Analysis">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Panel Height="16" Margin="4,0" IsVisible="{Binding HasStats}">
+                                <Border CornerRadius="2" ClipToBounds="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding BarStoredRatio, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                                            <ColumnDefinition Width="{Binding BarCompressionRatio, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                                            <ColumnDefinition Width="{Binding BarDedupRatio, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                                            <ColumnDefinition Width="{Binding BarSharedCompressedRatio, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                                            <ColumnDefinition Width="{Binding BarRemoveableRatio, Converter={x:Static converters:StarWidthConverter.Instance}}"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#F59E0B"/>
+                                        <Border Grid.Column="1" Background="#D97706"/>
+                                        <Border Grid.Column="2" Background="#6366F1"/>
+                                        <Border Grid.Column="3" Background="#818CF8"/>
+                                        <Border Grid.Column="4" Background="#10B981"/>
+                                    </Grid>
+                                </Border>
+                                <!-- Black ratio marker overlaid on bar -->
+                                <Grid VerticalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="{Binding ReducedBy, Converter={x:Static converters:StarWidthConverter.Instance}, ConverterParameter=100}"/>
+                                        <ColumnDefinition Width="{Binding ReducedBy, Converter={x:Static converters:InverseStarWidthConverter.Instance}, ConverterParameter=100}"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- 2px line between arrows -->
+                                    <Border Grid.Column="0" HorizontalAlignment="Right" Width="2" Background="#1A1A1A" Margin="-1,4,0,4"/>
+                                    <!-- Down arrow at top -->
+                                    <Polygon Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                             Points="0,0 8,0 4,5" Fill="#1A1A1A" Margin="-4,0,-3,0"/>
+                                    <!-- Up arrow at bottom -->
+                                    <Polygon Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                             Points="4,0 0,5 8,5" Fill="#1A1A1A" Margin="-4,0,-3,0"/>
+                                </Grid>
+                            </Panel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="ReducedBy">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Ratio" ToolTip.Tip="This image's share of storage — unique blocks + shared blocks divided among all images using them"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#CC222222">
+                                <TextBlock Text="{Binding ReducedByDisplay}"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="UniqueRawSize">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Unique" Foreground="#F59E0B" ToolTip.Tip="Blocks stored only for this image (incompressible)"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#33F59E0B">
+                                <TextBlock Text="{Binding UniqueRawSizeDisplay}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="UniqueCompressedSize">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Unique (shrunk)" Foreground="#D97706" ToolTip.Tip="Blocks stored only for this image (compressed)"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#33D97706">
+                                <TextBlock Text="{Binding UniqueCompressedSizeDisplay}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="SharedRawSize">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Shared" Foreground="#6366F1" ToolTip.Tip="Blocks shared with other images (incompressible)"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#336366F1">
+                                <TextBlock Text="{Binding SharedRawSizeDisplay}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="SharedCompressedSize">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Shared (shrunk)" Foreground="#818CF8" ToolTip.Tip="Blocks shared with other images (compressed)"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#33818CF8">
+                                <TextBlock Text="{Binding SharedCompressedSizeDisplay}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="90" Tag="SavedSize">
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Saved Space" Foreground="#10B981" ToolTip.Tip="Space saved by filler removal and compression"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:ImageRowViewModel">
+                            <Border Background="#3310B981">
+                                <TextBlock Text="{Binding SavedSizeDisplay}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

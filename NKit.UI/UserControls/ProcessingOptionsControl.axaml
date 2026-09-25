@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="400"
+             x:Class="NKit.Ui.UserControls.ProcessingOptionsControl"
+             xmlns:local="clr-namespace:NKit.Ui.ViewModels" 
+             x:DataType="local:ProcessingOptionsViewModel">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Theme="{StaticResource MaterialModernScrollViewer}">
+        <StackPanel Orientation="Vertical" Spacing="0" Margin="3,5,10,5">
+            <StackPanel.Styles>
+                <Style Selector="TextBox">
+                    <Setter Property="UseFloatingWatermark" Value="True" />
+                    <Setter Property="MinWidth" Value="300" />
+                </Style>
+                <Style Selector="Button.PathButton">
+                    <Setter Property="Height" Value="30" />
+                    <Setter Property="Width" Value="30" />
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                    <Setter Property="Margin" Value="5,5,0,0" />
+                </Style>
+                <Style Selector="TextBlock.SectionHeader">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Margin" Value="0,8,0,3" />
+                </Style>
+                <Style Selector="Border.SectionContainer">
+                    <Setter Property="BorderBrush" Value="DarkGray" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="CornerRadius" Value="3" />
+                    <Setter Property="Padding" Value="8" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                    <Setter Property="Background" Value="{DynamicResource MaterialCardBackgroundBrush}" />
+                </Style>
+            </StackPanel.Styles>
+
+            <!-- User Path Info -->
+            <SelectableTextBlock FontSize="12" Margin="0,0,0,10" TextWrapping="NoWrap" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Paths_Text_RootPath}">
+                <Run Text="Root Path: "/>
+                <Run Text="{Binding UserPath}" FontWeight="Bold"/>
+            </SelectableTextBlock>
+
+            <!-- Processing Options Header -->
+            <TextBlock Text="Source Scanning" Classes="SectionHeader" />
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <Grid ColumnDefinitions="28, *" RowDefinitions="Auto, Auto">
+                        <CheckBox Grid.Column="0" Grid.Row="0" IsChecked="{Binding Settings.Arc}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Check_ScanArchives}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Check_ScanArchives}">Scan Archives</TextBlock>
+
+                        <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding Settings.R}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Check_Recursive}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Check_Recursive}">Scan Directories Recursively</TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Core & Console Level -->
+            <TextBlock Text="Global Options (All Systems)" Classes="SectionHeader" />
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="10" Margin="0,10,0,5">
+                    <!-- Console Log Level -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="Console Log Level" Width="150" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Label_ConsoleLogLevel}" />
+                        <ComboBox Width="140" Height="30" ItemsSource="{Binding LogLevels}" SelectedItem="{Binding Settings.ConsoleLevel}" Classes="Dense" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Label_ConsoleLogLevel}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Logs Section -->
+            <TextBlock Text="Logs" Classes="SectionHeader"/>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="10" Margin="0,10,0,5">
+                    <!-- File Log Level -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Label Content="File Log Level" Width="150" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Label_FileLogLevel}" />
+                        <ComboBox Width="140" Height="30" ItemsSource="{Binding LogLevels}" SelectedItem="{Binding Settings.LogOutLevel}" Classes="Dense" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Label_FileLogLevel}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Path + Browse -->
+                    <Grid ColumnDefinitions="*, 40" RowDefinitions="Auto">
+                        <TextBox Grid.Row="0" Grid.Column="0" wpf:TextFieldAssist.Label="Log Path" Text="{Binding Settings.LogOutPath_Manual_Display}" IsEnabled="{Binding IsFileLogEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Text_LogOutPath}" />
+                        <Button Grid.Row="0" Grid.Column="1" Classes="PathButton" Click="OnSelectLogFileClicked" IsEnabled="{Binding IsFileLogEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Button_SelectLog}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Mask row -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Row="0" Grid.Column="0" wpf:TextFieldAssist.Label="Filename/Mask" Text="{Binding Settings.LogOutMask}" IsEnabled="{Binding IsFileLogEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Text_LogOutMask}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Results Section -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Results" Classes="SectionHeader"/>
+                <CheckBox IsChecked="{Binding Settings.Results}" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Check_SaveResults}" />
+            </StackPanel>
+            <Border Classes="SectionContainer">
+                <StackPanel Orientation="Vertical" Spacing="10" Margin="0,10,0,5">
+                    <!-- Path + Browse -->
+                    <Grid ColumnDefinitions="*, 40" RowDefinitions="Auto">
+                        <TextBox Grid.Row="0" Grid.Column="0" wpf:TextFieldAssist.Label="Results Path" Text="{Binding Settings.ResultsOutPath_Manual_Display}" IsEnabled="{Binding Settings.Results}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Text_ResultsOutPath}" />
+                        <Button Grid.Row="0" Grid.Column="1" Classes="PathButton" Click="OnSelectResultsFolderClicked" IsEnabled="{Binding Settings.Results}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Button_SelectResults}">
+                            <avalonia:MaterialIcon Kind="FolderOpenOutline" Width="20" Height="20"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Mask row -->
+                    <Grid ColumnDefinitions="*, 40">
+                        <TextBox Grid.Column="0" wpf:TextFieldAssist.Label="Filename / Mask (optional)" Text="{Binding Settings.ResultsOutMask}" IsEnabled="{Binding Settings.Results}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.ProcessOptions_Text_ResultsOutMask}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

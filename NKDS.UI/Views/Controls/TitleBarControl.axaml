@@ -1,0 +1,174 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:controls="using:NkdsUi.Views.Controls"
+             mc:Ignorable="d"
+             x:Class="NkdsUi.Views.Controls.TitleBarControl"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Border Height="50" Background="#1E1E1E" CornerRadius="4"
+            BorderBrush="#7B1FA2" BorderThickness="1"
+            Padding="8,2" ClipToBounds="True">
+        <Grid ColumnDefinitions="Auto,Auto,*">
+            <!-- Left side: Open + Set text in a grid for alignment -->
+            <Grid Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,0"
+                  ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="Open: " FontSize="12" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                           Text="{Binding SessionManager.OpenStateText}"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           MaxWidth="200"/>
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Text="Set: " FontSize="11" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           Text="{Binding SessionManager.SetDisplayText}"
+                           FontSize="11"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           MaxWidth="200"/>
+            </Grid>
+
+            <!-- Vertical divider -->
+            <Border Grid.Column="1" Width="1" Background="#7B1FA2"
+                    VerticalAlignment="Stretch" Margin="8,4"/>
+
+            <!-- Right side: Operation progress OR error OR filter bar (mutually exclusive) -->
+            <Panel Grid.Column="2" VerticalAlignment="Center">
+                <!-- Operation progress bar (shown when an operation is active — takes priority) -->
+                <ContentControl Content="{Binding CurrentOperation}"
+                                IsVisible="{Binding HasActiveOperations}"
+                                VerticalAlignment="Center">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate x:DataType="vm:OperationProgressViewModel">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto"
+                      RowDefinitions="Auto,Auto"
+                      VerticalAlignment="Center">
+                    <!-- Operation name (spans both rows, vertically centered) -->
+                    <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                               Text="{Binding OperationName}"
+                               FontWeight="Bold" FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0"/>
+                    <!-- Progress bar -->
+                    <ProgressBar Grid.Row="0" Grid.Column="1"
+                                 Minimum="0" Maximum="100"
+                                 Value="{Binding Percentage}"
+                                 Height="10"
+                                 Foreground="#CE93D8"
+                                 Background="#447B1FA2"
+                                 VerticalAlignment="Center"/>
+                    <!-- Percentage -->
+                    <TextBlock Grid.Row="0" Grid.Column="2"
+                               Text="{Binding Percentage, StringFormat={}{0}%}"
+                               FontSize="11" Opacity="0.8"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
+                    <!-- Items -->
+                    <TextBlock Grid.Row="0" Grid.Column="3"
+                               Text="{Binding CounterDisplay}"
+                               FontSize="11" Opacity="0.8"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
+                    <!-- Elapsed -->
+                    <TextBlock Grid.Row="0" Grid.Column="4"
+                               Text="{Binding ElapsedDisplay}"
+                               FontSize="11" Opacity="0.8"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
+                    <!-- Cancel button -->
+                    <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="5"
+                            Command="{Binding CancelCommand}"
+                            VerticalAlignment="Center"
+                            Padding="6,2"
+                            Margin="8,0,0,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Cursor="Hand">
+                        <Panel>
+                            <TextBlock Text="Cancel" FontSize="11"
+                                       IsVisible="{Binding !IsCancelling}"/>
+                            <TextBlock Text="Cancelling..." FontSize="11" Opacity="0.6"
+                                       IsVisible="{Binding IsCancelling}"/>
+                        </Panel>
+                    </Button>
+                    <!-- Current file name (centered horizontally under progress bar) -->
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                               Text="{Binding CurrentFileName}"
+                               FontSize="10" Opacity="0.6"
+                               TextTrimming="CharacterEllipsis"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Grid>
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+
+                <!-- Filter bar (shown when filter is active AND no operation in progress) -->
+                <StackPanel Orientation="Horizontal" Spacing="12"
+                            VerticalAlignment="Center">
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="Toolbar.ShowFilterBar"/>
+                            <Binding Path="!Toolbar.IsOperationActive"/>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <!-- Filter title -->
+                    <TextBlock Text="Filter"
+                               FontWeight="Bold" FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,4,0"/>
+                    <!-- Set Filter (visible when multiple sets) -->
+                    <StackPanel Orientation="Horizontal" Spacing="4"
+                                IsVisible="{Binding Toolbar.HasMultipleSets}">
+                        <TextBlock Text="Set:" Opacity="0.6" VerticalAlignment="Center" FontSize="11"/>
+                        <ComboBox ItemsSource="{Binding Toolbar.AvailableSetNames}"
+                                  SelectedItem="{Binding Toolbar.SelectedSetName, Mode=TwoWay}"
+                                  PlaceholderText="All Sets"
+                                  Width="130" FontSize="12"
+                                  VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Name Filter -->
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="Filter:" Opacity="0.6" VerticalAlignment="Center" FontSize="11"/>
+                        <TextBox Text="{Binding ImageList.NameFilter, Mode=TwoWay}"
+                                 PlaceholderText="Search..." Width="160" FontSize="12"
+                                 UseFloatingPlaceholder="False"
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- System Filter -->
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="System:" Opacity="0.6" VerticalAlignment="Center" FontSize="11"/>
+                        <ComboBox ItemsSource="{Binding ImageList.AvailableSystems}"
+                                  SelectedItem="{Binding ImageList.SelectedSystemFilter, Mode=TwoWay}"
+                                  PlaceholderText="All" Width="120" FontSize="12"
+                                  VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Error message (shown when an error occurs, auto-clears) -->
+                <TextBlock Text="{Binding SessionManager.ErrorMessage}"
+                           IsVisible="{Binding SessionManager.HasError}"
+                           FontSize="12" Foreground="#F44336"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <!-- Session loading indicator (shown during folder/file open, when no operation active) -->
+                <ProgressBar IsIndeterminate="True"
+                             IsVisible="{Binding SessionManager.IsLoading}"
+                             Height="10"
+                             MinHeight="10"
+                             Background="#447B1FA2"
+                             Foreground="#CE93D8"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"/>
+            </Panel>
+        </Grid>
+    </Border>
+</UserControl>

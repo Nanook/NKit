@@ -1,0 +1,148 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FsCheck;
+using FsCheck.Fluent;
+using FsCheck.Xunit;
+using Nanook.NKit;
+using Nanook.NKit.Steps.Shared;
+using NKitDataStore;
+
+namespace NKitDataStore.Tests;
+
+/// <summary>
+/// Property-based tests for the NKDS System Filesystem Merge feature.
+///
+/// Feature: nkds-system-filesystem-merge
+/// </summary>
+public class SystemFilesystemMergePropertyTests
+{
+    private static readonly FsType[] AllFsTypes = Enum.GetValues<FsType>();
+
+    // Valid filename characters for generating random file names
+    private static readonly char[] ValidNameChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.".ToCharArray();
+
+    /// <summary>
+    /// Feature: nkds-system-filesystem-merge, Property 9: ResolveTargetFsType routes System to "system"
+    ///
+    /// **Validates: Requirements 4.1, 4.3**
+    ///
+    /// For any call to ResolveTargetFsType(FsType.System), the result SHALL be "system".
+    /// This property holds regardless of the optional parentFsType parameter value.
+    /// We test with every possible FsType as the parent to confirm the result is always "system".
+    /// </summary>
+    [Property(MaxTest = 100)]
+    public Property ResolveTargetFsType_System_AlwaysReturnsSystem()
+    {
+        var parentFsTypeGen = Gen.Elements(AllFsTypes);
+
+        return Prop.ForAll(parentFsTypeGen.ToArbitrary(), parentFsType =>
+        {
+            string result = DataStoreIso9660Formatter.ResolveTargetFsType(FsType.System, parentFsType);
+
+            return (result == "system")
+                .Label($"Expected 'system' but got '{result}' when parentFsType={parentFsType}");
+        });
+    }
+
+    /// <summary>
+    /// Feature: nkds-system-filesystem-merge, Property 9: ResolveTargetFsType routes System to "system"
+    ///
+    /// **Validates: Requirements 4.1, 4.3**
+    ///
+    /// For any call to ResolveTargetFsType(FsType.System) with null parent, the result SHALL be "system".
+    /// </summary>
+    [Fact]
+    public void ResolveTargetFsType_System_NullParent_ReturnsSystem()
+    {
+        string result = DataStoreIso9660Formatter.ResolveTargetFsType(FsType.System, null);
+        Assert.Equal("system", result);
+    }
+
+    /// <summary>
+    /// Feature: nkds-system-filesystem-merge, Property 1: System entries appear in all non-system filesystems after merge
+    ///
+    /// **Validates: Requirements 1.2, 1.3**
+    ///
+    /// For any system NkFs and set of non-system NkFs instances, after merging,
+    /// every non-system NkFs SHALL contain all entries from the system NkFs
+    /// (identifiable by their IsSystem flag and original offset/size).
+    /// </summary>
+    [Property(MaxTest = 100)]
+    public Property SystemEntriesAppearInAllNonSystemFilesystemsAfterMerge()
+    {
+        var inputGen = from systemFileCount in Gen.Choose(1, 5)
+                       from nonSystemCount in Gen.Choose(1, 3)
+                       from seed in Gen.Choose(0, int.MaxValue)
+                       select (systemFileCount, nonSystemCount, seed);
+
+        return Prop.ForAll(inputGen.ToArbitrary(), input =>
+        {
+            var (systemFileCount, nonSystemCount, seed) = input;
+
+            // Build a system NkFs with random file entries
+            var systemFsYaml = new FsYaml();
+            var systemRoot = systemFsYaml.AddFileSystem(".", 0);
+            var systemEntries = new List<(string name, long offset, long size)>();
+
+            for (int i = 0; i < systemFileCount; i++)
+            {
+                string name = GenerateFileName(seed, "SYS", i);
+                long offset = (long)(seed + i * 0x2000) & 0x7FFFFFFFL;
+                long size = (long)((seed + i * 137) % 0x8000) + 1;
+                systemRoot.AddFile(name, offset, size, 0, 0, isSystem: true);
+                systemEntries.Add((name, offset, size));
+            }
+
+            NkFs systemNkFs = NkFs.FromFsYaml(systemFsYaml);
+
+            // Build non-system NkFs instances and merge
+            bool allSystemEntriesFound = true;
+            string failureDetail = "";
+
+            for (int t = 0; t < nonSystemCount; t++)
+            {
+                int targetFileCount = (seed + t) % 4 + 1; // 1-4 files per target
+
+                var targetFsYaml = new FsYaml();
+                var targetRoot = targetFsYaml.AddFileSystem(".", 0);
+
+                for (int i = 0; i < targetFileCount; i++)
+                {
+                    string name = GenerateFileName(seed, $"T{t}", i);
+                    long offset = (long)(seed + t * 0x10000 + i * 0x4000) & 0x7FFFFFFFL;
+                    long size = (long)((seed + t * 99 + i * 53) % 0x10000) + 1;
+                    targetRoot.AddFile(name, offset, size, 0, 0, isSystem: false);
+                }
+
+                NkFs targetNkFs = NkFs.FromFsYaml(targetFsYaml);
+
+                // Perform merge
+                NkFs merged = NkFsMerger.MergeSystemInto(targetNkFs, systemNkFs);
+
+                // Verify all system entries are present in the merged result
+                FsYaml mergedFsYaml = merged.ToFsYaml();
+                var mergedEntries = CollectAllFileEntries(mergedFsYaml);
+
+                foreach (var (name, offset, size) in systemEntries)
+                {
+                    bool found = mergedEntries.Any(e =>
+                        e.name == name && e.offset == offset && e.size == size && e.isSystem);
+
+                    if (!found)
+                    {
+                        allSystemEntriesFound = false;
+                        failureDetail = $"System entry '{name}' (offset={offset}, size={size}) not found in merged target {t}";
+                        break;
+                    }
+                }
+
+                if (!allSystemEntriesFound)
+                    break;
+            }
+
+            return allSystemEntriesFound
+                .Label(failureDetail);
+        });
+    }
+

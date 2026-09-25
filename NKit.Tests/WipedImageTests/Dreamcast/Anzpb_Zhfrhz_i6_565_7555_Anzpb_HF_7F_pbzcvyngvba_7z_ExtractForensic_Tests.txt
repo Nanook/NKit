@@ -1,0 +1,28 @@
+1a5266da	8000	/000000000_FileSystem/__customHeader
+2ce0f911	800	/000000000_FileSystem/__pvd_Iso9660_8000
+0ac41c20	800	/000000000_FileSystem/__pvdEnd_8800
+4c055bfc	a	/000000000_FileSystem/__paths_LittleEndian_9000
+98ea583d	a	/000000000_FileSystem/__paths_BigEndian_9800
+e958d549	800	/000000000_FileSystem/__fst_A000
+0fc2bb52	48	/000000000_FileSystem/NOFGENPG.TXT
+ddd1de1c	39	/000000000_FileSystem/OVOYVBTE.TXT
+cd28166f	47	/000000000_FileSystem/PBCLEVTU.TXT
+5b2e42e5	d7bc0	/000000000_FileSystem/JNEAVAT.DA
+0ecfb684	12e0a0	/00015BFA0_Audio/Data.bin
+1a5266da	8000	/00028A040_FileSystem/__customHeader
+ef0e7af0	800	/00028A040_FileSystem/__pvd_Iso9660_8000
+0ac41c20	800	/00028A040_FileSystem/__pvdEnd_8800
+54a5a4f9	a	/00028A040_FileSystem/__paths_LittleEndian_9000
+a9c5581c	a	/00028A040_FileSystem/__paths_BigEndian_9800
+c623c4e7	800	/00028A040_FileSystem/__fst_A000
+5b2e42e5	d7bc0	/00028A040_FileSystem/JNEAVAT.DA
+ff3d7b87	102f90	/04652CC70_Audio/Data.bin
+1190da0e	8320	/04662FC00_FileSystem/ZNANGRR.DRV
+ebf26a52	120	/04662FC00_FileSystem/FGERNZ.MLT
+ece9cae9	3b82dc	/04662FC00_FileSystem/QNGN5.BLT
+ac788812	19e504	/04662FC00_FileSystem/6FG_ERNQ.BIN
+000000000_FileSystem
+00015BFA0_Audio
+00028A040_FileSystem
+04652CC70_Audio
+04662FC00_FileSystem

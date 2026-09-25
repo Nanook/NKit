@@ -1,0 +1,144 @@
+Set:
+  InfoTestSet.nkds:
+    info:
+      - {version: 0x10000, shard_size: 0x100000, block_size: 0x10000, max_offset_blocks: 0x150}  # Version: 0.1.0
+    image:
+      - {id: 0x1, name: TestImage.iso, size: 0x5, xxhash64: 0x0, crc32: 0x0, system_id: null, format_id: 0x0}
+    area:
+      []
+    offset:
+      - {image_id: 0x1, offset: 0x0, size: 0x5, type_id: 0x1, offset_start: 0x0, blocks: [0x2F, 0xD6, 0xC0, 0x84, 0x48, 0xAB, 0x85, 0x8D, 0xF4, 0x99, 0x0B, 0x47]}
+    block:
+      - {hash: [0x2F, 0xD6, 0xC0, 0x84, 0x48, 0xAB, 0x85, 0x8D, 0xF4, 0x99, 0x0B, 0x47], file_id: 0x0, offset: 0x0, length: 0x6}
+
+# ===========================================
+# Storage Statistics
+# ===========================================
+# SetName: InfoTestSet
+# ImageCount: 1
+#
+# Database Files:
+#   DatabaseFileCount: 1
+#   TotalDatabaseFileSize: 48.00 KB (49,152 bytes)
+#
+# Logical Data Sizes:
+#   TotalImageDataSize: 5 B (5 bytes)
+#   EstimatedUncompressedSize: 64.00 KB (65,536 bytes)
+#
+# Physical Storage:
+#   TotalPhysicalBlockStorage: 6 B (6 bytes)
+#   BlockSize: 64.00 KB (65,536 bytes)
+#
+# Block Statistics:
+#   UniqueBlocksStored: 1
+#   TotalBlockReferences: 1
+#   CompressedBlocks: 1 (100.0%)
+#   UncompressedBlocks: 0 (0.0%)
+#
+# Compression Statistics:
+#   AverageCompressedBlockSize: 6 B (6 bytes)
+#   AverageUncompressedBlockSize: 0 B (0 bytes)
+#   CompressionRatio: 0.000 (100.0% reduction)
+#   CompressionSavings: 63.99 KB (65,530 bytes)
+#
+# Deduplication Statistics:
+#   DeduplicationRatio: 1.00x (blocks reused 1.00 times on average)
+#   DeduplicationSavings: 0 B (0 bytes)
+#
+# Overall Efficiency:
+#   OverallStorageEfficiency: 1.200 (-20.0% total reduction)
+#   TotalStorageSaved: 0 B (0 bytes)
+#   DatabaseOverhead: 47.99 KB (100.0% of file size)
+#
+
+
+# Enum Values (for reference - not stored in database):
+#
+# BlockType:
+#   0x0 = Other
+#   0x1 = File
+#   0x2 = FormatData
+#   0x3 = FileSystem
+#   0x4 = BlockPadding
+#   0x5 = NJunk
+#   0x6 = XFiller
+#
+# ImageFormat:
+#   0x0 = Unknown
+#   0x1 = Xbox
+#   0x2 = PS3
+#   0x3 = Wii
+#
+# System:
+#   0x0 = Default
+#   0x1 = GameCube
+#   0x2 = Wii
+#   0x3 = WiiU
+#   0x4 = PS1
+#   0x5 = PS2
+#   0x6 = PS3
+#   0x7 = PSP
+#   0x8 = Xbox
+#   0x9 = Xbox360
+#   0xA = Dreamcast
+#   0xB = Saturn
+#   0xC = SegaCD
+#   0xD = CDi
+#   0xE = PCEngine
+#
+# AreaValueType:
+#   0x0 = FileName
+#   0x1 = FileTimeStamp
+#   0x2 = FileAttributes
+#   0x3 = App
+#   0x4 = AreaOffsetBase
+#   0x5 = BlockSize
+#   0x6 = CommonKeyCrc
+#   0x7 = ContentHeaders
+#   0x8 = ContentIndex
+#   0x9 = ContentSha
+#   0xA = DecryptionValid
+#   0xB = DiscNo
+#   0xC = Duration
+#   0xD = Partition
+#   0xE = Encrypted
+#   0xF = FsType
+#   0x10 = HasFileSystem
+#   0x11 = HashRoot
+#   0x12 = HashSize
+#   0x13 = Hashes
+#   0x14 = HeaderCrc
+#   0x15 = HeaderDate
+#   0x16 = HeaderSize
+#   0x17 = HeaderXxHash
+#   0x18 = ID
+#   0x19 = JunkEndNullsOffset
+#   0x1A = JunkID
+#   0x1B = JunkLeadingNulls
+#   0x1C = KeyCrc
+#   0x1D = MissingFiles
+#   0x1E = PartitionType
+#   0x1F = Partitions
+#   0x20 = PhysicalOffset
+#   0x21 = PvdSectorCount
+#   0x22 = Region
+#   0x23 = RepeatedContentIndex
+#   0x24 = Revision
+#   0x25 = Session
+#   0x26 = SessionOffsetBase
+#   0x27 = Signed
+#   0x28 = SystemDataCrc
+#   0x29 = ThreeKey
+#   0x2A = Title
+#   0x2B = TitleId
+#   0x2C = TitleKeyCrc
+#   0x2D = TitleKeyMissing
+#   0x2E = TmdVersion
+#   0x2F = Track
+#   0x30 = UpdatePartitionRemoved
+#   0x31 = Version
+#   0x32 = VolumeId
+#   0x33 = AuxFileType
+#   0x34 = AuxFileName
+#   0x35 = Type
+#

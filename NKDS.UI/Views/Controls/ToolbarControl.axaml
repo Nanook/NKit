@@ -1,0 +1,229 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:converters="using:NkdsUi.Converters"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="90"
+             x:Class="NkdsUi.Views.Controls.ToolbarControl"
+             x:DataType="vm:ToolbarViewModel">
+
+    <UserControl.Resources>
+        <converters:SafeSvgPathConverter x:Key="SafeSvgPathConverter"/>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!-- Override Material theme's disabled opacity - grey icons are enough -->
+        <Style Selector="Button.toolbarBtn:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Opacity" Value="1.0"/>
+        </Style>
+        <Style Selector="Button.toolbarBtn:disabled">
+            <Setter Property="Opacity" Value="1.0"/>
+            <Setter Property="Foreground" Value="#888888"/>
+        </Style>
+        <!-- Disabled toolbar buttons: grey label text to match grey icons -->
+        <Style Selector="Button.toolbarBtn:disabled TextBlock">
+            <Setter Property="Foreground" Value="#888888"/>
+        </Style>
+        <!-- Cross-platform press/hover feedback (Windows provides this natively; Linux/macOS need explicit styles) -->
+        <Style Selector="Button.toolbarBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1ACE93D8"/>
+        </Style>
+        <Style Selector="Button.toolbarBtn:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#33CE93D8"/>
+        </Style>
+        <Style Selector="ToggleButton.toolbarBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1ACE93D8"/>
+        </Style>
+        <Style Selector="ToggleButton.toolbarBtn:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#33CE93D8"/>
+        </Style>
+        <!-- Checked/toggled state indicator for toolbar buttons (e.g., Group button when window is open) -->
+        <Style Selector="Border.toolbarCheckedIndicator">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="Border.toolbarCheckedIndicator.isChecked">
+            <Setter Property="Background" Value="#2E7B1FA2"/>
+            <Setter Property="BorderBrush" Value="#CE93D8"/>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Orientation="Horizontal" Spacing="4">
+        <!-- Operation Buttons -->
+        <ItemsControl ItemsSource="{Binding Items}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="2"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:ToolbarItemViewModel">
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Group divider -->
+                        <Border Width="1" Background="#444" Margin="6,4"
+                                VerticalAlignment="Stretch"
+                                IsVisible="{Binding ShowDividerBefore}"/>
+                        <!-- Checked indicator border: highlights when IsChecked is true (e.g., Group button toggled) -->
+                        <Border Classes="toolbarCheckedIndicator"
+                                Classes.isChecked="{Binding IsChecked}">
+                            <Button Command="{Binding Command}"
+                                    Classes="toolbarBtn"
+                                    Padding="4,4,4,2"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    IsEnabled="{Binding IsEnabled}"
+                                    ToolTip.Tip="{Binding Tooltip}">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2"
+                                            IsHitTestVisible="False">
+                                    <Panel Height="28" Width="28" HorizontalAlignment="Center">
+                                        <Svg Path="{Binding IconName, Converter={StaticResource SafeSvgPathConverter}, ConverterParameter='Toolbar'}"
+                                             Height="28" Width="28"
+                                             IsVisible="{Binding IsEnabled}"
+                                             IsHitTestVisible="False"/>
+                                        <Svg Path="{Binding IconName, Converter={StaticResource SafeSvgPathConverter}, ConverterParameter='ToolbarDisabled'}"
+                                             Height="28" Width="28"
+                                             IsVisible="{Binding !IsEnabled}"
+                                             IsHitTestVisible="False"/>
+                                    </Panel>
+                                    <TextBlock Text="{Binding Label}" FontSize="11"
+                                               HorizontalAlignment="Center"
+                                               Foreground="#CE93D8"
+                                               IsHitTestVisible="False"/>
+                                </StackPanel>
+                            </Button>
+                        </Border>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Separator -->
+        <Border Width="12"/>
+
+        <!-- Filter Toggle Button -->
+        <ToggleButton IsChecked="{Binding ShowFilterBar, Mode=TwoWay}"
+                      Classes="toolbarBtn"
+                      VerticalAlignment="Center"
+                      Padding="4,4,4,2"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      Cursor="Hand"
+                      ToolTip.Tip="Filter - Toggle filter bar visibility">
+            <ToggleButton.IsEnabled>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="HasDataStoreOpen"/>
+                    <Binding Path="!IsOperationActive"/>
+                </MultiBinding>
+            </ToggleButton.IsEnabled>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                <Panel Height="28" Width="28" HorizontalAlignment="Center">
+                    <Svg Path="/Assets/Toolbar/Filter.svg"
+                         Height="28" Width="28"
+                         IsHitTestVisible="False">
+                        <Svg.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="HasDataStoreOpen"/>
+                                <Binding Path="!IsOperationActive"/>
+                            </MultiBinding>
+                        </Svg.IsVisible>
+                    </Svg>
+                    <Svg Path="/Assets/ToolbarDisabled/Filter.svg"
+                         Height="28" Width="28"
+                         IsHitTestVisible="False">
+                        <Svg.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!HasDataStoreOpen"/>
+                                <Binding Path="IsOperationActive"/>
+                            </MultiBinding>
+                        </Svg.IsVisible>
+                    </Svg>
+                </Panel>
+                <TextBlock Text="Filter" FontSize="11"
+                           HorizontalAlignment="Center"
+                           Foreground="#CE93D8"
+                           IsHitTestVisible="False"/>
+            </StackPanel>
+        </ToggleButton>
+
+        <!-- YAML Export Button (Save List) -->
+        <Button Command="{Binding YamlCommand}"
+                Classes="toolbarBtn"
+                VerticalAlignment="Center"
+                Padding="4,4,4,2"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                ToolTip.Tip="YAML - Export visible image list data to a YAML file">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                <Panel Height="28" Width="28" HorizontalAlignment="Center">
+                    <Svg Path="/Assets/Toolbar/Yaml.svg"
+                         Height="28" Width="28"
+                         IsVisible="{Binding $parent[Button].IsEffectivelyEnabled}"
+                         IsHitTestVisible="False"/>
+                    <Svg Path="/Assets/ToolbarDisabled/Yaml.svg"
+                         Height="28" Width="28"
+                         IsVisible="{Binding !$parent[Button].IsEffectivelyEnabled}"
+                         IsHitTestVisible="False"/>
+                </Panel>
+                <TextBlock Text="YAML" FontSize="11"
+                           HorizontalAlignment="Center"
+                           Foreground="#CE93D8"
+                           IsHitTestVisible="False"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Refresh Button -->
+        <Button Command="{Binding RefreshCommand}"
+                Classes="toolbarBtn"
+                VerticalAlignment="Center"
+                Padding="4,4,4,2"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                ToolTip.Tip="Refresh - Reload images from the DataStore">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                <Panel Height="28" Width="28" HorizontalAlignment="Center">
+                    <Svg Path="/Assets/Toolbar/Refresh.svg"
+                         Height="28" Width="28"
+                         IsVisible="{Binding $parent[Button].IsEffectivelyEnabled}"
+                         IsHitTestVisible="False"/>
+                    <Svg Path="/Assets/ToolbarDisabled/Refresh.svg"
+                         Height="28" Width="28"
+                         IsVisible="{Binding !$parent[Button].IsEffectivelyEnabled}"
+                         IsHitTestVisible="False"/>
+                </Panel>
+                <TextBlock Text="Refresh" FontSize="11"
+                           HorizontalAlignment="Center"
+                           Foreground="#CE93D8"
+                           IsHitTestVisible="False"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Settings Button (always enabled) -->
+        <Button Command="{Binding SettingsCommand}"
+                Classes="toolbarBtn"
+                VerticalAlignment="Center"
+                Padding="4,4,4,2"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                ToolTip.Tip="Settings - Open application settings">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                <Panel Height="28" Width="28" HorizontalAlignment="Center">
+                    <Svg Path="/Assets/Toolbar/Settings.svg"
+                         Height="28" Width="28"
+                         IsHitTestVisible="False"/>
+                </Panel>
+                <TextBlock Text="Settings" FontSize="11"
+                           HorizontalAlignment="Center"
+                           Foreground="#CE93D8"
+                           IsHitTestVisible="False"/>
+            </StackPanel>
+        </Button>
+    </StackPanel>
+</UserControl>

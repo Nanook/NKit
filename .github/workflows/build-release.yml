@@ -1,0 +1,406 @@
+name: Build NKit Cross-Platform AOT
+
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      build_console:
+        description: 'Build console applications'
+        required: false
+        default: true
+        type: boolean
+      build_gui:
+        description: 'Build GUI applications'
+        required: false
+        default: true
+        type: boolean
+      run_tests:
+        description: 'Run the fast unit-test gate before building (skip if you knowingly have red tests)'
+        required: false
+        default: true
+        type: boolean
+      win-x64:
+        description: 'Windows x64'
+        required: false
+        default: true
+        type: boolean
+      win-arm64:
+        description: 'Windows ARM64'
+        required: false
+        default: true
+        type: boolean
+      linux-x64:
+        description: 'Linux x64'
+        required: false
+        default: true
+        type: boolean
+      linux-arm64:
+        description: 'Linux ARM64'
+        required: false
+        default: true
+        type: boolean
+      linux-legacy-x64:
+        description: 'Linux x64 (legacy glibc)'
+        required: false
+        default: true
+        type: boolean
+      linux-legacy-arm64:
+        description: 'Linux ARM64 (legacy glibc)'
+        required: false
+        default: true
+        type: boolean
+      osx-x64:
+        description: 'macOS Intel'
+        required: false
+        default: true
+        type: boolean
+      osx-arm64:
+        description: 'macOS Apple Silicon'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+  checks: write
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  CONFIGURATION: 'Release'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  # Runner for the fast unit-test gate. win-x64 for now (tests not yet validated on Linux);
+  # switch to 'ubuntu-latest' later once a Linux test run is confirmed (it's faster).
+  TEST_RUNNER: 'windows-latest'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      version: ${{ steps.version.outputs.version }}
+      test_runner: ${{ steps.test-runner.outputs.runner }}
+    steps:
+    - name: Resolve test runner
+      id: test-runner
+      shell: bash
+      run: echo "runner=${TEST_RUNNER}" >> "$GITHUB_OUTPUT"
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        fetch-depth: 0
+        clean: true
+
+    - name: Determine version
+      id: version
+      shell: bash
+      run: |
+        if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v ]]; then
+          # Tag push: strip leading 'v' (e.g. v2.0.0 -> 2.0.0, v2.1.0-alpha -> 2.1.0-alpha)
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+        else
+          # Non-tag build: use latest v* tag + dev suffix for traceability
+          LATEST_TAG=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || echo "")
+          if [[ -n "$LATEST_TAG" ]]; then
+            VERSION="${LATEST_TAG#v}-dev.${{ github.run_number }}"
+          else
+            VERSION="0.0.0-dev.${{ github.run_number }}"
+          fi
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Building version: $VERSION"
+
+    - name: Set up build matrix
+      id: set-matrix
+      shell: bash
+      run: |
+        chmod +x ./.github/scripts/setup-matrix.sh
+        ./.github/scripts/setup-matrix.sh \
+          "${{ github.event_name }}" \
+          "${{ github.event.inputs.win-x64 }}" \
+          "${{ github.event.inputs.win-arm64 }}" \
+          "${{ github.event.inputs.linux-x64 }}" \
+          "${{ github.event.inputs.linux-arm64 }}" \
+          "${{ github.event.inputs.linux-legacy-x64 }}" \
+          "${{ github.event.inputs.linux-legacy-arm64 }}" \
+          "${{ github.event.inputs.osx-x64 }}" \
+          "${{ github.event.inputs.osx-arm64 }}"
+
+    - name: Download GrindCore native libraries
+      shell: bash
+      run: |
+        echo "Downloading GrindCore native libraries (latest release)..."
+        DOWNLOAD_URL=$(curl -sL -H "Authorization: Bearer ${{ github.token }}" "https://api.github.com/repos/Nanook/GrindCore/releases/latest" | grep -o '"browser_download_url": *"[^"]*grindcore\.zip"' | cut -d'"' -f4)
+        if [ -z "$DOWNLOAD_URL" ]; then
+          echo "Could not find grindcore.zip in latest GrindCore release"
+          exit 1
+        fi
+        echo "Resolved URL: $DOWNLOAD_URL"
+        curl -sL "$DOWNLOAD_URL" -o grindcore-native.zip
+        mkdir -p grindcore-native
+        unzip -o grindcore-native.zip -d grindcore-native/
+        echo "=== Extracted files ==="
+        find grindcore-native -type f
+
+    - name: Upload GrindCore native libraries
+      uses: actions/upload-artifact@v4
+      with:
+        name: grindcore-native-libs
+        path: grindcore-native/
+        retention-days: 1
+
+  # Fast unit-test gate. Runs the unit tests only (excludes the heavy end-to-end suites and the
+  # real-image-decode classes) so it completes in ~2 minutes. Gated by the run_tests input so a
+  # manual dispatch can skip it when tests are knowingly red; on a tag push it always runs. The
+  # build jobs depend on this, so a real failure blocks the release (a skip does not).
+  test:
+    if: github.event.inputs.run_tests != 'false'
+    needs: setup
+    runs-on: ${{ needs.setup.outputs.test_runner }}
+    timeout-minutes: 15
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        fetch-depth: 0
+        clean: true
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Download GrindCore native libraries
+      uses: actions/download-artifact@v4
+      with:
+        name: grindcore-native-libs
+        path: .grindcore-native/
+
+    - name: Build test project
+      shell: pwsh
+      run: dotnet build NKit.Tests/NKit.Tests.csproj -f net10.0 -c Debug --nologo
+
+    - name: Run fast unit-test gate
+      shell: pwsh
+      run: |
+        # Exclude the end-to-end suites (Area=Full: Wiped, External, ProcessingTests) and the heavy
+        # real-image-decode classes (Speed=Slow). ~14,900 unit tests, targets under ~2 minutes.
+        $exe = "NKit.Tests/bin/Debug/net10.0/NKit.Tests.exe"
+        & $exe -notrait "Area=Full" -notrait "Speed=Slow"
+        if ($LASTEXITCODE -ne 0) { Write-Error "Unit-test gate failed (exit $LASTEXITCODE)"; exit $LASTEXITCODE }
+
+  build-console:
+    # Run when console builds are enabled AND the test gate did not fail (it either passed or was
+    # skipped via run_tests=false). always() lets a *skipped* test job still allow the build through,
+    # while a *failed* gate blocks it.
+    if: |
+      always()
+      && github.event.inputs.build_console != 'false'
+      && needs.setup.result == 'success'
+      && needs.test.result != 'failure'
+    needs: [setup, test]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    runs-on: ${{ matrix.runson }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        fetch-depth: 0
+        clean: true
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install libfuse3-dev (Linux only)
+      if: startsWith(matrix.runtime, 'linux-') && !matrix.legacy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libfuse3-dev
+
+    - name: Download GrindCore native libraries
+      uses: actions/download-artifact@v4
+      with:
+        name: grindcore-native-libs
+        path: .grindcore-native/
+
+    - name: Build console apps (bash)
+      if: matrix.shell == 'bash'
+      shell: bash
+      run: |
+        chmod +x build/build.sh build/build-legacy.sh build/archive.sh build/macos-bundle.sh
+        build/build.sh \
+          --runtime "${{ matrix.runtime }}" \
+          --config "${{ env.CONFIGURATION }}" \
+          --apps "console,nkds" \
+          --version "${{ needs.setup.outputs.version }}" \
+          ${{ matrix.legacy && '--legacy' || '' }}
+
+    - name: Build console apps (pwsh)
+      if: matrix.shell == 'pwsh'
+      shell: pwsh
+      run: |
+        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "console,nkds" -Version "${{ needs.setup.outputs.version }}" -NoPassword
+
+    - name: Upload Console Artifacts
+      if: success() || failure()
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact }}-Console
+        path: NKit_*_CLI_*.zip
+        if-no-files-found: warn
+        retention-days: 1
+
+  build-gui:
+    # See build-console: run unless disabled or the test gate failed (skip is allowed through).
+    if: |
+      always()
+      && github.event.inputs.build_gui != 'false'
+      && needs.setup.result == 'success'
+      && needs.test.result != 'failure'
+    needs: [setup, test]
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    runs-on: ${{ matrix.runson }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        fetch-depth: 0
+        clean: true
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Download GrindCore native libraries
+      uses: actions/download-artifact@v4
+      with:
+        name: grindcore-native-libs
+        path: .grindcore-native/
+
+    - name: Build GUI apps (bash)
+      if: matrix.shell == 'bash'
+      shell: bash
+      run: |
+        chmod +x build/build.sh build/build-legacy.sh build/archive.sh build/macos-bundle.sh
+        build/build.sh \
+          --runtime "${{ matrix.runtime }}" \
+          --config "${{ env.CONFIGURATION }}" \
+          --apps "gui,nkds-ui" \
+          --version "${{ needs.setup.outputs.version }}" \
+          ${{ matrix.legacy && '--legacy' || '' }}
+
+    - name: Build GUI apps (pwsh)
+      if: matrix.shell == 'pwsh'
+      shell: pwsh
+      run: |
+        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "gui,nkds-ui" -Version "${{ needs.setup.outputs.version }}" -NoPassword
+
+    - name: Upload GUI Artifacts
+      if: success() || failure()
+      continue-on-error: true
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact }}-GUI
+        path: NKit_*_UI_*.zip
+        if-no-files-found: warn
+        retention-days: 1
+
+  create-release:
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !cancelled() && (needs.build-console.result != 'failure' && needs.build-gui.result != 'failure')
+    needs: [build-console, build-gui]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+        path: artifacts
+
+    - name: Generate release info
+      id: release_info
+      run: |
+        if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          # Clean stable semver tag (e.g. v3.0.0): full release, marked latest.
+          echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          echo "make_latest=true" >> $GITHUB_OUTPUT
+          echo "release_name=NKit ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        elif [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v ]]; then
+          # Pre-release semver tag (e.g. v3.0.0-alpha.1, v3.0.0-rc.2): flagged prerelease, not latest.
+          echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          echo "make_latest=false" >> $GITHUB_OUTPUT
+          echo "release_name=NKit ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        else
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          SHORT_SHA="${{ github.sha }}"
+          SHORT_SHA="${SHORT_SHA:0:7}"
+          BRANCH_NAME="${{ github.ref_name }}"
+          CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | sed 's/\//-/g')
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            TAG_NAME="dev-manual-${CLEAN_BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
+          else
+            TAG_NAME="dev-${CLEAN_BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
+          fi
+
+          echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          echo "make_latest=false" >> $GITHUB_OUTPUT
+          echo "release_name=NKit Development Build - ${BRANCH_NAME} (${SHORT_SHA})" >> $GITHUB_OUTPUT
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Checkout repository for release notes
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        sparse-checkout: RELEASE_NOTES.md
+        sparse-checkout-cone-mode: false
+
+    - name: Prepare release body
+      id: release_body
+      run: |
+        if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v ]]; then
+          # Stable/pre-release tag: substitute {version} placeholder in RELEASE_NOTES.md
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          sed "s/{version}/${VERSION}/g" RELEASE_NOTES.md > release_body.md
+        else
+          # Dev build: use the static dev release notes file
+          cp DEV_RELEASE_NOTES.md release_body.md
+        fi
+        echo "body_path=release_body.md" >> $GITHUB_OUTPUT
+
+    - name: Flatten artifacts to working dir
+      run: find artifacts -name '*.zip' -exec mv {} . \; 2>/dev/null || true
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: '*.zip'
+        draft: false
+        prerelease: ${{ steps.release_info.outputs.is_prerelease }}
+        generate_release_notes: false
+        make_latest: ${{ steps.release_info.outputs.make_latest }}
+        name: ${{ steps.release_info.outputs.release_name }}
+        tag_name: ${{ steps.release_info.outputs.tag_name }}
+        body_path: ${{ steps.release_body.outputs.body_path }}

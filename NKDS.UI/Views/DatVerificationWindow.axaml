@@ -1,0 +1,225 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:models="using:NKDS.DatVerification"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="NkdsUi.Views.DatVerificationWindow"
+        x:DataType="vm:DatVerificationWindowViewModel"
+        Width="900" Height="600"
+        MinWidth="700" MinHeight="450"
+        CanResize="True"
+        Icon="/Assets/NkdsIcon.ico"
+        WindowStartupLocation="CenterScreen"
+        Title="Dat Verification">
+
+    <Design.DataContext>
+        <vm:DatVerificationWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="12">
+        <!-- Top section: Dat file path combo box with Browse and Load buttons -->
+        <StackPanel DockPanel.Dock="Top" Spacing="6">
+            <DockPanel>
+                <Button DockPanel.Dock="Right"
+                        Content="Load"
+                        Command="{Binding LoadCommand}"
+                        Margin="6,0,0,0"
+                        Padding="12,6"
+                        VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right"
+                        Command="{Binding BrowseCommand}"
+                        Height="30" Width="30" Padding="0"
+                        VerticalAlignment="Center"
+                        Margin="6,0,0,0"
+                        ToolTip.Tip="Select dat file">
+                    <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                </Button>
+                <Panel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right"
+                                Content="▾"
+                                Classes="Flat"
+                                Width="28"
+                                Padding="0"
+                                x:Name="DatHistoryButton"/>
+                        <TextBox Text="{Binding DatPathText, Mode=TwoWay}"
+                                 PlaceholderText="Enter or select dat file path..."
+                                 x:Name="DatPathTextBox"
+                                 KeyDown="DatPathTextBox_KeyDown"/>
+                    </DockPanel>
+                    <Popup x:Name="DatHistoryPopup"
+                           PlacementTarget="{Binding #DatPathTextBox}"
+                           Placement="Bottom"
+                           IsOpen="False"
+                           MaxHeight="250"
+                           Width="{Binding #DatPathTextBox.Bounds.Width}">
+                        <Border Background="#2D2D2D"
+                                BorderBrush="{DynamicResource MaterialDividerBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <ListBox x:Name="DatHistoryList"
+                                     ItemsSource="{Binding DatPathHistory}"
+                                     SelectionMode="Single"/>
+                        </Border>
+                    </Popup>
+                </Panel>
+            </DockPanel>
+
+            <!-- Info section: Dat name and error message -->
+            <StackPanel Orientation="Horizontal" Spacing="8"
+                        IsVisible="{Binding DatName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <TextBlock Text="Dat:" Opacity="0.7" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding DatName}"
+                           FontWeight="SemiBold"
+                           Foreground="#CE93D8"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"/>
+        </StackPanel>
+
+        <!-- Filter toggle checkboxes with coloured counts -->
+        <WrapPanel DockPanel.Dock="Top"
+                   Orientation="Horizontal"
+                   Margin="0,8,0,0">
+            <CheckBox IsChecked="{Binding ShowCorrect}" Margin="0,0,12,0">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Correct"/>
+                    <TextBlock Text="{Binding CorrectCount, StringFormat='({0})'}" Foreground="#4CAF50" FontWeight="Medium"/>
+                </StackPanel>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ShowMissing}" Margin="0,0,12,0">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Missing"/>
+                    <TextBlock Text="{Binding MissingCount, StringFormat='({0})'}" Foreground="#F44336" FontWeight="Medium"/>
+                </StackPanel>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ShowBadlyNamed}" Margin="0,0,12,0">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Badly Named"/>
+                    <TextBlock Text="{Binding BadlyNamedCount, StringFormat='({0})'}" Foreground="#FFC107" FontWeight="Medium"/>
+                </StackPanel>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ShowWrongCrc}" Margin="0,0,12,0">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Wrong CRC"/>
+                    <TextBlock Text="{Binding WrongCrcCount, StringFormat='({0})'}" Foreground="#FFC107" FontWeight="Medium"/>
+                </StackPanel>
+            </CheckBox>
+            <CheckBox IsChecked="{Binding ShowUnmatched}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="Unmatched"/>
+                    <TextBlock Text="{Binding UnmatchedCount, StringFormat='({0})'}" Opacity="0.7"/>
+                </StackPanel>
+            </CheckBox>
+        </WrapPanel>
+
+        <!-- Bottom section: Rename button -->
+        <StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0">
+            <Button Content="Rename To Dat"
+                    Command="{Binding RenameCommand}"
+                    Padding="16,8"/>
+        </StackPanel>
+
+        <!-- Results DataGrid -->
+        <DataGrid x:Name="ResultsDataGrid"
+                  ItemsSource="{Binding FilteredResults}"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  BorderThickness="1"
+                  BorderBrush="{DynamicResource MaterialDividerBrush}"
+                  Margin="0,8,0,0"
+                  LoadingRow="ResultsDataGrid_LoadingRow">
+            <DataGrid.Styles>
+                <Style Selector="DataGridColumnHeader">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#333333"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Padding" Value="6,4"/>
+                    <Setter Property="MinHeight" Value="28"/>
+                    <Setter Property="SeparatorBrush" Value="#555555"/>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding SeparatorBrush}"
+                                    BorderThickness="0,0,1,0"
+                                    Padding="{TemplateBinding Padding}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      HorizontalContentAlignment="Left"
+                                                      VerticalContentAlignment="Center"/>
+                                    <Thumb Name="PART_RightHeaderGripper"
+                                           Grid.Column="1"
+                                           Width="4"
+                                           Background="Transparent"
+                                           Cursor="SizeWestEast"
+                                           Margin="0"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="DataGridRow.status-correct /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#334CAF50"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow.status-correct">
+                    <Setter Property="Background" Value="#334CAF50"/>
+                </Style>
+                <Style Selector="DataGridRow.status-missing /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#33F44336"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow.status-missing">
+                    <Setter Property="Background" Value="#33F44336"/>
+                </Style>
+                <Style Selector="DataGridRow.status-badlynamed /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#33FFC107"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow.status-badlynamed">
+                    <Setter Property="Background" Value="#33FFC107"/>
+                </Style>
+                <Style Selector="DataGridRow.status-wrongcrc /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#33FFC107"/>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+                <Style Selector="DataGridRow.status-wrongcrc">
+                    <Setter Property="Background" Value="#33FFC107"/>
+                </Style>
+            </DataGrid.Styles>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Status"
+                                    Binding="{Binding Status}"
+                                    Width="100"
+                                    x:DataType="models:DatResultModel"/>
+                <DataGridTextColumn Header="Dat Entry Name"
+                                    Binding="{Binding DatEntryName}"
+                                    Width="*"
+                                    x:DataType="models:DatResultModel"/>
+                <DataGridTextColumn Header="Image Name"
+                                    Binding="{Binding ImageName}"
+                                    Width="*"
+                                    x:DataType="models:DatResultModel"/>
+                <DataGridTextColumn Header="CRC32"
+                                    Binding="{Binding Crc32, StringFormat='{}{0:X8}'}"
+                                    Width="100"
+                                    x:DataType="models:DatResultModel"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

@@ -1,0 +1,23 @@
+NKit CLI Configuration
+======================
+
+Concept
+-------
+- Portable mode (default): when a nkit.yaml file exists next to the nkit executable. Packaged ZIPs include a local config, so extracting the ZIP runs in portable mode by default.
+- System mode: when there is no local nkit.yaml (e.g., package manager installs). The app uses the OS user config area and creates one on first run.
+- Removing the local nkit.yaml switches the app from portable mode to system mode; placing a local nkit.yaml enables portable mode.
+
+File lookup order
+-----------------
+1. Command-line: -cfg <file> (explicit)
+2. Portable: Local config next to executable: nkit.yaml
+3. System: User config directory
+   - Windows: %APPDATA%\nkit\nkit.yaml
+   - Linux: ~/.config/nkit/nkit.yaml
+   - macOS: ~/Documents/nkit/nkit.yaml
+4. Built-in defaults
+
+First run behavior
+------------------
+- Packaged ZIPs include a local nkit.yaml, so when users extract the ZIP the CLI runs in portable mode and will create the folder structure (dats, fix, keys, logs, etc.) next to the executable on first run.
+- If no local config is present and no -cfg is given (for example after a package-manager install), the CLI defaults to system mode and will create a system config and the folder structure in the user config location on first run.

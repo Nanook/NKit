@@ -1,0 +1,7 @@
+# NKit DataStore UI Configuration File
+# This config enables portable mode when placed next to the nkds-ui executable.
+# The NKDS UI application will save your settings here when you close the application.
+# For complete configuration options, see: https://github.com/Nanook/NKit/wiki/Usage
+
+# Settings saved by the UI application will appear below this line when you use the application.
+

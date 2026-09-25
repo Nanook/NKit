@@ -1,0 +1,424 @@
+﻿# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# PROPOSAL â€” not active. Review, then rename over .editorconfig to adopt.
+# Encodes the agreed NKit coding standard. Differences from the current
+# .editorconfig are marked  # CHANGED  /  # NEW  with a short reason.
+# Naming rules are set to `suggestion` for the rollout (promote to error once
+# the code is conformed).
+# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
+root = true
+
+# C# files
+[*.cs]
+
+#### Core EditorConfig Options ####
+
+# Indentation and spacing
+indent_size = 4
+indent_style = space
+tab_width = 4
+
+# New line preferences
+end_of_line = lf
+insert_final_newline = false
+
+#### .NET Code Actions ####
+
+# Type members
+dotnet_hide_advanced_members = false
+dotnet_member_insertion_location = with_other_members_of_the_same_kind
+dotnet_property_generation_behavior = prefer_throwing_properties
+
+# Symbol search
+dotnet_search_reference_assemblies = true
+
+#### .NET Coding Conventions ####
+
+# Organize usings
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = false
+file_header_template = unset
+
+# this. and Me. preferences  (KEPT â€” you use this./base. deliberately for scope legibility)
+dotnet_style_qualification_for_event = true:suggestion
+dotnet_style_qualification_for_field = true:suggestion
+dotnet_style_qualification_for_method = true:suggestion
+dotnet_style_qualification_for_property = true:suggestion
+
+# Language keywords vs BCL types preferences  (KEPT â€” int/string, not Int32/String)
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# Parentheses preferences
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+
+# Modifier preferences
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+
+# Expression-level preferences
+dotnet_prefer_system_hash_code = true:silent
+dotnet_style_coalesce_expression = true:silent
+dotnet_style_collection_initializer = true
+dotnet_style_explicit_tuple_names = true
+dotnet_style_namespace_match_folder = true
+dotnet_style_null_propagation = true:silent
+dotnet_style_object_initializer = true
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+dotnet_style_prefer_auto_properties = true
+dotnet_style_prefer_collection_expression = when_types_loosely_match
+dotnet_style_prefer_compound_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_assignment = true
+dotnet_style_prefer_conditional_expression_over_return = true
+dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:silent
+dotnet_style_prefer_inferred_tuple_names = true
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:silent
+dotnet_style_prefer_simplified_boolean_expressions = true
+dotnet_style_prefer_simplified_interpolation = true
+
+# Field preferences
+dotnet_style_readonly_field = true
+
+# Parameter preferences
+dotnet_code_quality_unused_parameters = all
+
+# Suppression preferences
+dotnet_remove_unnecessary_suppression_exclusions = none
+
+# New line preferences
+dotnet_style_allow_multiple_blank_lines_experimental = true
+dotnet_style_allow_statement_immediately_after_block_experimental = true
+
+#### C# Coding Conventions ####
+
+# var preferences  (KEPT â€” explicit types always, no var)
+csharp_style_var_elsewhere = false:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = false:suggestion
+
+# Expression-bodied members
+# IMPORTANT: methods must NOT use expression bodies when they contain #if/#elif branches
+# with return statements — those are invalid C# on non-Windows platforms even though they
+# look fine on Windows. Set to 'false' so the cleanse tool never converts block-body methods.
+csharp_style_expression_bodied_accessors = true
+csharp_style_expression_bodied_constructors = false
+csharp_style_expression_bodied_indexers = true
+csharp_style_expression_bodied_lambdas = when_on_single_line
+csharp_style_expression_bodied_local_functions = when_on_single_line
+csharp_style_expression_bodied_methods = false
+csharp_style_expression_bodied_operators = false
+csharp_style_expression_bodied_properties = true
+
+# Pattern matching preferences
+csharp_style_pattern_matching_over_as_with_null_check = true:silent
+csharp_style_pattern_matching_over_is_with_cast_check = true:silent
+csharp_style_prefer_extended_property_pattern = true
+csharp_style_prefer_not_pattern = true:silent
+csharp_style_prefer_pattern_matching = true
+csharp_style_prefer_switch_expression = true
+
+# Null-checking preferences
+csharp_style_conditional_delegate_call = true:silent
+
+# Modifier preferences
+csharp_prefer_static_anonymous_function = true
+csharp_prefer_static_local_function = true
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
+csharp_style_prefer_readonly_struct = true
+csharp_style_prefer_readonly_struct_member = true
+
+# Code-block preferences
+# CHANGED severity error -> silent: brace-less single-statement bodies are PERMITTED and
+# preferred (next-line form). `false` never forces braces; silent = allowed, no nagging either way.
+# (Written convention: single statement on the NEXT line, never fully inline. Tooling can permit
+#  but not enforce the "not inline" part.)
+csharp_prefer_braces = false:silent
+csharp_prefer_simple_using_statement = false:silent
+csharp_prefer_system_threading_lock = true
+csharp_style_namespace_declarations = block_scoped
+csharp_style_prefer_method_group_conversion = true
+csharp_style_prefer_primary_constructors = true
+csharp_style_prefer_simple_property_accessors = true
+csharp_style_prefer_top_level_statements = false
+
+# Expression-level preferences
+csharp_prefer_simple_default_expression = true
+csharp_style_deconstructed_variable_declaration = true
+csharp_style_implicit_object_creation_when_type_is_apparent = true
+csharp_style_inlined_variable_declaration = true
+csharp_style_prefer_implicitly_typed_lambda_expression = true
+csharp_style_prefer_index_operator = true
+csharp_style_prefer_local_over_anonymous_function = true
+csharp_style_prefer_null_check_over_type_check = true:silent
+csharp_style_prefer_range_operator = true:silent
+csharp_style_prefer_tuple_swap = true
+csharp_style_prefer_unbound_generic_type_in_nameof = true
+csharp_style_prefer_utf8_string_literals = true
+csharp_style_throw_expression = true:silent
+csharp_style_unused_value_assignment_preference = discard_variable
+csharp_style_unused_value_expression_statement_preference = discard_variable
+
+# 'using' directive preferences
+csharp_using_directive_placement = outside_namespace
+
+# New line preferences
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true
+csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = true
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true
+# KEEP single-line blocks/statements intact (protects one-line `catch { _obj.Dispose(); }`)
+csharp_style_allow_embedded_statements_on_same_line_experimental = true
+
+#### C# Formatting Rules ####
+
+# New line preferences
+csharp_new_line_before_catch = true
+csharp_new_line_before_else = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_open_brace = all
+csharp_new_line_between_query_expression_clauses = true
+
+# Indentation preferences
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_case_contents_when_block = true
+csharp_indent_labels = one_less_than_current
+csharp_indent_switch_labels = true
+
+# Space preferences
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_around_declaration_statements = false
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false
+
+# Wrapping preferences  (KEEP â€” protects your one-line blocks/statements)
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+#### Naming styles ####
+# Rollout severity = suggestion. Order matters: MOST SPECIFIC rules first
+# (const before static-readonly before plain field), because the engine is
+# first-match-wins.
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+# â”€â”€ Rules (evaluated top-down) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+# Interfaces â†’ IPascalCase
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+# Types â†’ PascalCase
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+
+# UNIFIED "immutable class-level value" rule: const AND static readonly share one style.
+# (Decision: distinguishing const vs static-readonly by casing fought the codebase's
+#  named-identifier consts like EncodingZStd / H0Count. .NET convention is PascalCase, not
+#  UPPER_CASE. Genuine magic-number tuning consts MAY use _UPPER_CASE by hand â€” guidance only,
+#  not enforced here.)
+#
+# private const / private static readonly / private static â†’ _PascalCase
+# (must come before the plain instance-field rule; first-match-wins)
+dotnet_naming_rule.private_const_should_be__pascal.severity = suggestion
+dotnet_naming_rule.private_const_should_be__pascal.symbols = private_const_field
+dotnet_naming_rule.private_const_should_be__pascal.style = _staticname
+
+dotnet_naming_rule.private_static_readonly_should_be__pascal.severity = suggestion
+dotnet_naming_rule.private_static_readonly_should_be__pascal.symbols = private_static_readonly_field
+dotnet_naming_rule.private_static_readonly_should_be__pascal.style = _staticname
+
+dotnet_naming_rule.private_static_field_should_be__pascal.severity = suggestion
+dotnet_naming_rule.private_static_field_should_be__pascal.symbols = private_static_field
+dotnet_naming_rule.private_static_field_should_be__pascal.style = _staticname
+
+# non-private const / static â†’ PascalCase (no underscore; they're exposed).
+# These mostly ALREADY match (H0Count, EncodingZStd, SectorSize), so ~0 renames expected.
+dotnet_naming_rule.nonprivate_const_should_be_pascal.severity = suggestion
+dotnet_naming_rule.nonprivate_const_should_be_pascal.symbols = nonprivate_const_field
+dotnet_naming_rule.nonprivate_const_should_be_pascal.style = pascal_case
+
+# Private methods â†’ camelCase
+dotnet_naming_rule.private_method_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.private_method_should_be_camel_case.symbols = private_method
+dotnet_naming_rule.private_method_should_be_camel_case.style = camel_case
+
+# NEW: private properties â†’ camelCase  (your scope-legibility choice; departs from mainstream)
+dotnet_naming_rule.private_property_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.private_property_should_be_camel_case.symbols = private_property
+dotnet_naming_rule.private_property_should_be_camel_case.style = camel_case
+
+# Private/internal instance fields â†’ _camelCase
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = suggestion
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.symbols = private_or_internal_field
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.style = _camelcase
+
+# Exposed members (public/internal/protected methods, properties, events) â†’ PascalCase
+# CHANGED severity suggestion (was suggestion already) â€” internal/protected treated like public.
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
+
+# â”€â”€ Symbol specifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+# private const
+dotnet_naming_symbols.private_const_field.applicable_kinds = field
+dotnet_naming_symbols.private_const_field.applicable_accessibilities = private, private_protected
+dotnet_naming_symbols.private_const_field.required_modifiers = const
+
+# non-private const (public/internal/protected)
+dotnet_naming_symbols.nonprivate_const_field.applicable_kinds = field
+dotnet_naming_symbols.nonprivate_const_field.applicable_accessibilities = public, internal, protected, protected_internal
+dotnet_naming_symbols.nonprivate_const_field.required_modifiers = const
+
+# private static readonly
+dotnet_naming_symbols.private_static_readonly_field.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_field.applicable_accessibilities = private, private_protected
+dotnet_naming_symbols.private_static_readonly_field.required_modifiers = static, readonly
+
+# private static (mutable) â€” after const + static-readonly so those match first
+dotnet_naming_symbols.private_static_field.applicable_kinds = field
+dotnet_naming_symbols.private_static_field.applicable_accessibilities = private, internal, private_protected
+dotnet_naming_symbols.private_static_field.required_modifiers = static
+
+dotnet_naming_symbols.private_method.applicable_kinds = method
+dotnet_naming_symbols.private_method.applicable_accessibilities = private
+
+dotnet_naming_symbols.private_property.applicable_kinds = property
+dotnet_naming_symbols.private_property.applicable_accessibilities = private
+
+dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
+
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, protected, protected_internal, private_protected
+
+# â”€â”€ Naming styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+dotnet_naming_style._camelcase.required_prefix = _
+dotnet_naming_style._camelcase.capitalization = camel_case
+
+# _PascalCase (private static readonly / private static)
+dotnet_naming_style._staticname.required_prefix = _
+dotnet_naming_style._staticname.capitalization = pascal_case
+
+# (UPPER_CASE const styles removed â€” const now unified with static-readonly as _PascalCase.)
+
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# Exemptions â€” vendored / upstream-mirrored code keeps its own style.
+# Naming rules are silenced here so upstream diffs stay small.
+#   Permanent:    Common/Flac, Containers/Chd, Tmds.Fuse
+#   Transitional: XboxKit (removed after feature migration)
+# (Whitespace / newline / import rules still apply â€” only NAMING is relaxed.)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+[NKit/Common/Flac/**.cs]
+dotnet_naming_rule.private_const_should_be__pascal.severity = none
+dotnet_naming_rule.nonprivate_const_should_be_pascal.severity = none
+dotnet_naming_rule.private_static_readonly_should_be__pascal.severity = none
+dotnet_naming_rule.private_static_field_should_be__pascal.severity = none
+dotnet_naming_rule.private_method_should_be_camel_case.severity = none
+dotnet_naming_rule.private_property_should_be_camel_case.severity = none
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = none
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = none
+
+[NKit/Containers/Chd/**.cs]
+dotnet_naming_rule.private_const_should_be__pascal.severity = none
+dotnet_naming_rule.nonprivate_const_should_be_pascal.severity = none
+dotnet_naming_rule.private_static_readonly_should_be__pascal.severity = none
+dotnet_naming_rule.private_static_field_should_be__pascal.severity = none
+dotnet_naming_rule.private_method_should_be_camel_case.severity = none
+dotnet_naming_rule.private_property_should_be_camel_case.severity = none
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = none
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = none
+
+[Tmds.Fuse/**.cs]
+dotnet_naming_rule.private_const_should_be__pascal.severity = none
+dotnet_naming_rule.nonprivate_const_should_be_pascal.severity = none
+dotnet_naming_rule.private_static_readonly_should_be__pascal.severity = none
+dotnet_naming_rule.private_static_field_should_be__pascal.severity = none
+dotnet_naming_rule.private_method_should_be_camel_case.severity = none
+dotnet_naming_rule.private_property_should_be_camel_case.severity = none
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = none
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = none
+
+[XboxKit/**.cs]
+dotnet_naming_rule.private_const_should_be__pascal.severity = none
+dotnet_naming_rule.nonprivate_const_should_be_pascal.severity = none
+dotnet_naming_rule.private_static_readonly_should_be__pascal.severity = none
+dotnet_naming_rule.private_static_field_should_be__pascal.severity = none
+dotnet_naming_rule.private_method_should_be_camel_case.severity = none
+dotnet_naming_rule.private_property_should_be_camel_case.severity = none
+dotnet_naming_rule.private_or_internal_field_should_be__camelcase.severity = none
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = none
+
+# ═════════════════════════════════════════════════════════════════════════════
+# Disabled analyzer suggestions (NOT part of the coding standard).
+# These SDK code-style (IDE00xx) and code-quality (CA1xxx) analyzers produce
+# "Message"-level noise pushing stylistic simplifications we do not want (e.g.
+# target-typed new(), collection-expression [] syntax, var patterns). Turned off
+# so they don't clutter the Error List / Run Code Analysis. Re-enable individually
+# if any prove worth adopting.
+# ═════════════════════════════════════════════════════════════════════════════
+[*.cs]
+
+# --- Style simplifications we reject (readability preference) ---
+dotnet_diagnostic.IDE0005.severity = none   # remove unnecessary using directives — DISABLED:
+                                            # 'using' inside #if DEBUG blocks looks unused to the
+                                            # analyser on Release config but IS needed at runtime
+dotnet_diagnostic.IDE0028.severity = none   # collection init can be simplified
+dotnet_diagnostic.IDE0039.severity = none   # use local function
+dotnet_diagnostic.IDE0059.severity = none   # unnecessary value assignment
+dotnet_diagnostic.IDE0060.severity = none   # unused parameter
+dotnet_diagnostic.IDE0090.severity = none   # 'new' expression can be simplified (target-typed new)
+dotnet_diagnostic.IDE0300.severity = none   # collection init can be simplified
+dotnet_diagnostic.IDE0301.severity = none   # collection init can be simplified
+dotnet_diagnostic.IDE0305.severity = none   # collection init can be simplified
+dotnet_diagnostic.IDE0306.severity = none   # collection init can be simplified
+
+# --- Code-quality analyzers (not in standard; silence for now) ---
+dotnet_diagnostic.CA1816.severity = none    # Dispose should call GC.SuppressFinalize
+dotnet_diagnostic.CA1822.severity = none    # mark members static
+dotnet_diagnostic.CA1846.severity = none    # prefer AsSpan over Substring
+dotnet_diagnostic.CA1854.severity = none    # prefer TryGetValue over ContainsKey+indexer
+dotnet_diagnostic.CA1859.severity = none    # use concrete types for perf

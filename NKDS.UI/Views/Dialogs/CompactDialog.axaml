@@ -1,0 +1,88 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        x:Class="NkdsUi.Views.Dialogs.CompactDialog"
+        x:DataType="vm:CompactDialogViewModel"
+        Title="Compact Sets"
+        Icon="/Assets/NkdsIcon.ico"
+        Width="420" Height="380"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Margin="20">
+        <!-- Footer: Buttons -->
+        <StackPanel DockPanel.Dock="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="12"
+                    Margin="0,16,0,0">
+            <Button Content="Compact"
+                    Command="{Binding ConfirmCommand}"
+                    Classes="dialogConfirm"/>
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Classes="dialogCancel"/>
+        </StackPanel>
+
+        <!-- Content -->
+        <StackPanel Spacing="12">
+            <!-- Description -->
+            <TextBlock Text="Compact reclaims disk space by permanently purging removed images and their unreferenced blocks."
+                       TextWrapping="Wrap"
+                       Opacity="0.85"/>
+
+            <!-- Set Checklist -->
+            <StackPanel Spacing="4">
+                <DockPanel>
+                    <TextBlock Text="Select sets to compact:"
+                               FontWeight="SemiBold"
+                               DockPanel.Dock="Left"
+                               VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="8">
+                        <Button Content="All"
+                                Command="{Binding SelectAllCommand}"
+                                Padding="8,2"
+                                FontSize="11"/>
+                        <Button Content="None"
+                                Command="{Binding SelectNoneCommand}"
+                                Padding="8,2"
+                                FontSize="11"/>
+                    </StackPanel>
+                </DockPanel>
+                <Border BorderBrush="{DynamicResource MaterialDividerBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="4"
+                        MaxHeight="160">
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Sets}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CompactSetItem">
+                                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                              Content="{Binding Name}"
+                                              Margin="4,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </StackPanel>
+
+            <!-- Warning about permanent deletion -->
+            <TextBlock Text="⚠ This operation is irreversible. Removed images will be permanently deleted."
+                       TextWrapping="Wrap"
+                       Foreground="#FF9800"
+                       FontSize="12"
+                       Margin="0,4,0,0"/>
+
+            <!-- Dynamic warning message -->
+            <TextBlock Text="{Binding WarningMessage}"
+                       IsVisible="{Binding WarningMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       TextWrapping="Wrap"
+                       FontStyle="Italic"
+                       Foreground="{DynamicResource MaterialValidationErrorBrush}"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,265 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:uc="clr-namespace:NKit.Ui.UserControls"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:models="clr-namespace:NKit.Ui.Models"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             xmlns:conv="clr-namespace:NKit.Ui.Converters"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="800"
+             x:Class="NKit.Ui.UserControls.ProcessFilesControl"
+             x:DataType="vm:ProcessFilesViewModel">
+    <UserControl.Resources>
+        <conv:StringToMaterialIconKindConverter x:Key="IconKindConverter" />
+    </UserControl.Resources>
+    <DockPanel Name="DropState" DragDrop.AllowDrop="true">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" Margin="0,5,0,0">
+            <!-- Buttons & Stats Grid-->
+            <Grid RowDefinitions="25,*" ColumnDefinitions="105,106,105,*,312,110">
+                <!-- Row 0 - Stats -->
+                <Grid ColumnDefinitions="70, 30, 60" RowDefinitions="17,17,17" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2" IsVisible="{Binding DisplayProcessingStats}" HorizontalAlignment="Right">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Completed"  tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Completed}" TextAlignment="Right" />
+                    <avalonia:MaterialIcon Grid.Row="0" Grid.Column="1" Kind="CheckCircleOutline" Margin="0,0,0,3" Foreground="Green" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Completed}" />
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding StatsCompleted}"  tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Completed}" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Skipped" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Skipped}" TextAlignment="Right"/>
+                    <avalonia:MaterialIcon Grid.Row="1" Grid.Column="1" Kind="HelpCircleOutline" Margin="0,0,0,4" Foreground="Orange" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Skipped}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding StatsSkipped}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Skipped}" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Failed" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Failed}" TextAlignment="Right"/>
+                    <avalonia:MaterialIcon Grid.Row="2" Grid.Column="1" Kind="AlertCircleOutline" Margin="0,0,0,3" Foreground="Red" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Failed}" />
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StatsFailed}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Status_Failed}" />
+                </Grid>
+                <StackPanel Grid.Row="0" Grid.Column="4" Orientation="Horizontal" Margin="0,0,0,5" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Progress}">
+                    <Grid>
+                        <ProgressBar
+                            Value="{Binding StatsProgressPercentage}"
+                            Minimum="0"
+                            Maximum="100"
+                            Height="20"
+                            Width="312"
+                            Background="{DynamicResource PrimaryHueDarkBrush}"
+                            Foreground="{DynamicResource PrimaryHueLightBrush}"
+                            CornerRadius="3"/>
+                        <TextBlock Text="{Binding StatsProgress}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+                <!-- Row 1 - Buttons -->
+                <Button Grid.Row="1" Grid.Column="0" Width="100" Click="OnSelectFilesClicked" Name="openFileDialog" IsEnabled="{Binding !IsBusy}" IsVisible="{Binding !IsBusy}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_AddFiles}">Add File(s)</Button>
+                <Button Grid.Row="1" Grid.Column="1" Width="100" Click="OnSelectFolderClicked" Name="openFolderDialog" IsEnabled="{Binding !IsBusy}" IsVisible="{Binding !IsBusy}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_AddFolder}">Add Folder</Button>
+                <Button Grid.Row="1" Grid.Column="2" Width="100" Command="{Binding ClearFiles}" Name="btnClear" IsEnabled="{Binding HasFiles}" IsVisible="{Binding !IsBusy}" Background="#800000" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_Clear}">Clear</Button>
+                <Button Grid.Row="1" Grid.Column="4" Command="{Binding StartTask}" Name="btnGo" IsVisible="{Binding !IsBusy}" IsEnabled="{Binding HasFiles}" Background="Green" Content="{Binding GoButtonText}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_Start}"></Button>
+                <Button Grid.Row="1" Grid.Column="4" Command="{Binding CancelTask}" Name="btnCancel" IsVisible="{Binding IsBusy}" IsEnabled="{Binding HasFiles}" Background="#800000" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_Cancel}">Cancel</Button>
+            </Grid>
+        </StackPanel>
+        <DockPanel>
+            <!-- Settings Expander-->
+            <Expander Name="exSettings" DockPanel.Dock="Right" ExpandDirection="Left" IsExpanded="False" HorizontalContentAlignment="Right" Margin="0,0,0,0" Padding="-3" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="3" Tapped="onExpanderTapped" MinWidth="55">
+                <Expander.Header>
+                    <TextBlock Text="S E T T I N G S" FontFamily="/Assets/Fonts/Chromia.otf#Chromia" FontSize="15" HorizontalAlignment="Center" />
+                </Expander.Header>
+                <uc:SettingsControl Name="ucSettingsControl" />
+            </Expander>
+            <!-- Process Files and Console Grid -->
+            <Grid Name="gridProcessFilesConsole">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="100" />
+                    <ColumnDefinition Width="0" />
+                    <!-- 2 -->
+                    <ColumnDefinition Width="Auto" MinWidth="55"/>
+                </Grid.ColumnDefinitions>
+                <!-- Process Files -->
+                <Grid Grid.Column="0" Name="colProcessFiles">
+                    <DockPanel>
+                            <DataGrid
+                                Name="ProcessFilesDataGrid"
+                                ItemsSource="{Binding FileQueueFiltered}"
+                                MinHeight="485"
+                                CanUserResizeColumns="True"
+                                CanUserSortColumns="False"
+                                CanUserReorderColumns="True"
+                                SelectionMode="Extended"
+                                HeadersVisibility="Column"
+                                GridLinesVisibility="None"
+                                HorizontalScrollBarVisibility="Visible"
+                                CellPointerPressed="OnCellPointerPressed"
+                                Sorting="dataGrid_OnSortChanged"
+                                LoadingRow="OnLoadingRow"
+                                UnloadingRow="OnUnloadingRow"
+                                LoadingRowDetails="OnLoadingRowDetails"
+                                UnloadingRowDetails="OnUnloadingRowDetails"
+                                RowDetailsVisibilityChanged="onRowDetailsVisibilityChanged"
+                                SelectionChanged="onDataGridSelectionChanged"
+                                Grid.Row="0"
+                                Background="#252525"
+                                BorderBrush="DarkGray"
+                                BorderThickness="1"
+                                CornerRadius="3">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="30">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <avalonia:MaterialIcon Kind="{Binding DisplayDetailsIcon, Converter={StaticResource IconKindConverter}}" IsVisible="{Binding DisplayContainingFiles}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="File Type" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <avalonia:MaterialIcon Kind="{Binding FileTypeIcon, Converter={StaticResource IconKindConverter}}"/>
+                                                    <TextBlock Text="{Binding IsImageOrArchiveType, StringFormat='  {0}'}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Status" Width="120">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <avalonia:MaterialIcon Kind="{Binding StatusIcon, Converter={StaticResource IconKindConverter}}" Foreground="{Binding StatusIconColour}" tips:DelayedTooltip.Text="{Binding StatusIconToolTip}" Margin="0,0,0,3"/>
+                                                    <TextBlock Text="{Binding CurrentTask, StringFormat='  {0}'}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="Auto"/>
+                                    <DataGridTextColumn Header="Format" Binding="{Binding GetImageOrArchiveType}" IsReadOnly="True" Width="Auto"/>
+                                    <DataGridTemplateColumn Header="Size" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <TextBlock Text="{Binding GetFileSize}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Progress" Width="150">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <Grid>
+                                                    <ProgressBar
+                                                        Value="{Binding Progress}"
+                                                        Minimum="0"
+                                                        Maximum="100"
+                                                        Height="28"
+                                                        Background="{DynamicResource PrimaryHueDarkBrush}"
+                                                        Foreground="{DynamicResource PrimaryHueLightBrush}"/>
+                                                    <TextBlock Text="{Binding ProgressPercentage}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Verify Result" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate x:DataType="models:SourceFileRecord">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <avalonia:MaterialIcon Kind="{Binding VerifyResultIcon, Converter={StaticResource IconKindConverter}}" Foreground="{Binding VerifyResultIconColour}" Margin="0,0,0,3"/>
+                                                    <TextBlock Text="{Binding VerifyResultMessage, StringFormat='  {0}'}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Output File" Binding="{Binding OutFileName}" IsReadOnly="True" Width="Auto" />
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate x:DataType="models:SourceFileRecord">
+                                        <Border DockPanel.Dock="Right" BorderBrush="Purple" Background="#252525" BorderThickness="1" CornerRadius="3" Padding="4" Margin="0,0,0,0">
+                                            <Grid Name="GridRowDetailsGrid">
+                                                <Grid.Styles>
+                                                    <Style Selector="TextBlock">
+                                                        <Setter Property="FontFamily" Value="/Assets/Fonts/consola.ttf#Consolas" />
+                                                    </Style>
+                                                    <Style Selector="TextBox">
+                                                        <Setter Property="FontFamily" Value="/Assets/Fonts/consola.ttf#Consolas" />
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                        <Setter Property="BorderThickness" Value="0" />
+                                                        <Setter Property="Padding" Value="5" />
+                                                    </Style>
+                                                </Grid.Styles>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" MinWidth="400" />
+                                                    <ColumnDefinition Width="2" />
+                                                    <ColumnDefinition Width="Auto" MinWidth="400" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Grid.Column="0" RowDefinitions="20, *" Margin="2,0,0,0">
+                                                    <TextBlock Grid.Row="0" Text="File Details" LineHeight="20" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                                                    <ScrollViewer Grid.Row="1" 
+                                                                     VerticalScrollBarVisibility="Auto" 
+                                                                     HorizontalScrollBarVisibility="Auto"
+                                                                     MaxHeight="300">
+                                                        <TextBox Text="{Binding SourceFileDetails}" 
+                                                                 IsReadOnly="True"
+                                                                 TextWrapping="Wrap" 
+                                                                 LineHeight="20" 
+                                                                 AcceptsReturn="True"
+                                                                 MinHeight="100"
+                                                                 VerticalAlignment="Stretch"/>
+                                                    </ScrollViewer>
+                                                </Grid>
+                                                <GridSplitter Grid.Column="1" Background="Purple" ResizeDirection="Columns" DragCompleted="onGridRowDetailsDragCompleted" />
+                                                <Grid Grid.Column="2" RowDefinitions="20, *" Margin="0,0,2,0">
+                                                    <TextBlock Grid.Row="0" Text="Processing Output"  LineHeight="20" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,0,0,0" />
+                                                    <ScrollViewer Grid.Row="1" 
+                                                                     VerticalScrollBarVisibility="Auto" 
+                                                                     HorizontalScrollBarVisibility="Auto"
+                                                                     MaxHeight="300">
+                                                        <TextBox Text="{Binding ConsoleOutput}" 
+                                                                 IsReadOnly="True"
+                                                                 TextWrapping="Wrap" 
+                                                                 LineHeight="20" 
+                                                                 AcceptsReturn="True"
+                                                                 MinHeight="100"
+                                                                 VerticalAlignment="Stretch"/>
+                                                    </ScrollViewer>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                    </DockPanel>
+                    <Border IsVisible="{Binding !HasFiles}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Drag + Drop files and folders here" TextWrapping="Wrap" TextAlignment="Center" FontSize="20" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Process_Button_AddFiles}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border IsVisible="{Binding AllRowsFilteredOut}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Files are present but are currently filtered out" TextWrapping="Wrap" TextAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Amend your selection in UI Options -> Process Files Settings" TextWrapping="Wrap" TextAlignment="Center" FontSize="15"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Console -->
+                <Expander Name="exConsole" Grid.Column="2" DockPanel.Dock="Right" ExpandDirection="Left" IsExpanded="False" HorizontalContentAlignment="Left" Margin="5,0,0,0" Padding="-3" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="3" Tapped="onExpanderTapped">
+                    <Expander.Header>
+                        <TextBlock Text="C O N S O L E" FontFamily="/Assets/Fonts/Chromia.otf#Chromia" FontSize="15" HorizontalAlignment="Center" />
+                    </Expander.Header>
+                    <ScrollViewer Name="ConsoleOutputScrollViewer" Theme="{StaticResource MaterialModernScrollViewer}">
+                        <Border BorderBrush="#331733" BorderThickness="1" CornerRadius="3" Background="#331733">
+                            <!--  -->
+                            <TextBox
+                                Name="tbConsoleOutput"
+                                Width="500"
+                                Text="{Binding ConsoleOutput.Messages}"
+                                IsReadOnly="true"
+                                FontFamily="/Assets/Fonts/consola.ttf#Consolas"
+                                FontSize="11"
+                                LineHeight="14"
+                                TextWrapping="{Binding SettingsStore.UiSettings.ConsoleOutputWrapMode}"
+                                ScrollViewer.HorizontalScrollBarVisibility="{Binding SettingsStore.UiSettings.ConsoleOutputHorizontalScrollbarVisibility}"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Background="#331733" Margin="10,0,0,-4" />
+                        </Border>
+                    </ScrollViewer>
+                </Expander>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</UserControl>

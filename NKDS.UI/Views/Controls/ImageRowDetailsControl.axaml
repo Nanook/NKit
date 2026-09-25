@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="120"
+             x:Class="NkdsUi.Views.Controls.ImageRowDetailsControl"
+             x:DataType="vm:ImageRowViewModel">
+
+    <Border Padding="8,4" Margin="24,2,4,2" CornerRadius="4"
+            Background="#1E1E1E" BorderBrush="#333" BorderThickness="1"
+            IsVisible="{Binding HasOutput}">
+        <Grid RowDefinitions="Auto,*">
+            <!-- Header -->
+            <TextBlock Grid.Row="0"
+                       Text="Output"
+                       FontWeight="SemiBold"
+                       FontSize="11"
+                       Opacity="0.8"
+                       Margin="0,0,0,4"/>
+
+            <!-- Text output (read-only, monospace) -->
+            <TextBox Grid.Row="1"
+                     Text="{Binding OutputText, Mode=OneWay}"
+                     IsReadOnly="True"
+                     FontFamily="Cascadia Mono, Consolas, Courier New, monospace"
+                     FontSize="11"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MaxHeight="200"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="4,2"/>
+        </Grid>
+    </Border>
+</UserControl>

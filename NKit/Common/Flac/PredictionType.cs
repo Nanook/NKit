@@ -1,0 +1,25 @@
+namespace CUETools.Codecs.Flake
+{
+    /// <summary>
+    /// Type of linear prediction
+    /// </summary>
+    internal enum PredictionType
+    {
+        /// <summary>
+        /// Verbatim
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// Fixed prediction only
+        /// </summary>
+        Fixed = 1,
+        /// <summary>
+        /// Levinson-Durbin recursion
+        /// </summary>
+        Levinson = 2,
+        /// <summary>
+        /// Exhaustive search
+        /// </summary>
+        Search = 3
+    }
+}

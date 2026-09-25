@@ -1,0 +1,167 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:NkdsUi.Views.Controls"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720"
+        x:Class="NkdsUi.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        MinWidth="1200" MinHeight="720"
+        Icon="/Assets/NkdsIcon.ico"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="36"
+        Title="">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- Ensures bottom of window isn't truncated when maximized -->
+    <Window.Styles>
+        <Style Selector="Window[WindowState=Maximized]">
+            <Setter Property="Padding" Value="8" />
+        </Style>
+        <!-- When maximized on Linux, enlarge the top-right corner grip to act as a close button target.
+             Users expect to fling the mouse to the top-right corner to close.
+             Negative margin counteracts the Window padding (8px) so the grip reaches the screen edge. -->
+        <Style Selector="Window[WindowState=Maximized] Border#ResizeNEGrip">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Margin" Value="0,-8,-8,0"/>
+        </Style>
+        <!-- DataGrid selection highlight - must be at Window level to override Material.Avalonia theme -->
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#AA7B1FA2"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle.selected">
+            <Setter Property="Fill" Value="#AA7B1FA2"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+        <Style Selector="DataGridRow:selected DataGridCell">
+            <Setter Property="Background" Value="#AA7B1FA2"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="DataGridRow:selected DataGridCell TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#447B1FA2"/>
+            <Setter Property="Opacity" Value="1"/>
+        </Style>
+    </Window.Styles>
+
+    <Panel DragDrop.AllowDrop="True">
+
+    <DockPanel>
+        <!-- Toolbar Row 1: Logo + Icon buttons -->
+        <Border DockPanel.Dock="Top" Padding="8,4,8,4"
+                Name="ClientTitleBar"
+                PointerPressed="titleBar_PointerPressed"
+                Background="Transparent">
+            <DockPanel>
+                <!-- Window caption buttons (Linux only — Windows/macOS provide their own) -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="0"
+                            VerticalAlignment="Top" Margin="0,-4,-8,-4"
+                            Name="LinuxCaptionButtons"
+                            IsVisible="{OnPlatform False, Linux=True}">
+                    <Button Click="minimizeWindow" Background="Transparent" BorderThickness="0"
+                            Width="36" Height="36" Padding="0" Cursor="Hand"
+                            WindowDecorationProperties.ElementRole="User">
+                        <TextBlock Text="─" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Click="maximizeWindow" Background="Transparent" BorderThickness="0"
+                            Width="36" Height="36" Padding="0" Cursor="Hand"
+                            WindowDecorationProperties.ElementRole="User">
+                        <TextBlock Text="□" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button Click="closeWindow" Background="Transparent" BorderThickness="0"
+                            Width="36" Height="36" Padding="0" Cursor="Hand"
+                            WindowDecorationProperties.ElementRole="User">
+                        <TextBlock Text="✕" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="#F44336"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <!-- Logo (replaces title bar text) -->
+                    <Svg Path="/Assets/NkdsLogo.svg"
+                           Height="46"
+                           VerticalAlignment="Center"
+                           ToolTip.Tip="{Binding NKitVersion}"/>
+                    <controls:ToolbarControl DataContext="{Binding Toolbar}"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Title Bar (below toolbar, above image list — includes operation progress) -->
+        <controls:TitleBarControl DockPanel.Dock="Top"
+                                  Margin="8,0,8,0"/>
+
+        <!-- Main Content: Image List -->
+        <ContentControl Content="{Binding ImageList}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"/>
+    </DockPanel>
+
+        <!-- Empty state: No DataStore open -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="8" Opacity="0.5"
+                    IsHitTestVisible="False"
+                    IsVisible="{Binding !Toolbar.HasDataStoreOpen}">
+            <TextBlock Text="No DataStore Open"
+                       FontSize="18" FontWeight="SemiBold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Open a folder or create a new set to get started"
+                       FontSize="13"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Empty state: DataStore open but no images -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="8" Opacity="0.5"
+                    IsHitTestVisible="False">
+            <StackPanel.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="Toolbar.HasDataStoreOpen"/>
+                    <Binding Path="!ImageList.TotalImageCount"/>
+                </MultiBinding>
+            </StackPanel.IsVisible>
+            <TextBlock Text="No Images"
+                       FontSize="18" FontWeight="SemiBold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Add images using the toolbar or drag and drop files here"
+                       FontSize="13"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Resize grips (Linux only — on top of content for hit-testing) -->
+        <Border Height="5" VerticalAlignment="Top" Cursor="TopSide"
+                PointerPressed="resizeN_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Height="5" VerticalAlignment="Bottom" Cursor="BottomSide"
+                PointerPressed="resizeS_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="5" HorizontalAlignment="Left" Cursor="LeftSide"
+                PointerPressed="resizeW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="5" HorizontalAlignment="Right" Cursor="RightSide"
+                PointerPressed="resizeE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="BottomRightCorner"
+                PointerPressed="resizeSE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="BottomLeftCorner"
+                PointerPressed="resizeSW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="TopRightCorner"
+                PointerPressed="resizeNE_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"
+                Name="ResizeNEGrip"/>
+        <Border Width="8" Height="8" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="TopLeftCorner"
+                PointerPressed="resizeNW_PointerPressed" Background="Transparent"
+                IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>
+
+    </Panel>
+</Window>

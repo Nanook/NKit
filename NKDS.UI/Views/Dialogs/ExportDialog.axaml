@@ -1,0 +1,148 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="680" d:DesignHeight="350"
+        x:Class="NkdsUi.Views.Dialogs.ExportDialog"
+        x:DataType="vm:ExportDialogViewModel"
+        Width="680" SizeToContent="Height"
+        MinWidth="580" MinHeight="240"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/NkdsIcon.ico"
+        Title="Export Images">
+
+    <Design.DataContext>
+        <vm:ExportDialogViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="16">
+        <!-- Footer with OK/Cancel buttons -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="0,12,0,0"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                    <Button Content="Export"
+                            Classes="dialogConfirm"
+                            Command="{Binding ConfirmCommand}"/>
+                    <Button Content="Cancel"
+                            Classes="dialogCancel"
+                            Command="{Binding CancelCommand}"/>
+                </StackPanel>
+                <Panel/>
+            </DockPanel>
+        </Border>
+
+        <!-- Content -->
+        <StackPanel Spacing="16" Margin="0,0,0,8">
+            <!-- Image count info -->
+            <TextBlock Opacity="0.85">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Exporting {0} image(s)">
+                        <Binding Path="SelectedImageCount"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <!-- Format Grid -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Export Formats:" FontWeight="SemiBold" Opacity="0.85"/>
+                <ItemsControl ItemsSource="{Binding FormatRows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:FormatRowViewModel">
+                            <DockPanel Margin="0,4">
+                                <TextBlock DockPanel.Dock="Left"
+                                           Text="{Binding Label}"
+                                           VerticalAlignment="Center"
+                                           Width="140"
+                                           Opacity="0.85"/>
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <ComboBox ItemsSource="{Binding TargetFormats}"
+                                              SelectedItem="{Binding SelectedTargetFormat}"
+                                              MinWidth="120"/>
+                                    <!-- Format options wrapper: visible only when format has options -->
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="4"
+                                                VerticalAlignment="Center"
+                                                IsVisible="{Binding HasFormatOptions}">
+                                        <!-- RVZ options panel -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="4"
+                                                    IsVisible="{Binding IsRvzOptionsVisible}">
+                                            <ComboBox ItemsSource="{Binding EncodingTypes}"
+                                                      SelectedItem="{Binding SelectedEncoding}"
+                                                      MinWidth="80"/>
+                                            <ComboBox ItemsSource="{Binding CompressionLevels}"
+                                                      SelectedItem="{Binding SelectedLevel}"
+                                                      MinWidth="55"
+                                                      IsVisible="{Binding IsLevelVisible}"/>
+                                            <ComboBox ItemsSource="{Binding BlockSizes}"
+                                                      SelectedItem="{Binding SelectedBlockSize}"
+                                                      MinWidth="80"/>
+                                        </StackPanel>
+                                        <!-- Lossless checkbox for CISO/WBFS -->
+                                        <CheckBox Content="Lossless"
+                                                  IsChecked="{Binding Lossless}"
+                                                  IsVisible="{Binding IsLosslessVisible}"
+                                                  Margin="4,0,0,0"
+                                                  VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Output Directory -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Output Directory:" FontWeight="SemiBold" Opacity="0.85"/>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right"
+                            Classes="Flat"
+                            Command="{Binding BrowseCommand}"
+                            Height="30" Width="30" Padding="0"
+                            VerticalAlignment="Center"
+                            Margin="8,0,0,0"
+                            ToolTip.Tip="Select output folder">
+                        <materialIcons:MaterialIcon Kind="FolderOpenOutline" Width="18" Height="18"/>
+                    </Button>
+                    <Panel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right"
+                                    Content="▾"
+                                    Classes="Flat"
+                                    Width="28"
+                                    Padding="0"
+                                    x:Name="ExportHistoryButton"/>
+                            <TextBox Text="{Binding OutputDirectory, Mode=TwoWay}"
+                                     PlaceholderText="Select output directory..."
+                                     x:Name="OutputDirTextBox"/>
+                        </DockPanel>
+                        <Popup x:Name="ExportHistoryPopup"
+                               PlacementTarget="{Binding #OutputDirTextBox}"
+                               Placement="Bottom"
+                               IsOpen="False"
+                               MaxHeight="250"
+                               Width="{Binding #OutputDirTextBox.Bounds.Width}">
+                            <Border Background="#2D2D2D"
+                                    BorderBrush="{DynamicResource MaterialDividerBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <ListBox x:Name="ExportHistoryList"
+                                         ItemsSource="{Binding ExportPathHistory}"
+                                         SelectionMode="Single"/>
+                            </Border>
+                        </Popup>
+                    </Panel>
+                </DockPanel>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>

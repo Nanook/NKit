@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels.TaskSettings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:uc="clr-namespace:NKit.Ui.UserControls.TaskSettings"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="330"
+             x:Class="NKit.Ui.UserControls.TaskSettings.ExtractSettingsControl"
+             x:DataType="vm:ExtractSettingsViewModel">
+		<StackPanel Orientation="Vertical">
+			<StackPanel Orientation="Vertical" Spacing="7" Margin="0,5,0,20" x:DataType="vm:ExtractSettingsViewModel">
+				<Label Content="Extraction mode:" Margin="0,5,0,0" FontWeight="Bold" />
+				<RadioButton IsChecked="{Binding IsAllFilesModeSelected}" Margin="5,0,0,0" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Radio_AllFiles}">All Files: Extract files that match Search Pattern.</RadioButton>
+				<RadioButton IsChecked="{Binding IsFixFilesModeSelected}" Margin="5,0,0,0" IsVisible="{Binding IsExtractionModeVisible}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Radio_FixFiles}">Fix Files: Extract fix/recovery files used by Fix task.</RadioButton>
+				<RadioButton IsChecked="{Binding IsForensicModeSelected}" Margin="5,0,0,0" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Radio_Forensic}">Forensic mode</RadioButton>
+			</StackPanel>
+			<StackPanel IsVisible="{Binding IsSearchPatternVisible}" x:DataType="vm:ExtractSettingsViewModel">
+				<Label Content="Search Pattern:" FontWeight="Bold" />
+				<Grid ColumnDefinitions="140,*" Margin="5,10,0,5">
+					<RadioButton Grid.Column="0" IsChecked="{Binding IsMaskSelected}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Label_SearchPattern}">Mask</RadioButton>
+					<RadioButton Grid.Column="1" IsChecked="{Binding IsRegexSelected}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Label_SearchPattern}">Regex</RadioButton>
+				</Grid>
+				<TextBox HorizontalAlignment="Left" Width="380" Text="{Binding SearchTerm}" TextWrapping="Wrap" Margin="5,-10,0,0" Classes="dense" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Label_SearchPattern}"/>
+				<CheckBox IsChecked="{Binding Settings.ExtractMatchCase}" Margin="5,10,5,5" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Extract_Check_CaseSensitive}">Case Sensitive</CheckBox>
+				<StackPanel Orientation="Horizontal" Margin="5,10,5,5" IsVisible="{Binding DisplayInvalidRegexWarning}" x:DataType="vm:ExtractSettingsViewModel">
+					<avalonia:MaterialIcon Kind="Alert" Foreground="Yellow" ToolTip.Tip="Invalid Regex." IsVisible="{Binding DisplayInvalidRegexWarning}"/>
+					<TextBlock Width="360" Text="{Binding RegexValidationMessage}" IsVisible="{Binding DisplayInvalidRegexWarning}" Margin="3,2,0,0" TextWrapping="Wrap" />
+				</StackPanel>
+			</StackPanel>
+		</StackPanel>
+</UserControl>

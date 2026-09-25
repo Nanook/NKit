@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="48"
+             x:Class="NkdsUi.Views.Controls.ComparisonToolbarControl"
+             x:DataType="vm:ComparisonModeViewModel">
+
+    <StackPanel Spacing="4">
+        <!-- Toolbar Row -->
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4">
+            <!-- Enter Comparison Mode: visible when NOT active and NOT loading -->
+            <Button Command="{Binding EnterComparisonModeCommand}"
+                    ToolTip.Tip="Load BlockKey data for selected/visible images into memory for fast comparison"
+                    Classes="Flat"
+                    IsVisible="{Binding !IsActive}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <materialIcons:MaterialIcon Kind="SwapHorizontal" Width="18" Height="18"/>
+                    <TextBlock Text="Enter Comparison Mode" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Exit Comparison Mode: visible when active -->
+            <Button Command="{Binding ExitComparisonModeCommand}"
+                    ToolTip.Tip="Exit Comparison Mode and release cached data"
+                    Classes="Flat"
+                    IsVisible="{Binding IsActive}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <materialIcons:MaterialIcon Kind="Close" Width="18" Height="18"/>
+                    <TextBlock Text="Exit Comparison Mode" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Export Similarity Groups: visible when active -->
+            <Button Command="{Binding ExportSimilarityGroupsCommand}"
+                    ToolTip.Tip="Compute and export similarity groups as YAML"
+                    Classes="Flat"
+                    IsVisible="{Binding IsActive}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
+                    <TextBlock Text="Export Similarity Groups" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Find Top 10 Matches: visible when active -->
+            <Button Command="{Binding FindTopMatchesCommand}"
+                    ToolTip.Tip="Find the top 10 closest matches for the selected image using cached data"
+                    Classes="Flat"
+                    IsVisible="{Binding IsActive}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <materialIcons:MaterialIcon Kind="Magnify" Width="18" Height="18"/>
+                    <TextBlock Text="Find Top 10 Matches" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Separator: visible when active -->
+            <Border Width="1" Background="#555" Margin="4,4" VerticalAlignment="Stretch"
+                    IsVisible="{Binding IsActive}"/>
+
+            <!-- Cancel Loading: visible when loading -->
+            <Button Command="{Binding CancelLoadingCommand}"
+                    ToolTip.Tip="Cancel the current loading operation"
+                    Classes="Flat"
+                    IsVisible="{Binding IsLoading}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <materialIcons:MaterialIcon Kind="Cancel" Width="18" Height="18"/>
+                    <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!-- Loading progress text -->
+            <TextBlock VerticalAlignment="Center"
+                       Opacity="0.7"
+                       IsVisible="{Binding IsLoading}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Loading {0} / {1}...">
+                        <Binding Path="LoadedCount"/>
+                        <Binding Path="TotalToLoad"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <!-- Warning message -->
+            <TextBlock Text="{Binding WarningMessage}"
+                       VerticalAlignment="Center"
+                       Foreground="Orange"
+                       IsVisible="{Binding WarningMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+            <!-- Error message -->
+            <TextBlock Text="{Binding ErrorMessage}"
+                       VerticalAlignment="Center"
+                       Foreground="OrangeRed"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </StackPanel>
+
+        <!-- Progress Bar: visible during loading or exporting -->
+        <ProgressBar Minimum="0"
+                     Maximum="{Binding TotalToLoad}"
+                     Value="{Binding LoadedCount}"
+                     IsIndeterminate="{Binding IsExporting}"
+                     Background="#447B1FA2"
+                     Foreground="#CE93D8"
+                     Height="3"
+                     Margin="0">
+            <ProgressBar.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                    <Binding Path="IsLoading"/>
+                    <Binding Path="IsExporting"/>
+                </MultiBinding>
+            </ProgressBar.IsVisible>
+        </ProgressBar>
+
+    </StackPanel>
+</UserControl>

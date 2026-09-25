@@ -1,0 +1,7 @@
+356e4550	440	/sys/boot.bin
+ef903a88	2000	/sys/bi2.bin
+ed67c608	14bc0	/sys/apploader.img
+66f7eb47	24	/sys/fst.bin
+38a8b5e1	1960	/files/opening.bnr
+sys
+files

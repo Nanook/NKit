@@ -1,0 +1,10 @@
+011ffca6	8000	/000000000_FileSystem/__customHeader
+411b2699	800	/000000000_FileSystem/__pvd_Iso9660_8000
+411b2699	800	/000000000_FileSystem/__pvd_Iso9660_8800
+411b2699	800	/000000000_FileSystem/__pvd_Iso9660_9000
+0ac41c20	800	/000000000_FileSystem/__pvdEnd_9800
+0e205c81	a	/000000000_FileSystem/__paths_LittleEndian_A000
+e22a0b5d	a	/000000000_FileSystem/__paths_BigEndian_A800
+f17debe6	800	/000000000_FileSystem/__fst_B000
+9126ac94	4	/000000000_FileSystem/This is a really long filename, don't you think.txt.txt
+000000000_FileSystem

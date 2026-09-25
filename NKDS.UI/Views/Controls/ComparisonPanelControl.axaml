@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:NkdsUi.ViewModels"
+             xmlns:converters="using:NkdsUi.Converters"
+             mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="600"
+             x:Class="NkdsUi.Views.Controls.ComparisonPanelControl"
+             x:DataType="vm:ComparisonPanelViewModel">
+
+    <UserControl.Resources>
+        <converters:PercentageConverter x:Key="PercentageConverter"/>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Margin="8">
+            <TextBlock Text="Comparison"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Margin="0,0,0,4"/>
+            <TextBlock Text="{Binding ScopeDescription}"
+                       FontSize="12"
+                       Opacity="0.7"
+                       IsVisible="{Binding ScopeDescription, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+        </StackPanel>
+
+        <!-- Scope Restriction Checkboxes -->
+        <StackPanel DockPanel.Dock="Top" Margin="8,0,8,8" Spacing="4">
+            <CheckBox Content="Same Set"
+                      IsChecked="{Binding RestrictToSameSet}"/>
+            <CheckBox Content="Same System"
+                      IsChecked="{Binding RestrictToSameSystem}"/>
+        </StackPanel>
+
+        <!-- Progress Bar -->
+        <ProgressBar DockPanel.Dock="Top"
+                     Minimum="0"
+                     Maximum="1"
+                     Value="{Binding Progress}"
+                     IsVisible="{Binding IsComputing}"
+                     Background="#447B1FA2"
+                     Foreground="#CE93D8"
+                     Margin="8,0,8,8"/>
+
+        <!-- Error Message -->
+        <TextBlock DockPanel.Dock="Top"
+                   Text="{Binding ErrorMessage}"
+                   Foreground="OrangeRed"
+                   TextWrapping="Wrap"
+                   Margin="8,0,8,8"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+        <!-- Cancel Button -->
+        <Button DockPanel.Dock="Bottom"
+                Content="Cancel"
+                Command="{Binding CancelCommand}"
+                IsVisible="{Binding IsComputing}"
+                HorizontalAlignment="Stretch"
+                Margin="8"/>
+
+        <!-- Results List -->
+        <ItemsControl ItemsSource="{Binding Results}"
+                      Margin="8,0,8,8">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="4"
+                            Margin="0,0,0,4"
+                            CornerRadius="4"
+                            Background="{DynamicResource MaterialCardBrush}">
+                        <StackPanel Spacing="2">
+                            <!-- Matched Image Name -->
+                            <TextBlock Text="{Binding MatchedImage.Name}"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <!-- Match Percentage and Block Counts -->
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding MatchPercentage, Converter={StaticResource PercentageConverter}}"
+                                           Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                                <TextBlock Opacity="0.7">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} / {1} blocks">
+                                            <Binding Path="SharedBlockCount"/>
+                                            <Binding Path="ReferenceBlockCount"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</UserControl>

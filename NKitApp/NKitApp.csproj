@@ -1,0 +1,121 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<AssemblyName>nkit</AssemblyName>
+		<RootNamespace>Nanook.NKit.App</RootNamespace>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<!--<PublishTrimmed>true</PublishTrimmed>-->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(PlatformName)</RuntimeIdentifier>
+		<Configurations>Debug;Release;ReleaseTest</Configurations>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<!-- Suppress AOT and trim analysis warnings - xUnit1008 is the test creator -->
+		<NoWarn>$(NoWarn);IL2104;IL3053;IL2026;IL2036</NoWarn>
+		<!-- Ensure copy-local lock file assemblies are produced for AOT publish -->
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PublishAot>true</PublishAot>
+		<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+		<TrimMode>link</TrimMode>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcOptimizationPreference>Size</IlcOptimizationPreference>
+		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+	</PropertyGroup>
+
+	<!-- Static link GrindCore native library during AOT publish (eliminates separate .so/.dll at runtime) -->
+	<ItemGroup Condition="'$(GrindCoreStaticLink)' != 'false'">
+		<DirectPInvoke Include="GrindCore" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/11" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/12" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/13" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/14" />
+		<LinkerArg Include="-latomic" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-')) AND '$(GrindCoreStaticLink)' != 'false'">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="/FORCE:MULTIPLE" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Properties\\PublishProfiles\\**" />
+		<EmbeddedResource Remove="Properties\\PublishProfiles\\**" />
+		<None Remove="Properties\\PublishProfiles\\**" />
+	</ItemGroup>
+
+	<!-- Explicit RuntimeIdentifiers to ensure restore/publish generate assets for targeted RIDs (including musl) -->
+	<PropertyGroup>
+		<RuntimeIdentifiers>win-x64;osx-x64;osx-arm64;linux-x64;linux-musl-x64;linux-arm64</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<!-- Ensure linker tasks package is available during publish on build hosts that may not restore SDK assets correctly -->
+	<!-- Removed explicit ILLink package reference per SDK guidance to avoid versioning warnings -->
+
+	<ItemGroup>
+		<ProjectReference Include="..\\NKit\\NKit.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Spectre.Console" Version="0.57.2" />
+	</ItemGroup>
+
+	<!-- Spectre IPrompter implementation — AOT-safe interactive prompting for the nkit CLI. -->
+	<!-- SpectrePrompter.cs in Cli\ is picked up by the default SDK glob; no explicit Include needed. -->
+
+	<ItemGroup>
+	  <Resource Include="nkit-dev.yaml">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="ConfigInfo.txt">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	  <None Update="defaults\\nkit.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="nkit.yaml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Properties\\launchSettings.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<!-- Include nkit.yaml config file for portable mode -->
+
+	<!-- Create defaults directory structure during publish -->
+	<Target Name="CreateDefaultsStructure" AfterTargets="Publish">
+		<Message Text="Creating defaults directory structure for console app..." Importance="high" />
+		
+		<!-- Create defaults directory -->
+		<MakeDir Directories="$(PublishDir)defaults" />
+		<MakeDir Directories="$(PublishDir)defaults\\fix" />
+		
+		<!-- Copy fix files from NKit project output to defaults/fix ONLY (not root) -->
+		<ItemGroup>
+			<SourceFixFiles Include="$(PublishDir)defaults\\fix\\*.yaml" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SourceFixFiles)" DestinationFolder="$(PublishDir)defaults\\fix" Condition="Exists('$(PublishDir)defaults\\fix')" />
+		
+		<!-- Remove fix files from root - they should only be in defaults -->
+		<RemoveDir Directories="$(PublishDir)defaults\\fix" />
+		
+		<Message Text="✅ Defaults directory structure created (fix files in defaults only)" Importance="high" />
+	</Target>
+
+</Project>

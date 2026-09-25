@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels.TaskSettings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:uc="clr-namespace:NKit.Ui.UserControls.TaskSettings.Shared"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="330"
+             x:Class="NKit.Ui.UserControls.TaskSettings.ScanSettingsControl"
+             x:DataType="vm:ScanSettingsViewModel">
+	<StackPanel Orientation="Vertical" Margin="5,5,0,0">
+		<StackPanel Orientation="Vertical" Spacing="7" Margin="0,0,0,20" x:DataType="vm:ScanSettingsViewModel">
+			<Label Content="Verification Method:" Margin="-5,5,0,0" FontWeight="Bold" />
+			<RadioButton IsChecked="{Binding IsDynamicVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsDynamicVerifyEnabled}" Content="Dynamic - Best method chosen based on conversion type" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Scan_Radio_DynamicVerify}" />
+			<RadioButton IsChecked="{Binding IsDatLookupVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsDatLookupVerifyEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Scan_Radio_DatLookupVerify}">DAT Lookup - Expanded image must match DAT hashes</RadioButton>
+			<RadioButton IsChecked="{Binding IsNoneVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsNoneVerifyEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Scan_Radio_NoneVerify}">None</RadioButton>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

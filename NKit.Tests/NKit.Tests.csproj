@@ -1,0 +1,89 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+	<IsTestProject>true</IsTestProject>
+	<IsPackable>false</IsPackable>
+	<Configurations>Debug;Release;ReleaseTest</Configurations>
+	  <!-- Suppress xUnit1008 is the test creator
+	     - xUnit1026 is the unused id param for debugging
+		 - CA2022 old stream.read-->
+	  <NoWarn>$(NoWarn);xUnit1008;xUnit1026;CA2022;xUnit2013</NoWarn>
+	  <!-- NKDSApp is a win-x64 (AMD64) app whose managed types (NkdsInteractive) the tests use.
+	       This AnyCPU/MSIL test project references it, which triggers MSB3270 (processor-architecture
+	       mismatch). The mismatch is benign here (the test host runs x64 and the referenced types are
+	       managed), so silence the check for this project rather than force a PlatformTarget. -->
+	  <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Nanook.NKit.Tests.xunit.runner.json" />
+    <None Remove="ProcessingTests\ConvertFormatsTestsData.txt" />
+    <None Remove="ProcessingTests\ExtractTestsData.txt" />
+    <None Remove="ProcessingTests\ParamKeywordsTestsData.txt" />
+    <None Remove="ProcessingTests\SettingsConvertExpandTestsData.txt" />
+    <None Remove="ProcessingTests\SettingsScanTestsData.txt" />
+    <None Remove="ProcessingTests\WipedFullTestsData.txt" />
+    <None Remove="ProcessingTests\WipedFullTestsFiles1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\NKitExternalTestFiles\Tests\ExternalTests.txt" Link="ExternalImageTests\ExternalTests.txt" />
+    <Content Include="ProcessingTests\ExtractTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\WipedFullTestsFiles1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\WipedFullTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\ParamKeywordsTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\ConvertFormatsTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\SettingsScanTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessingTests\SettingsConvertExpandTestsData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FsCheck.Xunit.v3" Version="3.4.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+		<PackageReference Include="xunit.v3" Version="4.0.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" Version="10.0.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NKit\NKit.csproj" />
+    <ProjectReference Include="..\NKit.UI\NKit.UI.csproj" />
+    <ProjectReference Include="..\NKitDataStore\NKitDataStore.csproj" />
+    <ProjectReference Include="..\NKitApp\NKitApp.csproj" />
+    <ProjectReference Include="..\NKDSApp\NKDSApp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ExtractResults\GcImage_full.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ExtractResults\WiiImage_full.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NKit.Tests.xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

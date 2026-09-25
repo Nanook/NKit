@@ -1,0 +1,93 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NKit.Ui.App"
+             xmlns:local="using:NKit.Ui"
+			 xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             RequestedThemeVariant="Dark">
+	<Application.Resources>
+		<FontFamily x:Key="NKitDefaultFontFamily">/Assets/Fonts/#Roboto</FontFamily>
+		<!-- /Assets/Fonts/Roboto-Light.otf#Roboto Light-->
+		<!-- REsolves exceptions when it can't be found-->
+		<SolidColorBrush x:Key="SystemControlTransparentBrush" Color="#FF1E1E1E"/>
+	</Application.Resources>
+	<Application.Styles>
+		<themes:MaterialTheme PrimaryColor="Purple" SecondaryColor="Lime" />
+		<materialIcons:MaterialIconStyles />
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="{DynamicResource NKitDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="FontFamily" Value="{DynamicResource NKitDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<Style Selector="AccessText">
+			<Setter Property="FontFamily" Value="{DynamicResource NKitDefaultFontFamily}" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+		<!-- Material.Avalonia.DataGrid overrides -->
+		<!-- Override MaterialSelectionBrush to purple -->
+		<Style Selector="DataGrid">
+			<Style.Resources>
+				<SolidColorBrush x:Key="MaterialSelectionBrush" Color="#9C27B0"/>
+			</Style.Resources>
+		</Style>
+		<!-- Compact row height (Material template uses MinHeight=52 on PART_Root) -->
+		<Style Selector="DataGridRow /template/ DataGridFrozenGrid#PART_Root">
+			<Setter Property="MinHeight" Value="28" />
+		</Style>
+		<Style Selector="DataGridRow">
+			<Setter Property="MinHeight" Value="28" />
+		</Style>
+		<!-- Override Material DataGridRow template to reduce MinHeight from 52 to 28 -->
+		<Style Selector="DataGridRow">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border x:Name="RowBorder"
+							Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							CornerRadius="{TemplateBinding CornerRadius}">
+						<DataGridFrozenGrid Name="PART_Root"
+											MinHeight="28"
+											RowDefinitions="Auto,Auto,Auto"
+											ColumnDefinitions="Auto,*">
+							<Rectangle Name="BackgroundRectangle" Grid.RowSpan="2" Grid.ColumnSpan="2" />
+							<DataGridRowHeader Grid.RowSpan="3" Name="PART_RowHeader" DataGridFrozenGrid.IsFrozen="True" />
+							<DataGridCellsPresenter Grid.Column="1" Name="PART_CellsPresenter" DataGridFrozenGrid.IsFrozen="True" />
+							<DataGridDetailsPresenter Grid.Row="1" Grid.Column="1" Name="PART_DetailsPresenter" />
+							<Rectangle Grid.Row="2" Grid.Column="1" Margin="0"
+									   VerticalAlignment="Bottom" Height="1" Name="PART_BottomGridLine"
+									   HorizontalAlignment="Stretch" />
+						</DataGridFrozenGrid>
+					</Border>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<!-- Re-apply selection visuals on the overridden template -->
+		<Style Selector="DataGridRow /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="IsVisible" Value="False" />
+			<Setter Property="Fill" Value="{DynamicResource MaterialSelectionBrush}" />
+		</Style>
+		<Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="IsVisible" Value="True" />
+			<Setter Property="Opacity" Value="0.5" />
+		</Style>
+		<Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="IsVisible" Value="True" />
+			<Setter Property="Opacity" Value="1" />
+		</Style>
+		<!-- Compact header height (Material default is MinHeight=56) -->
+		<Style Selector="DataGridColumnHeader">
+			<Setter Property="MinHeight" Value="30" />
+			<Setter Property="Padding" Value="8,0" />
+		</Style>
+		<!-- Reduce cell padding and center content vertically -->
+		<Style Selector="DataGridCell">
+			<Setter Property="Padding" Value="6,0" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="MinHeight" Value="28" />
+		</Style>
+	</Application.Styles>
+</Application>

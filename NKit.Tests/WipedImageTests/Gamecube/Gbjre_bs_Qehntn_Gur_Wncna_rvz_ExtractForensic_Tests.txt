@@ -1,0 +1,7 @@
+b627b95d	440	/000000000_FileSystem/__boot.bin
+6091f552	2000	/000000000_FileSystem/__bi2.bin
+23c5f883	1d3e4	/000000000_FileSystem/__apploader.img
+97cdca48	46c40	/000000000_FileSystem/__main.dol
+68162043	24	/000000000_FileSystem/__fst.bin
+b3906ac5	1960	/000000000_FileSystem/opening.bnr
+000000000_FileSystem

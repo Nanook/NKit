@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:vm="clr-namespace:NKit.Ui.ViewModels.TaskSettings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:uc="clr-namespace:NKit.Ui.UserControls.TaskSettings.Shared"
+             xmlns:tips="clr-namespace:NKit.Ui.UserControls.Shared"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
+             x:Class="NKit.Ui.UserControls.TaskSettings.DedupeSettingsControl"
+             x:DataType="vm:DedupeSettingsViewModel">
+	<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Theme="{StaticResource MaterialModernScrollViewer}">
+		<StackPanel Spacing="10" Margin="5">
+			<!-- DataStore Settings Section -->
+			<StackPanel Spacing="8" Margin="0,10,0,10">
+				<StackPanel.Styles>
+					<Style Selector="TextBox">
+						<Setter Property="UseFloatingWatermark" Value="True"/>
+						<Setter Property="MinWidth" Value="300"/>
+					</Style>
+					<Style Selector="Button.PathButton">
+						<Setter Property="Height" Value="30"/>
+						<Setter Property="Width" Value="30"/>
+						<Setter Property="VerticalAlignment" Value="Bottom"/>
+						<Setter Property="Margin" Value="5,5,0,0"/>
+					</Style>
+				</StackPanel.Styles>
+
+				<TextBlock Text="DataStore Settings" FontWeight="Bold" FontSize="16" Margin="0,8,0,3"/>
+				<Border BorderBrush="DarkGray" BorderThickness="1" CornerRadius="3" Padding="8" Margin="0,0,0,8" Background="{DynamicResource MaterialCardBackgroundBrush}">
+					<StackPanel Orientation="Vertical" Spacing="8">
+						<!-- Set Name -->
+						<TextBox wpf:TextFieldAssist.Label="Set Name" Text="{Binding SetName}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Label_SetName}" PlaceholderText="(system name)"/>
+
+						<!-- Shard Size -->
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<Label Content="Shard Size:" Width="110" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Label_ShardSize}"/>
+							<ComboBox ItemsSource="{Binding AvailableShardSizes}" SelectedItem="{Binding SelectedShardSize}" Width="200" Height="30" Classes="Dense" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Combo_ShardSize}">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+						</StackPanel>
+
+						<!-- Block Size -->
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<Label Content="Block Size:" Width="110" VerticalAlignment="Center" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Label_BlockSize}"/>
+							<ComboBox ItemsSource="{Binding AvailableBlockSizes}" SelectedItem="{Binding SelectedBlockSize}" Width="200" Height="30" Classes="Dense" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Combo_BlockSize}">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+						</StackPanel>
+
+						<!-- 1GMR YAML File Picker -->
+						<Grid ColumnDefinitions="*, 40">
+							<TextBox Grid.Column="0" wpf:TextFieldAssist.Label="1GMR YAML" Text="{Binding OgmrYamlPath}" IsReadOnly="True"
+							         tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Label_OgmrYaml}"/>
+							<Button Grid.Column="1" Classes="PathButton" Command="{Binding BrowseOgmrYamlCommand}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Label_OgmrYaml}">
+								<avalonia:MaterialIcon Kind="FileOutline" Width="20" Height="20"/>
+							</Button>
+						</Grid>
+						<TextBlock Text="{Binding OgmrStatus}" Foreground="Gray" FontSize="11" Margin="0,-4,0,0"/>
+
+						<!-- Aux Mode -->
+						<CheckBox Content="Aux Mode" IsChecked="{Binding AuxMode}"
+						          tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Check_AuxMode}"/>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+
+			<!-- Verification Method Section -->
+			<StackPanel Orientation="Vertical" Spacing="7" Margin="0,0,0,20" x:DataType="vm:DedupeSettingsViewModel">
+				<Label Content="Verification Method:" Margin="-5,5,0,0" FontWeight="Bold"/>
+				<RadioButton IsChecked="{Binding IsDynamicVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsDynamicVerifyEnabled}" Content="Dynamic - Best method chosen based on conversion type" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Radio_DynamicVerify}" />
+				<RadioButton IsChecked="{Binding IsDatLookupVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsDatLookupVerifyEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Radio_DatLookupVerify}">DAT Lookup - Expanded image must match DAT hashes</RadioButton>
+				<RadioButton IsChecked="{Binding IsNoneVerifySelected}" IsEnabled="{Binding $parent.DataContext.IsNoneVerifyEnabled}" tips:DelayedTooltip.Text="{x:Static tips:TooltipTexts.Dedupe_Radio_NoneVerify}">None</RadioButton>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

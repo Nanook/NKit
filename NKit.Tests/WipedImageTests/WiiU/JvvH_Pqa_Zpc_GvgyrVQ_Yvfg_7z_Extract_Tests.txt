@@ -1,0 +1,9 @@
+29c8d735	350	/title.tik
+45f6fd99	12c4	/title.tmd
+44437dd4	700	/title.cert
+5ba0832a	28a	/code/app.xml
+b017bf5d	ee9	/code/cos.xml
+efdfcdb2	74	/content/app_type_list.txt
+baf9beef	5e7	/content/title_id_list.txt
+code
+content

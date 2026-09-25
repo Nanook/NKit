@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Defrag-style grid: solid blocks packed top-left, empty spaces bottom-right -->
+  <!-- Row 1: all filled -->
+  <rect x="3" y="3" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="8" y="3" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="13" y="3" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="18" y="3" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <!-- Row 2: three filled, one empty -->
+  <rect x="3" y="9" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="8" y="9" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="13" y="9" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="18" y="9" width="4" height="4" rx="0.5" fill="none" stroke="#CE93D8" stroke-width="1" opacity="0.4"/>
+  <!-- Row 3: one filled, rest empty -->
+  <rect x="3" y="15" width="4" height="4" rx="0.5" fill="#CE93D8" stroke="none"/>
+  <rect x="8" y="15" width="4" height="4" rx="0.5" fill="none" stroke="#CE93D8" stroke-width="1" opacity="0.4"/>
+  <rect x="13" y="15" width="4" height="4" rx="0.5" fill="none" stroke="#CE93D8" stroke-width="1" opacity="0.4"/>
+  <rect x="18" y="15" width="4" height="4" rx="0.5" fill="none" stroke="#CE93D8" stroke-width="1" opacity="0.4"/>
+</svg>

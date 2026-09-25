@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>NKDSLib</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <!-- Suppress AOT and trim analysis warnings inherited from dependencies -->
+    <NoWarn>$(NoWarn);IL2104;IL3053;IL2026;IL2036;IL3050</NoWarn>
+  </PropertyGroup>
+
+  <!-- InternalsVisibleTo grants -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="NKitDataStore.Tests" />
+  </ItemGroup>
+
+  <!-- On Windows use Dokan -->
+  <!-- Use OS detection as primary, with RID as fallback for cross-compilation scenarios -->
+  <PropertyGroup Condition=" '$([MSBuild]::IsOSPlatform(Windows))' == 'true' or '$(RuntimeIdentifier)' == 'win-x64' or '$(RuntimeIdentifier)' == 'win-arm64' ">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$([MSBuild]::IsOSPlatform(Windows))' == 'true' or '$(RuntimeIdentifier)' == 'win-x64' or '$(RuntimeIdentifier)' == 'win-arm64' ">
+    <PackageReference Include="DokanNet" Version="2.3.0.3" />
+  </ItemGroup>
+
+  <!-- Linux: FUSE via Tmds.Fuse -->
+  <PropertyGroup Condition=" '$([MSBuild]::IsOSPlatform(Linux))' == 'true' or '$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'linux-arm64' ">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$([MSBuild]::IsOSPlatform(Linux))' == 'true' or '$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'linux-arm64' ">
+    <ProjectReference Include="..\Tmds.Fuse\src\Tmds.Fuse\Tmds.Fuse.csproj" />
+  </ItemGroup>
+
+  <!-- macOS: FUSE-T via Tmds.Fuse -->
+  <PropertyGroup Condition=" '$([MSBuild]::IsOSPlatform(OSX))' == 'true' or '$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64' ">
+    <DefineConstants>$(DefineConstants);MACOS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$([MSBuild]::IsOSPlatform(OSX))' == 'true' or '$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64' ">
+    <ProjectReference Include="..\Tmds.Fuse\src\Tmds.Fuse\Tmds.Fuse.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NKit\NKit.csproj" />
+    <ProjectReference Include="..\NKitDataStore\NKitDataStore.csproj" />
+  </ItemGroup>
+</Project>

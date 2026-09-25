@@ -1,0 +1,267 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="NkdsUi.Views.GroupingWindow"
+        x:DataType="vm:GroupingWindowViewModel"
+        Width="800" Height="600"
+        MinWidth="600" MinHeight="400"
+        CanResize="True"
+        Icon="/Assets/NkdsIcon.ico"
+        WindowStartupLocation="CenterScreen"
+        Title="Threshold Grouping">
+
+    <Design.DataContext>
+        <vm:GroupingWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <!-- Match main toolbar button style -->
+        <Style Selector="Button.gwToolbarBtn">
+            <Setter Property="Padding" Value="4,4,4,2"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.gwToolbarBtn:disabled">
+            <Setter Property="Opacity" Value="1.0"/>
+        </Style>
+        <Style Selector="Button.gwToolbarBtn:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Opacity" Value="1.0"/>
+        </Style>
+        <Style Selector="Button.gwToolbarBtn:disabled TextBlock">
+            <Setter Property="Foreground" Value="#888888"/>
+        </Style>
+    </Window.Styles>
+
+    <DockPanel Margin="12">
+        <!-- Toolbar Area -->
+        <Border DockPanel.Dock="Top"
+                Padding="0,0,0,8"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                <!-- Start -->
+                <Button Command="{Binding StartCommand}"
+                        Classes="gwToolbarBtn"
+                        ToolTip.Tip="Start - Begin grouping computation">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                        <Panel Height="24" Width="24" HorizontalAlignment="Center">
+                            <Svg Path="/Assets/Toolbar/Start.svg" Height="24" Width="24"
+                                 IsVisible="{Binding StartCommand.CanExecute^}" IsHitTestVisible="False"/>
+                            <Svg Path="/Assets/ToolbarDisabled/Start.svg" Height="24" Width="24"
+                                 IsVisible="{Binding !StartCommand.CanExecute^}" IsHitTestVisible="False"/>
+                        </Panel>
+                        <TextBlock Text="Start" FontSize="10" HorizontalAlignment="Center"
+                                   Foreground="#CE93D8" IsHitTestVisible="False"/>
+                    </StackPanel>
+                </Button>
+                <!-- Cancel -->
+                <Button Command="{Binding CancelCommand}"
+                        Classes="gwToolbarBtn"
+                        ToolTip.Tip="Cancel - Stop current computation">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                        <Panel Height="24" Width="24" HorizontalAlignment="Center">
+                            <Svg Path="/Assets/Toolbar/Cancel.svg" Height="24" Width="24"
+                                 IsVisible="{Binding CancelCommand.CanExecute^}" IsHitTestVisible="False"/>
+                            <Svg Path="/Assets/ToolbarDisabled/Cancel.svg" Height="24" Width="24"
+                                 IsVisible="{Binding !CancelCommand.CanExecute^}" IsHitTestVisible="False"/>
+                        </Panel>
+                        <TextBlock Text="Cancel" FontSize="10" HorizontalAlignment="Center"
+                                   Foreground="#CE93D8" IsHitTestVisible="False"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Divider -->
+                <Border Width="1" Background="#444" Margin="6,4" VerticalAlignment="Stretch"/>
+
+                <!-- Export Groups -->
+                <Button Command="{Binding ExportGroupsCommand}"
+                        Classes="gwToolbarBtn"
+                        ToolTip.Tip="Save - Save grouped results as YAML">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                        <Panel Height="24" Width="24" HorizontalAlignment="Center">
+                            <Svg Path="/Assets/Toolbar/ExportGroups.svg" Height="24" Width="24"
+                                 IsVisible="{Binding ExportGroupsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                            <Svg Path="/Assets/ToolbarDisabled/ExportGroups.svg" Height="24" Width="24"
+                                 IsVisible="{Binding !ExportGroupsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                        </Panel>
+                        <TextBlock Text="Save" FontSize="10" HorizontalAlignment="Center"
+                                   Foreground="#CE93D8" IsHitTestVisible="False"/>
+                    </StackPanel>
+                </Button>
+                <!-- Export Pairs -->
+                <Button Command="{Binding ExportPairsCommand}"
+                        Classes="gwToolbarBtn"
+                        ToolTip.Tip="Export - Save pairwise matrix for later import">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                        <Panel Height="24" Width="24" HorizontalAlignment="Center">
+                            <Svg Path="/Assets/Toolbar/ExportPairs.svg" Height="24" Width="24"
+                                 IsVisible="{Binding ExportPairsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                            <Svg Path="/Assets/ToolbarDisabled/ExportPairs.svg" Height="24" Width="24"
+                                 IsVisible="{Binding !ExportPairsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                        </Panel>
+                        <TextBlock Text="Export" FontSize="10" HorizontalAlignment="Center"
+                                   Foreground="#CE93D8" IsHitTestVisible="False"/>
+                    </StackPanel>
+                </Button>
+                <!-- Import Pairs -->
+                <Button Command="{Binding ImportPairsCommand}"
+                        Classes="gwToolbarBtn"
+                        ToolTip.Tip="Import - Load previously exported pairwise matrix">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="2">
+                        <Panel Height="24" Width="24" HorizontalAlignment="Center">
+                            <Svg Path="/Assets/Toolbar/ImportPairs.svg" Height="24" Width="24"
+                                 IsVisible="{Binding ImportPairsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                            <Svg Path="/Assets/ToolbarDisabled/ImportPairs.svg" Height="24" Width="24"
+                                 IsVisible="{Binding !ImportPairsCommand.CanExecute^}" IsHitTestVisible="False"/>
+                        </Panel>
+                        <TextBlock Text="Import" FontSize="10" HorizontalAlignment="Center"
+                                   Foreground="#CE93D8" IsHitTestVisible="False"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Divider -->
+                <Border Width="1" Background="#444" Margin="6,4" VerticalAlignment="Stretch"/>
+
+                <!-- Configuration: Threshold with up/down buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center" Margin="4,0">
+                    <TextBlock Text="Threshold:" VerticalAlignment="Center" Opacity="0.7" FontSize="11"/>
+                    <Button Content="−" Command="{Binding ThresholdDownCommand}"
+                            Padding="4,0" MinWidth="20" Height="22" FontSize="12"
+                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                            VerticalAlignment="Center"/>
+                    <NumericUpDown Value="{Binding Threshold}"
+                                   Minimum="20" Maximum="100" Increment="5"
+                                   FormatString="F0"
+                                   ShowButtonSpinner="False"
+                                   Width="40" Height="24" FontSize="12"
+                                   IsEnabled="{Binding !IsComputing}"
+                                   VerticalAlignment="Center"/>
+                    <Button Content="+" Command="{Binding ThresholdUpCommand}"
+                            Padding="4,0" MinWidth="20" Height="22" FontSize="12"
+                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                            VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Configuration: Threads -->
+                <StackPanel Orientation="Horizontal" Spacing="3" VerticalAlignment="Center" Margin="4,0">
+                    <TextBlock Text="Threads:" VerticalAlignment="Center" Opacity="0.7" FontSize="11"/>
+                    <NumericUpDown Value="{Binding Threads}"
+                                   Minimum="1" Maximum="{Binding MaxThreads}" Increment="1"
+                                   ShowButtonSpinner="False"
+                                   Width="32" Height="24" FontSize="12"
+                                   IsEnabled="{Binding !IsComputing}"
+                                   VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Divider -->
+                <Border Width="1" Background="#444" Margin="6,4" VerticalAlignment="Stretch"/>
+
+                <!-- Image count -->
+                <StackPanel Orientation="Horizontal" Spacing="3" VerticalAlignment="Center" Margin="4,0">
+                    <TextBlock Text="Images:" VerticalAlignment="Center" Opacity="0.7" FontSize="11"/>
+                    <TextBlock Text="{Binding FilteredImageCount}" VerticalAlignment="Center"
+                               FontWeight="Medium" FontSize="12" Foreground="#CE93D8"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Progress/Status Area -->
+        <StackPanel DockPanel.Dock="Top" Spacing="3" Margin="0,6,0,0">
+            <!-- Progress Bar (visible only when computing) -->
+            <ProgressBar Value="{Binding ProgressPercent}"
+                         Maximum="100"
+                         IsVisible="{Binding IsComputing}"
+                         Background="#447B1FA2"
+                         Foreground="#CE93D8"
+                         Height="4"/>
+            <!-- Status Text -->
+            <TextBlock Text="{Binding StatusText}"
+                       IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Opacity="0.7" FontSize="11"
+                       FontStyle="Italic"/>
+        </StackPanel>
+
+        <!-- Error/Warning Area -->
+        <StackPanel DockPanel.Dock="Top" Spacing="3" Margin="0,3,0,0">
+            <TextBlock Text="{Binding ErrorMessage}"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                       TextWrapping="Wrap"
+                       FontWeight="Medium"/>
+            <TextBlock Text="{Binding WarningMessage}"
+                       IsVisible="{Binding WarningMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Foreground="Orange"
+                       TextWrapping="Wrap"
+                       FontStyle="Italic"/>
+        </StackPanel>
+
+        <!-- Header Summary (visible when results are present) -->
+        <TextBlock DockPanel.Dock="Top"
+                   Text="{Binding HeaderSummary}"
+                   IsVisible="{Binding HasResults}"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                   Margin="0,8,0,0"/>
+
+        <!-- No Groups Message -->
+        <TextBlock DockPanel.Dock="Top"
+                   Text="No groups were found at the specified threshold. Try lowering the threshold percentage."
+                   IsVisible="{Binding HasNoGroups}"
+                   Margin="0,12"
+                   Opacity="0.7" FontSize="12"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"/>
+
+        <!-- Results Area: Group Cards -->
+        <ScrollViewer Margin="0,8,0,0"
+                      IsVisible="{Binding HasResults}">
+            <ItemsControl ItemsSource="{Binding NumberedGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:NumberedGroupViewModel">
+                        <Border Padding="8,6" Margin="0,2"
+                                CornerRadius="4"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource MaterialDividerBrush}">
+                            <StackPanel Spacing="4">
+                                <!-- Group header: number, image count, overall % -->
+                                <TextBlock FontWeight="Medium">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}: {1} images — Min: {2:F0}% | Max: {3:F0}% | Avg: {4:F0}%">
+                                            <Binding Path="GroupName"/>
+                                            <Binding Path="Group.Images.Count"/>
+                                            <Binding Path="Group.Summary.MinMatchPercentage"/>
+                                            <Binding Path="Group.Summary.MaxMatchPercentage"/>
+                                            <Binding Path="Group.Summary.AvgMatchPercentage"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <!-- Image names with match % (vertical list) -->
+                                <ItemsControl ItemsSource="{Binding ImageItems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:GroupedImageItem">
+                                            <StackPanel Orientation="Horizontal" Margin="12,1,0,1">
+                                                <TextBlock Opacity="0.8" FontSize="11">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} ({1:F0}%)">
+                                                            <Binding Path="Name"/>
+                                                            <Binding Path="BestMatchPercent"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

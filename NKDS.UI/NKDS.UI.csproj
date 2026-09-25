@@ -1,0 +1,129 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<AssemblyName>nkds-ui</AssemblyName>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<ApplicationIcon>Assets\NkdsIcon.ico</ApplicationIcon>
+		<!-- Default runtime identifier when not specified (ensures NKDS library gets WINDOWS define) -->
+		<RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
+		<!-- Suppress AOT and trim analysis warnings -->
+		<NoWarn>$(NoWarn);IL2104;IL3053;IL2026;IL2036;IL3050</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="NKitDataStore.Tests" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<PublishAot>true</PublishAot>
+		<BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+		<TrimMode>link</TrimMode>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+		<IlcOptimizationPreference>Size</IlcOptimizationPreference>
+		<IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+	</PropertyGroup>
+
+	<!-- Static link GrindCore native library during AOT publish (eliminates separate .so/.dll at runtime) -->
+	<ItemGroup Condition="'$(GrindCoreStaticLink)' != 'false'">
+		<DirectPInvoke Include="GrindCore" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/11" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/12" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/13" />
+		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/14" />
+		<LinkerArg Include="-latomic" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+	</ItemGroup>
+	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-'))">
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="/FORCE:MULTIPLE" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<TrimmerRootDescriptor Include="$(MSBuildThisFileDirectory)rd.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="rd.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\Fonts\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+		<!-- Avalonia 12 includes DevTools in the main package; no separate Diagnostics package needed -->
+		<PackageReference Include="Material.Avalonia" Version="3.20.0" />
+		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.20.0" />
+		<PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
+		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.2" />
+		<PackageReference Include="System.Text.Encoding.CodePages" Version="11.0.0-preview.3.26207.106" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="NKitDataStore.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NKDS\NKDS.csproj" />
+		<ProjectReference Include="..\NKitDataStore\NKitDataStore.csproj" />
+	</ItemGroup>
+
+	<!-- Include nkds-ui.yaml config file for portable mode (placed next to exe, triggers portable detection) -->
+	<ItemGroup>
+		<Content Include="nkds-ui.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<!-- Create defaults directory structure during publish (not for macOS - uses bundle Resources) -->
+	<Target Name="CreateDefaultsStructure" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' != 'osx-x64' AND '$(RuntimeIdentifier)' != 'osx-arm64'">
+		<Message Text="Creating defaults directory structure for NKDS UI app..." Importance="high" />
+		
+		<!-- Create defaults directory -->
+		<MakeDir Directories="$(PublishDir)defaults" />
+		<MakeDir Directories="$(PublishDir)defaults\fix" />
+		
+		<!-- Copy fix files from NKit project output to defaults/fix ONLY (not root) -->
+		<ItemGroup>
+			<SourceFixFiles Include="$(PublishDir)defaults\fix\*.yaml" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SourceFixFiles)" DestinationFolder="$(PublishDir)defaults\fix" Condition="Exists('$(PublishDir)defaults\fix')" />
+		
+		<!-- Remove fix files from root - they should only be in defaults -->
+		<RemoveDir Directories="$(PublishDir)defaults\fix" />
+		
+		<Message Text="Defaults directory structure created for NKDS UI app (fix files in defaults only)" Importance="high" />
+	</Target>
+
+</Project>

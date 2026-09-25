@@ -1,0 +1,166 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NkdsUi.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="NkdsUi.Views.ThresholdGroupsDialog"
+        x:DataType="vm:ThresholdGroupsDialogViewModel"
+        Width="700" Height="500"
+        MinWidth="500" MinHeight="350"
+        CanResize="True"
+        Icon="/Assets/NkdsIcon.ico"
+        WindowStartupLocation="CenterOwner"
+        Title="Threshold Groups">
+
+    <Design.DataContext>
+        <vm:ThresholdGroupsDialogViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="16">
+        <!-- Header -->
+        <Border DockPanel.Dock="Top"
+                Padding="0,0,0,12"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding HeaderSummary}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Threshold %:" VerticalAlignment="Center" Opacity="0.7"/>
+                    <NumericUpDown Value="{Binding DialogThreshold}"
+                                   Minimum="0" Maximum="100" Increment="1"
+                                   FormatString="F2"
+                                   Width="120"
+                                   VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Footer -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="0,12,0,0"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource MaterialDividerBrush}">
+            <StackPanel Spacing="8">
+                <!-- Button Row -->
+                <DockPanel>
+                    <!-- Right-aligned Close -->
+                    <Button DockPanel.Dock="Right"
+                            Content="Close"
+                            Classes="Flat"
+                            Command="{Binding CloseCommand}"/>
+
+                    <!-- Left-aligned Export, Export Pairs, Import Pairs -->
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8">
+                        <Button Content="Export"
+                                Classes="Flat"
+                                Command="{Binding ExportGroupsCommand}"/>
+                        <Button Content="Export Pairs"
+                                Classes="Flat"
+                                Command="{Binding ExportPairsCommand}"/>
+                        <Button Content="Import Pairs"
+                                Classes="Flat"
+                                Command="{Binding ImportPairsCommand}"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- Message Area -->
+                <TextBlock Text="{Binding DialogMessage}"
+                           IsVisible="{Binding DialogMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Foreground="{DynamicResource MaterialValidationErrorBrush}"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- No Groups Message -->
+        <TextBlock DockPanel.Dock="Top"
+                   Text="No groups were found at the specified threshold. Try lowering the threshold percentage."
+                   IsVisible="{Binding HasNoGroups}"
+                   Margin="0,16"
+                   Opacity="0.7"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"/>
+
+        <!-- Groups List -->
+        <ScrollViewer Margin="0,12,0,0"
+                      IsVisible="{Binding !HasNoGroups}">
+            <ItemsControl ItemsSource="{Binding NumberedGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:NumberedGroupViewModel">
+                        <Expander Margin="0,4" HorizontalAlignment="Stretch">
+                            <Expander.Header>
+                                <TextBlock FontWeight="Medium">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Group {0}: {1} images | Min: {2:F1}% | Max: {3:F1}% | Avg: {4:F1}%">
+                                            <Binding Path="GroupNumber"/>
+                                            <Binding Path="Group.Images.Count"/>
+                                            <Binding Path="Group.Summary.MinMatchPercentage"/>
+                                            <Binding Path="Group.Summary.MaxMatchPercentage"/>
+                                            <Binding Path="Group.Summary.AvgMatchPercentage"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Expander.Header>
+
+                            <Border Padding="12,8"
+                                    Margin="4,4,4,8"
+                                    CornerRadius="4"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource MaterialDividerBrush}">
+                                <StackPanel Spacing="12">
+                                    <!-- Images Section -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Images:"
+                                                   FontWeight="SemiBold"
+                                                   Opacity="0.85"/>
+                                        <ItemsControl ItemsSource="{Binding Group.Images}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Margin="12,2,0,2"
+                                                               Opacity="0.9">
+                                                        <Run Text="•"/>
+                                                        <Run Text=" "/>
+                                                        <Run Text="{Binding Name}"/>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                    <!-- Pairwise Matches Section -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Pairwise Matches:"
+                                                   FontWeight="SemiBold"
+                                                   Opacity="0.85"/>
+                                        <ItemsControl ItemsSource="{Binding SortedPairwiseMatches}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Margin="12,2,0,2"
+                                                               Opacity="0.9">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0} ↔ {1}: {2:F2}%">
+                                                                <Binding Path="ImageA"/>
+                                                                <Binding Path="ImageB"/>
+                                                                <Binding Path="MatchPercentage"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
