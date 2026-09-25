@@ -4,8 +4,8 @@ set -euo pipefail
 # =============================================================================
 # NKit Linux x64 AOT build (console + nkds + GUI) using NATIVE Docker in WSL.
 # =============================================================================
-# Produces: build-output/NKit_CLI_linux-x64_VERSION.zip
-#           build-output/NKit_UI_linux-x64_VERSION.zip
+# Produces: build-output/NKit_linux-x64_CLI_VERSION.zip
+#           build-output/NKit_linux-x64_UI_VERSION.zip
 #
 # Run via build-all.ps1, or directly from Windows PowerShell:
 #   wsl -d Ubuntu-22.04 -- bash -lc "cd /mnt/d/Src/NKitCode/NKit && VERSION=3.0.0-alpha.3 ./build/wsl-docker-build.sh"

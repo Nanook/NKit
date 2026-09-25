@@ -189,7 +189,7 @@ if (-not $NoArchive) {
     }
 
     if ($BuildConsole) {
-        $cliZip = Join-Path $OutDir "NKit_CLI_${Runtime}_${ArchiveLabel}.zip"
+        $cliZip = Join-Path $OutDir "NKit_${Runtime}_CLI_${ArchiveLabel}.zip"
         $cliDir = "publish/console/$Runtime"
 
         # Include nkds in console archive
@@ -201,7 +201,7 @@ if (-not $NoArchive) {
     }
 
     if ($BuildGui) {
-        $uiZip = Join-Path $OutDir "NKit_UI_${Runtime}_${ArchiveLabel}.zip"
+        $uiZip = Join-Path $OutDir "NKit_${Runtime}_UI_${ArchiveLabel}.zip"
         $guiDir = "publish/gui/$Runtime"
 
         # Include nkds-ui in gui archive

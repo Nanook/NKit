@@ -33,10 +33,10 @@ pwsh -File build\build-all.ps1 -Version 3.0.0-alpha.3
 Output in `<repo-root>/build-output/` (gitignored, next to `build/`):
 
 ```
-NKit_CLI_win-x64_3.0.0-alpha.3.zip    # nkit.exe  + nkds.exe   + config
-NKit_UI_win-x64_3.0.0-alpha.3.zip     # nkit-ui.exe + nkds-ui.exe + config
-NKit_CLI_linux-x64_3.0.0-alpha.3.zip  # nkit     + nkds       + config
-NKit_UI_linux-x64_3.0.0-alpha.3.zip   # nkit-ui  + nkds-ui    + libSkiaSharp.so + libHarfBuzzSharp.so + config
+NKit_win-x64_CLI_3.0.0-alpha.3.zip    # nkit.exe  + nkds.exe   + config
+NKit_win-x64_UI_3.0.0-alpha.3.zip     # nkit-ui.exe + nkds-ui.exe + config
+NKit_linux-x64_CLI_3.0.0-alpha.3.zip  # nkit     + nkds       + config
+NKit_linux-x64_UI_3.0.0-alpha.3.zip   # nkit-ui  + nkds-ui    + libSkiaSharp.so + libHarfBuzzSharp.so + config
 ```
 
 Skip one platform if needed:

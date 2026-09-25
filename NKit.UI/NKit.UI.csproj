@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
 		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
@@ -45,10 +45,10 @@
 		<LinkerArg Include="-latomic" />
 	</ItemGroup>
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
 	</ItemGroup>
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
 		<LinkerArg Include="/FORCE:MULTIPLE" />
 	</ItemGroup>
 

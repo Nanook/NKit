@@ -169,12 +169,12 @@ rm -f "$ui_dir"/*.a "$ui_dir"/*.dbg 2>/dev/null || true
 # ---- 9. create archives ------------------------------------------------------
 VERSION_LABEL="${VERSION:-$(date +%Y%m%d)}"
 
-CLI_ZIP="NKit_CLI_${RUNTIME}_${VERSION_LABEL}.zip"
+CLI_ZIP="NKit_${RUNTIME}_CLI_${VERSION_LABEL}.zip"
 echo "### creating $CLI_ZIP ###"
 (cd "$cli_dir" && zip -r "/out/$CLI_ZIP" .)
 echo "Created: $CLI_ZIP"
 
-UI_ZIP="NKit_UI_${RUNTIME}_${VERSION_LABEL}.zip"
+UI_ZIP="NKit_${RUNTIME}_UI_${VERSION_LABEL}.zip"
 echo "### creating $UI_ZIP ###"
 (cd "$ui_dir" && zip -r "/out/$UI_ZIP" .)
 echo "Created: $UI_ZIP"

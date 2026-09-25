@@ -4,8 +4,8 @@
 # Builds both win-x64 and linux-x64 release archives and places them in
 # <repo-root>/build-output/ (gitignored).
 #
-#   win-x64  : NKit_CLI_win-x64_VERSION.zip  +  NKit_UI_win-x64_VERSION.zip
-#   linux-x64: NKit_CLI_linux-x64_VERSION.zip  +  NKit_UI_linux-x64_VERSION.zip
+#   win-x64  : NKit_win-x64_CLI_VERSION.zip  +  NKit_win-x64_UI_VERSION.zip
+#   linux-x64: NKit_linux-x64_CLI_VERSION.zip  +  NKit_linux-x64_UI_VERSION.zip
 #              (console + nkds + GUI, via WSL + Docker)
 #
 # Usage:

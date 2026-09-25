@@ -139,12 +139,10 @@ namespace Nanook.NKit.Configuration.Services
 
             try
             {
-                if (context.ConfigFileName.Equals(ConfigSettingsConstants.ConfigFileNameCLI, StringComparison.OrdinalIgnoreCase))
-                {
-                    return tryCopyFromDefaults(context, fileSystem, targetConfigPath);
-                }
-
-                return false;
+                // Copy the default config if a defaults/{configFileName} source exists.
+                // Previously gated to CLI only (nkit.yaml), but nkit-ui.yaml and nkds-ui.yaml
+                // also ship a defaults/ config and need the same first-run copy behaviour.
+                return tryCopyFromDefaults(context, fileSystem, targetConfigPath);
             }
             catch
             {

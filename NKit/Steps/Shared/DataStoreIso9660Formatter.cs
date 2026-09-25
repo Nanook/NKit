@@ -470,6 +470,26 @@ namespace Nanook.NKit.Steps.Shared
 
             if (section.Type == AreaType.FileSystem)
             {
+                // When a FileSystem section has no mapped items (empty FST — e.g. Track 2 of a
+                // PS2 multi-track CUE+BIN whose track geometry couldn't be resolved), the gap/file
+                // machinery produces an empty range list and the entire section content is silently
+                // dropped. Detect this and fall back to storing the section verbatim so the data
+                // survives the DataStore round-trip. Only store non-trivial (non-zero) content to
+                // avoid bloating the store with padding tracks that are genuinely blank.
+                if (!section.Items.Any())
+                {
+                    bool hasData = false;
+                    byte[] raw = section.Decrypted;
+                    int rawLen = (int)section.Size;
+                    for (int i = 0; i < rawLen && !hasData; i++)
+                        hasData = raw[i] != 0;
+
+                    if (hasData)
+                        _imageWriter.WriteData(section.ImageOffset, raw, 0, rawLen, BlockType.Other);
+
+                    return;
+                }
+
                 // Persist gap/non-creatable data ranges
                 List<GapRange> storedRanges = DataStoreWiiFormatter.GetGapsAndNonCreatableDataRanges(section, stride).ToList();
 

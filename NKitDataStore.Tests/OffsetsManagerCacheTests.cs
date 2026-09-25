@@ -902,7 +902,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void TtlLifecycle_ExpiryRemovesEntry()
         {
-            // Arrange — use a short TTL; sleep well beyond it to ensure expiry fires
+            // Arrange
             const int ttlMs = 50;
             List<AreaRecord> areas = createAreas(1);
             List<OffsetRecord> offsets = createOffsets(3);
@@ -910,14 +910,14 @@ namespace NKitDataStore.Tests
             MockDataStore dataStore = new MockDataStore(_ => mockReader);
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, ttlMs);
 
-            // Acquire and release (starts TTL)
+            // Acquire and release (starts TTL timer, but we won't wait for it)
             OffsetsManagerCacheResult first = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.ReleaseOffsetsManager("set1", 42);
 
-            // Wait well beyond TTL — 20× the TTL gives the timer thread ample CPU time
-            Thread.Sleep(ttlMs * 20);
+            // Force expiry synchronously — no wall-clock dependency
+            manager.ForceOffsetsManagerExpiry("set1:42");
 
-            // Act — acquire again should create new instance
+            // Act — acquire again should create a new instance
             OffsetsManagerCacheResult second = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
             // Assert — new construction occurred (2 calls per construction × 2 constructions = 4)

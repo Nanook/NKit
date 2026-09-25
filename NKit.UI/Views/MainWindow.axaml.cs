@@ -42,18 +42,17 @@ namespace NKit.Ui.Views
                 }
                 else
                 {
-                    // CSD mode: no WM decorations, app draws its own chrome
+                    // CSD mode: owner-drawn chrome provides the visual identity.
+                    // Keep Title blank so Avalonia doesn't render it over the logo.
                     WindowDecorations = Avalonia.Controls.WindowDecorations.None;
-                    // Title is blank in CSD mode for the in-window chrome, but the OS taskbar
-                    // still shows a label — set it so alt-tab/taskbar has a meaningful name.
-                    Title = $"NKit v{Nanook.NKit.AppSettings.GetVersion()}";
+                    Title = "";
                 }
             }
             else
             {
-                // Windows / macOS: OS title bar is visually suppressed by ExtendClientAreaToDecorationsHint,
-                // but the taskbar and alt-tab still use Title. Set it here.
-                Title = $"NKit v{Nanook.NKit.AppSettings.GetVersion()}";
+                // Windows / macOS: owner-drawn chrome, no OS title bar visible.
+                // Keep Title blank — the custom chrome is the visual identity.
+                Title = "";
             }
 
             DataContext = new MainWindowViewModel();

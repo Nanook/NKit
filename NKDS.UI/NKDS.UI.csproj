@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64' AND '$(GrindCoreStaticLink)' != 'false'">
 		<LinkerArg Include="-L/usr/lib/gcc/aarch64-linux-gnu/7" />
@@ -49,10 +49,10 @@
 		<LinkerArg Include="-latomic" />
 	</ItemGroup>
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('osx-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/libGrindCore.a" />
 	</ItemGroup>
 	<ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win-'))">
-		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.8.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
+		<LinkerArg Include="$(NuGetPackageRoot)/grindcore/0.9.0/runtimes/$(RuntimeIdentifier)/native/GrindCore.lib" />
 		<LinkerArg Include="/FORCE:MULTIPLE" />
 	</ItemGroup>
 
@@ -96,6 +96,14 @@
 	<ItemGroup>
 		<ProjectReference Include="..\NKDS\NKDS.csproj" />
 		<ProjectReference Include="..\NKitDataStore\NKitDataStore.csproj" />
+	</ItemGroup>
+
+	<!-- Include nkds-ui.yaml config file for portable mode (placed next to exe, triggers portable detection) -->
+	<ItemGroup>
+		<Content Include="nkds-ui.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
 	</ItemGroup>
 
 	<!-- Create defaults directory structure during publish (not for macOS - uses bundle Resources) -->

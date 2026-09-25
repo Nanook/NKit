@@ -18,9 +18,9 @@ create_archives() {
         archive_label=$(date +%Y%m%d)
     fi
 
-    # Console archive: NKit_CLI_{artifact}_{version}.zip
+    # Console archive: NKit_{artifact}_CLI_{version}.zip
     if [[ "$build_console" == true ]]; then
-        local cli_zip="NKit_CLI_${artifact_name}_${archive_label}.zip"
+        local cli_zip="NKit_${artifact_name}_CLI_${archive_label}.zip"
         echo "Creating: $cli_zip"
 
         local cli_dir="publish/console/$runtime"
@@ -45,9 +45,9 @@ create_archives() {
         echo "Created: $cli_zip"
     fi
 
-    # GUI archive: NKit_UI_{artifact}_{version}.zip
+    # GUI archive: NKit_{artifact}_UI_{version}.zip
     if [[ "$build_gui" == true ]]; then
-        local ui_zip="NKit_UI_${artifact_name}_${archive_label}.zip"
+        local ui_zip="NKit_${artifact_name}_UI_${archive_label}.zip"
         echo "Creating: $ui_zip"
 
         if [[ "$runtime" == osx-* ]]; then

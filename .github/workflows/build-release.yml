@@ -258,7 +258,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact }}-Console
-        path: NKit_CLI_*.zip
+        path: build-output/NKit_*_CLI_*.zip
         if-no-files-found: warn
         retention-days: 1
 
@@ -318,7 +318,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact }}-GUI
-        path: NKit_UI_*.zip
+        path: build-output/NKit_*_UI_*.zip
         if-no-files-found: warn
         retention-days: 1
 
@@ -368,6 +368,27 @@ jobs:
           echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
         fi
 
+    - name: Checkout repository for release notes
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref || github.ref }}
+        sparse-checkout: RELEASE_NOTES.md
+        sparse-checkout-cone-mode: false
+
+    - name: Prepare release body
+      id: release_body
+      run: |
+        if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v ]]; then
+          # Stable/pre-release tag: substitute {version} placeholder in RELEASE_NOTES.md
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#v}"
+          sed "s/{version}/${VERSION}/g" RELEASE_NOTES.md > release_body.md
+        else
+          # Dev build: use the static dev release notes file
+          cp DEV_RELEASE_NOTES.md release_body.md
+        fi
+        echo "body_path=release_body.md" >> $GITHUB_OUTPUT
+
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
@@ -378,23 +399,4 @@ jobs:
         make_latest: ${{ steps.release_info.outputs.make_latest }}
         name: ${{ steps.release_info.outputs.release_name }}
         tag_name: ${{ steps.release_info.outputs.tag_name }}
-        body: |
-          ## ${{ steps.release_info.outputs.release_name }}
-
-          ### Console Applications (NKit_CLI_*)
-          - Windows x64 / ARM64
-          - Linux x64 / ARM64 / Legacy x64 / Legacy ARM64
-          - macOS Intel / Apple Silicon
-
-          ### GUI Applications (NKit_UI_*)
-          - Windows x64 / ARM64
-          - Linux x64 / ARM64 / Legacy x64 / Legacy ARM64
-          - macOS Intel / Apple Silicon
-
-          All binaries are self-contained AOT-compiled native executables. No .NET runtime required.
-
-          For documentation and setup instructions, see the [Wiki](https://github.com/Nanook/NKit/wiki).
-
-          For recent changes and known issues, see [Current Status](https://github.com/Nanook/NKit/wiki/Current-Status).
-
-          ${{ github.ref_type == 'tag' && '' || '> **Development Build** - automated build from development branch.' }}
+        body_path: ${{ steps.release_body.outputs.body_path }}

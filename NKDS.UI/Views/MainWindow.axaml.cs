@@ -57,23 +57,18 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             }
             else
             {
-                // CSD mode: no WM decorations, app draws its own chrome.
-                // Disable ExtendClientAreaToDecorationsHint to prevent Avalonia from
-                // rendering a managed title bar with the Title text over our logo.
+                // CSD mode: owner-drawn chrome provides the visual identity.
+                // Keep Title blank so Avalonia doesn't render it over the logo.
                 WindowDecorations = Avalonia.Controls.WindowDecorations.None;
                 ExtendClientAreaToDecorationsHint = false;
-                // Title is blank in CSD mode — the custom chrome provides the visual identity.
-                // The OS taskbar still shows a title, so we set it here even though it is not
-                // visible inside the window chrome itself.
-                Title = $"NKDS v{Nanook.NKit.AppSettings.GetVersion()}";
+                Title = "";
             }
         }
         else
         {
-            // Windows / macOS: ExtendClientAreaToDecorationsHint suppresses the OS title bar
-            // visually, but the taskbar and alt-tab still use Title. Set it so the OS has a
-            // meaningful label even though the custom chrome draws the visual identity.
-            Title = $"NKDS v{Nanook.NKit.AppSettings.GetVersion()}";
+            // Windows / macOS: owner-drawn chrome, no OS title bar visible.
+            // Keep Title blank — the custom chrome is the visual identity.
+            Title = "";
         }
 
         // Obtain services from ServiceRegistry

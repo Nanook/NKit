@@ -355,6 +355,12 @@ namespace NKitDataStore
             _bufferCaches.TryRemove(imageId, out _);
         }
 
+        /// <summary>
+        /// Synchronously forces TTL expiry for the offsets manager entry with the given key.
+        /// Intended for unit tests only — avoids relying on wall-clock timer scheduling.
+        /// </summary>
+        internal void ForceOffsetsManagerExpiry(string key) => onOffsetsManagerTtlExpired(key);
+
         private void onOffsetsManagerTtlExpired(string key)
         {
             if (_isShutdown)

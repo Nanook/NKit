@@ -1,18 +1,12 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-# Install build prerequisites
+# Install build prerequisites (Ubuntu 20.04 / glibc 2.31+)
+# clang-12 and lld-12 are available in the standard focal repos — no PPA needed.
 RUN apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      curl ca-certificates gnupg2 apt-transport-https software-properties-common \
-      build-essential clang pkg-config zlib1g-dev libssl-dev libicu-dev file zip libunwind8 gettext \
-      libatomic1 gcc libgcc-7-dev && \
-    rm -rf /var/lib/apt/lists/*
-
-# Add LLVM-12 (Ubuntu 18.04 stock clang lacks lld; LLVM-12 provides it for ARM64)
-RUN curl -sSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-    echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main" > /etc/apt/sources.list.d/llvm.list && \
-    apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends clang-12 lld-12 && \
+      curl ca-certificates gnupg2 apt-transport-https \
+      build-essential clang-12 lld-12 pkg-config zlib1g-dev libssl-dev libicu-dev file zip \
+      libunwind-dev gettext libatomic1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Install .NET SDK via dotnet-install script
