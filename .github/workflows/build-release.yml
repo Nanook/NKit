@@ -389,6 +389,9 @@ jobs:
         fi
         echo "body_path=release_body.md" >> $GITHUB_OUTPUT
 
+    - name: Flatten artifacts to working dir
+      run: find . -mindepth 2 -name '*.zip' -exec mv {} . \; 2>/dev/null || true
+
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
