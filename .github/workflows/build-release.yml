@@ -258,7 +258,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact }}-Console
-        path: build-output/NKit_*_CLI_*.zip
+        path: |
+          NKit_*_CLI_*.zip
+          build-output/NKit_*_CLI_*.zip
         if-no-files-found: warn
         retention-days: 1
 
@@ -318,7 +320,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact }}-GUI
-        path: build-output/NKit_*_UI_*.zip
+        path: |
+          NKit_*_UI_*.zip
+          build-output/NKit_*_UI_*.zip
         if-no-files-found: warn
         retention-days: 1
 
