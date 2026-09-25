@@ -250,7 +250,7 @@ jobs:
       if: matrix.shell == 'pwsh'
       shell: pwsh
       run: |
-        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "console,nkds" -Version "${{ needs.setup.outputs.version }}"
+        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "console,nkds" -Version "${{ needs.setup.outputs.version }}" -NoPassword
 
     - name: Upload Console Artifacts
       if: success() || failure()
@@ -310,7 +310,7 @@ jobs:
       if: matrix.shell == 'pwsh'
       shell: pwsh
       run: |
-        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "gui,nkds-ui" -Version "${{ needs.setup.outputs.version }}"
+        .\build\build.ps1 -Runtime "${{ matrix.runtime }}" -Config "${{ env.CONFIGURATION }}" -Apps "gui,nkds-ui" -Version "${{ needs.setup.outputs.version }}" -NoPassword
 
     - name: Upload GUI Artifacts
       if: success() || failure()

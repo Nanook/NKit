@@ -14,7 +14,8 @@ param(
     [string]$Config = "Release",
     [string]$Apps = "console,gui,nkds,nkds-ui",
     [string]$Version = "",
-    [switch]$NoArchive
+    [switch]$NoArchive,
+    [switch]$NoPassword  # CI mode: plain zip in repo root, no 7-Zip password
 )
 
 $ErrorActionPreference = "Stop"
@@ -160,32 +161,45 @@ if (-not $NoArchive) {
     Write-Host "--- Creating archives ---" -ForegroundColor Yellow
     $ArchiveLabel = if ($Version) { $Version } else { Get-Date -Format "yyyyMMdd" }
 
-    # Ensure build-output/ exists alongside build/ so all zips land in one place
-    $OutDir = Join-Path (Split-Path -Parent $ScriptDir) "build-output"
-    if (!(Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
-
-    # Use 7-Zip for password-protected archives. Compress-Archive does not support passwords.
-    $7z = $null
-    foreach ($candidate in @("7z", "D:\Src\NKitCode\7z.exe", "C:\Program Files\7-Zip\7z.exe", "C:\Program Files (x86)\7-Zip\7z.exe")) {
-        if (Get-Command $candidate -ErrorAction SilentlyContinue) { $7z = $candidate; break }
-        if (Test-Path $candidate) { $7z = $candidate; break }
-    }
-    if (-not $7z) { throw "7-Zip not found. Expected at D:\Src\NKitCode\7z.exe or on PATH." }
-
-    function New-PasswordZip {
-        param([string]$SourceDir, [string]$ZipPath, [string]$Password)
-        if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
-        # Resolve to absolute path before changing directory, then push into source dir
-        # so 7-Zip stores bare filenames with no publish/... path prefix in the archive.
-        $absZip = [System.IO.Path]::GetFullPath($ZipPath)
-        Push-Location $SourceDir
-        try {
-            & $7z a -tzip -p"$Password" "$absZip" "*" | Out-Null
-            if ($LASTEXITCODE -ne 0) { throw "7-Zip failed for $absZip" }
-        } finally {
-            Pop-Location
+    if ($NoPassword) {
+        # CI mode: plain zip in repo root, no password, no 7-Zip needed
+        $OutDir = Split-Path -Parent $ScriptDir  # repo root
+        function New-PasswordZip {
+            param([string]$SourceDir, [string]$ZipPath, [string]$Password)
+            if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
+            $absZip = [System.IO.Path]::GetFullPath($ZipPath)
+            Push-Location $SourceDir
+            try {
+                $items = Get-ChildItem -Path . | Select-Object -ExpandProperty FullName
+                Compress-Archive -Path $items -DestinationPath $absZip -Force
+            } finally {
+                Pop-Location
+            }
+            Write-Host "Created: $ZipPath"
         }
-        Write-Host "Created: $ZipPath"
+    } else {
+        # Local mode: password-protected zip in build-output/, requires 7-Zip
+        $OutDir = Join-Path (Split-Path -Parent $ScriptDir) "build-output"
+        if (!(Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
+        $7z = $null
+        foreach ($candidate in @("7z", "D:\Src\NKitCode\7z.exe", "C:\Program Files\7-Zip\7z.exe", "C:\Program Files (x86)\7-Zip\7z.exe")) {
+            if (Get-Command $candidate -ErrorAction SilentlyContinue) { $7z = $candidate; break }
+            if (Test-Path $candidate) { $7z = $candidate; break }
+        }
+        if (-not $7z) { throw "7-Zip not found. Expected at D:\Src\NKitCode\7z.exe or on PATH." }
+        function New-PasswordZip {
+            param([string]$SourceDir, [string]$ZipPath, [string]$Password)
+            if (Test-Path $ZipPath) { Remove-Item $ZipPath -Force }
+            $absZip = [System.IO.Path]::GetFullPath($ZipPath)
+            Push-Location $SourceDir
+            try {
+                & $7z a -tzip -p"$Password" "$absZip" "*" | Out-Null
+                if ($LASTEXITCODE -ne 0) { throw "7-Zip failed for $absZip" }
+            } finally {
+                Pop-Location
+            }
+            Write-Host "Created: $ZipPath"
+        }
     }
 
     if ($BuildConsole) {
