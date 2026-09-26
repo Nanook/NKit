@@ -57,7 +57,7 @@ namespace Nanook.NKit.Steps.Shared
                 // CHD sources carry their track layout INSIDE the container (ChdMetaData), so
                 // SourceFile.IndexFile is null. Without this the image would be stored as a
                 // single-file ImageFormat.Iso even though it is logically an indexed image.
-                if (context.ImageInfo?.MediaType == MediaType.GD)
+                if (context.SystemType == SystemType.Dreamcast)
                 {
                     // Dreamcast GD-ROM. The raw CHD track bytes are stored VERBATIM (no pad/pregap
                     // mutation — preservation-safe), and the CHD's own track metadata is persisted as
@@ -478,11 +478,31 @@ namespace Nanook.NKit.Steps.Shared
                 // avoid bloating the store with padding tracks that are genuinely blank.
                 if (!section.Items.Any())
                 {
+                    // For raw 0x930 sectors, check only the FS (user data) bytes for non-zero content.
+                    // Raw sector headers (sync, MSF, EDC, ECC) are always non-zero and recreatable via
+                    // the BlockPadding pack — using them to detect "hasData" would incorrectly trigger
+                    // verbatim storage for gap sections that contain only reconstructible header bytes
+                    // and zero user data (e.g. the large gap between the FST and the first data file
+                    // in a mixed Mode2Form1/Form2 PS2 image like Crazy Taxi).
                     bool hasData = false;
                     byte[] raw = section.Decrypted;
                     int rawLen = (int)section.Size;
-                    for (int i = 0; i < rawLen && !hasData; i++)
-                        hasData = raw[i] != 0;
+                    if (blockSize == SectorPaddingPacker.RawSectorSize && ai.BlockFsSize > 0 && ai.BlockFsOffset >= 0)
+                    {
+                        // Check only user data bytes (FS region) within each sector
+                        for (int soff = 0; soff < rawLen && !hasData; soff += blockSize)
+                        {
+                            int dataStart = soff + ai.BlockFsOffset;
+                            int dataEnd = Math.Min(dataStart + ai.BlockFsSize, rawLen);
+                            for (int i = dataStart; i < dataEnd && !hasData; i++)
+                                hasData = raw[i] != 0;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < rawLen && !hasData; i++)
+                            hasData = raw[i] != 0;
+                    }
 
                     if (hasData)
                         _imageWriter.WriteData(section.ImageOffset, raw, 0, rawLen, BlockType.Other);
@@ -1059,7 +1079,7 @@ namespace Nanook.NKit.Steps.Shared
                 // .cue/.gdi in the source folder may belong to a different mastering). So for GD-ROM
                 // we store ONLY the authoritative CHD metadata (chd.meta.txt); read-back rehydrates a
                 // genuine CHD source from it and export produces the correct cue/gdi on demand.
-                if (_context.ImageInfo?.MediaType == MediaType.GD)
+                if (_context.SystemType == SystemType.Dreamcast)
                 {
                     WriteChdMetaFile(ordered);
                     return;
