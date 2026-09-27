@@ -391,12 +391,18 @@ jobs:
         echo "body_path=release_body.md" >> $GITHUB_OUTPUT
 
     - name: Flatten artifacts to working dir
-      run: find artifacts -name '*.zip' -exec mv {} . \; 2>/dev/null || true
+      run: |
+        echo "=== Artifact directory contents ==="
+        find artifacts -type f | sort
+        echo "=== Moving zips ==="
+        find artifacts -name 'NKit_*.zip' -exec mv -v {} . \;
+        echo "=== Zips in working dir ==="
+        ls -la NKit_*.zip 2>/dev/null || echo "No NKit_*.zip found"
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        files: '*.zip'
+        files: 'NKit_*.zip'
         draft: false
         prerelease: ${{ steps.release_info.outputs.is_prerelease }}
         generate_release_notes: false
