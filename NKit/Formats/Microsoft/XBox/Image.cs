@@ -127,9 +127,9 @@ namespace Nanook.NKit.Microsoft.XBox
 
             int xgdType = Array.IndexOf(Consts.REDUMP_ISO_LENGTH, _iso.Size);
 
-            int xgdType4WaveType = xgdType != 4 ? -1 : Array.IndexOf(Consts.WAVE_PVD, pvdObj.PvdCreationDate.ReadString(0, 0x10));
+            int waveType = (xgdType != 4 && xgdType != 6) ? -1 : Array.IndexOf(Consts.WAVE_PVD, pvdObj.PvdCreationDate.ReadString(0, 0x10));
             _fullImage = xgdType >= 0;
-            int videoType = !_fullImage ? -1 : getVideoType(xgdType, xgdType4WaveType);
+            int videoType = !_fullImage ? -1 : getVideoType(xgdType, waveType);
             long l0Length = videoType == -1 ? -1 : Consts.VIDEO_L0_LENGTH[videoType];
             long l1Length = videoType == -1 ? -1 : Consts.VIDEO_L1_LENGTH[videoType];
             int xDvdFsType = !_fullImage ? -1 : getXDvdFsType(xgdType);
@@ -488,14 +488,14 @@ namespace Nanook.NKit.Microsoft.XBox
         {
             return xgdType switch
             {
-                0 => 0,
-                1 or 2 or 3 or 4 => 1,
-                5 => 2,
-                6 or 7 => 3,
+                0 or 1 => 0,
+                2 or 3 or 4 or 5 => 1,
+                6 => 2,
+                7 or 8 => 3,
                 _ => -1,
             };
         }
-        private int getVideoType(int xgdType, int xgdType4WaveType)
+        private int getVideoType(int xgdType, int waveType)
         {
             return xgdType switch
             {
@@ -503,27 +503,32 @@ namespace Nanook.NKit.Microsoft.XBox
                 1 => 1,
                 2 => 2,
                 3 => 3,
-                4 => xgdType4WaveType switch
+                4 => 4,
+                5 => waveType switch
                 {
-                    0 => 1,
-                    1 => 2,
-                    2 => 3,
-                    3 => 4,
-                    4 or 5 or 6 or 7 => 5,
-                    8 or 9 => 6,
-                    10 or 11 or 12 => 7,
-                    13 => 8,
-                    14 or 15 => 9,
-                    16 => 10,
-                    17 or 18 => 11,
-                    19 => 12,
-                    20 => 13,
-                    21 => 14,
+                    0 => 2,
+                    1 => 3,
+                    2 => 4,
+                    3 => 5,
+                    4 or 5 or 6 or 7 => 6,
+                    8 or 9 => 7,
+                    10 or 11 or 12 => 8,
+                    13 => 9,
+                    14 or 15 => 10,
+                    16 => 11,
+                    17 or 18 => 12,
+                    19 => 13,
+                    20 => 14,
+                    21 => 15,
                     _ => -1,
                 },
-                5 => 14,
                 6 => 15,
-                7 => 16,
+                7 => waveType switch
+                {
+                    23 => 16,
+                    _ => 17,
+                },
+                8 => 18,
                 _ => -1,
             };
         }
