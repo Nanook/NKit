@@ -168,7 +168,18 @@ namespace Nanook.NKit.Iso.Iso9660
                         // For directory entries, update size if still unknown, set RockRidge
                         // name, and clear the returned file reference (caller doesn't track directories)
                         if (f.FsSize == -1)
+                        {
                             f.FsSize = fsEntry.DataSize;
+                            // Rerun gap analysis now that FsSize is known. The path-table pass adds
+                            // directory entries with FsSize=-1, so setFileAnalysis skips the
+                            // PostGapFsOffset/PostGapSize computation for them. processDirectory may
+                            // run from ReadSystemData called by a PARENT directory's resolution,
+                            // which is before this entry is resolved by Current() — meaning Current()
+                            // later sees FsSize!=-1 and skips the setFileAnalysis call. Without this
+                            // refresh, PostGapFsOffset stays 0 for the last directory-area entry,
+                            // making the large gap before the first data file invisible to ProcessData.
+                            _ctx.RefreshFileAnalysis(f);
+                        }
                         if (fsEntry.RockRidge != null)
                             f.RockRidge = fsEntry.RockRidge;
                         f = null;

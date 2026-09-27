@@ -116,6 +116,20 @@ namespace Nanook.NKit.Iso.Iso9660
             }
         }
 
+        /// <summary>
+        /// Re-runs gap analysis for a file whose FsSize was set AFTER initial insertion.
+        /// This corrects PostGapFsOffset/PostGapSize which are skipped when FsSize=-1 at
+        /// insert time (e.g. directory entries resolved via processDirectory before Current()).
+        /// Also refreshes the predecessor's PostGapSize.
+        /// </summary>
+        internal void RefreshFileAnalysis(FstFile file)
+        {
+            int idx = _files.KeyIndex(file.FsOffset, out bool found);
+            if (!found) return;
+            setFileAnalysis(idx);
+            if (idx > 0) setFileAnalysis(idx - 1);
+        }
+
         public FstFile AddMissing(FstFile file)
         {
             Add(file.FsOffset, file.Links, lnks => file, out int index, out _);

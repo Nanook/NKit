@@ -57,7 +57,7 @@ namespace Nanook.NKit.Steps.Shared
                 // CHD sources carry their track layout INSIDE the container (ChdMetaData), so
                 // SourceFile.IndexFile is null. Without this the image would be stored as a
                 // single-file ImageFormat.Iso even though it is logically an indexed image.
-                if (context.SystemType == SystemType.Dreamcast)
+                if (context.SystemType == SystemType.Dreamcast && context.ImageInfo?.MediaType == MediaType.GD)
                 {
                     // Dreamcast GD-ROM. The raw CHD track bytes are stored VERBATIM (no pad/pregap
                     // mutation — preservation-safe), and the CHD's own track metadata is persisted as
@@ -1182,7 +1182,7 @@ namespace Nanook.NKit.Steps.Shared
                 // .cue/.gdi in the source folder may belong to a different mastering). So for GD-ROM
                 // we store ONLY the authoritative CHD metadata (chd.meta.txt); read-back rehydrates a
                 // genuine CHD source from it and export produces the correct cue/gdi on demand.
-                if (_context.SystemType == SystemType.Dreamcast)
+                if (_context.SystemType == SystemType.Dreamcast && _context.ImageInfo?.MediaType == MediaType.GD)
                 {
                     WriteChdMetaFile(ordered);
                     return;
