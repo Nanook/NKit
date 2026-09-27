@@ -478,34 +478,47 @@ namespace Nanook.NKit.Steps.Shared
                 // avoid bloating the store with padding tracks that are genuinely blank.
                 if (!section.Items.Any())
                 {
-                    // For raw 0x930 sectors, check only the FS (user data) bytes for non-zero content.
-                    // Raw sector headers (sync, MSF, EDC, ECC) are always non-zero and recreatable via
-                    // the BlockPadding pack — using them to detect "hasData" would incorrectly trigger
-                    // verbatim storage for gap sections that contain only reconstructible header bytes
-                    // and zero user data (e.g. the large gap between the FST and the first data file
-                    // in a mixed Mode2Form1/Form2 PS2 image like Crazy Taxi).
-                    bool hasData = false;
-                    byte[] raw = section.Decrypted;
-                    int rawLen = (int)section.Size;
-                    if (blockSize == SectorPaddingPacker.RawSectorSize && ai.BlockFsSize > 0 && ai.BlockFsOffset >= 0)
+                    // For raw 0x930 sectors with no mapped FST items (pure gap sections between
+                    // FST end and the first data file): store the user-data (FS-stripped) bytes
+                    // so verify can reproduce the original disc content. These sectors contain
+                    // whatever the disc mastering wrote there — often non-zero — and the CRC
+                    // comparison requires byte-exact reproduction.
+                    //
+                    // Use section.Read() which strips headers and delivers only the 0x800 user-data
+                    // bytes per sector (same as file data), stored at the section's image offset
+                    // via the normal strided BeginFileWrite path. OnGapFill zeros would mismatch.
+                    //
+                    // For non-raw sectors (cooked 0x800, audio, etc.): check for genuine non-zero
+                    // content and store verbatim only if present (original behaviour).
+                    if (blockSize == SectorPaddingPacker.RawSectorSize)
                     {
-                        // Check only user data bytes (FS region) within each sector
-                        for (int soff = 0; soff < rawLen && !hasData; soff += blockSize)
+                        bool hasUserData = false;
+                        byte[] raw = section.Decrypted;
+                        int rawLen = (int)section.Size;
+                        for (int soff = 0; soff < rawLen && !hasUserData; soff += blockSize)
                         {
-                            int dataStart = soff + ai.BlockFsOffset;
-                            int dataEnd = Math.Min(dataStart + ai.BlockFsSize, rawLen);
-                            for (int i = dataStart; i < dataEnd && !hasData; i++)
-                                hasData = raw[i] != 0;
+                            int dataEnd = Math.Min(soff + ai.BlockFsOffset + ai.BlockFsSize, rawLen);
+                            for (int i = soff + ai.BlockFsOffset; i < dataEnd && !hasUserData; i++)
+                                hasUserData = raw[i] != 0;
                         }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < rawLen && !hasData; i++)
-                            hasData = raw[i] != 0;
+                        if (hasUserData)
+                        {
+                            long imageOffset = section.ImageOffset + stride.CleanToOffset(0, false);
+                            Stream writeStream = BeginFileWrite(imageOffset, BlockType.Other, stride);
+                            section.Read(0, (int)section.FsSize, writeStream);
+                            FinalizeFileWrite(imageOffset, writeStream);
+                        }
+                        return;
                     }
 
+                    bool hasData = false;
+                    byte[] rawCooked = section.Decrypted;
+                    int rawCookedLen = (int)section.Size;
+                    for (int i = 0; i < rawCookedLen && !hasData; i++)
+                        hasData = rawCooked[i] != 0;
+
                     if (hasData)
-                        _imageWriter.WriteData(section.ImageOffset, raw, 0, rawLen, BlockType.Other);
+                        _imageWriter.WriteData(section.ImageOffset, rawCooked, 0, rawCookedLen, BlockType.Other);
 
                     return;
                 }
@@ -524,6 +537,96 @@ namespace Nanook.NKit.Steps.Shared
                     Stream writeStream = BeginFileWrite(persist.ImageOffset, BlockType.Other, stride);
                     section.Read((int)persist.FsOffset, (int)persist.Size, writeStream);
                     FinalizeFileWrite(persist.ImageOffset, writeStream);
+                }
+
+                // Coverage audit: find any FS ranges in this section not covered by files or stored
+                // gap ranges. This catches gaps missed when ProcessData ran with a stale FST (e.g.
+                // PostGapSize=0 at parallel-stage time because the next file hadn't been added yet).
+                // Only raw 0x930 sections can have this problem (PS2/Dreamcast/GC disc filesystems).
+                // Non-raw sections use cooked 0x800 blocks where PostGapSize is always set up-front.
+                // All coordinates below are section-local (buffer-relative, 0-based within this section).
+                if (blockSize == SectorPaddingPacker.RawSectorSize)
+                {
+                    long secFsSize = section.FsSize;
+
+                    // Build list of [start, end) intervals already covered (section-local coords).
+                    List<(long Start, long End)> covered = new List<(long, long)>();
+
+                    foreach (ISectionItem item in section.Items)
+                    {
+                        if (item.File != null && item.File.FsSize > 0)
+                            covered.Add((item.File.FsOffset, item.File.FsOffset + item.File.FsSize));
+                        if (item.Gap != null && item.Gap.FsSize > 0)
+                            covered.Add((item.Gap.FsOffset, item.Gap.FsOffset + item.Gap.FsSize));
+                    }
+                    foreach (GapRange gr in storedRanges)
+                        covered.Add((gr.FsOffset, gr.FsOffset + gr.Size));
+
+                    // Sort and merge covered intervals
+                    covered.Sort((a, b) => a.Start.CompareTo(b.Start));
+                    List<(long Start, long End)> mergedCov = new List<(long, long)>();
+                    foreach ((long s, long e) in covered)
+                    {
+                        if (mergedCov.Count > 0 && s <= mergedCov[mergedCov.Count - 1].End)
+                            mergedCov[mergedCov.Count - 1] = (mergedCov[mergedCov.Count - 1].Start, Math.Max(mergedCov[mergedCov.Count - 1].End, e));
+                        else
+                            mergedCov.Add((s, e));
+                    }
+
+                    // Walk coverage to find uncovered gaps within [0, secFsSize)
+                    long cursor = 0;
+                    foreach ((long s, long e) in mergedCov)
+                    {
+                        if (s > cursor)
+                        {
+                            // Uncovered range [cursor, s) — store only if it has non-zero user data
+                            long relOffset = cursor;
+                            int gapFsSize = (int)(s - cursor);
+                            bool hasData = false;
+                            byte[] raw = section.Decrypted;
+                            int rawSect = (int)(relOffset / ai.BlockFsSize);
+                            int rawSectCount = (gapFsSize + ai.BlockFsSize - 1) / ai.BlockFsSize;
+                            for (int sIdx = rawSect; sIdx < rawSect + rawSectCount && !hasData; sIdx++)
+                            {
+                                int sectorBase = sIdx * blockSize + ai.BlockFsOffset;
+                                int dataLen = Math.Min(ai.BlockFsSize, (int)section.Size - sIdx * blockSize - ai.BlockFsOffset);
+                                for (int bi = sectorBase; bi < sectorBase + dataLen && !hasData; bi++)
+                                    hasData = bi < raw.Length && raw[bi] != 0;
+                            }
+                            if (hasData)
+                            {
+                                long imageOffset = section.ImageOffset + stride.CleanToOffset(relOffset, false);
+                                Stream writeStream = BeginFileWrite(imageOffset, BlockType.Other, stride);
+                                section.Read((int)relOffset, gapFsSize, writeStream);
+                                FinalizeFileWrite(imageOffset, writeStream);
+                            }
+                        }
+                        cursor = Math.Max(cursor, e);
+                    }
+                    // Trailing uncovered range [cursor, secFsSize)
+                    if (cursor < secFsSize)
+                    {
+                        long relOffset = cursor;
+                        int gapFsSize = (int)(secFsSize - cursor);
+                        bool hasData = false;
+                        byte[] raw = section.Decrypted;
+                        int rawSect = (int)(relOffset / ai.BlockFsSize);
+                        int rawSectCount = (gapFsSize + ai.BlockFsSize - 1) / ai.BlockFsSize;
+                        for (int sIdx = rawSect; sIdx < rawSect + rawSectCount && !hasData; sIdx++)
+                        {
+                            int sectorBase = sIdx * blockSize + ai.BlockFsOffset;
+                            int dataLen = Math.Min(ai.BlockFsSize, (int)section.Size - sIdx * blockSize - ai.BlockFsOffset);
+                            for (int bi = sectorBase; bi < sectorBase + dataLen && !hasData; bi++)
+                                hasData = bi < raw.Length && raw[bi] != 0;
+                        }
+                        if (hasData)
+                        {
+                            long imageOffset = section.ImageOffset + stride.CleanToOffset(relOffset, false);
+                            Stream writeStream = BeginFileWrite(imageOffset, BlockType.Other, stride);
+                            section.Read((int)relOffset, gapFsSize, writeStream);
+                            FinalizeFileWrite(imageOffset, writeStream);
+                        }
+                    }
                 }
             }
             else if (section.Type == AreaType.Audio)
