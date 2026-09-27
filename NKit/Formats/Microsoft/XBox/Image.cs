@@ -127,7 +127,7 @@ namespace Nanook.NKit.Microsoft.XBox
 
             int xgdType = Array.IndexOf(Consts.REDUMP_ISO_LENGTH, _iso.Size);
 
-            int waveType = (xgdType != 4 && xgdType != 6) ? -1 : Array.IndexOf(Consts.WAVE_PVD, pvdObj.PvdCreationDate.ReadString(0, 0x10));
+            int waveType = (xgdType != 5 && xgdType != 7) ? -1 : Array.IndexOf(Consts.WAVE_PVD, pvdObj.PvdCreationDate.ReadString(0, 0x10));
             _fullImage = xgdType >= 0;
             int videoType = !_fullImage ? -1 : getVideoType(xgdType, waveType);
             long l0Length = videoType == -1 ? -1 : Consts.VIDEO_L0_LENGTH[videoType];
