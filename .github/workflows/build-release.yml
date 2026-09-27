@@ -329,52 +329,18 @@ jobs:
     permissions:
       contents: write
     steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        merge-multiple: true
-        path: artifacts
-
-    - name: Generate release info
-      id: release_info
-      run: |
-        if [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          # Clean stable semver tag (e.g. v3.0.0): full release, marked latest.
-          echo "is_prerelease=false" >> $GITHUB_OUTPUT
-          echo "make_latest=true" >> $GITHUB_OUTPUT
-          echo "release_name=NKit ${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-        elif [[ "${{ github.ref_type }}" == "tag" && "${{ github.ref_name }}" =~ ^v ]]; then
-          # Pre-release semver tag (e.g. v3.0.0-alpha.1, v3.0.0-rc.2): flagged prerelease, not latest.
-          echo "is_prerelease=true" >> $GITHUB_OUTPUT
-          echo "make_latest=false" >> $GITHUB_OUTPUT
-          echo "release_name=NKit ${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-        else
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          SHORT_SHA="${{ github.sha }}"
-          SHORT_SHA="${SHORT_SHA:0:7}"
-          BRANCH_NAME="${{ github.ref_name }}"
-          CLEAN_BRANCH_NAME=$(echo "${BRANCH_NAME}" | sed 's/\//-/g')
-
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            TAG_NAME="dev-manual-${CLEAN_BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
-          else
-            TAG_NAME="dev-${CLEAN_BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
-          fi
-
-          echo "is_prerelease=true" >> $GITHUB_OUTPUT
-          echo "make_latest=false" >> $GITHUB_OUTPUT
-          echo "release_name=NKit Development Build - ${BRANCH_NAME} (${SHORT_SHA})" >> $GITHUB_OUTPUT
-          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
-        fi
-
     - name: Checkout repository for release notes
       uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref || github.ref }}
         sparse-checkout: RELEASE_NOTES.md
         sparse-checkout-cone-mode: false
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        merge-multiple: true
+        path: artifacts
 
     - name: Prepare release body
       id: release_body
@@ -391,13 +357,7 @@ jobs:
         echo "body_path=release_body.md" >> $GITHUB_OUTPUT
 
     - name: Flatten artifacts to working dir
-      run: |
-        echo "=== Artifact directory contents ==="
-        find artifacts -type f | sort
-        echo "=== Moving zips ==="
-        find artifacts -name 'NKit_*.zip' -exec mv -v {} . \;
-        echo "=== Zips in working dir ==="
-        ls -la NKit_*.zip 2>/dev/null || echo "No NKit_*.zip found"
+      run: find artifacts -name 'NKit_*.zip' -exec mv {} . \;
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
