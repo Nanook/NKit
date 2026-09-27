@@ -360,6 +360,7 @@ jobs:
       run: find artifacts -name 'NKit_*.zip' -exec mv {} . \;
 
     - name: Create Release
+      id: create_release
       uses: softprops/action-gh-release@v2
       with:
         files: 'NKit_*.zip'
@@ -370,3 +371,19 @@ jobs:
         name: ${{ steps.release_info.outputs.release_name }}
         tag_name: ${{ steps.release_info.outputs.tag_name }}
         body_path: ${{ steps.release_body.outputs.body_path }}
+
+    - name: Notify Discord
+      if: steps.release_info.outputs.is_prerelease == 'false'
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL_RELEASES }}
+      run: |
+        curl -s -X POST "$DISCORD_WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "NKit ${{ github.ref_name }} released",
+              "url": "${{ steps.create_release.outputs.url }}",
+              "color": 5814783,
+              "description": "A new stable release is available.\n\n[Download NKit ${{ github.ref_name }}](${{ steps.create_release.outputs.url }})"
+            }]
+          }'
