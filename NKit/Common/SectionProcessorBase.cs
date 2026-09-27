@@ -168,11 +168,15 @@ namespace Nanook.NKit
                     ? lastFile.PostGapFsOffset + lastFile.PostGapSize
                     : lastFile.FsOffset + lastFile.FsSize;
                 long sectionFsEnd = areaFs + this.FsSize;
-                long trailingGapSize = sectionFsEnd - lastFileEnd;
+                // Clip lastFileEnd to sectionFsEnd: the post-gap of the last file may extend well
+                // beyond this section (e.g. the final FST file's post-gap covers the rest of the disc).
+                // We only care about the gap that falls within THIS section.
+                long effectiveLastFileEnd = Math.Min(lastFileEnd, sectionFsEnd);
+                long trailingGapSize = sectionFsEnd - effectiveLastFileEnd;
                 if (trailingGapSize > 0)
                 {
                     SectionItem gp = new SectionItem(ImageOffset, AreaOffset, areaFsBase, lastFile);
-                    _buffer.TestFsRange(lastFileEnd - areaFsBase, trailingGapSize, rr);
+                    _buffer.TestFsRange(effectiveLastFileEnd - areaFsBase, trailingGapSize, rr);
                     if (rr.IsMatch && rr.Size != 0)
                         gp.Gap = new SectionData(this.ImageOffset, this.AreaInfo, rr.BufferOffset, rr.Size) { OffsetInItem = rr.RangeOffset };
                     Items.Add(gp);
@@ -247,11 +251,15 @@ namespace Nanook.NKit
                     ? lastFile.PostGapFsOffset + lastFile.PostGapSize
                     : lastFile.FsOffset + lastFile.FsSize;
                 long sectionFsEnd = areaFs + this.FsSize;
-                long trailingGapSize = sectionFsEnd - lastFileEnd;
+                // Clip lastFileEnd to sectionFsEnd: the post-gap of the last file may extend well
+                // beyond this section (e.g. the final FST file's post-gap covers the rest of the disc).
+                // We only care about the gap that falls within THIS section.
+                long effectiveLastFileEnd = Math.Min(lastFileEnd, sectionFsEnd);
+                long trailingGapSize = sectionFsEnd - effectiveLastFileEnd;
                 if (trailingGapSize > 0)
                 {
                     SectionItem gp = new SectionItem(ImageOffset, AreaOffset, areaFsBase, lastFile);
-                    _buffer.TestFsRange(lastFileEnd - areaFsBase, trailingGapSize, rr);
+                    _buffer.TestFsRange(effectiveLastFileEnd - areaFsBase, trailingGapSize, rr);
                     if (rr.IsMatch && rr.Size != 0)
                         gp.Gap = new SectionData(this.ImageOffset, this.AreaInfo, rr.BufferOffset, rr.Size) { OffsetInItem = rr.RangeOffset };
                     Items.Add(gp);
