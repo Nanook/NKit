@@ -403,14 +403,7 @@ debug-mac.sh
 transferring
 CACHED
 
-# Personal dev config — never ship
+# Personal dev — never ship
 NKitApp/nkit-dev.yaml
 NKit.UI/nkit-ui-dev.yaml
-
-
-# Visual Studio launch settings contain personal machine paths — never ship
 **/Properties/launchSettings.json
-
-# Sub-project solution files — use NKit.slnx only
-Tmds.Fuse/Tmds.Fuse.sln
-XboxKit/XboxKit.sln

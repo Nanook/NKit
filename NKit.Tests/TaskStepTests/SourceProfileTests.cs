@@ -154,6 +154,32 @@ namespace NKit.Tests.Engine.Output
         [InlineData("a/b/c", true, "b")]        // >1 slash: folder-index = part[1] (matches old Split[1])
         public void DualFormat_For_TargetsCorrectHalf(string configString, bool isFolderIndex, string expected) => Assert.Equal(expected, DualFormat.Parse(configString).For(isFolderIndex));
 
+        // ---- FolderFormat srcType ----
+
+        [Fact] // Real .wua file in Convert mode → srcType "folderformat"
+        public void From_SrcType_FolderFormat_RealWua()
+        {
+            SourceFile wua = TaskStepsShared.CreateSourceFile(".wua", false, false, isFolderFormat: true);
+            SourceProfile p = SourceProfile.From(TaskType.Convert, SystemType.WiiU, wua, plain(), settingsFor(SystemType.WiiU, "loadiine"));
+            Assert.Equal("folderformat", p.SrcType);
+        }
+
+        [Fact] // Loadiine synthetic (IsFolderFormat=true) in Convert mode → srcType "folderformat"
+        public void From_SrcType_FolderFormat_LoadiineSynthetic()
+        {
+            SourceFile loadiine = TaskStepsShared.CreateSourceFile(".loadiine", false, false, isFolderFormat: true);
+            SourceProfile p = SourceProfile.From(TaskType.Convert, SystemType.WiiU, loadiine, plain(), settingsFor(SystemType.WiiU, "wua"));
+            Assert.Equal("folderformat", p.SrcType);
+        }
+
+        [Fact] // Real .wua file in Dedupe mode → srcType "image" (not folderformat)
+        public void From_SrcType_NotFolderFormat_WuaDedupe()
+        {
+            SourceFile wua = TaskStepsShared.CreateSourceFile(".wua", false, false, isFolderFormat: true);
+            SourceProfile p = SourceProfile.From(TaskType.Dedupe, SystemType.WiiU, wua, plain(), settingsFor(SystemType.WiiU));
+            Assert.Equal("image", p.SrcType); // dedupe routes through normal image path
+        }
+
         // ---- resolveVerifyMethod (#3, derived not substituted) ----
 
         [Theory]

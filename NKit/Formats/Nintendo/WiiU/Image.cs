@@ -146,7 +146,18 @@ namespace Nanook.NKit.Nintendo.WiiU
                         byte[] probeKey = WiiUSecurityContext.GetActiveEncryptionKey(_fsInfo?.Type ?? PartitionType.Game, true, null, si.KeyTitle);
                         byte[] probeDec = WiiUSecurity.DecryptFst(idxFst, null, 16, probeKey);
                         if (Encoding.ASCII.GetString(probeDec, 0, 3) != "FST")
-                            _header.EncryptedNoKeyMode = true; // raw system binary — store as-is
+                        {
+                            // Fallback: try an all-zeros title key. This covers test/homebrew titles
+                            // that were intentionally packed with a zero key (no real common-key
+                            // dependency) — their ticket encrypts zeros with the common key, and the
+                            // content is encrypted with the raw zero key directly.
+                            byte[] zeroKey = new byte[0x10];
+                            byte[] zeroProbe = WiiUSecurity.DecryptFst(idxFst, null, 16, zeroKey);
+                            if (Encoding.ASCII.GetString(zeroProbe, 0, 3) == "FST")
+                                si.KeyTitle = zeroKey; // use zeros for the rest of the session
+                            else
+                                _header.EncryptedNoKeyMode = true; // raw system binary — store as-is
+                        }
                     }
                 }
 
@@ -202,7 +213,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                 _fsInfo = new FileSystemInfo(0, Size, _header, _header.SiData[0], idxFstSize);
 
             _info.SourceAreas = _areas?.ToArray();
-            _info.IsFolderIndex = false;
+            _info.IsFolderIndex = _isIdx; // TmdApp (CDN) has one content file per area — treat as folder-index
 
             // [In] Detail: reader identity + resolved geometry (once per image).
             ILogScope inScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
@@ -818,7 +829,9 @@ namespace Nanook.NKit.Nintendo.WiiU
                 if (_areas == null)
                     _areas = new List<IImageArea>();
 
-                ContentHeader[] headers = fsInfo.FstBlock.ContentHeaders.Where(h => h.Size > 0).OrderBy(h => h.ImageOffset).ToArray();
+                ContentHeader[] headers = fsInfo.FstBlock.ContentHeaders
+                    .Where(h => _isIdx ? h.Size > 0 : h.FsSize > 0)  // CDN uses Size (from IndexFile); disc uses FsSize (from FST)
+                    .OrderBy(h => h.ImageOffset).ToArray();
                 for (int hi = 0; hi < headers.Length; hi++)
                 {
                     ContentHeader h = headers[hi];

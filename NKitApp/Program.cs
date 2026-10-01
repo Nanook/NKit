@@ -191,9 +191,8 @@ namespace Nanook.NKit.App
                 }
                 if (settings?.In?.Length != 0)
                 {
-                    List<SourceFile> images = settings.TaskType == TaskType.Dedupe
-                        ? SourceFiles.ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token)
-                        : SourceFiles.Scan(settings.In, settings.R, settings.Arc, true, log, cancel.Token).OrderBy(a => a.Name).ToList();
+                    List<SourceFile> images = SourceFiles.ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token,
+                        allowRealFolderFormat: settings.TaskType == TaskType.Convert);
 
                     if (log.FileWriteError)
                     {

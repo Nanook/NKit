@@ -182,14 +182,17 @@ namespace Nanook.NKit
                 context.Items.TryGetValue("SectorPaddingPack", out object packObj);
                 byte[] packData = packObj as byte[];
 
-                // PHASE 1: Apply subheader + extended user data from pack BEFORE ReconstructEcc.
-                // This is critical because EDC/ECC computation for Mode2 sectors includes the
-                // subheader bytes (offset 0x10) and extended user data (offset 0x818 for Form2).
-                // Without this, ReconstructEcc would compute EDC over zeros instead of actual subheader.
+                // Pre-pass: read the pack to get sector types (needed before ReconstructPrefix
+                // so we know Form1 vs Form2 for each sector). Do NOT apply subheader yet —
+                // ReconstructPrefix overwrites [0x10-0x13] by mirroring [0x14-0x17], so we must
+                // apply the subheader AFTER ReconstructPrefix but BEFORE ReconstructEcc.
                 SectorFlags?[] sectorTypes = null;
+                int[] subheaderPositions = null;
+                int[] extDataPositions = null;
                 if (packData != null)
                 {
-                    SectorPaddingUnpacker.UnpackPreEcc(packData, buffer, 0, sectorCount, out sectorTypes);
+                    SectorPaddingUnpacker.ReadSectorTypesAndPositions(packData, sectorCount,
+                        out sectorTypes, out subheaderPositions, out extDataPositions);
                 }
 
                 // Regenerate sync, MSF, mode, EDC, and ECC for each sector
@@ -200,16 +203,13 @@ namespace Nanook.NKit
                     // Compute sector LBA: areaPhysicalOffset + (bufferPositionWithinArea / blockSize)
                     long sectorLba = areaContext.PhysicalOffset + ((areaOffset + sectorOffset) / 0x930);
 
-                    // Determine sector mode. If we have pack data with sector type info, use that
-                    // (more reliable since the buffer may not have subheader bytes for Form detection).
-                    // Otherwise fall back to buffer inspection.
+                    // Determine sector mode from pack flags (authoritative) or fallback.
                     bool isMode1;
                     bool isMode2Form1 = false;
                     bool isMode2Form2 = false;
 
                     if (sectorTypes != null && sectorTypes[i].HasValue)
                     {
-                        // Use sector type from pack flags (authoritative)
                         SectorFlags type = sectorTypes[i].Value & SectorFlags.TypeMask;
                         isMode1 = type == SectorFlags.Mode1;
                         isMode2Form1 = type == SectorFlags.Mode2Form1;
@@ -221,31 +221,33 @@ namespace Nanook.NKit
                     }
                     else
                     {
-                        // For Mode2 sectors without pack info, check the subheader
-                        // (after pre-ECC phase, subheader should be populated if it was in the pack)
                         isMode1 = false;
                         byte subMode = buffer[sectorOffset + 0x12];
                         isMode2Form2 = (subMode & 0x20) != 0;
                         isMode2Form1 = !isMode2Form2;
                     }
 
-                    // Regenerate sync pattern and MSF header
+                    // Step 1: Regenerate sync + MSF + mode.
+                    // For Mode2, this copies [0x14-0x17] into [0x10-0x13] (subheader mirror).
                     Ecm.ReconstructPrefix(buffer, sectorOffset, isMode1, sectorLba);
 
-                    // Regenerate EDC and ECC (now with correct subheader/ext data in buffer)
+                    // Step 2: Apply non-standard subheader and extended user data from pack,
+                    // AFTER ReconstructPrefix so the mirror copy doesn't overwrite them.
+                    // EDC/ECC computation below uses these bytes, so they must be in place first.
+                    if (packData != null && subheaderPositions != null)
+                    {
+                        SectorPaddingUnpacker.ApplySubheaderAndExtData(packData, buffer, sectorOffset,
+                            subheaderPositions[i], extDataPositions[i]);
+                    }
+
+                    // Step 3: Regenerate EDC and ECC with correct subheader/ext data in place.
                     if (isMode1 || isMode2Form1)
-                    {
                         Ecm.ReconstructEcc(buffer, sectorOffset, isMode1, isMode2Form1, isMode2Form2);
-                    }
                     else if (isMode2Form2)
-                    {
                         Ecm.ReconstructEcc(buffer, sectorOffset, false, false, true);
-                    }
                 }
 
-                // PHASE 2: Apply non-standard sync, MSF, EDC, ECC from pack AFTER ReconstructEcc.
-                // This overwrites the computed values with the actual non-standard bytes for
-                // sectors with copy protection or intentional errors.
+                // Phase 2: Apply non-standard sync, MSF, EDC, ECC from pack AFTER ReconstructEcc.
                 if (packData != null)
                 {
                     SectorPaddingUnpacker.UnpackPostEcc(packData, buffer, 0, sectorCount);

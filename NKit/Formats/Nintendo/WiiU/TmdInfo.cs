@@ -108,17 +108,14 @@ namespace Nanook.NKit.Nintendo.WiiU
             byte[] tik = new byte[0x350];
             tik.WriteUInt16B(0x0, 0x1);
             tik.WriteUInt16B(0x2, 0x4);
-            for (int i = 0x4; i < 0x104; i += 8)
-                tik.WriteUInt64B(i, 0xD15EA5ED15ABE11Aul);
+            // Signature bytes 0x004..0x103 left as zeros — standard fake-sign convention.
+            // RSA(0, e, n) = 0, producing null bytes that trigger FakeSigned detection.
             tik.WriteString(WiiUConsts.TicketIssuerOffset, WiiUConsts.TicketIssuer.Length, issuer);
-            for (int i = 0x180; i < 0x1BC; i += 4)
-                tik.WriteUInt32B(i, 0xFEEDFACEu);
+            // 0x180..0x1BB: ECC public key / server padding — zeros in all retail and fake-signed tickets.
             tik.Write8(0x1bc, 1);
 
             tik.WriteUInt64B(WiiUConsts.TicketTitleIdOffset, titleId);
-            byte[] iv = new byte[0x10];
-            iv.WriteUInt64B(0, titleId);
-            key = (byte[])key.Clone(); //don't mofify the existing key
+            key = (byte[])key.Clone(); //don't modify the existing key
             tik.Write(WiiUConsts.TicketKeyOffset, key);
 
             tik.WriteUInt16B(0x220, 0x1);
@@ -133,8 +130,8 @@ namespace Nanook.NKit.Nintendo.WiiU
             tik.WriteUInt16B(0x2C2, 0x84);
             tik.WriteUInt16B(0x2C6, 0x84);
             tik.WriteUInt16B(0x2C8, 0x3);
-            for (int i = 0x2D0; i < 0x2F0; i += 4)
-                tik.WriteUInt32B(i, 0xFFFFFFFFu);
+            // Content access permissions limit: 0x07 at 0x2D0, rest zeros.
+            tik.Write8(0x2D0, 0x07);
 
             return tik;
         }
@@ -181,6 +178,18 @@ namespace Nanook.NKit.Nintendo.WiiU
             }
         }
 
+        /// <summary>
+        /// Derives the deterministic raw (plaintext) title key for a given title ID using the
+        /// same PBKDF2-based derivation that <see cref="GenerateEncryptedKey"/> brute-forces on
+        /// read.  This ensures the encrypted FST written during conversion can be correctly
+        /// recovered by <see cref="GenerateEncryptedKey"/> later.
+        /// </summary>
+        public static byte[] GenerateRawKey(string titleId)
+        {
+            using MD5 md5 = MD5.Create();
+            return genKey(md5, _Data[1], titleId);
+        }
+
         private static byte[] genKey(MD5 md5, string pwd, string titleId)
         {
             byte[] secret = md5.ComputeHash((_Data[0] + titleId.Substring(2, titleId.Length - 2)).HexToBytes());
@@ -195,6 +204,57 @@ namespace Nanook.NKit.Nintendo.WiiU
                 return x.GetBytes(16);
 #endif
         }
+
+        /// <summary>
+        /// Synthesises a minimal WiiU v1 TMD binary with zero content records.
+        /// Used when converting a Loadiine/WUA source that has no existing tmd file.
+        /// The hash fields are left zeroed; <c>WiiUAppTmdBuilder.FinaliseTmd()</c>
+        /// fills them after content encryption.  The RSA signature bytes are zero
+        /// (null-byte fake-sign convention).
+        /// </summary>
+        public static byte[] SynthesiseTmd(ulong titleId, int titleVersion = 0, int contentCount = 0,
+            ulong sysVersion = 0, ushort groupId = 0)
+        {
+            int contentItemLen = 0x30;
+            int totalLen       = 0xB04 + contentCount * contentItemLen;
+            byte[] tmd = new byte[totalLen];
+
+            tmd.WriteUInt32B(0x000, 0x00010004u);  // sig type RSA-2048 SHA-256 (sig bytes stay 0)
+            byte[] issuer = Encoding.ASCII.GetBytes(CommonIssuer);
+            Array.Copy(issuer, 0, tmd, 0x140, issuer.Length);
+
+            tmd[0x180] = 1;                                   // version = 1 (WiiU)
+            tmd.WriteUInt64B(0x184, sysVersion);              // system version (OS requirement)
+            tmd.WriteUInt64B(0x18C, titleId);                 // title ID
+            tmd.WriteUInt32B(0x194, 0x00000100u);             // title type (WiiU application)
+            tmd.WriteUInt16B(0x198, groupId);                 // group ID
+            tmd.WriteUInt16B(0x1DC, (ushort)titleVersion);    // title version
+            tmd.WriteUInt16B(0x1DE, (ushort)contentCount);    // content count
+            tmd.WriteUInt16B(0x1E0, 0);                       // boot content index = 0 (FST)
+            // ContentInfo group 0 at 0x204: offset=0, count=contentCount
+            tmd.WriteUInt16B(0x206, (ushort)contentCount);
+
+            return tmd;
+        }
+
+        /// <summary>
+        /// Writes the ContentID, Index, Type and Size fields for a content record into a
+        /// synthesised TMD.  Must be called for each content after <see cref="SynthesiseTmd"/>
+        /// and before <see cref="WiiUAppTmdBuilder.FinaliseTmd"/> (which fills the hash fields).
+        /// Type: 0x0001 = hashless, 0x0002 = hashed (disc-based content uses 0x2001/0x2003
+        /// but NUS standard is 0x0001/0x0002 — use the disc-format flags for authenticity).
+        /// </summary>
+        public static void WriteContentRecord(byte[] tmd, int recordIndex, uint contentId, int contentIdx, ushort contentType, long size)
+        {
+            int off = 0xB04 + recordIndex * 0x30;
+            tmd.WriteUInt32B(off + 0x00, contentId);
+            tmd.WriteUInt16B(off + 0x04, (ushort)contentIdx);
+            tmd.WriteUInt16B(off + 0x06, contentType);
+            tmd.WriteUInt64B(off + 0x08, (ulong)size);
+            // Hash at off+0x10 is left zeros — FinaliseTmd fills it
+        }
+
+        private static readonly string CommonIssuer = WiiUConsts.CommonIssuer;
 
     }
 }

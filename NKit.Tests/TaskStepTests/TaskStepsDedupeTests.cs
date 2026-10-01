@@ -1451,6 +1451,50 @@ namespace NKit.Tests.Engine.Output
         [InlineData("018", "wiiu", ".nkds", "ds", "", "datLookup", true, true, true, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
         public void DedupeWiiu_Nkds(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => dedupeTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
         #endregion
+        #region DedupeWiiU_Wua
+        [Theory]
+        [InlineData("001", "wiiu", ".wua", "folderformat", "", "n",         false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("002", "wiiu", ".wua", "folderformat", "", "n",         false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("003", "wiiu", ".wua", "folderformat", "", "n",         false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("004", "wiiu", ".wua", "folderformat", "", "n",         true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("005", "wiiu", ".wua", "folderformat", "", "n",         true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("006", "wiiu", ".wua", "folderformat", "", "n",         true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("007", "wiiu", ".wua", "folderformat", "", "y",         false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("008", "wiiu", ".wua", "folderformat", "", "y",         false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".wua", "folderformat", "", "y",         false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".wua", "folderformat", "", "y",         true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".wua", "folderformat", "", "y",         true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".wua", "folderformat", "", "y",         true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".wua", "folderformat", "", "datLookup", false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("014", "wiiu", ".wua", "folderformat", "", "datLookup", false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".wua", "folderformat", "", "datLookup", false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".wua", "folderformat", "", "datLookup", true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("017", "wiiu", ".wua", "folderformat", "", "datLookup", true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".wua", "folderformat", "", "datLookup", true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        public void DedupeWiiU_Wua(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => dedupeTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
+        #region DedupeWiiU_Loadiine
+        [Theory]
+        [InlineData("001", "wiiu", ".loadiine", "folderformat", "", "n",         false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("002", "wiiu", ".loadiine", "folderformat", "", "n",         false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("003", "wiiu", ".loadiine", "folderformat", "", "n",         false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("004", "wiiu", ".loadiine", "folderformat", "", "n",         true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("005", "wiiu", ".loadiine", "folderformat", "", "n",         true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("006", "wiiu", ".loadiine", "folderformat", "", "n",         true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)")]
+        [InlineData("007", "wiiu", ".loadiine", "folderformat", "", "y",         false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("008", "wiiu", ".loadiine", "folderformat", "", "y",         false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".loadiine", "folderformat", "", "y",         false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".loadiine", "folderformat", "", "y",         true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".loadiine", "folderformat", "", "y",         true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".loadiine", "folderformat", "", "y",         true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".loadiine", "folderformat", "", "datLookup", false, false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("014", "wiiu", ".loadiine", "folderformat", "", "datLookup", false, true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".loadiine", "folderformat", "", "datLookup", false, true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".loadiine", "folderformat", "", "datLookup", true,  false, false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("017", "wiiu", ".loadiine", "folderformat", "", "datLookup", true,  true,  false, "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".loadiine", "folderformat", "", "datLookup", true,  true,  true,  "", "filestore", "Dedupe-Image(M,V:NoVerify,C:DedupeStep)|Verify-Image(V:DataStore [XxHash+Crc32],C:ScanStep)")]
+        public void DedupeWiiU_Loadiine(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => dedupeTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
 
         private void dedupeTest(string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString)
         {

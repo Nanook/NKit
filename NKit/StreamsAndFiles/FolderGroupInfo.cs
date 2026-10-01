@@ -48,6 +48,18 @@ namespace Nanook.NKit
         /// archive for enumerating extra files. Null when IsArchived is false.
         /// </summary>
         public SourceFileItem[] ArchiveFiles { get; set; }
+        /// <summary>
+        /// True when this group is a WUA file or Loadiine folder — sources that are fed
+        /// through <see cref="Containers.FolderFilesAsIso"/> and
+        /// <see cref="Formats.FolderFiles.FolderFilesImage"/> as <c>AreaType.Other</c>
+        /// sections rather than as a disc image with partition tables and an FST.
+        ///
+        /// Currently true for WuaFolder and LoadiineFolder. Adding a new folder-format
+        /// group type here is the only change needed in core routing code.
+        /// </summary>
+        public bool IsFolderFormat =>
+            GroupType == FolderGroupType.WuaFolder ||
+            GroupType == FolderGroupType.LoadiineFolder;
     }
 
     public enum FolderGroupType
@@ -60,5 +72,11 @@ namespace Nanook.NKit
 
         /// <summary>Future: GDI folder with multiple .gdi files.</summary>
         GdiFolder,
+
+        /// <summary>WiiU ZArchive (.wua): a single file containing a Loadiine game folder.</summary>
+        WuaFolder,
+
+        /// <summary>WiiU Loadiine folder on disk: a directory containing code/ + content/ or meta/ subfolders.</summary>
+        LoadiineFolder,
     }
 }

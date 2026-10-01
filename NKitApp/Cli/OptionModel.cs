@@ -221,6 +221,8 @@ namespace Nanook.NKit.App.Cli
                     "  ciso   Wii/GameCube, lossless.   ciso:lossless           e.g. ciso:y\n" +
                     "  wux    WiiU, lossless.           wux (no parameters)\n" +
                     "  apptmd WiiU, lossy app+tmd.      apptmd (no parameters)\n" +
+                    "  loadiine WiiU, lossy Loadiine.   loadiine (no parameters)\n" +
+                    "  wua    WiiU, lossy ZArchive.     wua (no parameters)\n" +
                     "  deciso PS3, decrypted ISO.       deciso (no parameters)\n" +
                     "  cso    compressed (ISO systems). cso:level:blockSize:parallelism   e.g. cso:9:16k:4\n" +
                     "  zso    compressed (ISO systems). zso:level:blockSize:parallelism   (level ignored) e.g. zso::16k:4\n" +
@@ -242,6 +244,8 @@ namespace Nanook.NKit.App.Cli
                     new OptionExample("ciso:y",              "lossless CISO",           "wii", "gamecube"),
                     new OptionExample("wux",                 "WiiU WUX",                "wiiu"),
                     new OptionExample("apptmd",              "WiiU app+tmd (lossy)",    "wiiu"),
+                    new OptionExample("loadiine",            "WiiU Loadiine (lossy)",   "wiiu"),
+                    new OptionExample("wua",                 "WiiU ZArchive (lossy)",   "wiiu"),
                     new OptionExample("deciso",              "PS3 decrypted ISO",       "ps3"),
                     new OptionExample("cso:9:16k:4",         "CSO (compressed ISO)",    "ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
                     new OptionExample("cso:9:16k:4/cue:split","iso + cue (split) — dual","ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),

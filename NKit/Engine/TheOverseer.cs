@@ -90,7 +90,14 @@ namespace Nanook.NKit
                 throw new Exception("Bad Buffer Size");
 
             if (buff.ImageOffset != _lastImageOffset + _lastSize)
-                throw new Exception("Bad ImageOffset");
+            {
+                // WiiU: Other sections (partition gaps) may produce non-contiguous image offsets —
+                // either the gap section itself, or the section immediately following a gap.
+                bool isWiiUGap = _image.Type == ImageType.WiiU &&
+                                 (buff.Type == AreaType.Other || _lastAreaType == AreaType.Other);
+                if (!isWiiUGap)
+                    throw new Exception("Bad ImageOffset");
+            }
 
             if (buff.AreaInfo.ImageOffset != _lastAreaImageOffset && buff.AreaOffset != 0)
                 throw new Exception("Bad Area ImageOffset");

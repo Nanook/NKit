@@ -252,7 +252,9 @@ namespace Nanook.NKit.Steps.Shared
             //check the file/folder outputs are valid
             if (Context.StepInfo.OutputType == OutputType.Image)
             {
-                if (OutStream.ChecksummedFiles.Count != 1)
+                // Only validate file count when checksums are being computed;
+                // when ContractCanCrc/Hash=false, ChecksummedFiles is empty by design.
+                if (Context.StepInfo.CreateOutChecksum && OutStream.ChecksummedFiles.Count != 1)
                     throw new HandledException($"Output type 'Image' expects 1 file");
             }
             else if (Context.StepInfo.OutputType == OutputType.FolderIndex && Context.StepInfo.StepType != TaskType.Scan && Context.StepInfo.StepType != TaskType.Verify)

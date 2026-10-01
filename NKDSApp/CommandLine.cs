@@ -246,7 +246,8 @@ namespace Nanook.NKit.Vfs
                     throw new CommandLineException("No input files were specified.");
 
                 List<SourceFile> images = SourceFiles
-                    .ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token);
+                    .ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token,
+                        allowRealFolderFormat: settings.TaskType == TaskType.Convert);
 
                 if (images.Count == 0)
                 {
@@ -341,15 +342,8 @@ namespace Nanook.NKit.Vfs
                 log = settings.GetLog((message, level) => Console.Write(message));
 
                 List<SourceFile> images = SourceFiles
-                    .ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token);
-
-                if (images.Count == 0)
-                {
-                    Console.WriteLine("No valid images were found.");
-                    return;
-                }
-
-                // 4. Create file router for matching filenames to game entries
+                    .ScanGrouped(settings.In, settings.R, settings.Arc, true, log, cancel.Token,
+                        allowRealFolderFormat: settings.TaskType == TaskType.Convert);
                 FileRouter router = new FileRouter(games);
 
                 Console.WriteLine();

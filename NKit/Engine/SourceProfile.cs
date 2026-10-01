@@ -78,6 +78,15 @@ namespace Nanook.NKit
             configString = DualFormat.Parse(configString).For(isFolderIndex);
 
             string srcType = (isFolderIndex ? OutputType.FolderIndex : OutputType.Image).ToString().ToLower();
+            // FolderFormat sources (WUA file or Loadiine synthetic folder) get a dedicated srcType
+            // so the routing table dispatches to the direct pipeline steps instead of disc-image
+            // steps that would silently receive no matching AreaType sections.
+            // Applies to Convert, Extract and Wipe. All other tasks (Scan, Verify, Fix, Expand,
+            // Dedupe) either work correctly as "image" or are NotSupported — no change needed.
+            bool isFolderFormat = sourceFile?.SyntheticFolderGroup?.IsFolderFormat == true
+                               || sourceFile?.ImageType == SourceImageType.Wua;
+            if (isFolderFormat && (task == TaskType.Convert || task == TaskType.Extract || task == TaskType.Wipe))
+                srcType = "folderformat";
             string config = CalculateConfig(task, system, configString, isGdRom, isFolderIndex, sourceFile);
 
             return new SourceProfile(srcType, config, configString, isGdRom, isDataStore, isFolderIndex);

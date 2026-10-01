@@ -6,6 +6,9 @@ using Xunit;
 
 namespace NKit.Tests.Full.Wiped
 {
+    // Area="Full"/Group="Wiped" are inherited from WipedImageTestsBase; only the per-System trait
+    // is emitted per generated class so tests can be filtered by console system too.
+    [Trait("System", "WiiU")]
     public partial class WipedImage_WiiU_Tests : WipedImageTestsBase
     {
         //Retail     / WUX       / 23.4GiB / Game Partition
@@ -177,7 +180,7 @@ namespace NKit.Tests.Full.Wiped
                 Assert.Equal(extractLines[l++], $"{base.ExtractFileResults[c].Crc:x8}\t{base.ExtractFileResults[c].Size:x}\t/{base.ExtractFileResults[c].FileName.Replace('\\', '/')}");
             for (int c = 0; c < base.ExtractFileDirectories.Length; c++)
                 Assert.Equal(extractLines[l++], base.ExtractFileDirectories[c].Replace('\\', '/'));
-
+            
 
             base.Complete();
         }

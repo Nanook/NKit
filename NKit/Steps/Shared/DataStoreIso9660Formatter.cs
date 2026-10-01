@@ -508,6 +508,11 @@ namespace Nanook.NKit.Steps.Shared
                             section.Read(0, (int)section.FsSize, writeStream);
                             FinalizeFileWrite(imageOffset, writeStream);
                         }
+                        // Always persist sector padding pack for raw sections — even with no FST
+                        // items, the sectors may have non-standard sync/MSF/subheader/EDC/ECC that
+                        // must survive the DataStore round-trip (e.g. all-zero null sectors whose
+                        // headers the reconstruction would otherwise fill with standard patterns).
+                        FinaliseSectionAndPersistBlockPadding(section.ImageOffset, section, true, stride);
                         return;
                     }
 

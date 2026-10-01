@@ -55,7 +55,7 @@ namespace Nanook.NKit
             //[Group 3] index extensions
             _IdxExts = new[] { ".cue", ".gdi", ".tmd" };       //ccd, mds, wiiu tmd
             //[Group 4] image extensions
-            _ImgExts = new[] { ".nkit.iso", ".nkit.gcz", ".iso.dec", ".dec.iso", ".iso", ".xiso", ".360", ".bin", ".raw", ".ciso", ".wbfs", ".gcz", ".gcm", ".wia", ".rvz", ".wud", ".wux", ".cso", ".zso", ".dax", ".jso", ".chd", ".app", ".tik", ".cert", ".h3", ".cetk", "." + NKitTask.ScanExt }; //mdf, sub, ordered for regex matching
+            _ImgExts = new[] { ".nkit.iso", ".nkit.gcz", ".iso.dec", ".dec.iso", ".iso", ".xiso", ".360", ".bin", ".raw", ".ciso", ".wbfs", ".gcz", ".gcm", ".wia", ".rvz", ".wud", ".wux", ".wua", ".cso", ".zso", ".dax", ".jso", ".chd", ".app", ".tik", ".cert", ".h3", ".cetk", "." + NKitTask.ScanExt }; //mdf, sub, ordered for regex matching
             //[Group 5] is split
             string isSplitImage = @"(\.[0-9]{3,})?";           //is split image
             //multipart archives (may or may not include part 1) - aligns to SourceSplitType
@@ -167,7 +167,7 @@ namespace Nanook.NKit
             }
         }
 
-        public static List<SourceFile> ScanGrouped(string[] masks, bool scanSubfolders, bool scanArchives, bool validOnly, ILogScope log, CancellationToken? cancel)
+        public static List<SourceFile> ScanGrouped(string[] masks, bool scanSubfolders, bool scanArchives, bool validOnly, ILogScope log, CancellationToken? cancel, bool allowRealFolderFormat = false)
         {
             List<SourceFile> images = Scan(masks, scanSubfolders, scanArchives, validOnly, log, cancel)
                 .OrderBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
@@ -191,10 +191,52 @@ namespace Nanook.NKit
                 }
             }
 
+            // Force synthetic detection for any FolderFormat source when not in convert mode:
+            //   • A single .wua file needs the WuaFolder synthetic route so it is stored as
+            //     Loadiine content rather than processed as a raw disc image.
+            //   • A single Loadiine directory (code/content/meta) has no image files at all,
+            //     so images is empty, but it still needs the LoadiineFolder synthetic route.
+            // When allowRealFolderFormat=true (Convert task) WUA files are kept as real
+            // SourceFiles for direct conversion. Loadiine directories always need synthetic
+            // detection since they produce no real SourceFile entries regardless of the task.
+            bool hasRealWuaImages = images.Any(sf => sf.ImageType == SourceImageType.Wua);
+            if (!isFolderScan)
+            {
+                if (!allowRealFolderFormat && hasRealWuaImages)
+                    isFolderScan = true;
+                else if (masks.Length == 1)
+                {
+                    string candidatePath = FileMask.CreateLocalMask(masks[0], scanSubfolders).Path;
+                    if (SyntheticSourceDetector.IsLoadiineFolder(candidatePath))
+                        isFolderScan = true;
+                }
+            }
+
             if (isFolderScan)
             {
                 List<FolderGroupInfo> folderGroups = SyntheticSourceDetector.DetectFolderGroups(images);
+
+                // Also detect Loadiine folders on disk (code/content/meta structure without tmd/app files).
+                // Skip when the trigger was a single WUA file (hasRealWuaImages with no dir inputs) —
+                // we don't want to probe the WUA file's parent directory for Loadiine subdirs.
+                bool skipLoadiineScan = hasRealWuaImages && !images.Any(sf => sf.ImageType != SourceImageType.Wua);
+                if (!skipLoadiineScan)
+                {
+                    IEnumerable<string> scanPaths = masks
+                        .Select(m => FileMask.CreateLocalMask(m, scanSubfolders).Path)
+                        .Where(p => System.IO.Directory.Exists(p))
+                        .Distinct(StringComparer.OrdinalIgnoreCase);
+                    List<FolderGroupInfo> loadiineGroups = SyntheticSourceDetector.DetectLoadiineFolders(scanPaths, folderGroups);
+                    folderGroups.AddRange(loadiineGroups);
+                }
+
                 SyntheticSourceFactory.InsertSyntheticSources(images, folderGroups);
+
+                // Remove real FolderFormat sources that have been replaced by their synthetic
+                // counterpart, unless allowRealFolderFormat=true (Convert task keeps them for
+                // direct pipeline conversion, e.g. wua → loadiine, loadiine → wua).
+                if (!allowRealFolderFormat && folderGroups.Any(g => g.IsFolderFormat))
+                    images.RemoveAll(sf => !sf.IsSyntheticFolder && sf.ImageType == SourceImageType.Wua);
             }
             return images;
         }

@@ -50,6 +50,13 @@
         public const int H2Offset = H0Len + H1Len; //0x280;
         public const int H2Full = H0Count * H1Count * H2Count; //256MiB if sectorsize is 0x10000;
 
+        public const int Sha1HashLen = 20;          // SHA-1 output length in bytes
+        public const int HashedChunkSize = 0x10000; // full hashed chunk: hash area + data area
+        public const int HashedDataSize  = 0xFC00;  // plaintext data bytes per hashed chunk
+        public const int FstRecordSize   = 0x20;    // NUS FST header and content record length
+        public const uint FstMagic       = 0x46535400u; // 'FST\0' — NUS FST binary header magic
+        public const int TmdContentInfoHashOffset = 0x1e4; // offset in TMD where content-info SHA-256 is stored
+
         public static byte[] KeyCommon = new byte[] { 0x0B, 0x6C, 0xD8, 0xDE, 0xB9, 0x47, 0x7E, 0x77, 0x0E, 0x17, 0xD1, 0x6E, 0xA3, 0x7E, 0x6A, 0x8A };
         public static byte[] KeyCommonDev = new byte[] { 0xF3, 0x80, 0xC7, 0xF5, 0x98, 0x3B, 0x21, 0xB3, 0x1F, 0x4B, 0x4A, 0x97, 0xD9, 0xAA, 0x4D, 0x26 };
         public static byte[] KeyCommonVWii = new byte[] { 0xEC, 0x63, 0x1B, 0xB2, 0xA0, 0xC5, 0x73, 0x67, 0xFF, 0xCA, 0xEF, 0xEC, 0x12, 0x0B, 0x1E, 0x51 };

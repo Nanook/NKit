@@ -36,6 +36,11 @@ namespace Nanook.NKit
             new[] { "Convert-WiiGc-Lossy",    "wbfs/ciso",                       "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-WiiU-Wux",       "wux",                             "n",      "n",    "y",      "n",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-WiiU-AppTmd",    "apptmd",                          "n",      "n",    "n",      "y",     "n",   "n",      "folderindex", "n",    "n" },
+            new[] { "Convert-WiiU-Loadiine",  "loadiine",                        "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
+            new[] { "Convert-WiiU-Wua",       "wua",                             "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
+            new[] { "Convert-Wua-Loadiine",   "loadiine",                        "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
+            new[] { "Convert-Loadiine-Wua",   "wua",                             "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
+            new[] { "Convert-Folder-AppTmd",    "apptmd",                          "n",      "n",    "y",      "y",     "n",   "n",      "folderindex", "n",    "n" },
             new[] { "Expand-WiiU-AppTmd",     "apptmd",                          "n",      "n",    "n",      "n",     "n",   "y",      "folderindex", "y",    "y" },
             new[] { "Convert-Iso-CsoZso",     "cso/zso",                         "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-Iso-DecIso",     "deciso",                          "n",      "n",    "y",      "n",     "n",   "y",      "image",       "y",    "y" },
@@ -52,6 +57,7 @@ namespace Nanook.NKit
 
             new[] { "Extract-WiiGc",          "folderfiles",                     "n",      "n",    "n",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
             new[] { "Extract-WiiU",           "folderfiles",                     "n",      "n",    "n",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
+            new[] { "Extract-Wua-Loadiine",   "folderfiles",                     "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
             new[] { "Extract-XBox",           "folderfiles",                     "n",      "n",    "n",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
             new[] { "Extract-Iso",            "folderfiles",                     "n",      "n",    "n",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
 
@@ -136,6 +142,8 @@ namespace Nanook.NKit
             new[] { @"Extract-WiiGc            (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wii/gamecube", "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
             //     takes the single-step Extract-WiiGc row above (no Expand-Image-Patch pre-pass).
+            //   wiiu - wua/loadiine folder sources: direct passthrough (AreaType.Other sections)
+            new[] { @"Extract-Wua-Loadiine     (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wiiu",         "folderformat", "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wiiu
             new[] { @"Extract-WiiU             (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wiiu",         _ImgIdx,        "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   xbox — single-step: archived XBox streams from the archive (BufferStream), so
@@ -204,6 +212,16 @@ namespace Nanook.NKit
             new[] { @"Convert-WiiU-Wux         (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         "image",       "wux",                             "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wiiu - apptmd - lossy 
             new[] { @"Convert-WiiU-AppTmd      (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         _ImgIdx,       "apptmd",                          "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   wiiu - loadiine - lossy
+            new[] { @"Convert-WiiU-Loadiine    (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         _ImgIdx,       "loadiine",                        "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   wiiu - wua - lossy
+            new[] { @"Convert-WiiU-Wua         (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         _ImgIdx,       "wua",                             "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   wua source → loadiine folder (ZArchive direct extract, no IAsIso reader needed)
+            new[] { @"Convert-Wua-Loadiine     (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         "folderformat", "loadiine",                      "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   loadiine folder → wua (folder to ZArchive, no IAsIso reader needed)
+            new[] { @"Convert-Loadiine-Wua     (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         "folderformat", "wua",                           "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   wua/loadiine folder → encrypted AppTmd installable (no IAsIso reader needed)
+            new[] { @"Convert-Folder-AppTmd    (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wiiu",         "folderformat", "apptmd",                        "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wiiu - apptmd - not supported
             new[] { @"NotSet-NotSupported      (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:N, del:N)", "Convert",         "wiiu",         "folderindex", "*",                               "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   ps3 - decrypt
@@ -383,6 +401,8 @@ namespace Nanook.NKit
             // WIPE                                                                                               Task,              System,         SrcType,       Config,                            Ptch,  PrmV,            Chk,   Scan,  Dats,  DatItem
             //   Wii/Gc/WiiU
             new[] { @"Wipe-WiiGc               (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Wipe",            "wii/gamecube", "image",       "*",                               "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+            //   wiiu - wua/loadiine folder sources have no disc layout to wipe: not supported
+            new[] { @"NotSet-NotSupported       (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:N, del:N)", "Wipe",            "wiiu",         "folderformat", "*",                              "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Wipe-WiiU                (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Wipe",            "wiiu",         "image",       "*",                               "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Wipe-WiiU-AppTmd         (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Wipe",            "wiiu",         "folderindex", "*",                               "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
@@ -465,7 +485,10 @@ namespace Nanook.NKit
         internal void CreateSteps(IStepsImageInfo imageInfo)
         {
             DatItem datMatch = this.DatManager?.FindByName(this.Steps[0].SourceFile.Name);
-            Scan inScan = this.AppSettings[this.SystemType]?.Lookup.GetNKitScan(this.Steps[0].SourceFile.ImageFiles[0].FileName);
+            // Synthetic folder sources (LoadiineFolder) have no ImageFiles — skip scan lookup
+            Scan inScan = (this.Steps[0].SourceFile.IsSyntheticFolder || (this.Steps[0].SourceFile.ImageFiles?.Length ?? 0) == 0)
+                ? null
+                : this.AppSettings[this.SystemType]?.Lookup.GetNKitScan(this.Steps[0].SourceFile.ImageFiles[0].FileName);
 
             // Normalise ALL source facts once, before the lookup. SourceProfile absorbs the former
             // config-string selection (#1), the dual-format split (#2), and the whole CalculateConfig

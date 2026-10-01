@@ -68,6 +68,10 @@ namespace Nanook.NKit.Nintendo.WiiU
                     if (indexFile != null && indexFile.Items[s.Index].Size < s.Size) //fixed oversized entry in indexed read
                         s.Size = indexFile.Items[s.Index].Size;
 
+                    // CDN layout: FsSize is always 0 in the FST, use the actual .app file size instead
+                    if (indexFile != null && s.Size == 0)
+                        s.Size = indexFile.Items[s.Index].Size;
+
                     s.SizePaddedToBlock = s.Size + (s.Size % s.BlockSize == 0 ? 0 : s.BlockSize - (s.Size % s.BlockSize));
                     s.FsSizePaddedToBlock = Buffer.OffsetToFsOffset(s.SizePaddedToBlock, s.BlockSize, s.BlockFsOffset, s.BlockFsSize);
                     long h2Size = WiiUConsts.H2Full * s.BlockSize;

@@ -65,7 +65,22 @@ namespace Nanook.NKit
                     });
                 }
 
-                // Step 2b: Within each container, find CUE/GDI groups.
+                // Step 2b (WUA): each .wua file becomes a standalone WuaFolder group.
+                // WUA files are self-contained ZArchives with Loadiine content — one image per file.
+                foreach (SourceFile wua in dirGroup.Where(sf => sf.ImageType == SourceImageType.Wua && !sf.IsArchived))
+                {
+                    result.Add(new FolderGroupInfo
+                    {
+                        GroupType    = FolderGroupType.WuaFolder,
+                        BaseName     = wua.Name,
+                        SourceFolder = System.IO.Path.Combine(wua.ImageFiles[0].Path, wua.ImageFiles[0].FileName),
+                        ChildSources = new List<SourceFile> { wua },
+                        SystemType   = SystemType.WiiU,
+                        IsArchived   = false,
+                    });
+                }
+
+                // Step 2c: Within each container, find CUE/GDI groups.
                 // A CueFolder is only created when 2+ CUE or GDI images exist
                 // in the same container (single-image containers are stored standalone).
                 List<SourceFile> cuegdiSources = dirGroup
@@ -97,6 +112,96 @@ namespace Nanook.NKit
             result.Sort((a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.BaseName, b.BaseName));
 
             return result;
+        }
+
+        /// <summary>
+        /// Probes the given scan directories for Loadiine game folders (code/ + content/ or meta/).
+        /// Called from ScanGrouped() after normal scan detection so already-claimed folders
+        /// (those with a tmd or .wua source) are excluded.
+        /// </summary>
+        public static List<FolderGroupInfo> DetectLoadiineFolders(
+            IEnumerable<string> scanPaths,
+            IEnumerable<FolderGroupInfo> alreadyClaimed)
+        {
+            var result = new List<FolderGroupInfo>();
+
+            // Build a set of directories already claimed by other group types
+            var claimedDirs = new System.Collections.Generic.HashSet<string>(
+                alreadyClaimed.Select(g => g.SourceFolder),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (string scanPath in scanPaths)
+            {
+                if (!System.IO.Directory.Exists(scanPath)) continue;
+
+                // Check the scan path itself, then each immediate subdirectory
+                foreach (string candidate in getCandidateDirs(scanPath))
+                {
+                    if (claimedDirs.Contains(candidate)) continue;
+                    if (!IsLoadiineFolder(candidate)) continue;
+
+                    string name = System.IO.Path.GetFileName(
+                        candidate.TrimEnd(System.IO.Path.DirectorySeparatorChar,
+                                          System.IO.Path.AltDirectorySeparatorChar));
+                    if (string.IsNullOrEmpty(name)) continue;
+
+                    result.Add(new FolderGroupInfo
+                    {
+                        GroupType    = FolderGroupType.LoadiineFolder,
+                        BaseName     = name,
+                        SourceFolder = candidate,
+                        ChildSources = new System.Collections.Generic.List<SourceFile>(),
+                        SystemType   = SystemType.WiiU,
+                        IsArchived   = false,
+                    });
+
+                    claimedDirs.Add(candidate); // prevent double-adding
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns directories to probe: the path itself if it looks like a game folder,
+        /// otherwise each immediate subdirectory (for scanning a collection folder).
+        /// </summary>
+        private static System.Collections.Generic.IEnumerable<string> getCandidateDirs(string path)
+        {
+            if (IsLoadiineFolder(path))
+            {
+                yield return path;
+                yield break;
+            }
+            // Walk one level of subdirectories
+            foreach (string sub in System.IO.Directory.EnumerateDirectories(path))
+                yield return sub;
+        }
+
+        /// <summary>
+        /// Returns true if the directory looks like a Loadiine game folder.
+        /// Criterion: has a code/ subdirectory AND at least one of content/ or meta/,
+        /// AND no tmd / tmd.* / .wua file at the top level (to avoid false positives).
+        /// </summary>
+        internal static bool IsLoadiineFolder(string path)
+        {
+            if (!System.IO.Directory.Exists(path)) return false;
+
+            bool hasCode    = System.IO.Directory.Exists(System.IO.Path.Combine(path, "code"));
+            bool hasContent = System.IO.Directory.Exists(System.IO.Path.Combine(path, "content"));
+            bool hasMeta    = System.IO.Directory.Exists(System.IO.Path.Combine(path, "meta"));
+
+            if (!hasCode || (!hasContent && !hasMeta)) return false;
+
+            // Reject if any tmd or .wua file exists — that means it's a TmdApp/WUA source
+            foreach (string f in System.IO.Directory.EnumerateFiles(path))
+            {
+                string fn = System.IO.Path.GetFileName(f).ToLowerInvariant();
+                if (fn.StartsWith("tmd") || fn.EndsWith(".wua"))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
