@@ -11,11 +11,11 @@
 
 ### Bug Fixes
 
-- **PS2 CUE+BIN non-standard sector bytes not restored on verify** — Mode2 sectors with non-standard intermediate bytes (`0x10..0x17`) are now detected, packed and restored correctly during NKDS round-trip
-- **PS2 integer overflow crash on malformed PVD** — FstContext no longer overflows when the PVD reports an unrealistically large sector count; a 64MB cap prevents the crash
-- **PS2 FileSystem directory records overwriting File data** — ImageBuilder now pre-computes File offset ranges and skips FileSystem writes that overlap an already-committed File area, fixing corruption during reconstruction
-- **OffsetsManager BlockPadding stride conversion** — BlockPadding records store raw metadata bytes, not user data, so the stride size conversion must not be applied when building segment intersections. Fixes NKDS verify failures for images with sector padding
-- **BlockWriter threading deadlock and polling** — `WaitAll` replaced a 100 ms polling loop with a `ManualResetEventSlim` event, eliminating both the CPU spin and the theoretical deadlock where `_bufferSemaphore.Wait()` was called while `lockObj` was held. The semaphore is now always acquired after the per-key lock is released
+- **NKDS — PS2 CUE+BIN non-standard sector bytes not restored on verify** — Mode2 sectors with non-standard intermediate bytes are now correctly packed and restored
+- **NKDS — PS2 integer overflow crash on malformed PVD** — a 64MB FST buffer cap prevents a crash on discs with unrealistically large sector counts in the PVD
+- **NKDS — PS2 FileSystem records overwriting File data** — ImageBuilder now skips FileSystem writes that overlap an already-committed File area, fixing reconstruction corruption
+- **NKDS — BlockPadding stride conversion** — BlockPadding records are no longer passed through the stride size conversion, fixing verify failures for images with sector padding
+- **NKDS — BlockWriter threading** — `WaitAll` now uses event signalling instead of a 100 ms polling loop; the semaphore is acquired after the per-key lock is released, removing a potential deadlock
 
 ### Internal
 
