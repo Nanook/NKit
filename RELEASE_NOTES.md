@@ -11,9 +11,9 @@
 
 ### Bug Fixes
 
-- **NKDS — PS2 CUE+BIN non-standard sector bytes not restored on verify** — Mode2 sectors with non-standard intermediate bytes are now correctly packed and restored
-- **NKDS — PS2 integer overflow crash on malformed PVD** — a 64MB FST buffer cap prevents a crash on discs with unrealistically large sector counts in the PVD
-- **NKDS — PS2 FileSystem records overwriting File data** — ImageBuilder now skips FileSystem writes that overlap an already-committed File area, fixing reconstruction corruption
+- **NKDS — ISO9660 non-standard sector bytes not restored on verify** — Mode2 sectors with non-standard intermediate bytes are now correctly packed and restored
+- **NKDS — ISO9660 integer overflow crash on malformed PVD** — a 64MB FST buffer cap prevents a crash on discs with unrealistically large sector counts in the PVD
+- **NKDS — ISO9660 FileSystem records overwriting File data** — ImageBuilder now skips FileSystem writes that overlap an already-committed File area, fixing reconstruction corruption
 - **NKDS — BlockPadding stride conversion** — BlockPadding records are no longer passed through the stride size conversion, fixing verify failures for images with sector padding
 - **NKDS — BlockWriter threading** — `WaitAll` now uses event signalling instead of a 100 ms polling loop; the semaphore is acquired after the per-key lock is released, removing a potential deadlock
 
