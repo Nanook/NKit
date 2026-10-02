@@ -2,12 +2,12 @@
 
 ### New Features
 
-- **WiiU WUA support** — reads and writes WUA (`.wua`) ZArchive images. Convert WUD/WUX to WUA, or WUA back to WUD/WUX/AppTmd. WUA is a lossless compressed ZArchive container that stores decrypted WiiU content in `code/content/meta` layout with a synthetic title key
+- **WiiU WUA support** — reads and writes WUA (`.wua`) ZArchive images. Convert WUD/WUX to WUA, or WUA back to WUD/WUX/AppTmd. WUA is a compressed ZArchive container storing decrypted WiiU content in `code/content/meta` layout
 - **WiiU Loadiine support** — reads Loadiine folder sources (decrypted `code/content/meta` directory tree) and converts to WUA, AppTmd or other WiiU formats
-- **WUA ↔ Loadiine conversion** — bidirectional conversion between WUA and Loadiine formats; both are lossless between each other
-- **WUA/Loadiine → AppTmd conversion** — full re-encryption pipeline converting decrypted WUA or Loadiine content to installable NUS AppTmd packages using hashed/hashless content encryption. Zero raw key used for synthetic titles (verified working on hardware with Cocoto Magic Circus 2 EU)
-- **ZArchive container support** — new `ZArchiveReader`/`ZArchiveWriter` providing full ZArchive read/write pipeline integration
-- **Folder-format pipeline integration** — WUA and Loadiine sources are handled via a unified `IsFolderFormat` abstraction so all NKit tasks (scan, extract, convert, dedupe) work with folder sources
+- **WUA ↔ Loadiine conversion** — bidirectional conversion between WUA and Loadiine formats
+- **WUA/Loadiine → AppTmd conversion** — converts decrypted WUA or Loadiine content to installable NUS AppTmd packages (verified working on hardware with Cocoto Magic Circus 2 EU)
+- **ZArchive container support** — full ZArchive read/write pipeline integration
+- **Folder-format pipeline integration** — WUA and Loadiine sources work with all NKit tasks (scan, extract, convert, dedupe)
 
 ### Bug Fixes
 
@@ -19,10 +19,9 @@
 
 ### Internal
 
-- `WiiUAppTmdBuilder` — FST, TMD, ticket, hashed/hashless content encryption using `WiiUSecurity` per 16-MiB H2 block
-- `WiiUFstBuilder` — WiiU-specific FST serialiser with content table, `sectionNo`/permission derivation
+- `WiiUAppTmdBuilder`, `WiiUFstBuilder` — AppTmd content packaging pipeline
 - `WiiUFileExtractBase` — shared extraction engine for all WiiU source types
-- `FolderFilesAsIso`/`FolderFilesImage` — folder-format `IAsIso` pipeline integration
+- `FolderFilesAsIso`/`FolderFilesImage` — folder-format pipeline integration
 - `InspectWua` and `RepackAppTmd` diagnostic tools added
 
 ---
