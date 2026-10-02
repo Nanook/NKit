@@ -179,9 +179,12 @@ namespace Nanook.NKit
                 //System.Diagnostics.Trace.WriteLine($"{_currentArea.CrcDecrypted:X8} - {_currentArea.Size:X9}");
             }
 
-            section.PatchInfo.PrePatchCrc = section.Crc;
-            section.PatchInfo.PrePatchCrcDecrypted = section.CrcDecrypted;
-            section.PatchInfo.PrePatchXxHash = section.XxHash;
+            if (section.PatchInfo != null)
+            {
+                section.PatchInfo.PrePatchCrc = section.Crc;
+                section.PatchInfo.PrePatchCrcDecrypted = section.CrcDecrypted;
+                section.PatchInfo.PrePatchXxHash = section.XxHash;
+            }
 
             ScanSection sec = new ScanSection(_currentArea)
             {
@@ -200,10 +203,10 @@ namespace Nanook.NKit
                 FsSize = section.FsSize,
                 FileStartIndex = section.FileStartIndex,
                 FileEndIndex = section.FileEndIndex,
-                PatchInfo = section.PatchInfo.Clone()
+                PatchInfo = section.PatchInfo?.Clone()
             };
 
-            if (sec.PatchInfo.MarkForPatching || sec.PatchInfo.MarkForCalculatedData)
+            if (sec.PatchInfo != null && (sec.PatchInfo.MarkForPatching || sec.PatchInfo.MarkForCalculatedData))
             {
                 sec.Data = new byte[section.Decrypted.Length];
                 section.Decrypted.CopyTo(sec.Data, 0);
@@ -212,6 +215,7 @@ namespace Nanook.NKit
             //copy items to array and set filesystem CRCs
             SectionItems items = new SectionItems();
             //ReadOnlyCollection<IFsFile> fs = section.FileSystemData?.FileSystem?.Files;
+            if (section.Items != null)
             foreach (SectionItem item in section.Items)
             {
                 if (item.FsFile != null)
@@ -251,6 +255,8 @@ namespace Nanook.NKit
 
         internal void RecalculatePatchedSectionSingleCrcs(ScanSection section) //file must not have moved. Just content changed
         {
+            if (section.Items == null)
+                return;
             foreach (SectionItem si in section.Items)
             {
                 if (si.FsFile != null)

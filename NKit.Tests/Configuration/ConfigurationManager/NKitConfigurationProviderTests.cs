@@ -44,7 +44,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
         }
 
         [Theory(DisplayName = "Other systems support expected formats")]
-        [InlineData(SystemType.WiiU, new[] { "app", "tmd", "iso", "wux" })]
+        [InlineData(SystemType.WiiU, new[] { "app", "tmd", "iso", "wux", "loadiine", "wua" })]
         [InlineData(SystemType.Dreamcast, new[] { "cue", "gdi" })]
         [InlineData(SystemType.PcEngine, new[] { "cue", "cso", "cso2", "zso", "iso" })]
         public void GetSupportedFormats_OtherSystems_ReturnsExpectedFormats(SystemType systemType, string[] expectedFormats)

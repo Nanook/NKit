@@ -50,6 +50,12 @@ namespace Nanook.NKit
         // detection precedence; each Create returns null when the header does not match.
         private IAsIso createImageContainer(byte[] id, bool canUseCustomChkSum)
         {
+            // Folder-format sources (WUA file, Loadiine synthetic folder) are detected by
+            // SourceFile flags, not magic bytes. They must come first so the ZArchive/folder
+            // reader wins before DefaultAsIso or any other byte-pattern reader.
+            IAsIso folderIso = Nanook.NKit.Container.FolderFilesAsIso.Create(_context.SourceFile, _context.Log);
+            if (folderIso != null) return folderIso;
+
             return NKitAsIso.Create(id) ??
                    WuxAsIso.Create(id) ??
                    TmdAppAsIso.Create(id, _context.SourceFile.IndexFile) ??
@@ -117,7 +123,10 @@ namespace Nanook.NKit
                 //    _cache.SetNewSize(requestedBuffSize);
 
                 //_iso.Read(-1, 0x20 - (int)_iso.Position, _cache); //first 4 bytes of plain iso format has already been read
-                string fileext = _context.SourceFile.ImageFiles[0].Extension.ToLower(); //last resort
+                // Synthetic folder sources (LoadiineFolder) have no ImageFiles — skip file extension detection
+                string fileext = (_context.SourceFile.IsSyntheticFolder || (_context.SourceFile.ImageFiles?.Length ?? 0) == 0)
+                    ? ""
+                    : _context.SourceFile.ImageFiles[0].Extension.ToLower(); //last resort
 
                 if (_iso is NKitAsIso nkitSys && (nkitSys.IsWii || nkitSys.IsGameCube))
                     detectedSystem = nkitSys.IsWii ? SystemType.Wii : SystemType.GameCube;
@@ -176,7 +185,14 @@ namespace Nanook.NKit
                             $"Fix decorator [{_iso.GetType().Name}] wrapping source");
                 }
 
-                if (detectedSystem == SystemType.GameCube)
+                if (_iso is Nanook.NKit.Container.FolderFilesAsIso folderIso)
+                {
+                    // Folder-format source: build a lightweight image that feeds raw file sections.
+                    detectedSystem = SystemType.WiiU; // always WiiU for WUA/Loadiine
+                    _context.SetSystemType(detectedSystem);
+                    Image = new Nanook.NKit.Formats.FolderFiles.FolderFilesImage(_context, folderIso);
+                }
+                else if (detectedSystem == SystemType.GameCube)
                     Image = new Nintendo.WiiGc.Image(_context, _iso, _isoStream, true); //gamecube
                 else if (detectedSystem == SystemType.Wii)
                     Image = new Nintendo.WiiGc.Image(_context, _iso, _isoStream, false);

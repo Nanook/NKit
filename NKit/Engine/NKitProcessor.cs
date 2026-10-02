@@ -1,3 +1,4 @@
+using Nanook.NKit.Dats;
 using NKitDataStore;
 using System;
 using System.IO;
@@ -78,11 +79,32 @@ namespace Nanook.NKit
         //Main processing entry point. It all starts here
         public NKitTaskResults Process()
         {
-            // Early interception for synthetic folder sources
             SourceFile sourceFile = _taskContext.Steps[0].SourceFile;
+
+            // Synthetic folder sources are handled differently by task type and group type:
+            // - TmdAppFolder / WuaFolder: DataStore build operations — Dedupe only.
+            //   For all other task types, skip them silently.
+            // - LoadiineFolder / CueFolder / GdiFolder: for Dedupe → DataStore write.
+            //   For Convert/Extract/Scan → fall through to the normal pipeline.
+            //   FolderFilesAsIso.Create() handles LoadiineFolder synthetic sources in NKitInput.
             if (sourceFile.IsSyntheticFolder)
             {
-                return processSyntheticFolder();
+                FolderGroupType groupType = sourceFile.SyntheticFolderGroup?.GroupType ?? FolderGroupType.TmdAppFolder;
+                bool isDataStoreOnly = groupType == FolderGroupType.TmdAppFolder || groupType == FolderGroupType.WuaFolder;
+
+                if (isDataStoreOnly && _taskContext.AppSettings.TaskType != TaskType.Dedupe)
+                {
+                    // TmdAppFolder/WuaFolder outside Dedupe — skip silently
+                    NKitTask skipTask = new NKitTask(_taskContext);
+                    skipTask.CompleteSkipped(SystemType.WiiU);
+                    return skipTask.Results;
+                }
+
+                if (_taskContext.AppSettings.TaskType == TaskType.Dedupe)
+                    return processSyntheticFolder();
+
+                // Non-Dedupe LoadiineFolder/CueFolder/GdiFolder: fall through to normal pipeline.
+                // NKitInput.createImageContainer → FolderFilesAsIso.Create handles these.
             }
 
             // For TmdApp sources with some missing content, skip only the absent files
@@ -116,7 +138,12 @@ namespace Nanook.NKit
 
                 //open the src image to get the initial details
                 input = new NKitInput(_taskContext.Steps[0]); //reads source format and marks missing/removed blocks of data
-                readStream = _taskContext.Steps[0].SourceFile.OpenFileStream(_taskContext.Log);
+                // Synthetic folder sources (LoadiineFolder) have no image files on disk —
+                // FolderFilesAsIso.Construct() stores the stream but never reads from it,
+                // so pass an empty stream rather than calling OpenFileStream() which requires ImageFiles.
+                readStream = sourceFile.IsSyntheticFolder
+                    ? Stream.Null
+                    : _taskContext.Steps[0].SourceFile.OpenFileStream(_taskContext.Log);
                 SystemType systemType;
 
                 bool customChkCandidate = _taskContext.TaskType == TaskType.Scan || _taskContext.TaskType == TaskType.Verify || _taskContext.TaskType == TaskType.Expand; //need to add check for V=y when we have caching reader
@@ -377,13 +404,28 @@ namespace Nanook.NKit
             SourceFile sf = _taskContext.Steps[0].SourceFile;
             FolderGroupInfo group = sf.SyntheticFolderGroup;
 
-            // Resolve datastore path from settings
-            // Use group.SourceFolder instead of sf.BasePath — synthetic SourceFiles
-            // have null ImageFiles/IndexFile so BasePath would throw
+            // Initialise the task context for this group's system type so that
+            // AppSettings[system].Out and DedupeConfig are populated from overrideParams.
+            _taskContext.Initialise(group.SystemType);
+
+            // Resolve datastore path from settings.
+            // For WuaFolder, group.SourceFolder is the WUA file path — use its parent dir
+            // as the default fallback.
+            string groupDefaultPath = (group.GroupType == FolderGroupType.WuaFolder && File.Exists(group.SourceFolder))
+                ? Path.GetDirectoryName(group.SourceFolder) ?? group.SourceFolder
+                : group.SourceFolder;
             string dedupeDirectory = _taskContext.AppSettings
-                .GetOutFilesPath(null, group.SourceFolder, group.SystemType, TaskType.Dedupe);
-            string setName = _taskContext.AppSettings[group.SystemType]?.DedupeConfig?.SetName
-                ?? group.SystemType.ToString();
+                .GetOutFilesPath(null, groupDefaultPath, group.SystemType, TaskType.Dedupe);
+            // Use the system type as the set name for WuaFolder and LoadiineFolder groups
+            // so they always land in e.g. "WiiU.nkds" regardless of the default DedupeConfig
+            // set name in the user's config. TmdAppFolder groups keep the configured set name
+            // (they share a set with their parent disc images).
+            string setName;
+            if (group.IsFolderFormat)
+                setName = group.SystemType.ToString();
+            else
+                setName = _taskContext.AppSettings[group.SystemType]?.DedupeConfig?.SetName
+                    ?? group.SystemType.ToString();
 
             // Resolve to actual directory if path ends with .nkds
             if (dedupeDirectory.EndsWith(DataStore.DatabaseFileExtension, StringComparison.OrdinalIgnoreCase))

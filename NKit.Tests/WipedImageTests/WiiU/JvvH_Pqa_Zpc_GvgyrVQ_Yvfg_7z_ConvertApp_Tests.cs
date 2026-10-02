@@ -6,6 +6,9 @@ using Xunit;
 
 namespace NKit.Tests.Full.Wiped
 {
+    // Area="Full"/Group="Wiped" are inherited from WipedImageTestsBase; only the per-System trait
+    // is emitted per generated class so tests can be filtered by console system too.
+    [Trait("System", "WiiU")]
     public partial class WipedImage_WiiU_Tests : WipedImageTestsBase
     {
         //Update     / APP       / 284KiB  / tmd.6 Update tmd+cetk files. Multi versions in archive

@@ -139,7 +139,10 @@ namespace Nanook.NKit.Vfs
         {
             ("rvz:zstd:19:128k:16", "Wii/GC — best compression"),
             ("wbfs:y",              "Wii/GC — lossless WBFS"),
-            ("wux",                 "WiiU"),
+            ("wux",                 "WiiU — lossless WUX"),
+            ("apptmd",              "WiiU — lossy app+tmd"),
+            ("loadiine",            "WiiU — lossy Loadiine folder"),
+            ("wua",                 "WiiU — lossy ZArchive (.wua)"),
             ("deciso",              "PS3 decrypted ISO"),
             ("cso:9:16k:4/cue:split","PS2 — iso + cue"),
             ("cue",                 "redump cue/bin (PS1/Saturn/...)"),

@@ -10,7 +10,7 @@ namespace Nanook.NKit
 {
     public enum SourceFileResult { Valid, NoData, IndexOnly, BinRawNoIndex, MissingFile, ArchiveReadError, ArchiveEmpty, ArchiveInArchive, NeedsSeekInArchive }
     public enum SourceArchiveType { None, Zip, Rar, SevenZip, Gzip, DataStore }
-    public enum SourceImageType { Cue, Gdi, NKitIso, NKitGcz, IsoDec, Cdi, DecIso, Iso, XIso, IsoMode1, IsoMode2, Chd, CIso, Wbfs, Gcz, Gcm, Wia, Rvz, Wud, Wux, TmdApp, Sfb, Sfo }
+    public enum SourceImageType { Cue, Gdi, NKitIso, NKitGcz, IsoDec, Cdi, DecIso, Iso, XIso, IsoMode1, IsoMode2, Chd, CIso, Wbfs, Gcz, Gcm, Wia, Rvz, Wud, Wux, Wua, TmdApp, Sfb, Sfo }
 
     /// <summary>
     /// Supports Multiple file archives and split (.001 .002 / wbfs wbf1 etc) files. Split files in archives is not supported. Archives within archives is not supported
@@ -34,7 +34,11 @@ namespace Nanook.NKit
         /// <summary>
         /// Path of file (archive or file)
         /// </summary>
-        public string BasePath => this.IsArchived ? ArchiveFiles[0].Path : (IndexFile?.Path ?? ImageFiles[0].Path);
+        public string BasePath => this.IsArchived ? ArchiveFiles[0].Path
+            : (IndexFile?.Path ?? ImageFiles?.FirstOrDefault()?.Path
+               ?? System.IO.Path.GetDirectoryName(SyntheticFolderGroup?.SourceFolder?.TrimEnd(
+                   System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar))
+               ?? "");
         /// <summary>
         /// File name of archive
         /// </summary>
@@ -169,10 +173,11 @@ namespace Nanook.NKit
                                  (ext == ".wia" ? SourceImageType.Wia :
                                  (ext == ".wud" ? SourceImageType.Wud :
                                  (ext == ".wux" ? SourceImageType.Wux :
+                                 (ext == ".wua" ? SourceImageType.Wua :
                                  (ext == ".dec.iso" ? SourceImageType.DecIso :
                                  (ext == ".chd" ? SourceImageType.Chd :
                                  (ext == ".sfb" ? SourceImageType.Sfb :
-                                                  SourceImageType.Iso))))))))))))));
+                                                  SourceImageType.Iso)))))))))))))));
             }
 
             if (this.ArchiveFiles != null && this.ArchiveFiles.Length != 0)
@@ -400,6 +405,10 @@ namespace Nanook.NKit
         {
             get
             {
+                // Synthetic folder sources have no image files — return the source folder path
+                if (IsSyntheticFolder)
+                    return SyntheticFolderGroup?.SourceFolder ?? Name ?? "";
+
                 StringBuilder sb = new StringBuilder(100);
 
                 if (this.IsArchived)

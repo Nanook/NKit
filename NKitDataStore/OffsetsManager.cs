@@ -1,4 +1,4 @@
-using NKitDataStore.Interfaces;
+﻿using NKitDataStore.Interfaces;
 
 namespace NKitDataStore
 {
@@ -160,8 +160,12 @@ namespace NKitDataStore
                     {
                         long offStartImage = off.Offset; // image offset where this stored data group begins (hashed/image coordinates)
 
-                        // offset.Size is stored data length (fs length) � convert to hashed/image length for intersection math
-                        long offImageLength = stride.GetStridedSize(offStartImage - area.Offset, off.Size, true); // computeHashedLengthForStoredLength(off.Size, area);
+                        // offset.Size is stored data length (fs length) - convert to hashed/image length for intersection math.
+                        // BlockPadding records are raw metadata (not sector-aligned data) and must NOT be stride-converted;
+                        // treat them as having 1:1 image:stored size so they intersect only the section they belong to.
+                        long offImageLength = off.Type == BlockType.BlockPadding
+                            ? off.Size
+                            : stride.GetStridedSize(offStartImage - area.Offset, off.Size, true); // computeHashedLengthForStoredLength(off.Size, area);
                         long offEndImage = offStartImage + offImageLength;
 
                         // find first section index that could intersect
@@ -187,8 +191,8 @@ namespace NKitDataStore
                             if (intersectStartImage < intersectEndImage || off.Size == 0) // allow 0 length
                             {
                                 // compute stored/fs offsets & sizes corresponding to the intersection image-range
-                                long sourceOffsetFs = stride.GetCleanSize(offStartImage - area.Offset, intersectStartImage - offStartImage);
-                                long segSizeFs = stride.GetCleanSize(intersectStartImage - area.Offset, intersectEndImage - intersectStartImage);
+                                long sourceOffsetFs = off.Type == BlockType.BlockPadding ? (intersectStartImage - offStartImage) : stride.GetCleanSize(offStartImage - area.Offset, intersectStartImage - offStartImage);
+                                long segSizeFs = off.Type == BlockType.BlockPadding ? (intersectEndImage - intersectStartImage) : stride.GetCleanSize(intersectStartImage - area.Offset, intersectEndImage - intersectStartImage);
 
                                 OffsetSegment seg = new OffsetSegment
                                 {

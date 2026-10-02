@@ -1546,7 +1546,8 @@ public sealed class NkdsOperations : INkdsOperations
                             : imageName;
 
                         string mask;
-                        if (image.Format == ImageFormat.App || image.Format == ImageFormat.Cdn)
+                        if (image.Format == ImageFormat.App || image.Format == ImageFormat.Cdn
+                            || image.Format == ImageFormat.TmdAppFolder)
                             mask = maskName;
                         else if (image.Format == ImageFormat.Cue || image.Format == ImageFormat.Gdi)
                             mask = maskName + "/" + maskName + "." + imageFormat;
@@ -1944,7 +1945,8 @@ public sealed class NkdsOperations : INkdsOperations
                             : imageName;
 
                         string mask;
-                        if (imageFormatEnum == ImageFormat.App || imageFormatEnum == ImageFormat.Cdn)
+                        if (imageFormatEnum == ImageFormat.App || imageFormatEnum == ImageFormat.Cdn
+                            || imageFormatEnum == ImageFormat.TmdAppFolder)
                             mask = maskName;
                         else if (imageFormatEnum == ImageFormat.Cue || imageFormatEnum == ImageFormat.Gdi)
                             mask = maskName + "/" + maskName + "." + imageFormat;

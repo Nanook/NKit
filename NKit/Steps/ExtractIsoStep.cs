@@ -207,7 +207,7 @@ namespace Nanook.NKit
 
             if (_skippedEncFiles != 0)
                 _context.Log.Info(() => $"Skipped {_skippedEncFiles} Encrypted file{_skippedEncFiles.s()} as no key was found");
-            _context.Log.Info(() => $"Extracted {_extracted} file{_extracted.s()}");
+            Context.Result.ProgressSummary = $"Extracted {_extracted} file{_extracted.s()}";
             base.ProcessResults();
         }
 

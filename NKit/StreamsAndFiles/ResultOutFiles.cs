@@ -52,10 +52,11 @@ namespace Nanook.NKit
             _finalName = finalName;
 
             //ensure no duplicates in outFiles (including folders)
-            if (_stepContext.Result.OutFileParts.GroupBy(f => $"{SourceFiles.CleanseFileName(f.FileName)}").Any(g => g.Count() > 1))
+            if (_stepContext.Result.OutFileParts != null && _stepContext.Result.OutFileParts.GroupBy(f => $"{SourceFiles.CleanseFileName(f.FileName)}").Any(g => g.Count() > 1))
                 throw new HandledException("Some output items have duplicate names");
 
-            this.AddRange(_stepContext.Result.OutFileParts.Select(a => new ResultOutFile((Part)a)));
+            if (_stepContext.Result.OutFileParts != null)
+                this.AddRange(_stepContext.Result.OutFileParts.Select(a => new ResultOutFile((Part)a)));
 
             setUniqueFinalNames();
         }
@@ -137,6 +138,8 @@ namespace Nanook.NKit
             {
                 if (this.OutputType == OutputType.Image || this.OutputType == OutputType.Files)
                 {
+                    if (this.Count == 0)
+                        return; // no temp files to rename (step wrote directly to final path)
                     Directory.CreateDirectory(Path.GetDirectoryName(this[0].FinalName)); //will create scanout folder if this is a scan
                     foreach (ResultOutFile f in this)
                     {

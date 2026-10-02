@@ -73,6 +73,19 @@ namespace Nanook.NKit
                 case "Convert-WiiU-Wux":
                     this.Step = new ConvertWiiUWuxStep(this);
                     break;
+                case "Convert-WiiU-Loadiine":
+                case "Convert-WiiU-Wua":
+                    this.Step = new ConvertWiiULoadiineStep(this);
+                    break;
+                case "Convert-Wua-Loadiine":
+                    this.Step = new ConvertWuaLoadiineStep(this);
+                    break;
+                case "Convert-Loadiine-Wua":
+                    this.Step = new ConvertLoadiineWuaStep(this);
+                    break;
+                case "Convert-Folder-AppTmd":
+                    this.Step = new ConvertFolderAppTmdStep(this);
+                    break;
                 case "Convert-Iso-CsoZso":
                     this.Step = new ConvertIsoCsoZsoStep(this);
                     break;
@@ -134,6 +147,9 @@ namespace Nanook.NKit
                         this.Step = new ExtractForensicStep(this);
                     else
                         this.Step = new ExtractWiiGcStep(this);
+                    break;
+                case "Extract-Wua-Loadiine":
+                    this.Step = new ConvertWuaLoadiineStep(this);
                     break;
                 case "Extract-WiiU":
                     if (stepConfig == ConfigSettingsConstants.ExtractFlagForensic)

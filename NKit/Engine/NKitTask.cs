@@ -130,7 +130,10 @@ namespace Nanook.NKit
                 sf = SourceFile.CreateFromTemp(lastStep.Result.OutPath, lastStep.Result.OutFileParts);
                 sf.Key = lastStep.Key;
             }
-            sf.Initialised();
+            // Sources that never went through the file scanner (multi-step intermediates,
+            // folder-format outputs) don't have ImageFiles set and must not be re-initialised.
+            if (!sf.IsSyntheticFolder && sf.ImageFiles != null)
+                sf.Initialised();
             return sf;
         }
 
@@ -255,10 +258,10 @@ namespace Nanook.NKit
                 string ext = main.Result.StepInfo.OutputType == OutputType.Image ? SourceFiles.GetKnownFileExtension(main.Result.FinalName) : "";
                 string newName = (!_context.Settings.OutAsDatMatch || datMatch?.FileName == null) ? null : datMatch.FileName.Substring(0, datMatch.FileName.Length - datMatch.FileNameExt.Length) + ext;
                 //store the header key if it's different to one provided by a key file. Needs better implementation than this
-                if (main.SystemType == SystemType.WiiU)
-                    key = ((Nanook.NKit.Nintendo.WiiU.ImageHeader)main.Header).GetKeyToStore();
-                else if (main.SystemType == SystemType.PS3)
-                    key = ((Nanook.NKit.Iso.Iso9660.ImageHeader)main.Header).Ps3.GetKeyToStore();
+                if (main.SystemType == SystemType.WiiU && main.Header is Nanook.NKit.Nintendo.WiiU.ImageHeader wiiuHdr)
+                    key = wiiuHdr.GetKeyToStore();
+                else if (main.SystemType == SystemType.PS3 && main.Header is Nanook.NKit.Iso.Iso9660.ImageHeader ps3Hdr)
+                    key = ps3Hdr.Ps3.GetKeyToStore();
 
                 //finalise the output files/folders
                 string finalName = newName ?? main.Result.FinalName; //final name assigned by main step
@@ -460,6 +463,14 @@ namespace Nanook.NKit
             // colour them (stripped at Info verbosity, left in place at Detail/Debug).
             if (results.DatMatch != null)
                 _context.Log.InfoOutParam(() => $"DatName   : {results.DatMatch}");
+
+            // Progress summary (file count etc.) from the main step — emitted here after the
+            // timing line so it doesn't interleave with the progress dots.
+            NKitStepContext mainStep = NKitTaskResults.GetCompletionStep(_context.TaskType, _context.Steps);
+            string progressSummary = mainStep?.Result?.ProgressSummary;
+            if (progressSummary != null)
+                _context.Log.Info(() => progressSummary);
+
             if (results.OutPath != null && results.OutFileName != null)
             {
                 string[] fl = results.OutFileName.Split('|');

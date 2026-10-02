@@ -70,7 +70,7 @@ namespace Nanook.NKit
         public override void ProcessResults()
         {
             base.ProcessingComplete();
-            _context.Log.Info(() => $"Extracted {_extracted} file{_extracted.s()}");
+            Context.Result.ProgressSummary = $"Extracted {_extracted} file{_extracted.s()}";
             base.ProcessResults();
         }
 

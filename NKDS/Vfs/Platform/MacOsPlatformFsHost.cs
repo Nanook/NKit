@@ -10,7 +10,7 @@ namespace Nanook.NKit.Vfs
     {
         private MacOsFs _fs;
 
-        public void Run(string dataStorePath, string mountPoint, string? setName = null, bool showImage = true, bool showFileSystem = true, bool showSystem = false, bool updateMode = false, bool allowOther = false, uint? uid = null, uint? gid = null, int maxFileSystemYamlSizeKiB = NKitDataStore.DataStore.DefaultMaxFileSystemSizeKiB)
+        public void Run(string dataStorePath, string mountPoint, string setName = null, bool showImage = true, bool showFileSystem = true, bool showSystem = false, bool updateMode = false, bool allowOther = false, uint? uid = null, uint? gid = null, int maxFileSystemYamlSizeKiB = NKitDataStore.DataStore.DefaultMaxFileSystemSizeKiB)
         {
             _fs = new MacOsFs(dataStorePath, setName, showImage, showFileSystem, showSystem, updateMode, maxFileSystemYamlSizeKiB: maxFileSystemYamlSizeKiB);
             _fs.Mount(mountPoint, allowOther, uid, gid);
@@ -36,7 +36,7 @@ namespace Nanook.NKit.Vfs
             _fs?.Dispose();
         }
 
-        public void FinalizeDatabases(string dataStorePath, string? setName = null)
+        public void FinalizeDatabases(string dataStorePath, string setName = null)
         {
             try
             {

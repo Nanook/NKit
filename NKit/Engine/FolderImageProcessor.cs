@@ -60,6 +60,12 @@ namespace Nanook.NKit
             if (group.GroupType == FolderGroupType.CueFolder || group.GroupType == FolderGroupType.GdiFolder)
                 return processCueFolder(group, dedupeDirectory, setName, log);
 
+            if (group.GroupType == FolderGroupType.WuaFolder)
+                return processWuaFolder(group, dedupeDirectory, setName, log);
+
+            if (group.GroupType == FolderGroupType.LoadiineFolder)
+                return processLoadiineFolder(group, dedupeDirectory, setName, log);
+
             return processTmdAppFolder(group, dedupeDirectory, setName, log);
         }
 
@@ -141,6 +147,114 @@ namespace Nanook.NKit
                 log?.Invoke("Result    : Created", LogLevel.Info);
 
                 return FolderProcessResult.Created;
+            }
+            catch (Exception ex)
+            {
+                log?.Invoke($"Result    : Error - {ex.Message}", LogLevel.Error);
+                return FolderProcessResult.Error;
+            }
+        }
+
+        /// <summary>
+        /// Processes a WuaFolder group by opening the ZArchive and storing its title folder
+        /// contents via DataStoreFolderFormatter, identical to how adddir handles a folder.
+        /// </summary>
+        private FolderProcessResult processWuaFolder(
+            FolderGroupInfo group,
+            string dedupeDirectory,
+            string setName,
+            Action<string, LogLevel> log)
+        {
+            try
+            {
+                // Resolve shard/block sizes from existing set or use defaults
+                long shardSize = 50L * 1024 * 1024 * 1024;
+                int blockSize = 0x10000;
+                using (var ds = new NKitDataStore.DataStore(dedupeDirectory))
+                {
+                    var existingSet = ds.GetSetInfo(setName);
+                    if (existingSet != null) { shardSize = existingSet.ShardSize; blockSize = existingSet.BlockSize; }
+                    else ds.CreateSet(setName, shardSize, blockSize);
+                }
+
+                using System.IO.Stream wuaStream = System.IO.File.OpenRead(group.SourceFolder);
+                new Steps.Shared.WuaFolderBuilder().Build(wuaStream, group.BaseName, dedupeDirectory, setName, shardSize, blockSize, "WiiU", log);
+
+                log?.Invoke($"Result    : Success", LogLevel.Info);
+                return FolderProcessResult.Created;
+            }
+            catch (HandledException hex)
+            {
+                log?.Invoke($"Result    : Error - {hex.Message}", LogLevel.Error);
+                return FolderProcessResult.Error;
+            }
+            catch (Exception ex)
+            {
+                log?.Invoke($"Result    : Error - {ex.Message}", LogLevel.Error);
+                return FolderProcessResult.Error;
+            }
+        }
+
+        /// <summary>
+        /// Processes a Loadiine folder on disk (code/content/meta) by storing all its files
+        /// via DataStoreFolderFormatter — identical to adddir, but triggered automatically by
+        /// folder structure detection rather than explicit user invocation.
+        /// </summary>
+        private FolderProcessResult processLoadiineFolder(
+            FolderGroupInfo group,
+            string dedupeDirectory,
+            string setName,
+            Action<string, LogLevel> log)
+        {
+            try
+            {
+                log?.Invoke(Log.Section, LogLevel.Info);
+                log?.Invoke(InfoPrefix.Stamp(InfoPrefix.Title, $"[LoadiineFolder/WiiU]  {group.BaseName}"), LogLevel.Info);
+                log?.Invoke(Log.Divider, LogLevel.Info);
+
+                long shardSize = 50L * 1024 * 1024 * 1024;
+                int blockSize = 0x10000;
+                using (var ds = new NKitDataStore.DataStore(dedupeDirectory))
+                {
+                    var existingSet = ds.GetSetInfo(setName);
+                    if (existingSet != null) { shardSize = existingSet.ShardSize; blockSize = existingSet.BlockSize; }
+                    else ds.CreateSet(setName, shardSize, blockSize);
+                }
+
+                string fullDir = group.SourceFolder;
+                var files = System.IO.Directory.EnumerateFiles(fullDir, "*", System.IO.SearchOption.AllDirectories)
+                    .Select(f => (FullPath: f, RelativePath: System.IO.Path.GetRelativePath(fullDir, f).Replace(System.IO.Path.DirectorySeparatorChar, '/')))
+                    .OrderBy(f => f.RelativePath, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                log?.Invoke($"{LogScopes.Tag(LogScopes.Input)}files: {files.Count}", LogLevel.Detail);
+
+                using (var formatter = new Steps.Shared.DataStoreFolderFormatter(dedupeDirectory, group.BaseName, shardSize, blockSize, setName, NKitDataStore.ImageFormat.TmdAppFolder, "WiiU"))
+                {
+                    long totalSize = 0;
+                    foreach (var (fullPath, relPath) in files)
+                    {
+                        long fileSize = new System.IO.FileInfo(fullPath).Length;
+                        if (fileSize == 0)
+                            formatter.StoreFile(relPath, System.IO.Stream.Null, 0);
+                        else
+                        {
+                            using var stream = System.IO.File.OpenRead(fullPath);
+                            formatter.StoreFile(relPath, stream, fileSize);
+                            totalSize += fileSize;
+                        }
+                    }
+                    formatter.BuildFileSystemYaml();
+                    formatter.FinalizeImage(totalSize, 0, 0);
+                }
+
+                log?.Invoke($"Result    : Created ({files.Count} files)", LogLevel.Info);
+                return FolderProcessResult.Created;
+            }
+            catch (HandledException hex)
+            {
+                log?.Invoke($"Result    : Error - {hex.Message}", LogLevel.Error);
+                return FolderProcessResult.Error;
             }
             catch (Exception ex)
             {

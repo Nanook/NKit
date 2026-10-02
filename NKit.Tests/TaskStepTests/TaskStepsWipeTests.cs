@@ -101,8 +101,10 @@ namespace NKit.Tests.Engine.Output
         [InlineData("087", "wii", ".nkds", "ds", "none", "none", "image", "Wipe-WiiGc(M,V:NoVerify,C:WipeWiiGcStep)")]
         [InlineData("088", "gamecube", ".nkds", "ds", "none", "none", "image", "Wipe-WiiGc(M,V:NoVerify,C:WipeWiiGcStep)")]
         [InlineData("089", "wiiu", ".nkds", "ds", "none", "none", "image", "Wipe-WiiU(M,V:NoVerify,C:WipeWiiUStep)")]
-        [InlineData("090", "pcEngine", ".chd", "idx", "none", "none", "folderindex", "Wipe-IsoCueTocGdi(M,V:NoVerify,C:WipeIsoStep)")]
-        [InlineData("091", "pcEngine", ".nkds", "idxds", "none", "none", "folderindex", "Wipe-IsoCueTocGdi(M,V:NoVerify,C:WipeIsoStep)")]
+        [InlineData("090", "wiiu", ".wua",      "folderformat", "none", "none", "image", "Wipe-WiiU(M,V:NoVerify,C:WipeWiiUStep)")]
+        [InlineData("091", "wiiu", ".loadiine",  "folderformat", "none", "none", "image", "Wipe-WiiU(M,V:NoVerify,C:WipeWiiUStep)")]
+        [InlineData("092", "pcEngine", ".chd", "idx", "none", "none", "folderindex", "Wipe-IsoCueTocGdi(M,V:NoVerify,C:WipeIsoStep)")]
+        [InlineData("093", "pcEngine", ".nkds", "idxds", "none", "none", "folderindex", "Wipe-IsoCueTocGdi(M,V:NoVerify,C:WipeIsoStep)")]
         public void WipeTest(string idx, string system, string srcFormat, string srcInfo, string wipe, string cfg, string outType, string resultString)
         {
             TaskStepVerifySettings[] vfy = TaskStepsShared.VerifyCombos();

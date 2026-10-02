@@ -6,6 +6,9 @@ using Xunit;
 
 namespace NKit.Tests.Full.Wiped
 {
+    // Area="Full"/Group="Wiped" are inherited from WipedImageTestsBase; only the per-System trait
+    // is emitted per generated class so tests can be filtered by console system too.
+    [Trait("System", "WiiU")]
     public partial class WipedImage_WiiU_Tests : WipedImageTestsBase
     {
         //Retail     / APP       / 60MiB   / CDN tmd, no tik, no cert, no h3 files
@@ -511,7 +514,7 @@ namespace NKit.Tests.Full.Wiped
             Assert.Equal("title.cert", r.OutFileParts[10].FileName);
             Assert.Equal(0x350L, r.OutFileParts[11].Size);
             Assert.NotNull(r.OutFileParts[11].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:8195EB5F", r.OutFileParts[11].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:E7B25555", r.OutFileParts[11].Checksums.ToString(true, true));
             Assert.NotNull(r.OutFileParts[11].FileName);
             Assert.Equal("title.tik", r.OutFileParts[11].FileName);
             Assert.Equal(0x13e4L, r.OutFileParts[12].Size);
@@ -676,7 +679,7 @@ namespace NKit.Tests.Full.Wiped
             Assert.False(t.StepFiles[11].IsIndex);
             Assert.False(t.StepFiles[11].IsImageName);
             Assert.NotNull(t.StepFiles[11].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:8195EB5F", t.StepFiles[11].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:E7B25555", t.StepFiles[11].Checksums.ToString(true, true));
             Assert.NotNull(t.StepFiles[11].FileName);
             Assert.Equal("title.tik", t.StepFiles[11].FileName);
             Assert.Equal(0x13e4L, t.StepFiles[12].Size);

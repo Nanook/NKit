@@ -461,8 +461,10 @@ namespace NKitDataStore
         {
             try
             {
-                // 1. Ensure any background compression tasks for this set have completed
-                try { _dataAccess.WaitForCompressionTasks(Image.SetName, -1); } catch { }
+                // 1. Ensure any background compression tasks for this set have completed.
+                // No timeout needed: BlockWriter uses proper event signalling and will return
+                // as soon as the queue drains (or immediately if already idle).
+                try { _dataAccess.WaitForCompressionTasks(Image.SetName); } catch { }
 
                 // 2. Commit or rollback transaction based on finalization state
                 if (_isFinalized)

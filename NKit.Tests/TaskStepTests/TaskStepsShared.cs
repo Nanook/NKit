@@ -73,14 +73,18 @@ namespace NKit.Tests
             bool isGdRom = cfg == null ? false : Regex.IsMatch(cfg, "^(chd)?gdrom", RegexOptions.IgnoreCase);
             bool forceIdx = srcInfo.Contains("idx");
             bool isDataStore = srcInfo.Contains("ds");
+            bool isFolderFormat = srcInfo.Contains("folderformat") || srcType == ".wua";
 
             AppSettings settings = new AppSettings(presets);
-            SourceFile file = CreateSourceFile(srcType, isGdRom || forceIdx, isDataStore); //will need to cater for multi track images also
+            SourceFile file = CreateSourceFile(srcType, isGdRom || forceIdx, isDataStore, isFolderFormat); //will need to cater for multi track images also
             NKitTaskContext task = new NKitTaskContext(settings, file, null);
             task.Steps[0].ImageInfo = new ImageInfo() { IsFolderIndex = file.IndexFile != null };
             task.Initialise(presets.System);
             string config = task.CalculateConfig(configString, task.SystemType == SystemType.Dreamcast && isGdRom);
-            string srcFormat = file.IndexFile != null ? "folderindex" : "image";
+            // FolderFormat sources use "folderformat" srcType in the routing table only for Convert;
+            // for Scan/Verify/Dedupe/etc. they route through the normal "image" path.
+            string srcFormat = (isFolderFormat && taskType == "convert") ? "folderformat"
+                             : (file.IndexFile != null ? "folderindex" : "image");
             IStepsImageInfo imgInfo = new FakeImageInfo() { ReqPatch = reqPatch, Checksums = parts[0]?.Checksums ?? new Checksums(), IsIndex = file.IndexFile != null };
             task.CreateSteps(imgInfo, srcFormat, di, scan, config, configString, dats);
             return task;
@@ -136,11 +140,37 @@ namespace NKit.Tests
             return new Parts(chk);
         }
 
-        internal static SourceFile CreateSourceFile(string srcFormat, bool forceIndex, bool isDataStore = false)
+        internal static SourceFile CreateSourceFile(string srcFormat, bool forceIndex, bool isDataStore = false, bool isFolderFormat = false)
         {
             SourceFile file;
 
-            if (forceIndex || (new string[] { ".cue", ".tmd", ".gdi" }).Contains(srcFormat))
+            // FolderFormat sources: synthetic SourceFiles with no ImageFiles/IndexFile.
+            // A real WUA file (.wua) keeps ImageFiles; a Loadiine synthetic has neither.
+            if (isFolderFormat && srcFormat != ".wua")
+            {
+                // Loadiine synthetic — mirrors what SyntheticSourceFactory produces for LoadiineFolder
+                file = new SourceFile();
+                file.IsSyntheticFolder = true;
+                var group = new FolderGroupInfo
+                {
+                    GroupType    = FolderGroupType.LoadiineFolder,
+                    BaseName     = "TestLoadiine",
+                    SourceFolder = "/test/loadiine",
+                    ChildSources = new System.Collections.Generic.List<SourceFile>(),
+                    SystemType   = SystemType.WiiU,
+                };
+                file.SyntheticFolderGroup = group;
+                return file;
+            }
+            else if (isFolderFormat && srcFormat == ".wua")
+            {
+                // Real WUA file — ImageType is set via Initialised(), SyntheticFolderGroup is null
+                file = new SourceFile();
+                file.ImageFiles = new[] { new SourceFileItem("", "Game.wua", ".wua", ".wua", 0, 0x1000, 0, false, false) };
+                file.Initialised();
+                return file;
+            }
+            else if (forceIndex || (new string[] { ".cue", ".tmd", ".gdi" }).Contains(srcFormat))
             {
                 file = new SourceFile();
                 file.IndexFile = IndexFile.Parse("", "", Encoding.UTF8.GetBytes("FILE \"File.bin\" BINARY\r\n  TRACK 01 MODE1/2352\r\n    INDEX 01 00:00:00\r\n"));

@@ -162,6 +162,8 @@ namespace NKit.Tests.Engine.Output
         [InlineData("148", "wii", ".nkds", "ds", "", "", "folderfiles", "Extract-WiiGc(M,V:NoVerify,C:ExtractWiiGcStep)")]
         [InlineData("149", "gamecube", ".nkds", "ds", "", "", "folderfiles", "Extract-WiiGc(M,V:NoVerify,C:ExtractWiiGcStep)")]
         [InlineData("150", "wiiu", ".nkds", "ds", "", "", "folderfiles", "Extract-WiiU(M,V:NoVerify,C:ExtractWiiUStep)")]
+        [InlineData("153", "wiiu", ".wua",      "folderformat", "", "", "folderfiles", "Extract-WiiU(M,V:NoVerify,C:ExtractWiiUStep)")]
+        [InlineData("154", "wiiu", ".loadiine",  "folderformat", "", "", "folderfiles", "Extract-WiiU(M,V:NoVerify,C:ExtractWiiUStep)")]
         [InlineData("151", "pcEngine", ".chd", "idx", "", "", "folderfiles", "Extract-Iso(M,V:NoVerify,C:ExtractIsoStep)")]
         [InlineData("152", "pcEngine", ".nkds", "idxds", "", "", "folderfiles", "Extract-Iso(M,V:NoVerify,C:ExtractIsoStep)")]
         public void ExtractTest(string idx, string system, string srcFormat, string srcInfo, string extract, string cfg, string outType, string resultString)

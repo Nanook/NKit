@@ -16,5 +16,7 @@ namespace Nanook.NKit
         public uint? ResultCrc { get; internal set; } //Combined InCrc for most steps. Calculated for Fix
         public long? ResultSize { get; internal set; } //Summed InSize for most steps. Calculated for Fix
         public string FinalName { get; internal set; }
+        /// <summary>Optional one-line summary logged after the progress/timing line (e.g. "Wrote 13 app files").</summary>
+        public string ProgressSummary { get; internal set; }
     }
 }

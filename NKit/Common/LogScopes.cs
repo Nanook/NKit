@@ -90,6 +90,11 @@ namespace Nanook.NKit
         public const string StepConvertWiiGcRvz = "ConvertWiiGcRvz";   // ConvertWiiGcRvzStep
         public const string StepConvertWiiUWux = "ConvertWiiUWux";     // ConvertWiiUWuxStep
         public const string StepConvertWiiUAppTmd = "ConvertWiiUAppTmd"; // ConvertWiiUAppTmdStep
+        public const string StepConvertWiiULoadiine = "ConvertWiiULoadiine"; // ConvertWiiULoadiineStep (loadiine folder)
+        public const string StepConvertWiiUWua = "ConvertWiiUWua";       // ConvertWiiULoadiineStep (wua output)
+        public const string StepConvertWuaLoadiine = "ConvertWuaLoadiine"; // ConvertWuaLoadiineStep (wua → loadiine)
+        public const string StepConvertLoadiineWua = "ConvertLoadiineWua"; // ConvertLoadiineWuaStep (loadiine → wua)
+        public const string StepConvertFolderAppTmd = "ConvertFolderAppTmd"; // ConvertFolderAppTmdStep (wua/loadiine → encrypted AppTmd)
         public const string StepConvertXBox = "ConvertXBox";           // ConvertXBoxStep
         public const string StepConvertIsoCsoZso = "ConvertIsoCsoZso"; // ConvertIsoCsoZsoStep
         public const string StepConvertIsoDecIso = "ConvertIsoDecIso"; // ConvertIsoDecIsoStep

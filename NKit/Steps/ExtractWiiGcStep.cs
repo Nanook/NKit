@@ -153,7 +153,7 @@ namespace Nanook.NKit
                 _activeOverlaps.Clear();
             }
 
-            _context.Log.Info(() => $"Extracted {_extracted} file{_extracted.s()}");
+            Context.Result.ProgressSummary = $"Extracted {_extracted} file{_extracted.s()}";
             base.ProcessResults();
         }
 

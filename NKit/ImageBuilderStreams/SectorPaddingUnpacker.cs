@@ -313,5 +313,76 @@ namespace Nanook.NKit
                 _ => EccOffsetMode1, // fallback; ECC not applicable to Mode2Form2/Audio
             };
         }
+
+        /// <summary>
+        /// Reads the pack to populate sectorTypes without writing to the buffer.
+        /// The type bits in each flag byte tell the caller Form1 vs Form2 for every sector.
+        /// </summary>
+        public static void ReadSectorTypes(byte[] packData, int sectorCount, out SectorFlags?[] sectorTypes)
+        {
+            int headerSectorCount = ReadHeader(packData, out int bitmapOffset, out int bitmapLength);
+            int sectorsToProcess = Math.Min(headerSectorCount, sectorCount);
+            sectorTypes = new SectorFlags?[sectorCount];
+            int dataPos = bitmapOffset + bitmapLength;
+            for (int i = 0; i < sectorsToProcess; i++)
+            {
+                if ((packData[bitmapOffset + i / 8] & (1 << (i % 8))) == 0) continue;
+                if (dataPos >= packData.Length) break;
+                SectorFlags flags = (SectorFlags)packData[dataPos];
+                sectorTypes[i] = flags;
+                dataPos += 1;
+                if ((flags & SectorFlags.Sync) != 0) dataPos += SectorFlagsHelper.SyncSize;
+                if ((flags & SectorFlags.MsfMode) != 0) dataPos += SectorFlagsHelper.MsfModeSize;
+                if ((flags & SectorFlags.Subheader) != 0) dataPos += SectorFlagsHelper.SubheaderSize;
+                if ((flags & SectorFlags.Edc) != 0) dataPos += SectorFlagsHelper.EdcSize;
+                if ((flags & SectorFlags.Ecc) != 0) dataPos += SectorFlagsHelper.GetEccSize(flags);
+                if ((flags & SectorFlags.ExtUserData) != 0) dataPos += SectorFlagsHelper.ExtUserDataSize;
+            }
+        }
+
+        /// <summary>
+        /// Reads the pack into per-sector types AND the byte position of each sector's
+        /// subheader/ExtUserData payload within packData. The positions array is -1 for
+        /// sectors with no subheader/ExtUserData stored. This lets the main loop apply
+        /// subheader and ExtUserData in O(1) per sector after a single O(n) pre-pass.
+        /// </summary>
+        public static void ReadSectorTypesAndPositions(byte[] packData, int sectorCount,
+            out SectorFlags?[] sectorTypes, out int[] subheaderPositions, out int[] extDataPositions)
+        {
+            int headerSectorCount = ReadHeader(packData, out int bitmapOffset, out int bitmapLength);
+            int sectorsToProcess = Math.Min(headerSectorCount, sectorCount);
+            sectorTypes = new SectorFlags?[sectorCount];
+            subheaderPositions = new int[sectorCount];
+            extDataPositions = new int[sectorCount];
+            for (int i = 0; i < sectorCount; i++) { subheaderPositions[i] = -1; extDataPositions[i] = -1; }
+
+            int dataPos = bitmapOffset + bitmapLength;
+            for (int i = 0; i < sectorsToProcess; i++)
+            {
+                if ((packData[bitmapOffset + i / 8] & (1 << (i % 8))) == 0) continue;
+                if (dataPos >= packData.Length) break;
+                SectorFlags flags = (SectorFlags)packData[dataPos++];
+                sectorTypes[i] = flags;
+                if ((flags & SectorFlags.Sync) != 0) dataPos += SectorFlagsHelper.SyncSize;
+                if ((flags & SectorFlags.MsfMode) != 0) dataPos += SectorFlagsHelper.MsfModeSize;
+                if ((flags & SectorFlags.Subheader) != 0) { subheaderPositions[i] = dataPos; dataPos += SectorFlagsHelper.SubheaderSize; }
+                if ((flags & SectorFlags.Edc) != 0) dataPos += SectorFlagsHelper.EdcSize;
+                if ((flags & SectorFlags.Ecc) != 0) dataPos += SectorFlagsHelper.GetEccSize(flags);
+                if ((flags & SectorFlags.ExtUserData) != 0) { extDataPositions[i] = dataPos; dataPos += SectorFlagsHelper.ExtUserDataSize; }
+            }
+        }
+
+        /// <summary>
+        /// Applies subheader and extended user data for a single sector using pre-computed positions.
+        /// Call ReadSectorTypesAndPositions once, then call this per sector after ReconstructPrefix.
+        /// </summary>
+        public static void ApplySubheaderAndExtData(byte[] packData, byte[] buffer, int bufferSectorOffset,
+            int subheaderPos, int extDataPos)
+        {
+            if (subheaderPos >= 0)
+                Array.Copy(packData, subheaderPos, buffer, bufferSectorOffset + SubheaderOffset, SectorFlagsHelper.SubheaderSize);
+            if (extDataPos >= 0)
+                Array.Copy(packData, extDataPos, buffer, bufferSectorOffset + ExtUserDataOffset, SectorFlagsHelper.ExtUserDataSize);
+        }
     }
 }

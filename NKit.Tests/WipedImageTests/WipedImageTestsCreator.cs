@@ -554,6 +554,8 @@ namespace NKit.Tests.Full.Wiped
 
         //[Theory]
         [InlineData("Convert", "app")]
+        [InlineData("Convert", "loadiine")]
+        [InlineData("Convert", "wua")]
         [InlineData("Convert", "wux")]
         [InlineData("Expand", "")]
         [InlineData("Extract", "f")]
@@ -587,7 +589,18 @@ namespace NKit.Tests.Full.Wiped
             createTests("WiiU", task, taskOptions, "Pbpbgb Zntvp Pvephf 7 (Rhebcr) (Ra,Se,Qr,Rf,Vg,Ay,Cg) [555055556567Q555].7z", "Retail     / APP       / 367MiB  / App with tmd, tik, cert and H3 files", null, _Keys, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "loadiine")]
+        [InlineData("Convert", "wua")]
+        [InlineData("Extract", "f")]
+        [InlineData("Extract", "ri:.*")]
+        [InlineData("Scan", "")]
+        public void WiiU_PbpbgbNccGzq(string task, string taskOptions) =>
+            createTests("WiiU", task, taskOptions, "Pbpbgb Zntvp Pvephf 7 (Rhebcr) (Ra,Se,Qr,Rf,Vg,Ay,Cg) [555055556567A555].zip", "Retail     / APP       / 367MiB  / App converted from wux - tests wua/loadiine from app source", null, _Keys, null, null, true);
+
+        //[Theory]
         [InlineData("Convert", "app")]
+        [InlineData("Convert", "loadiine")]
+        [InlineData("Convert", "wua")]
         [InlineData("Convert", "wux")]
         [InlineData("Expand", "")]
         [InlineData("Extract", "f")]

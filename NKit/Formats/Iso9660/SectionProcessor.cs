@@ -131,9 +131,15 @@ namespace Nanook.NKit.Iso.Iso9660
                 int sectorCount = (int)(base.Buffer.Size / SectorPaddingPacker.RawSectorSize);
                 if (sectorCount > 0)
                 {
-                    // The first sector's own MSF encodes its physical position (LBA); use it as the
-                    // section's start LBA so sync/MSF reconstruction matches the disc.
-                    long startLba = Ecm.SectorToLba(base.Buffer.Decrypted, 0);
+                    // Derive the start LBA from the area's physical offset and the section's
+                    // position within the area — this is always correct regardless of whether
+                    // the first sector has a valid MSF. Falling back to the first sector's MSF
+                    // is unreliable for null/zero sectors (MSF 00:00:00 → LBA -150).
+                    object physOffObj = base.Buffer.AreaInfo.Properties?["PhysicalOffset"];
+                    long physOff = physOffObj != null ? (long)(ulong)physOffObj : 0;
+                    long sectionAreaOffset = base.Buffer.AreaOffset; // byte offset from area start
+                    long blockSize2 = base.Buffer.BlockSize;
+                    long startLba = (physOff / blockSize2) + (sectionAreaOffset / blockSize2);
                     this.SectorPadding = SectorPaddingPacker.Analyse(base.Buffer.Decrypted, sectorCount, startLba);
                     this.IsCreatable = SectorPaddingPacker.IsFullyCreatable(this.SectorPadding);
                 }

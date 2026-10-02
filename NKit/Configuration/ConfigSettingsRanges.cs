@@ -103,7 +103,9 @@ namespace Nanook.NKit.Configuration
                     ConfigSettingsConstants.FormatApp,
                     ConfigSettingsConstants.FormatTmd,
                     ConfigSettingsConstants.FormatIso,
-                    ConfigSettingsConstants.FormatWux
+                    ConfigSettingsConstants.FormatWux,
+                    ConfigSettingsConstants.FormatLoadiine,
+                    ConfigSettingsConstants.FormatWua
                 },
 
                 SystemType.Dreamcast => new[]

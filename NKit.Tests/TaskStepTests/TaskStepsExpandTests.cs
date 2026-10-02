@@ -185,6 +185,50 @@ namespace NKit.Tests.Engine.Output
         [InlineData("018", "wiiu", ".wux", "", "iso", "datLookup", true, true, true, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
         public void ExpandWiiU_Wux(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => expandTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
         #endregion
+        #region ExpandWiiU_Wua
+        [Theory]
+        [InlineData("001", "wiiu", ".wua", "folderformat", "iso", "n",         false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("002", "wiiu", ".wua", "folderformat", "iso", "n",         false, true,  false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("003", "wiiu", ".wua", "folderformat", "iso", "n",         false, true,  true,  "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("004", "wiiu", ".wua", "folderformat", "iso", "n",         true,  false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("005", "wiiu", ".wua", "folderformat", "iso", "n",         true,  true,  false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("006", "wiiu", ".wua", "folderformat", "iso", "n",         true,  true,  true,  "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("007", "wiiu", ".wua", "folderformat", "iso", "y",         false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("008", "wiiu", ".wua", "folderformat", "iso", "y",         false, true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".wua", "folderformat", "iso", "y",         false, true,  true,  "iso", "image", "Expand-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".wua", "folderformat", "iso", "y",         true,  false, false, "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".wua", "folderformat", "iso", "y",         true,  true,  false, "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".wua", "folderformat", "iso", "y",         true,  true,  true,  "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".wua", "folderformat", "iso", "datLookup", false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("014", "wiiu", ".wua", "folderformat", "iso", "datLookup", false, true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".wua", "folderformat", "iso", "datLookup", false, true,  true,  "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".wua", "folderformat", "iso", "datLookup", true,  false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("017", "wiiu", ".wua", "folderformat", "iso", "datLookup", true,  true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".wua", "folderformat", "iso", "datLookup", true,  true,  true,  "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        public void ExpandWiiU_Wua(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => expandTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
+        #region ExpandWiiU_Loadiine
+        [Theory]
+        [InlineData("001", "wiiu", ".loadiine", "folderformat", "iso", "n",         false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("002", "wiiu", ".loadiine", "folderformat", "iso", "n",         false, true,  false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("003", "wiiu", ".loadiine", "folderformat", "iso", "n",         false, true,  true,  "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("004", "wiiu", ".loadiine", "folderformat", "iso", "n",         true,  false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("005", "wiiu", ".loadiine", "folderformat", "iso", "n",         true,  true,  false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("006", "wiiu", ".loadiine", "folderformat", "iso", "n",         true,  true,  true,  "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("007", "wiiu", ".loadiine", "folderformat", "iso", "y",         false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("008", "wiiu", ".loadiine", "folderformat", "iso", "y",         false, true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".loadiine", "folderformat", "iso", "y",         false, true,  true,  "iso", "image", "Expand-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".loadiine", "folderformat", "iso", "y",         true,  false, false, "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".loadiine", "folderformat", "iso", "y",         true,  true,  false, "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".loadiine", "folderformat", "iso", "y",         true,  true,  true,  "iso", "image", "Expand-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", false, false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("014", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", false, true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", false, true,  true,  "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", true,  false, false, "iso", "image", "Expand-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("017", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", true,  true,  false, "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".loadiine", "folderformat", "iso", "datLookup", true,  true,  true,  "iso", "image", "Expand-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        public void ExpandWiiU_Loadiine(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => expandTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
         #region ExpandPs3_Chd
         [Theory]
         //Cue

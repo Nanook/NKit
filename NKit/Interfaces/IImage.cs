@@ -19,7 +19,7 @@
 
     public enum TaskType { NotSet, Scan, Convert, Expand, Fix, FixExtract, Dedupe, Extract, Verify, Wipe }
 
-    public enum ContainerType { Unknown, DecIso, IsoDec, Wbfs, Ciso, Wia, Rvz, Wux, Wud, Iso, Gcz, Cso, Zso, Dax, Jso, Chd, Cue, Toc, Gdi, TmdApp, Ps3Jb }
+    public enum ContainerType { Unknown, DecIso, IsoDec, Wbfs, Ciso, Wia, Rvz, Wux, Wua, Wud, Iso, Gcz, Cso, Zso, Dax, Jso, Chd, Cue, Toc, Gdi, TmdApp, Ps3Jb }
 
     public enum OutputType { None, Scan, Image, FolderIndex, FolderFiles, Files, FileStore }
 

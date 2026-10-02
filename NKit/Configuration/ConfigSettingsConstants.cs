@@ -82,6 +82,8 @@ namespace Nanook.NKit.Configuration
         public const string FormatTmd = "tmd";
         public const string FormatWux = "wux";
         public const string FormatToc = "toc";
+        public const string FormatLoadiine = "loadiine";
+        public const string FormatWua = "wua";
 
         // ======= Display Format Names =======
 
@@ -100,6 +102,8 @@ namespace Nanook.NKit.Configuration
         public const string DisplayFormatWux = "WUX";
         public const string DisplayFormatCue = "CUE";
         public const string DisplayFormatGdi = "GDI";
+        public const string DisplayFormatLoadiine = "Loadiine";
+        public const string DisplayFormatWua = "WUA";
 
         // ======= Encoding Types =======
 

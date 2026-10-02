@@ -592,6 +592,22 @@ namespace Nanook.NKit
                        .ToUpperInvariant();
         }
 
+        /// <summary>
+        /// Finds the system type that has a non-empty Out path configured.
+        /// Falls back to the preferred system if none has an Out path set.
+        /// Used by synthetic folder processing to locate the --out directory.
+        /// </summary>
+        public SystemType FindSystemWithOut(SystemType preferred)
+        {
+            foreach (var kv in _systemSettings)
+                if (!string.IsNullOrWhiteSpace(kv.Value.Out))
+                    return kv.Key;
+            return preferred;
+        }
+
+        /// <summary>Returns the Out path from the first available system settings entry.</summary>
+        public string GetFirstOut() => _systemSettings.FirstOrDefault().Value?.Out ?? "";
+
         public SystemSettings this[SystemType type]
         {
             get

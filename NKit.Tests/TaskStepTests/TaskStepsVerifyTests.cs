@@ -187,6 +187,50 @@ namespace NKit.Tests.Engine.Output
         [InlineData("018", "wiiu", ".wux", "", "iso", "datLookup", true, true, true, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
         public void VerifyWiiU_Wux(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => verifyTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
         #endregion
+        #region VerifyWiiU_Wua
+        [Theory]
+        [InlineData("001", "wiiu", ".wua", "folderformat", "wua", "n",         false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("002", "wiiu", ".wua", "folderformat", "wua", "n",         false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("003", "wiiu", ".wua", "folderformat", "wua", "n",         false, true,  true,  "none", "image", "Verify-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("004", "wiiu", ".wua", "folderformat", "wua", "n",         true,  false, false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("005", "wiiu", ".wua", "folderformat", "wua", "n",         true,  true,  false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("006", "wiiu", ".wua", "folderformat", "wua", "n",         true,  true,  true,  "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("007", "wiiu", ".wua", "folderformat", "wua", "y",         false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("008", "wiiu", ".wua", "folderformat", "wua", "y",         false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".wua", "folderformat", "wua", "y",         false, true,  true,  "none", "image", "Verify-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".wua", "folderformat", "wua", "y",         true,  false, false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".wua", "folderformat", "wua", "y",         true,  true,  false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".wua", "folderformat", "wua", "y",         true,  true,  true,  "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".wua", "folderformat", "wua", "datLookup", false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("014", "wiiu", ".wua", "folderformat", "wua", "datLookup", false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".wua", "folderformat", "wua", "datLookup", false, true,  true,  "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".wua", "folderformat", "wua", "datLookup", true,  false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("017", "wiiu", ".wua", "folderformat", "wua", "datLookup", true,  true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".wua", "folderformat", "wua", "datLookup", true,  true,  true,  "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        public void VerifyWiiU_Wua(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => verifyTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
+        #region VerifyWiiU_Loadiine
+        [Theory]
+        [InlineData("001", "wiiu", ".loadiine", "folderformat", "wua", "n",         false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("002", "wiiu", ".loadiine", "folderformat", "wua", "n",         false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("003", "wiiu", ".loadiine", "folderformat", "wua", "n",         false, true,  true,  "none", "image", "Verify-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("004", "wiiu", ".loadiine", "folderformat", "wua", "n",         true,  false, false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("005", "wiiu", ".loadiine", "folderformat", "wua", "n",         true,  true,  false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("006", "wiiu", ".loadiine", "folderformat", "wua", "n",         true,  true,  true,  "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("007", "wiiu", ".loadiine", "folderformat", "wua", "y",         false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("008", "wiiu", ".loadiine", "folderformat", "wua", "y",         false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("009", "wiiu", ".loadiine", "folderformat", "wua", "y",         false, true,  true,  "none", "image", "Verify-Image(M,V:DatMatch [Md5+Crc32],C:ScanStep)")]
+        [InlineData("010", "wiiu", ".loadiine", "folderformat", "wua", "y",         true,  false, false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("011", "wiiu", ".loadiine", "folderformat", "wua", "y",         true,  true,  false, "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("012", "wiiu", ".loadiine", "folderformat", "wua", "y",         true,  true,  true,  "none", "image", "Verify-Image(M,V:ScanCompare [Crc32Only],C:ScanStep)")]
+        [InlineData("013", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("014", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", false, true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("015", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", false, true,  true,  "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("016", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", true,  false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
+        [InlineData("017", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", true,  true,  false, "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        [InlineData("018", "wiiu", ".loadiine", "folderformat", "wua", "datLookup", true,  true,  true,  "none", "image", "Verify-Image(M,V:DatLookup [Md5+Crc32],C:ScanStep)")]
+        public void VerifyWiiU_Loadiine(string idx, string system, string srcFormat, string srcInfo, string convert, string prmV, bool inScan, bool dats, bool datItem, string cfg, string outType, string resultString) => verifyTest(system, srcFormat, srcInfo, convert, prmV, inScan, dats, datItem, cfg, outType, resultString);
+        #endregion
         #region VerifyPs3_Chd
         [Theory]
         [InlineData("001", "ps3", ".chd", "", "iso", "n", false, false, false, "none", "image", "Verify-Image(M,V:NoVerify,C:ScanStep)")]
