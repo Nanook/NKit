@@ -383,7 +383,7 @@ jobs:
             "embeds": [{
               "title": "NKit ${{ github.ref_name }} released",
               "url": "${{ steps.create_release.outputs.url }}",
-              "color": 5814783,
+              "color": 8847500,
               "description": "A new stable release is available.\n\n[Download NKit ${{ github.ref_name }}](${{ steps.create_release.outputs.url }})"
             }]
           }'
