@@ -356,6 +356,28 @@ jobs:
         fi
         echo "body_path=release_body.md" >> $GITHUB_OUTPUT
 
+    - name: Resolve release metadata
+      id: release_info
+      run: |
+        TAG="${{ github.ref_name }}"
+        if [[ "${{ github.ref_type }}" == "tag" && "$TAG" =~ ^v ]]; then
+          # Pre-release if tag contains a hyphen suffix (e.g. v3.1.0-alpha.1)
+          if [[ "$TAG" =~ - ]]; then
+            echo "is_prerelease=true"  >> $GITHUB_OUTPUT
+            echo "make_latest=false"   >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "make_latest=true"    >> $GITHUB_OUTPUT
+          fi
+          echo "release_name=NKit $TAG" >> $GITHUB_OUTPUT
+          echo "tag_name=$TAG"          >> $GITHUB_OUTPUT
+        else
+          echo "is_prerelease=true"    >> $GITHUB_OUTPUT
+          echo "make_latest=false"     >> $GITHUB_OUTPUT
+          echo "release_name=NKit dev build ${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "tag_name="             >> $GITHUB_OUTPUT
+        fi
+
     - name: Flatten artifacts to working dir
       run: find artifacts -name 'NKit_*.zip' -exec mv {} . \;
 
