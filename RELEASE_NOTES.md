@@ -26,6 +26,27 @@
 
 ---
 
+### Downloads
+
+| Package | Platform |
+|---|---|
+| `NKit_win-x64_CLI_{version}.zip` | Windows x64 |
+| `NKit_win-arm64_CLI_{version}.zip` | Windows ARM64 |
+| `NKit_linux-x64_CLI_{version}.zip` | Linux x64 |
+| `NKit_linux-arm64_CLI_{version}.zip` | Linux ARM64 |
+| `NKit_linux-legacy-x64_CLI_{version}.zip` | Linux x64 (legacy glibc, Ubuntu 18.04+) |
+| `NKit_linux-legacy-arm64_CLI_{version}.zip` | Linux ARM64 (legacy glibc, Ubuntu 18.04+) |
+| `NKit_macOS-Intel_CLI_{version}.zip` | macOS Intel |
+| `NKit_macOS-AppleSilicon_CLI_{version}.zip` | macOS Apple Silicon |
+| `NKit_*_UI_{version}.zip` | GUI equivalents of all of the above |
+
+All binaries are self-contained AOT-compiled native executables. No .NET runtime required.
+
+For documentation and setup instructions, see the [Wiki](https://github.com/Nanook/NKit/wiki).
+For recent changes and known issues, see [Current Status](https://github.com/Nanook/NKit/wiki/Current-Status).
+
+---
+
 ## NKit v3.0.1
 
 ### Bug fixes
