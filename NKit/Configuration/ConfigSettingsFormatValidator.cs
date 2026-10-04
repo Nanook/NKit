@@ -235,6 +235,25 @@ namespace Nanook.NKit.Configuration
         }
 
         // ======= End CISO/WBFS Validation =======
+        // ======= NKit ISO Validation =======
+
+        /// <summary>
+        /// Validates NKit ISO format configuration. Format is 'nkit.iso' with no parameters.
+        /// Only valid for GameCube sources.
+        /// </summary>
+        public static ValidationResult ValidateNkitIsoFormat(string formatString)
+        {
+            if (string.IsNullOrWhiteSpace(formatString))
+                return ValidationResult.Error("Format string cannot be empty");
+
+            string[] parts = formatString.Split(':');
+            if (parts.Length > 1)
+                return ValidationResult.Error("NKit ISO format takes no parameters — use 'nkit.iso'");
+
+            return ValidationResult.Success();
+        }
+
+        // ======= End NKit ISO Validation =======
         // ======= Extract Validation =======
 
         /// <summary>
@@ -287,6 +306,7 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatCiso => ValidateCisoFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatDecIso => ValidationResult.Success(),
+                ConfigSettingsConstants.FormatNkitIso => ValidateNkitIsoFormat(formatString),
                 _ => ValidationResult.Error($"Unknown format '{format}'. Supported formats: {string.Join(", ", ConfigSettingsRanges.GetAllSupportedFormats())}")
             };
         }

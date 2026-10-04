@@ -84,6 +84,7 @@ namespace Nanook.NKit.Configuration
         public const string FormatToc = "toc";
         public const string FormatLoadiine = "loadiine";
         public const string FormatWua = "wua";
+        public const string FormatNkitIso = "nkit.iso";
 
         // ======= Display Format Names =======
 
@@ -104,6 +105,7 @@ namespace Nanook.NKit.Configuration
         public const string DisplayFormatGdi = "GDI";
         public const string DisplayFormatLoadiine = "Loadiine";
         public const string DisplayFormatWua = "WUA";
+        public const string DisplayFormatNkitIso = "NKit ISO";
 
         // ======= Encoding Types =======
 
@@ -221,6 +223,7 @@ namespace Nanook.NKit.Configuration
             FormatWux => DisplayFormatWux,
             FormatCue => DisplayFormatCue,
             FormatGdi => DisplayFormatGdi,
+            FormatNkitIso => DisplayFormatNkitIso,
             _ => format?.ToUpper() ?? ""
         };
 
@@ -240,6 +243,7 @@ namespace Nanook.NKit.Configuration
             DisplayFormatWux => FormatWux,
             DisplayFormatCue => FormatCue,
             DisplayFormatGdi => FormatGdi,
+            DisplayFormatNkitIso => FormatNkitIso,
             _ => display?.ToLower() ?? ""
         };
 

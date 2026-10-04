@@ -55,7 +55,16 @@ namespace Nanook.NKit.Configuration
         {
             return systemType switch
             {
-                SystemType.GameCube or SystemType.Wii => new[]
+                SystemType.GameCube => new[]
+                {
+                    ConfigSettingsConstants.FormatIso,
+                    ConfigSettingsConstants.FormatRvz,
+                    ConfigSettingsConstants.FormatWbfs,
+                    ConfigSettingsConstants.FormatCiso,
+                    ConfigSettingsConstants.FormatNkitIso
+                },
+
+                SystemType.Wii => new[]
                 {
                     ConfigSettingsConstants.FormatIso,
                     ConfigSettingsConstants.FormatRvz,

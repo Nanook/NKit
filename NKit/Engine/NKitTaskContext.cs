@@ -34,6 +34,7 @@ namespace Nanook.NKit
         {
             new[] { "Convert-WiiGc-Lossless", "rvz[nkit]/wbfs[nkit]/ciso[nkit]", "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" }, //Writes header on completion so no CRC/Hash - CRC could be supported
             new[] { "Convert-WiiGc-Lossy",    "wbfs/ciso",                       "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
+            new[] { "Convert-Gc-NKitIso",     "nkit.iso[nkit]",                  "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" }, //GameCube NKit ISO output — writes header on completion, no inline CRC/Hash
             new[] { "Convert-WiiU-Wux",       "wux",                             "n",      "n",    "y",      "n",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-WiiU-AppTmd",    "apptmd",                          "n",      "n",    "n",      "y",     "n",   "n",      "folderindex", "n",    "n" },
             new[] { "Convert-WiiU-Loadiine",  "loadiine",                        "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
@@ -196,6 +197,12 @@ namespace Nanook.NKit
             new[] { @"Convert-WiiGc-Lossless   (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Convert",         "wii/gamecube", "image",       "rvz[nkit]/wbfs[nkit]/ciso[nkit]", "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //     patch (nkit.iso/gcz): no dedicated rows — decoded NKitAsIso is ReqPatch=n and
             //     converts single-step (Convert-WiiGc-Lossless -> Verify-Image) via the rows above.
+            //   gamecube nkit.iso output — gamecube only, always lossless
+            new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
+                      Verify-Image             (scan:N, vfy:InScanCompare,      ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "y",             "y/n", "y/n", "y/n", "y/n" },
+            new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
+                      Verify-Image             (scan:N, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "datLookup",     "y/n", "y/n", "y",   "y/n" },
+            new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wii gamecube - lossy
             new[] { @"Convert-WiiGc-Lossy      (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:Y, vfy:ScanCompare,        ichk:N, ochk:N, write:N, del:Y)", "Convert",         "wii/gamecube", "image",       "wbfs/ciso",                       "n",   "y",             "y/n", "y",   "y/n", "y/n" },

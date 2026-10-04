@@ -112,6 +112,9 @@ namespace Nanook.NKit
                     else
                         throw new HandledException($"Step {info.Name} / {info.ImageConfig} is not recognised");
                     break;
+                case "Convert-Gc-NKitIso":
+                    this.Step = new ConvertGcNKitIsoStep(this);
+                    break;
                 case "Convert-WiiGc-Lossy":
                     if (info.ImageConfig == ConfigSettingsConstants.FormatCiso)
                         this.Step = new ConvertWiiGcCisoStep(this);

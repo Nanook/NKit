@@ -306,14 +306,6 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 long fstSize = bootBin.ReadUInt32B(WiiConsts.FstSizeOffset);
                 long fstEnd = (fstPtr + fstSize) * _imageInfo.Multiplier;
 
-                // Guard against overflow or unreasonably large FST (e.g., update partition with no real filesystem)
-                //if (fstEnd <= 0 || fstEnd > buffer.FsSize * 1024)
-                //{
-                //    FstData = bootBin;
-                //    InvalidPartitionData = InvalidFileSystem = true;
-                //    FileSystem = null;
-                //    return true;
-                //}
 
                 long sz = fstEnd / buffer.FsSize * buffer.FsSize;
                 if (sz < fstEnd)
@@ -421,7 +413,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 for (int i = 0; i < dolOffsets; i++)
                 {
                     if (FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) != 0) //7 text offsets, 11 data offsets
-                        MainDolSize = Math.Max(MainDolSize, FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) + FstData.ReadUInt32B((int)MainDolOffset + 0x90 + (i * 4)));
+                        MainDolSize = Math.Max(MainDolSize, (long)FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) + (long)FstData.ReadUInt32B((int)MainDolOffset + 0x90 + (i * 4)));
                 }
                 SystemFiles.Add(_mainDol = new FstFile(null, "__main.dol", MainDolOffset, MainDolSize, -1, false, false) { IsSystemFile = true });
             }

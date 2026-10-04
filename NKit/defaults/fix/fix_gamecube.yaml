@@ -39,6 +39,16 @@ junkIdSubstitutions:
   # Smash Bros DX Event Disc
   D24J010000: AAAA
 
+# Some images require files to be kept at specific alignment boundaries in the NKit output stream.
+# When a file's source disc offset is a multiple of the alignment value, padding zeros are inserted
+# before it in the NKit stream so it stays aligned. Value is the alignment in bytes (hex).
+# Default behaviour (no entry) aligns files whose disc offset AND length are both multiples of 0x8000.
+fstFileAlignment:
+  # Nintendo Aging Disc DOL - files must stay 0x8000-aligned (loaded directly via DVD streaming)
+  102E010007: "8000"
+  # Nintendo Aging Disc DOL (alt ID)
+  301E010000: "8000"
+
 # Patches for a handful of images that generated junk does not match 100% - if the redump crc changes in future they can be commented them out, set FailMatchDelete=false to get a raw image that may match
 dataPatches:
   # Doshin The Giant (Europe)
