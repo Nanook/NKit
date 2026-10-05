@@ -219,7 +219,7 @@ namespace Nanook.NKit.App.Cli
                     "         e.g. rvz:zstd:19:128k:16  |  rvz:lzma:9:128k:16  |  rvz:none:128k:4\n" +
                     "  wbfs   Wii/GameCube, lossless.   wbfs:lossless           e.g. wbfs:y\n" +
                     "  ciso   Wii/GameCube, lossless.   ciso:lossless           e.g. ciso:y\n" +
-                    "  nkit.iso GameCube only, lossless. nkit.iso (no parameters)\n" +
+                    "  nkitiso GameCube only, lossless. nkitiso (no parameters; alias: nkit.iso)\n" +
                     "  wux    WiiU, lossless.           wux (no parameters)\n" +
                     "  apptmd WiiU, lossy app+tmd.      apptmd (no parameters)\n" +
                     "  loadiine WiiU, lossy Loadiine.   loadiine (no parameters)\n" +
@@ -243,7 +243,7 @@ namespace Nanook.NKit.App.Cli
                     new OptionExample("rvz:none:128k:4",     "fast, no compression",    "wii", "gamecube"),
                     new OptionExample("wbfs:y",              "lossless WBFS",           "wii", "gamecube"),
                     new OptionExample("ciso:y",              "lossless CISO",           "wii", "gamecube"),
-                    new OptionExample("nkit.iso",            "GameCube NKit ISO (lossless, GameCube only)", "gamecube"),
+                    new OptionExample("nkitiso",             "GameCube NKit ISO (lossless, GameCube only)", "gamecube"),
                     new OptionExample("wux",                 "WiiU WUX",                "wiiu"),
                     new OptionExample("apptmd",              "WiiU app+tmd (lossy)",    "wiiu"),
                     new OptionExample("loadiine",            "WiiU Loadiine (lossy)",   "wiiu"),

@@ -248,7 +248,7 @@ namespace Nanook.NKit.Configuration
 
             string[] parts = formatString.Split(':');
             if (parts.Length > 1)
-                return ValidationResult.Error("NKit ISO format takes no parameters — use 'nkit.iso'");
+                return ValidationResult.Error("NKit ISO format takes no parameters — use 'nkitiso' (or 'nkit.iso')");
 
             return ValidationResult.Success();
         }
@@ -306,7 +306,7 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatCiso => ValidateCisoFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatDecIso => ValidationResult.Success(),
-                ConfigSettingsConstants.FormatNkitIso => ValidateNkitIsoFormat(formatString),
+                ConfigSettingsConstants.FormatNkitIso or ConfigSettingsConstants.FormatNkitIsoAlias => ValidateNkitIsoFormat(formatString),
                 _ => ValidationResult.Error($"Unknown format '{format}'. Supported formats: {string.Join(", ", ConfigSettingsRanges.GetAllSupportedFormats())}")
             };
         }

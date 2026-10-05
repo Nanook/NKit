@@ -20,7 +20,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
         #region Format Support Tests
 
         [Theory(DisplayName = "Nintendo systems support expected formats")]
-        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso" })]
+        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso", "nkitiso" })]
         [InlineData(SystemType.Wii, new[] { "iso", "rvz", "wbfs", "ciso" })]
         public void GetSupportedFormats_NintendoSystems_ReturnsExpectedFormats(SystemType systemType, string[] expectedFormats)
         {

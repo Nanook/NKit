@@ -27,7 +27,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
         #region System Format Support Tests
 
         [Theory]
-        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso" }, false)]
+        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso", "nkitiso" }, false)]
         [InlineData(SystemType.Wii, new[] { "iso", "rvz", "wbfs", "ciso" }, false)]
         public void Nintendo_Systems_SupportCorrectFormats(SystemType system, string[] expectedFormats, bool supportsDualFormat)
         {
@@ -481,7 +481,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             // Assert
             string[] expectedFormats = new[]
             {
-                "app", "tmd", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "rvz", "wbfs", "wua", "wux", "zso"
+                "app", "tmd", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "nkitiso", "rvz", "wbfs", "wua", "wux", "zso"
             };
 
             Assert.Equal(expectedFormats.Length, allFormats.Count);

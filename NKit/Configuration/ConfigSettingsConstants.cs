@@ -84,7 +84,8 @@ namespace Nanook.NKit.Configuration
         public const string FormatToc = "toc";
         public const string FormatLoadiine = "loadiine";
         public const string FormatWua = "wua";
-        public const string FormatNkitIso = "nkit.iso";
+        public const string FormatNkitIso = "nkitiso";
+        public const string FormatNkitIsoAlias = "nkit.iso"; // legacy alias, accepted by parser
 
         // ======= Display Format Names =======
 
@@ -224,6 +225,7 @@ namespace Nanook.NKit.Configuration
             FormatCue => DisplayFormatCue,
             FormatGdi => DisplayFormatGdi,
             FormatNkitIso => DisplayFormatNkitIso,
+            FormatNkitIsoAlias => DisplayFormatNkitIso, // legacy alias
             _ => format?.ToUpper() ?? ""
         };
 

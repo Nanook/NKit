@@ -1,4 +1,5 @@
 using Nanook.NKit.Steps.Shared;
+using Nanook.NKit.Configuration;
 using System.Text.RegularExpressions;
 
 namespace Nanook.NKit
@@ -103,7 +104,11 @@ namespace Nanook.NKit
             {
                 case TaskType.Convert:
                     fmt = (configString ?? "").ToLower().Split(':');
-                    bool isLossy = (system == SystemType.WiiU && fmt[0] == "app")
+                    // Normalise "nkitiso" alias to the internal routing name "nkit.iso" before
+                    // the [nkit] suffix is appended — keeps the routing table unchanged.
+                    if (fmt[0] == ConfigSettingsConstants.FormatNkitIso)
+                        fmt[0] = ConfigSettingsConstants.FormatNkitIsoAlias;
+                    bool isLossy = (system == SystemType.WiiU && (fmt[0] == "app" || fmt[0] == "tmd" || fmt[0] == "apptmd"))
                                 || ((system == SystemType.Wii || system == SystemType.GameCube) && fmt.Length > 1 && (fmt[0] == "wbfs" || fmt[0] == "ciso") && fmt[1] == "n");
                     switch (system)
                     {

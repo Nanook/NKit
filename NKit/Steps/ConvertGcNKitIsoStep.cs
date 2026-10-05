@@ -19,7 +19,7 @@ namespace Nanook.NKit
     internal sealed class ConvertGcNKitIsoStep : StepBase, IStep
     {
         private string _outName;
-        private const string _OutExt = "nkit.iso";
+        private const string _OutExt = "nkit.iso"; // file extension — distinct from the format name "nkitiso"
         private const int _JunkProbe = 0x30;
 
         private const int _NkitHdrPos    = WiiConsts.NKitHeaderPos;
