@@ -158,6 +158,7 @@ namespace Nanook.NKit
 
             // Use junk ID substitution if present (some discs generate junk with a different ID)
             _rawDiscId = new byte[] { hd[0], hd[1], hd[2], hd[3] };
+            _discNo    = hd[WiiConsts.DataHdrDiscNoOffset];
             string forceJunkId = fixData?.ForceJunkId;
             if (!string.IsNullOrEmpty(forceJunkId) && forceJunkId.Length >= 4)
                 _discId = new byte[] { (byte)forceJunkId[0], (byte)forceJunkId[1], (byte)forceJunkId[2], (byte)forceJunkId[3] };
@@ -344,67 +345,86 @@ namespace Nanook.NKit
                     }
 
                     long fileSzPadded = e.FstFile.PaddedLength;
-                    if (_carryLen < fileSzPadded)
+
+                    // First time entering this file — need at least the junk probe + alignment bytes.
+                    // We also need enough to do the junk check (first _JunkProbe bytes).
+                    int minNeeded = Math.Min((int)fileSzPadded, _JunkProbe);
+                    if (e.FileWritten == 0 && _carryLen < minNeeded)
                         return;
 
-                    // Apply alignment padding before EVERY file (including junk) — matches v1.
-                    // V1 pads then updates the FST offset, then checks junk.
-                    long align = e.FstFile.Alignment;
-                    if (align == 0) // preserve: pad to original disc offset
+                    // Apply alignment padding — only once, on first entry (FileWritten == 0).
+                    if (e.FileWritten == 0)
                     {
-                        long pad = Math.Max(0, e.FstFile.DataOffset - _dstPos);
-                        if (pad > 0)
+                        long align = e.FstFile.Alignment;
+                        if (align == 0) // preserve: pad to original disc offset
                         {
+                            long pad = Math.Max(0, e.FstFile.DataOffset - _dstPos);
+                            if (pad > 0)
+                            {
+                                byte[] zeros = new byte[(int)pad];
+                                outWrite(zeros, 0, (int)pad);
+                                _dstPos += pad;
+                            }
+                        }
+                        else if (align > 0 && _dstPos % align != 0)
+                        {
+                            long pad = align - (_dstPos % align);
                             byte[] zeros = new byte[(int)pad];
                             outWrite(zeros, 0, (int)pad);
                             _dstPos += pad;
                         }
-                    }
-                    else if (align > 0 && _dstPos % align != 0)
-                    {
-                        long pad = align - (_dstPos % align);
-                        byte[] zeros = new byte[(int)pad];
-                        outWrite(zeros, 0, (int)pad);
-                        _dstPos += pad;
-                    }
 
-                    // Update FST offset to compacted output position for ALL files.
-                    _fst.WriteUInt32B(e.FstFile.FstAddrOffset, (uint)_dstPos);
-                    if (e.FstFile.DataOffset == _mainDolAddr)
-                        _dstMainDolAddr = _dstPos;
+                        // Update FST offset to compacted output position — must happen before any write.
+                        _fst.WriteUInt32B(e.FstFile.FstAddrOffset, (uint)_dstPos);
+                        if (e.FstFile.DataOffset == _mainDolAddr)
+                            _dstMainDolAddr = _dstPos;
 
-                    if (isFileJunk(_carry, 0, e.FstFile, _srcPos))
-                    {
-                        // Junk file: zero the FST size so the reader knows to use the
-                        // JunkFile gap descriptor to reconstruct this file's content.
-                        _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
-                        if (_eIdx + 1 < _entries.Count)
+                        if (isFileJunk(_carry, 0, e.FstFile, _srcPos))
                         {
-                            GcEntry next = _entries[_eIdx + 1];
-                            next.JunkFileLength    = (uint)e.FstFile.Length;
-                            next.JunkFstAddrOffset = e.FstFile.FstAddrOffset;
-                            int nullCount = 0;
-                            for (int k = 0; k < Math.Min(e.FstFile.Length, (long)WiiConsts.DataNullsCount); k++)
+                            // Junk file: zero FST size; propagate JunkFile info to next gap.
+                            _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
+                            if (_eIdx + 1 < _entries.Count)
                             {
-                                if (_carry[k] != 0) break;
-                                nullCount++;
+                                GcEntry next = _entries[_eIdx + 1];
+                                next.JunkFileLength    = (uint)e.FstFile.Length;
+                                next.JunkFstAddrOffset = e.FstFile.FstAddrOffset;
+                                int nullCount = 0;
+                                for (int k = 0; k < Math.Min(e.FstFile.Length, (long)WiiConsts.DataNullsCount); k++)
+                                {
+                                    if (_carry[k] != 0) break;
+                                    nullCount++;
+                                }
+                                next.JunkFileNulls  = nullCount;
+                                _entries[_eIdx + 1] = next;
                             }
-                            next.JunkFileNulls  = nullCount;
-                            _entries[_eIdx + 1] = next;
+                            consumeCarry((int)fileSzPadded);
+                            _eIdx++;
+                            _phase = GcPhase.Gap;
+                            continue;
                         }
                     }
-                    else
-                    {
-                        outWrite(_carry, 0, (int)fileSzPadded);
-                        _dstPos += fileSzPadded;
 
-                        long newNulls = _srcPos + fileSzPadded + WiiConsts.DataNullsCount;
-                        if (newNulls % 4 != 0)
-                            newNulls += 4 - (newNulls % 4);
-                        _nullsPos = newNulls;
+                    // Stream the file data from carry in whatever chunks are available.
+                    // Come back next section if not all data is in carry yet.
+                    long remaining = fileSzPadded - e.FileWritten;
+                    int  available = (int)Math.Min(_carryLen, remaining);
+                    if (available > 0)
+                    {
+                        outWrite(_carry, 0, available);
+                        _dstPos       += available;
+                        e.FileWritten += available;
+                        consumeCarry(available);
+                        _entries[_eIdx] = e;
                     }
 
-                    consumeCarry((int)fileSzPadded);
+                    if (e.FileWritten < fileSzPadded)
+                        return; // need more data
+
+                    // File complete.
+                    long newNulls = _srcPos + WiiConsts.DataNullsCount;
+                    if (newNulls % 4 != 0)
+                        newNulls += 4 - (newNulls % 4);
+                    _nullsPos = newNulls;
                     _eIdx++;
                     _phase = GcPhase.Gap;
                 }
@@ -460,6 +480,12 @@ namespace Nanook.NKit
                                 if (secOff > 0 && secSize > 0)
                                     dolSize = Math.Max(dolSize, secOff + secSize);
                             }
+                            // Sanity check: dolSize must be within the disc image.
+                            // On discs where files have been relocated, the boot header DOL pointer
+                            // may reference a different file's data — reading DOL section headers
+                            // from that position produces garbage sizes. Clamp to image size.
+                            if (dolSize > _imageSize - _mainDolAddr)
+                                dolSize = 0;
                             _mainDolEnd = _mainDolAddr + Math.Max(dolSize, 0x100L);
                         }
                     }
@@ -474,10 +500,11 @@ namespace Nanook.NKit
 
             // Pre-fill junk blocks for this carry section in parallel — eliminates
             // synchronous NJunk.Fill calls during the per-block classification loop.
+            // Skipped in DirectScanMode (v1-equivalent path does per-block NJunk.Fill inline).
             int  carryIdx       = 0;
             long firstGapDiscOff = e.GapDiscStart + (e.GapLength - _gapEncoder.Remaining);
             int  availForPrefill = (int)Math.Min(_carryLen - carryIdx, _gapEncoder.Remaining);
-            if (availForPrefill > 0)
+            if (!_gapEncoder.DirectScanMode && availForPrefill > 0)
             {
                 _gapEncoder.SetSectionJunkMap(_sectionJunkMap);
                 _gapEncoder.PrefillJunkCache(firstGapDiscOff, availForPrefill);
@@ -708,11 +735,28 @@ namespace Nanook.NKit
             List<GcEntry> result = new List<GcEntry>();
             long prevEnd = _fstPtr + _fstPad;
 
+            // V1 NkitFormat.GetConvertFstFiles returns null when any inter-file gap is negative
+            // (disc where files have been relocated with mismatched boot header). In that case
+            // NkitWriterGc falls back to a single ProcessGap
+            // covering imageSize - srcPos as one big gap — no per-file processing.
+            // Replicate that: if any gap is negative, return a single tail entry.
             for (int i = 0; i < files.Count; i++)
             {
                 long end = (i == 0) ? prevEnd : files[i - 1].DataOffset + files[i - 1].PaddedLength;
                 long gap = files[i].DataOffset - end;
-                if (gap < 0) gap = 0;
+                if (gap < 0)
+                {
+                    // Bad image — single gap covering rest of disc, no files
+                    long tailGap = _imageSize - prevEnd;
+                    result.Add(new GcEntry
+                    {
+                        GapLength     = tailGap < 0 ? 0 : tailGap,
+                        GapDiscStart  = prevEnd,
+                        IsFirstOrLast = true,
+                        FstFile       = null
+                    });
+                    return result;
+                }
                 result.Add(new GcEntry
                 {
                     GapLength     = gap,
@@ -762,6 +806,7 @@ namespace Nanook.NKit
             public uint      JunkFileLength;
             public int       JunkFstAddrOffset;
             public int       JunkFileNulls;
+            public long      FileWritten;   // bytes of file data already written (for streaming large files)
         }
     }
 

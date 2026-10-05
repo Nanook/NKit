@@ -47,6 +47,7 @@ namespace Nanook.NKit
         private const uint _BlkJunk    = 0u;
         private const uint _BlkNonJunk = 1u;
         private const uint _BlkScrub   = 2u;
+        private const uint _BlkRepeat  = 3u;
 
         // classifyBlock return values
         private const int _ClassJunk    = 0;
@@ -112,6 +113,11 @@ namespace Nanook.NKit
         // classifyBlock checks this first before falling back to the single-block _junkCache.
         private System.Collections.Generic.Dictionary<long, byte[]> _junkBatchCache;
 
+        // When classifyBlock returns _ClassScrub via the section junk map fast path, the
+        // correct fill byte (from ClassifiedRegion.FillByte) is stored here so processClassified
+        // can use it instead of data[offset], which may be 0x00 for scrubbed sources.
+        private byte _lastFastPathFillByte;
+
         // Pre-classified disc regions from section.Items — set by SetSectionJunkMap().
         // classifyBlock checks these before generating junk, short-circuiting NJunk.Fill
         // for regions the pipeline SectionProcessor has already verified.
@@ -119,6 +125,14 @@ namespace Nanook.NKit
         private System.Collections.Generic.List<ClassifiedRegion> _classifiedRegions;
         // Index cache for sequential access — avoids full list scan on every classifyBlock.
         private int _classifiedIdx;
+
+        /// <summary>
+        /// When true, classifyBlock skips the SectionProcessor pre-classification fast-path
+        /// and the parallel junk batch cache. Every block is classified by direct per-block
+        /// NJunk comparison — the v1-equivalent linear scan path. Useful for debugging
+        /// classification mismatches; can be left enabled if correct and not slower.
+        /// </summary>
+        public bool DirectScanMode { get; set; }
 
         /// <summary>
         /// A pre-classified disc region derived from a section's SectionItems gap analysis.
@@ -297,14 +311,18 @@ namespace Nanook.NKit
         /// </summary>
         private void processClassified(byte[] data, int offset, int length, int bType)
         {
+            // Use _lastFastPathFillByte for the effective fill byte — for scrubbed sources this
+            // may differ from data[offset] (e.g. 0xA8/0x55 regions scrubbed to 0x00 in the ISO).
+            byte effectiveFill = _lastFastPathFillByte;
+
             if (bType != _ClassJunk)  _allJunk  = false;
-            if (bType != _ClassScrub || data[offset] != 0x00) _allScrub = false;
+            if (bType != _ClassScrub || effectiveFill != 0x00) _allScrub = false;
 
             uint nkitType = bType == _ClassNonJunk ? _BlkNonJunk
                           : bType == _ClassScrub   ? _BlkScrub
                           :                          _BlkJunk;
 
-            if (!_headerWritten && (nkitType == _BlkNonJunk || (nkitType == _BlkScrub && data[offset] != 0x00)))
+            if (!_headerWritten && (nkitType == _BlkNonJunk || (nkitType == _BlkScrub && effectiveFill != 0x00)))
                 flushPreHeaderAsMixed();
 
             if (nkitType == _BlkNonJunk)
@@ -332,7 +350,7 @@ namespace Nanook.NKit
                 flushNonJunk();
 
                 if (_runActive && _runType == nkitType
-                    && (_runType != _BlkScrub || data[offset] == _runFill))
+                    && (_runType != _BlkScrub || effectiveFill == _runFill))
                 {
                     _runCount++;
                 }
@@ -342,7 +360,7 @@ namespace Nanook.NKit
                     _runType   = nkitType;
                     _runCount  = 1;
                     _runActive = true;
-                    _runFill   = (nkitType == _BlkScrub) ? data[offset] : (byte)0;
+                    _runFill   = (nkitType == _BlkScrub) ? effectiveFill : (byte)0;
                 }
             }
         }
@@ -395,21 +413,36 @@ namespace Nanook.NKit
             if (_runType == _BlkJunk)
             {
                 const uint _MaxCount = 0x3FFFFFFFu;
+                bool first = true;
                 while (count > 0)
                 {
                     uint chunk = count > _MaxCount ? _MaxCount : count;
                     count -= chunk;
-                    appendDescriptor((_BlkJunk << 30) | chunk);
+                    uint type = first ? _BlkJunk : _BlkRepeat;
+                    appendDescriptor((type << 30) | chunk);
+                    first = false;
                 }
             }
             else // ByteFill (Scrub)
             {
-                const uint _MaxCount = 0x3FFFFFu;
+                const uint _MaxFillCount   = 0x3FFFFFu;
+                const uint _MaxRepeatCount = 0x3FFFFFFFu;
+                bool first = true;
                 while (count > 0)
                 {
-                    uint chunk = count > _MaxCount ? _MaxCount : count;
-                    count -= chunk;
-                    appendDescriptor((_BlkScrub << 30) | (chunk << 8) | (uint)_runFill);
+                    if (first)
+                    {
+                        uint chunk = count > _MaxFillCount ? _MaxFillCount : count;
+                        count -= chunk;
+                        appendDescriptor((_BlkScrub << 30) | (chunk << 8) | (uint)_runFill);
+                        first = false;
+                    }
+                    else
+                    {
+                        uint chunk = count > _MaxRepeatCount ? _MaxRepeatCount : count;
+                        count -= chunk;
+                        appendDescriptor((_BlkRepeat << 30) | chunk);
+                    }
                 }
             }
 
@@ -453,6 +486,87 @@ namespace Nanook.NKit
             _write(_desc, 0, 4);
         }
 
+        // ── Fill check ────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Size of the fill-check unit — aligns to 1024-byte boundaries so that
+        /// four consecutive 256-byte blocks are examined as a single unit.
+        /// </summary>
+        private const int _FillCheckSize = 0x400; // 1024 bytes
+
+        /// <summary>
+        /// Number of fill-check units to batch in one parallel scan call.
+        /// Keeps thread-dispatch overhead proportional to data size.
+        /// </summary>
+        private const int _FillCheckBatchBlocks = 256; // 256 KB per parallel batch
+
+        // Scratch result arrays for checkFillByte — reused across calls.
+        // One entry per _FillCheckSize unit: 0xFF means "uniform, fill byte = result",
+        // 0x100 means "not uniform".
+        private int[]  _fillResults;
+        private byte[] _fillBytes;
+
+        /// <summary>
+        /// Check whether <paramref name="data"/> is entirely filled with a single byte
+        /// value.  Examines in <see cref="_FillCheckSize"/>-byte units in parallel.
+        /// Returns the fill byte if uniform, or -1 if not.
+        ///
+        /// The check is always aligned to <see cref="_FillCheckSize"/> within the data
+        /// window — if <paramref name="offset"/> is not aligned the first unit is
+        /// shrunk to reach the next boundary.
+        /// </summary>
+        private int checkFillByte(byte[] data, int offset, int length)
+        {
+            // How many fill-check units do we need?
+            int units = (length + _FillCheckSize - 1) / _FillCheckSize;
+
+            // Ensure result scratch buffers are large enough
+            if (_fillResults == null || _fillResults.Length < units)
+            {
+                _fillResults = new int[units];
+                _fillBytes   = new byte[units];
+            }
+
+            int[] results   = _fillResults;
+            byte[] fillBufs = _fillBytes;
+
+            System.Threading.Tasks.Parallel.For(0, units,
+                new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 2) },
+                u =>
+                {
+                    int uOffset = offset + u * _FillCheckSize;
+                    int uLen    = Math.Min(_FillCheckSize, offset + length - uOffset);
+                    byte first  = data[uOffset];
+                    bool same   = true;
+                    for (int i = 1; i < uLen; i++)
+                    {
+                        if (data[uOffset + i] != first)
+                        {
+                            same = false;
+                            break;
+                        }
+                    }
+                    if (same)
+                    {
+                        results[u]   = 0; // uniform
+                        fillBufs[u]  = first;
+                    }
+                    else
+                    {
+                        results[u] = 1; // mixed
+                    }
+                });
+
+            // All units must agree on the same fill byte
+            byte candidate = fillBufs[0];
+            for (int u = 0; u < units; u++)
+            {
+                if (results[u] != 0 || fillBufs[u] != candidate)
+                    return -1;
+            }
+            return candidate;
+        }
+
         // ── Block classification ──────────────────────────────────────────────────────
 
         private bool isJunkCoveredByRegion(long start, long end)
@@ -469,13 +583,15 @@ namespace Nanook.NKit
 
         private int classifyBlock(byte[] data, int offset, int length, long discOffset, int leadNulls)
         {
+            // Reset to the actual byte — fast-path Fill will override if needed.
+            _lastFastPathFillByte = data[offset];
             if (_dolStart >= 0 && _dolEnd > 0
                 && discOffset < _dolEnd && discOffset + length > _dolStart)
                 return _ClassNonJunk;
 
             // Fast path: check pre-classified regions from section.Items (sorted by DiscStart).
             // Advance _classifiedIdx to skip past regions that end before this block.
-            if (_classifiedRegions != null && _classifiedRegions.Count > 0)
+            if (!this.DirectScanMode && _classifiedRegions != null && _classifiedRegions.Count > 0)
             {
                 long blockEnd = discOffset + length;
                 // Skip past regions that end before this block (sequential access)
@@ -489,14 +605,19 @@ namespace Nanook.NKit
                     if (r.DiscStart <= discOffset && blockEnd <= r.DiscEnd)
                     {
                         if (r.Type == DataType.NJunk)  return _ClassJunk;
-                        if (r.Type == DataType.Fill)   return _ClassScrub;
+                        if (r.Type == DataType.Fill)
+                        {
+                            // Store the correct fill byte — data[offset] may be 0x00 for scrubbed sources.
+                            _lastFastPathFillByte = r.FillByte;
+                            return _ClassScrub;
+                        }
                         // DataType.Data or other — fall through to full scan
                     }
                 }
             }
 
             long   blockStart = (discOffset / NJunk.JunkBlockSize) * NJunk.JunkBlockSize;
-            bool   useBatch   = _junkBatchCache != null && _junkBatchCache.ContainsKey(blockStart);
+            bool   useBatch   = !this.DirectScanMode && _junkBatchCache != null && _junkBatchCache.ContainsKey(blockStart);
             byte[] junk       = null;
 
             if (useBatch)
