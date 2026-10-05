@@ -428,6 +428,22 @@ namespace Nanook.NKit.Configuration
         // ======= Generic Format Parsing =======
 
         /// <summary>
+        /// Parses WUA format configuration (e.g., "wua" or "wua:16")
+        /// The only parameter is parallelism (compression worker threads).
+        /// </summary>
+        public static WuaFormatConfiguration ParseWuaFormat(string formatString)
+        {
+            string[] parts = formatString.Split(':');
+            string parallelismStr = parts.Length >= 2 ? parts[1] : "";
+            int parallelism = parseParallelism(parallelismStr, ConfigSettingsDefaults.GetDefaultParallelism(SystemType.WiiU));
+
+            if (parallelism < 0 || parallelism > ConfigSettingsConstants.MaxParallelismValue)
+                throw new ArgumentException($"Parallelism must be 0-{ConfigSettingsConstants.MaxParallelismValue}, got {parallelism}");
+
+            return new WuaFormatConfiguration { Parallelism = parallelism };
+        }
+
+        /// <summary>
         /// Parses any supported format configuration string and returns format-specific configuration
         /// </summary>
         public static object ParseFormatConfiguration(string formatString, SystemType systemType)
@@ -445,6 +461,7 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatWbfs => ParseWbfsFormat(formatString),
                 ConfigSettingsConstants.FormatCiso => ParseCisoFormat(formatString),
                 ConfigSettingsConstants.FormatGdi => new GdiFormatConfiguration { FormatType = formatType },
+                ConfigSettingsConstants.FormatWua => ParseWuaFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatDecIso => new SimpleFormatConfiguration { FormatType = formatType },
                 _ => throw new ArgumentException($"Unknown or unsupported format '{formatType}'")

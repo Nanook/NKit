@@ -304,7 +304,15 @@ namespace Nanook.NKit
                     }
                 }
             }
-            Array.Copy(cacheItem.Cached, buff.Result, buff.Info.FullSize);
+            byte[] cached = cacheItem.Cached;
+            Array.Copy(cached, buff.Result, buff.Info.FullSize);
+            // Evict immediately after the last reference — avoids holding the cached byte[]
+            // until the end-of-batch cleanup loop, which can be millions of items later for
+            // WUX images with cross-partition deduplication.
+            // Use CompareExchange so only one thread performs the eviction when multiple workers
+            // may concurrently serve references to the same cached primary block.
+            if (buff.Info.Index >= cacheItem.RefLastIdx)
+                System.Threading.Interlocked.CompareExchange(ref cacheItem.Cached, null, cached);
         }
 
         private int setOutputBuffers(long readOffset, int readSize, ImageBlockInfo<T> currentBlock, int currentPos, AreaType areaType)

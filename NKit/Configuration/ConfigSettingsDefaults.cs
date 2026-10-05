@@ -65,7 +65,11 @@ namespace Nanook.NKit.Configuration
                 "wbfs" => "wbfs",
                 "ciso" => "ciso",
                 "app" => "app",
+                "tmd" => "tmd",
                 "wux" => "wux",
+                "loadiine" => "loadiine",
+                "wua" => "wua",
+                "xiso" => "xiso",
                 "gdi" => "gdi",
                 "cue" => "cue:split:bin:bin:sub",
                 _ => GetFullDefaultFormat(systemType)
@@ -254,7 +258,7 @@ namespace Nanook.NKit.Configuration
         // ======= End Log Level Defaults =======
         // ======= UI Defaults =======
 
-        public static bool IsParallelismsSupported(string format) => IsBlockSizesSupported(format);
+        public static bool IsParallelismsSupported(string format) => IsBlockSizesSupported(format) || format == ConfigSettingsConstants.FormatWua;
 
         public static bool IsFixSupported(SystemType systemType)
         {

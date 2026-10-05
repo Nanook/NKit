@@ -102,6 +102,7 @@ namespace Nanook.NKit.Configuration
                 SystemType.XBox or SystemType.XBox360 => new[]
                 {
                     ConfigSettingsConstants.FormatIso,
+                    ConfigSettingsConstants.FormatXiso,
                     ConfigSettingsConstants.FormatCso,
                     ConfigSettingsConstants.FormatCso2,
                     ConfigSettingsConstants.FormatZso

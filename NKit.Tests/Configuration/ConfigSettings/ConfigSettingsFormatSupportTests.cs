@@ -27,7 +27,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
         #region System Format Support Tests
 
         [Theory]
-        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso" }, false)]
+        [InlineData(SystemType.GameCube, new[] { "iso", "rvz", "wbfs", "ciso", "nkit.iso" }, false)]
         [InlineData(SystemType.Wii, new[] { "iso", "rvz", "wbfs", "ciso" }, false)]
         public void Nintendo_Systems_SupportCorrectFormats(SystemType system, string[] expectedFormats, bool supportsDualFormat)
         {
@@ -65,8 +65,8 @@ namespace NKit.Tests.Configuration.ConfigSettings
         }
 
         [Theory]
-        [InlineData(SystemType.XBox, new[] { "iso", "cso", "cso2", "zso" }, false)]
-        [InlineData(SystemType.XBox360, new[] { "iso", "cso", "cso2", "zso" }, false)]
+        [InlineData(SystemType.XBox, new[] { "iso", "xiso", "cso", "cso2", "zso" }, false)]
+        [InlineData(SystemType.XBox360, new[] { "iso", "xiso", "cso", "cso2", "zso" }, false)]
         public void Microsoft_Systems_SupportCorrectFormats(SystemType system, string[] expectedFormats, bool supportsDualFormat)
         {
             // Act
@@ -481,7 +481,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             // Assert
             string[] expectedFormats = new[]
             {
-                "app", "tmd", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "rvz", "wbfs", "wua", "wux", "zso"
+                "app", "tmd", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "nkit.iso", "rvz", "wbfs", "wua", "wux", "xiso", "zso"
             };
 
             Assert.Equal(expectedFormats.Length, allFormats.Count);

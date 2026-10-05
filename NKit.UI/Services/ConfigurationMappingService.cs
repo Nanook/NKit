@@ -169,6 +169,10 @@ namespace NKit.Ui.Services
                         settings.ConvertBinary = cue.BinaryExtension;
                         settings.ConvertAudio = cue.AudioExtension;
                         break;
+
+                    case WuaFormatConfiguration wua:
+                        settings.ConvertParallelism = wua.Parallelism.ToString();
+                        break;
                 }
             }
             catch (Exception)
@@ -257,10 +261,15 @@ namespace NKit.Ui.Services
                 ConfigSettingsConstants.FormatCiso => ConfigSettingsFormatGenerator.GenerateCisoFormatString(
                     settings.ConvertLossless),
 
+                ConfigSettingsConstants.FormatWua => ConfigSettingsFormatGenerator.GenerateWuaFormatString(
+                    int.TryParse(settings.ConvertParallelism, out int wuaPar) ? wuaPar : null),
+
                 // For simple formats without parameters, return just the format name
                 ConfigSettingsConstants.FormatIso or
                 ConfigSettingsConstants.FormatApp or
                 ConfigSettingsConstants.FormatWux or
+                ConfigSettingsConstants.FormatLoadiine or
+                ConfigSettingsConstants.FormatXiso or
                 ConfigSettingsConstants.FormatDecIso or
                 ConfigSettingsConstants.FormatGdi => baseFormat,
 

@@ -1,4 +1,5 @@
 using Nanook.GrindCore.ZStd;
+using Nanook.NKit.Steps.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,10 +20,9 @@ namespace Nanook.NKit.Container.ZArchive
     ///   [footer]                  (144 bytes, big-endian, magic at byte 140)
     ///
     /// Usage:
-    ///   using var w = new ZArchiveWriter(outputStream);
+    ///   using var w = new ZArchiveWriter(outputStream, workers: 16);
     ///   w.MakeDir("titleId_v0");
-    ///   w.MakeDir("titleId_v0/code");
-    ///   w.StartFile("titleId_v0/code/app.xml");
+    ///   w.StartFile("titleId_v0/code/app.rpx");
     ///   w.Write(data, 0, data.Length);
     ///   w.FinalizeArchive();
     ///
@@ -37,69 +37,108 @@ namespace Nanook.NKit.Container.ZArchive
         private const uint VersionValue        = 0x61BF3A01u;
         private const int  FooterSize          = ZArchiveReader.FooterSize;    // 144 bytes
 
-        // ── Compression ──────────────────────────────────────────────────────
-        private readonly ZStdBlock _compressor;
-        private readonly byte[] _uncompressedBlock = new byte[BlockSize];
-        private readonly byte[] _compressedBlock   = new byte[BlockSize + 4096]; // headroom
-        private int _blockBufferFill; // bytes filled in _uncompressedBlock
+        // ── Thread-local compressor ───────────────────────────────────────────
+        // One ZStdBlock per thread, created on first use and reused for its lifetime.
+        // Each parallel worker thread gets its own context, so there is no lock contention
+        // and no per-block native alloc/free churn (the CRT arena stays warm between calls).
+        // This mirrors ConvertWiiGcRvzStep, which uses the same pattern with CircularSequenceQueue.
+        [ThreadStatic]
+        private static ZStdBlock _tlsCompressor;
+
+        private static ZStdBlock getCompressor()
+        {
+            if (_tlsCompressor == null)
+                _tlsCompressor = new ZStdBlock(new GrindCore.CompressionOptions
+                {
+                    BlockSize = BlockSize,
+                    Type = (GrindCore.CompressionType)19  // level 19 — maximum compression
+                });
+            return _tlsCompressor;
+        }
+
+        // ── Parallel pipeline ─────────────────────────────────────────────────
+        // Pool slot: (uncompressed, compressed) buffer pair.  No ZStdBlock here — the
+        // thread-local compressor above is used by whichever worker thread processes the slot.
+        private sealed class BlockBuffer
+        {
+            internal BlockBuffer()
+            {
+                this.Uncompressed = new byte[BlockSize];
+                this.Compressed   = new byte[BlockSize + 4096]; // headroom
+            }
+            internal byte[] Uncompressed;
+            internal byte[] Compressed;
+            internal int    CompressedLen; // 0 = store uncompressed
+        }
+
+        private readonly CircularSequenceQueue<BlockBuffer> _queue;
+        private int _blockBufferFill; // bytes in _queue.FillItem.Uncompressed
+        private volatile Exception _writeException;
 
         // ── Block offset tracking ─────────────────────────────────────────────
-        // One OffsetRecord covers EntriesPerRecord blocks.
-        // Each entry stores compressed size - 1 as a uint16 (big-endian).
-        private readonly List<long>   _blockBaseOffsets = new List<long>(); // one per group of 16
-        private readonly List<ushort> _blockSizes       = new List<ushort>(); // one per block
+        private readonly List<long>   _blockBaseOffsets = new List<long>();
+        private readonly List<ushort> _blockSizes       = new List<ushort>();
 
         // ── Output stream ─────────────────────────────────────────────────────
         private readonly Stream _out;
-        private readonly IncrementalHash _sha256; // hashes every byte written to _out
-        private long _compDataStart; // absolute stream position where compressed data begins
-        private long _compWritePos;  // running write position
+        private readonly IncrementalHash _sha256;
+        private long _compDataStart;
+        private long _compWritePos;
 
         // ── File tree ─────────────────────────────────────────────────────────
         private class Node
         {
             public string Name;
             public bool   IsFile;
-            public long   FileOffset;  // byte offset within uncompressed data stream
+            public long   FileOffset;
             public long   FileSize;
-            public List<Node> Children = new List<Node>(); // only for dirs
-            public int ChildStartIndex; // assigned during tree serialisation
+            public List<Node> Children = new List<Node>();
+            public int ChildStartIndex;
         }
         private readonly Node _root = new Node { Name = "", IsFile = false };
-        private Node _currentFile; // file currently being appended to
-
-        // Per-file: running uncompressed byte offset (across all files, sequential)
+        private Node _currentFile;
         private long _currentDataOffset;
 
         // ── Name table ───────────────────────────────────────────────────────
         private readonly List<byte[]> _nameBytes    = new List<byte[]>();
         private readonly Dictionary<string, int> _nameIndex = new Dictionary<string, int>(StringComparer.Ordinal);
 
-        // ── SHA-256 (zeroed — Cemu doesn't verify) ────────────────────────────
-        // We write 32 zero bytes in the footer's hash field.
-
         // ────────────────────────────────────────────────────────────────────
         // Construction
         // ────────────────────────────────────────────────────────────────────
 
-        public ZArchiveWriter(Stream output)
+        /// <summary>
+        /// Creates a new ZArchiveWriter.
+        /// </summary>
+        /// <param name="output">The stream to write the archive to.</param>
+        /// <param name="workers">
+        /// Number of parallel compression workers. 0 = use <see cref="Environment.ProcessorCount"/>.
+        /// Mirrors the <c>wua:N</c> parallelism option (e.g. <c>wua:16</c>).
+        /// </param>
+        public ZArchiveWriter(Stream output, int workers = 0)
         {
             _out = output ?? throw new ArgumentNullException(nameof(output));
-            _compressor = new ZStdBlock(new GrindCore.CompressionOptions
-            {
-                BlockSize = BlockSize,
-                Type = (GrindCore.CompressionType)19  // level 19 — maximum compression
-            });
             _sha256 = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
             _compDataStart = output.Position;
             _compWritePos  = _compDataStart;
+
+            if (workers <= 0)
+                workers = Environment.ProcessorCount;
+
+            // Pool: workers + 2 (one fill slot + one write-side slack), same sizing as RVZ.
+            // CircularSequenceQueue takes the first item as the initial FillItem; the rest are
+            // the circular work queue, so we need workers + 2 items total.
+            BlockBuffer[] pool = new BlockBuffer[workers + 2];
+            for (int i = 0; i < pool.Length; i++)
+                pool[i] = new BlockBuffer();
+
+            _queue = new CircularSequenceQueue<BlockBuffer>(pool, compressBlock, writeBlock);
         }
 
         // ────────────────────────────────────────────────────────────────────
         // Public API
         // ────────────────────────────────────────────────────────────────────
 
-        /// <summary>Creates a directory node. Call before adding files inside it.</summary>
         public void MakeDir(string path)
         {
             flushCurrentFile();
@@ -112,16 +151,12 @@ namespace Nanook.NKit.Container.ZArchive
                 {
                     child = new Node { Name = part, IsFile = false };
                     cur.Children.Add(child);
-                    getOrCreateName(part); // pre-populate name table entry
+                    getOrCreateName(part);
                 }
                 cur = child;
             }
         }
 
-        /// <summary>
-        /// Starts a new file at the given path (directories must already exist).
-        /// Subsequent <see cref="Write"/> calls append to this file.
-        /// </summary>
         public void StartFile(string path)
         {
             flushCurrentFile();
@@ -129,7 +164,6 @@ namespace Nanook.NKit.Container.ZArchive
             string[] parts = path.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 0) throw new ArgumentException("Empty path");
 
-            // Navigate to parent directory
             Node dir = _root;
             for (int i = 0; i < parts.Length - 1; i++)
             {
@@ -139,119 +173,165 @@ namespace Nanook.NKit.Container.ZArchive
             }
 
             string fileName = parts[parts.Length - 1];
-            var node = new Node { Name = fileName, IsFile = true, FileOffset = _currentDataOffset, FileSize = 0 };
+            Node node = new Node { Name = fileName, IsFile = true, FileOffset = _currentDataOffset, FileSize = 0 };
             dir.Children.Add(node);
-            getOrCreateName(fileName); // pre-populate name table entry
+            getOrCreateName(fileName);
             _currentFile = node;
         }
 
-        /// <summary>Appends bytes to the currently active file.</summary>
         public void Write(byte[] data, int offset, int count)
         {
             if (_currentFile == null) throw new InvalidOperationException("No file started. Call StartFile first.");
+            checkException();
 
             int remaining = count;
             while (remaining > 0)
             {
-                int space = BlockSize - _blockBufferFill;
+                int space  = BlockSize - _blockBufferFill;
                 int toCopy = Math.Min(remaining, space);
-                Array.Copy(data, offset + (count - remaining), _uncompressedBlock, _blockBufferFill, toCopy);
+                Array.Copy(data, offset + (count - remaining), _queue.FillItem.Uncompressed, _blockBufferFill, toCopy);
                 _blockBufferFill += toCopy;
                 remaining        -= toCopy;
 
                 if (_blockBufferFill == BlockSize)
-                    flushBlock();
+                    submitBlock(full: true);
             }
             _currentFile.FileSize += count;
             _currentDataOffset    += count;
         }
 
-        /// <summary>Flushes any buffered data and writes the index tables + footer.</summary>
         public void FinalizeArchive()
         {
             flushCurrentFile();
-            flushBlock(); // flush partial last block (may be empty → no-op inside flushBlock)
+            submitBlock(full: false);
+            _queue.Complete();
+            checkException();
 
             long compDataEnd = _compWritePos - _compDataStart;
 
-            // Write OffsetRecords
             long recStart = _compWritePos;
             writeOffsetRecords();
             long recEnd = _compWritePos;
 
-            // Write name table
             long namesStart = _compWritePos;
             writeNameTable();
             long namesEnd = _compWritePos;
 
-            // Write file tree
             long treeStart = _compWritePos;
-            int entryCount = writeFileTree();
+            writeFileTree();
             long treeEnd = _compWritePos;
 
-            // meta sections (empty)
-            long metaDirStart = _compWritePos;
+            long metaDirStart  = _compWritePos;
             long metaDataStart = _compWritePos;
+            long totalSize     = _compWritePos + FooterSize;
 
-            long totalSize = _compWritePos + FooterSize;
-
-            // Build the footer with the SHA-256 hash field zeroed (required by spec —
-            // the hash covers the whole archive including the footer with hash=0).
             byte[] footer = new byte[FooterSize];
             int fi = 0;
-            // sectionCompressedData
-            footer.WriteUInt64B(fi, (ulong)_compDataStart);             fi += 8;
-            footer.WriteUInt64B(fi, (ulong)compDataEnd);                fi += 8;
-            // sectionOffsetRecords
-            footer.WriteUInt64B(fi, (ulong)recStart);                   fi += 8;
-            footer.WriteUInt64B(fi, (ulong)(recEnd - recStart));        fi += 8;
-            // sectionNames
-            footer.WriteUInt64B(fi, (ulong)namesStart);                 fi += 8;
-            footer.WriteUInt64B(fi, (ulong)(namesEnd - namesStart));    fi += 8;
-            // sectionFileTree
-            footer.WriteUInt64B(fi, (ulong)treeStart);                  fi += 8;
-            footer.WriteUInt64B(fi, (ulong)(treeEnd - treeStart));      fi += 8;
-            // sectionMetaDirectory
-            footer.WriteUInt64B(fi, (ulong)metaDirStart);               fi += 8;
-            footer.WriteUInt64B(fi, (ulong)0);                          fi += 8;
-            // sectionMetaData
-            footer.WriteUInt64B(fi, (ulong)metaDataStart);              fi += 8;
-            footer.WriteUInt64B(fi, (ulong)0);                          fi += 8;
-            // SHA-256 hash field — zeroed for hashing, filled in below (fi = 96)
+            footer.WriteUInt64B(fi, (ulong)_compDataStart);          fi += 8;
+            footer.WriteUInt64B(fi, (ulong)compDataEnd);             fi += 8;
+            footer.WriteUInt64B(fi, (ulong)recStart);                fi += 8;
+            footer.WriteUInt64B(fi, (ulong)(recEnd - recStart));     fi += 8;
+            footer.WriteUInt64B(fi, (ulong)namesStart);              fi += 8;
+            footer.WriteUInt64B(fi, (ulong)(namesEnd - namesStart)); fi += 8;
+            footer.WriteUInt64B(fi, (ulong)treeStart);               fi += 8;
+            footer.WriteUInt64B(fi, (ulong)(treeEnd - treeStart));   fi += 8;
+            footer.WriteUInt64B(fi, (ulong)metaDirStart);            fi += 8;
+            footer.WriteUInt64B(fi, (ulong)0);                       fi += 8;
+            footer.WriteUInt64B(fi, (ulong)metaDataStart);           fi += 8;
+            footer.WriteUInt64B(fi, (ulong)0);                       fi += 8;
             const int HashOffset = 96;
-            fi += 32; // skip 32 zero bytes (already zero from new byte[])
-            // totalSize
-            footer.WriteUInt64B(fi, (ulong)totalSize);                  fi += 8;
-            // version
-            footer.WriteUInt32B(fi, VersionValue);                      fi += 4;
-            // magic
-            footer.WriteUInt32B(fi, MagicValue);                        fi += 4;
+            fi += 32;
+            footer.WriteUInt64B(fi, (ulong)totalSize);               fi += 8;
+            footer.WriteUInt32B(fi, VersionValue);                   fi += 4;
+            footer.WriteUInt32B(fi, MagicValue);                     fi += 4;
 
-            // Feed the footer (with zeroed hash) into the SHA-256 so the hash covers
-            // the complete archive. Then compute the final hash and embed it.
             _sha256.AppendData(footer, 0, FooterSize);
             byte[] hash = _sha256.GetHashAndReset();
             Array.Copy(hash, 0, footer, HashOffset, 32);
-
-            // Write the footer with the real hash directly to _out (hash is now final).
             _out.Write(footer, 0, FooterSize);
         }
 
         public void Dispose()
         {
-            _compressor?.Dispose();
             _sha256?.Dispose();
+            // _tlsCompressor is intentionally not disposed here — it lives for the thread's lifetime
+            // and is reused across all ZArchiveWriter instances on the same thread.
         }
 
         // ────────────────────────────────────────────────────────────────────
-        // Private helpers
+        // Block pipeline
         // ────────────────────────────────────────────────────────────────────
 
-        /// <summary>
-        /// Writes bytes to the output stream AND feeds them into the running SHA-256 hash.
-        /// Every byte written to the archive (including the footer with hash field zeroed)
-        /// must go through this helper so the final hash is correct.
-        /// </summary>
+        private void checkException()
+        {
+            if (_writeException != null)
+                throw new HandledException(_writeException, $"ZArchiveWriter: {_writeException.Message}");
+        }
+
+        private void submitBlock(bool full)
+        {
+            if (!full && _blockBufferFill == 0)
+                return;
+
+            if (!full && _blockBufferFill < BlockSize)
+                Array.Clear(_queue.FillItem.Uncompressed, _blockBufferFill, BlockSize - _blockBufferFill);
+
+            _queue.ItemComplete();
+            _blockBufferFill = 0;
+        }
+
+        // Called on a thread-pool worker thread by CircularSequenceQueue.
+        private void compressBlock(BlockBuffer slot)
+        {
+            if (_writeException != null)
+                return;
+            int compLen = slot.Compressed.Length;
+            bool ok = false;
+            try
+            {
+                ok = getCompressor().Compress(slot.Uncompressed, 0, BlockSize, slot.Compressed, 0, ref compLen)
+                     == GrindCore.CompressionResultCode.Success
+                     && compLen < BlockSize;
+            }
+            catch (Exception ex)
+            {
+                System.Threading.Interlocked.CompareExchange(ref _writeException, ex, null);
+                ok = false;
+            }
+            slot.CompressedLen = ok ? compLen : 0;
+        }
+
+        // Called serially in submission order by CircularSequenceQueue.
+        private void writeBlock(BlockBuffer slot)
+        {
+            if (_writeException != null)
+                return;
+            try
+            {
+                int blockIdx = _blockSizes.Count;
+                if (blockIdx % EntriesPerRecord == 0)
+                    _blockBaseOffsets.Add(_compWritePos - _compDataStart);
+
+                bool compressed = slot.CompressedLen > 0;
+                byte[] toWrite    = compressed ? slot.Compressed   : slot.Uncompressed;
+                int    toWriteLen = compressed ? slot.CompressedLen : BlockSize;
+
+                if (toWriteLen > 0xFFFF + 1)
+                    throw new InvalidOperationException("Compressed block too large for uint16 size field.");
+
+                _blockSizes.Add((ushort)(toWriteLen - 1));
+                outputData(toWrite, 0, toWriteLen);
+            }
+            catch (Exception ex)
+            {
+                System.Threading.Interlocked.CompareExchange(ref _writeException, ex, null);
+            }
+        }
+
+        // ────────────────────────────────────────────────────────────────────
+        // Output / serialisation helpers
+        // ────────────────────────────────────────────────────────────────────
+
         private void outputData(byte[] data, int offset, int count)
         {
             _out.Write(data, offset, count);
@@ -261,60 +341,12 @@ namespace Nanook.NKit.Container.ZArchive
 
         private void flushCurrentFile()
         {
-            // no-op if no current file
             _currentFile = null;
-        }
-
-        private void flushBlock()
-        {
-            if (_blockBufferFill == 0) return;
-
-            // Pad block to full size with zeros if partial
-            if (_blockBufferFill < BlockSize)
-                Array.Clear(_uncompressedBlock, _blockBufferFill, BlockSize - _blockBufferFill);
-
-            // Track group start offset
-            int blockIdx = _blockSizes.Count;
-            if (blockIdx % EntriesPerRecord == 0)
-                _blockBaseOffsets.Add(_compWritePos - _compDataStart);
-
-            // Try to compress
-            int compLen = _compressedBlock.Length;
-            bool compressed = false;
-            try
-            {
-                _compressor.Compress(_uncompressedBlock, 0, BlockSize, _compressedBlock, 0, ref compLen);
-                compressed = compLen < BlockSize;
-            }
-            catch { compressed = false; }
-
-            byte[] toWrite;
-            int    toWriteLen;
-            if (compressed)
-            {
-                toWrite    = _compressedBlock;
-                toWriteLen = compLen;
-            }
-            else
-            {
-                toWrite    = _uncompressedBlock;
-                toWriteLen = BlockSize;
-            }
-
-            if (toWriteLen > 0xFFFF + 1)
-                throw new InvalidOperationException("Compressed block too large for uint16 size field.");
-
-            _blockSizes.Add((ushort)(toWriteLen - 1));
-            outputData(toWrite, 0, toWriteLen);
-            _blockBufferFill = 0;
         }
 
         private void writeOffsetRecords()
         {
-            // Each record: 8-byte base + 16 × uint16 (big-endian)
-            int totalBlocks = _blockSizes.Count;
-            int totalRecords = (totalBlocks + EntriesPerRecord - 1) / EntriesPerRecord;
-
+            int totalRecords = (_blockSizes.Count + EntriesPerRecord - 1) / EntriesPerRecord;
             for (int r = 0; r < totalRecords; r++)
             {
                 byte[] rec = new byte[8 + 2 * EntriesPerRecord];
@@ -331,32 +363,20 @@ namespace Nanook.NKit.Container.ZArchive
 
         private void writeNameTable()
         {
-            // Collect all names from the tree in DFS order to assign nameOffsets
-            // Actually we build the table on the fly and assign indices during tree construction.
-            // Here we write them in the order they appear in _nameBytes.
             using var ms = new MemoryStream();
             foreach (byte[] entry in _nameBytes)
-            {
                 ms.Write(entry, 0, entry.Length);
-            }
             byte[] table = ms.ToArray();
             outputData(table, 0, table.Length);
         }
 
-        private int writeFileTree()
+        private void writeFileTree()
         {
-            // BFS (breadth-first) flat array — matches the C++ reference exactly.
-            // All direct children of a directory are contiguous in the flat array so
-            // ChildStartIndex + ChildCount correctly addresses them.
-            //
-            // Pass 1: BFS to compute ChildStartIndex for every directory.
-            // Pass 2: BFS again in the same order to write entries.
-
-            // Pass 1 — assign indices
             var queue = new Queue<Node>();
             queue.Enqueue(_root);
-            int currentIndex = 1; // root occupies index 0
+            int currentIndex = 1;
 
+            // Pass 1: assign ChildStartIndex
             while (queue.Count > 0)
             {
                 Node node = queue.Dequeue();
@@ -369,10 +389,8 @@ namespace Nanook.NKit.Container.ZArchive
                 }
             }
 
-            // Pass 2 — serialize in the same BFS order
+            // Pass 2: serialize BFS
             queue.Enqueue(_root);
-            int written = 0;
-
             while (queue.Count > 0)
             {
                 Node n = queue.Dequeue();
@@ -381,7 +399,6 @@ namespace Nanook.NKit.Container.ZArchive
                         queue.Enqueue(child);
 
                 byte[] entry = new byte[16];
-                // Root node uses the special name offset 0x7FFFFFFF (per spec)
                 int nameOff = ReferenceEquals(n, _root) ? 0x7FFFFFFF : getOrCreateName(n.Name);
                 uint nameAndType = (uint)nameOff;
                 if (n.IsFile) nameAndType |= 0x80000000u;
@@ -403,19 +420,14 @@ namespace Nanook.NKit.Container.ZArchive
                     entry.WriteUInt32B(12, 0);
                 }
                 outputData(entry, 0, 16);
-                written++;
             }
-            return written;
         }
 
         private int getOrCreateName(string name)
         {
             if (_nameIndex.TryGetValue(name, out int idx)) return idx;
 
-            // Encode as Latin-1
             byte[] nameData = Encoding.GetEncoding(1252).GetBytes(name);
-
-            // Write length prefix: single byte if length < 128, two bytes otherwise
             byte[] entry;
             int nameLen = nameData.Length;
             if (nameLen < 128)
@@ -432,7 +444,6 @@ namespace Nanook.NKit.Container.ZArchive
                 Array.Copy(nameData, 0, entry, 2, nameLen);
             }
 
-            // The name offset is the current position in the name table byte stream
             int nameOffset = 0;
             foreach (byte[] e in _nameBytes) nameOffset += e.Length;
 
@@ -441,6 +452,5 @@ namespace Nanook.NKit.Container.ZArchive
             _nameBytes.Add(entry);
             return idx;
         }
-
     }
 }

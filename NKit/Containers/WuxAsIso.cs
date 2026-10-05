@@ -10,7 +10,6 @@ namespace Nanook.NKit.Container
     internal class WuxAsIso : Stream, IAsIso
     {
         private Stream _stream;
-        private bool _allowSeek;
         private long _position;
         private long _size;
         private ContainerType _format;
@@ -18,8 +17,17 @@ namespace Nanook.NKit.Container
 
         private int _wuxSectorSize;
         private int _wuxSectors;
-        ImageBlockCache _blockCache;
         private long _dataOffset;
+
+        /// <summary>
+        /// Set to true before <see cref="IAsIso.Construct"/> if the task reads every sector
+        /// sequentially (FullScan=true, e.g. Scan, Convert, Dedupe). When true the
+        /// <see cref="ImageBlockReader{T}"/> caches deduplicated physical sectors so re-reads
+        /// are served from memory rather than seeking back to disk.
+        /// Leave false (default) for partial-read tasks (Extract, Wipe) where caching adds
+        /// memory overhead with no benefit.
+        /// </summary>
+        internal bool EnableCaching { get; set; }
 
 
         private byte[] _wuxHdr;
@@ -44,7 +52,6 @@ namespace Nanook.NKit.Container
         public int Construct(Stream stream, bool allowSeek)
         {
             _stream = stream;
-            _allowSeek = allowSeek;
 
             _format = ContainerType.Wux;
             _wuxHdr = _stream.ReadBytes(0x20);
@@ -58,14 +65,20 @@ namespace Nanook.NKit.Container
             _dataOffset = _wuxHdr.Length + data.Length;
             _dataOffset += _dataOffset % _wuxSectorSize == 0 ? 0 : (_wuxSectorSize - (_dataOffset % _wuxSectorSize));
 
-            uint val;
-            _blockCache = new ImageBlockCache(true);
-            _blockReader = new ImageBlockReader<object>(true, true, false, 10, 10);
+            // Enable caching for deduplicated sectors — WUX maps multiple virtual sectors to
+            // the same physical offset. With caching enabled, ImageBlockReader detects these
+            // via RefIndex/RefLastIdx (built in CompletedAddItems) and serves re-reads from the
+            // cached copy instead of seeking back to disk. The immediate eviction fix in
+            // ImageBlockReader.cachedItem ensures Cached is released as soon as the last
+            // reference is consumed, preventing unbounded accumulation across the image.
+            // EnableCaching is set by NKitInput based on StepInfo.FullScan — only true for
+            // full sequential scans (Convert, Scan, Dedupe); false for Extract/Wipe/Verify
+            // where each sector is read at most once and caching wastes memory.
+            _blockReader = new ImageBlockReader<object>(true, this.EnableCaching, false, 10, 10);
             ulong maxPointer = 0;
             for (int i = 0; i < _wuxSectors; i++)
             {
-                val = data.ReadUInt32L(i << 2);
-                _blockCache.Register(val * (ulong)_wuxSectorSize, _wuxSectorSize);
+                uint val = data.ReadUInt32L(i << 2);
                 _blockReader.AddItem((val * (ulong)_wuxSectorSize) + (ulong)_dataOffset, _wuxSectorSize, (uint)_wuxSectorSize, ImageBlockType.Raw, null);
                 maxPointer = Math.Max((val * (ulong)_wuxSectorSize) + (ulong)_dataOffset, maxPointer);
             }
