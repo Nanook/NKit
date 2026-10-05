@@ -78,17 +78,18 @@ namespace NKit.Ui.Services
                     mapSingleFormat(convertFormat, settings, suppressEvents);
                     settings.ConvertSingleFormat = formatName;
 
-                    // For dual format systems, preserve indexed format if it exists
+                    // For dual format systems, reset indexed format to system default (not preserve
+                    // a stale value from a different system that may be incompatible).
                     if (!ConfigSettingsDefaults.IsIndexedFormatSupported(settings.System))
                     {
                         settings.ConvertIndexedFormat = string.Empty;
                     }
-                    else if (string.IsNullOrEmpty(settings.ConvertIndexedFormat))
+                    else
                     {
-                        // Set default indexed format for dual systems
-                        string defaultIndexed = ConfigSettingsDefaults.GetDefaultIndexedFormat(settings.System);
-                        settings.ConvertIndexedFormat = defaultIndexed;
-                        // System.Diagnostics.Debug.WriteLine($"MapFromConvertFormat: Set default indexed format '{defaultIndexed}' for dual system");
+                        // Always reset to the system's default indexed format — this ensures that
+                        // switching from PS3 (indexed="cue") to WiiU (indexed="app") correctly
+                        // resets the indexed slot rather than inheriting an incompatible format.
+                        settings.ConvertIndexedFormat = ConfigSettingsDefaults.GetDefaultIndexedFormat(settings.System);
                     }
                 }
             }
@@ -292,6 +293,12 @@ namespace NKit.Ui.Services
                     settings.ConvertAudio,
                     ConfigSettingsDefaults.GetDefaultSubExtension());
             }
+
+            // WiiU indexed formats (app, wua, loadiine) are parameter-free — pass through as-is.
+            if (baseFormat == ConfigSettingsConstants.FormatApp
+             || baseFormat == ConfigSettingsConstants.FormatWua
+             || baseFormat == ConfigSettingsConstants.FormatLoadiine)
+                return baseFormat;
 
             return settings.ConvertIndexedFormat;
         }
