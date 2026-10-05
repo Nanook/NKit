@@ -517,6 +517,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
 
             // Assert — GameCube has 5 formats (includes nkitiso), Wii has 4
             int expectedCount = systemType == SystemType.GameCube ? 5 : 4;
+            Assert.Equal(expectedCount, supportedFormats.Count);
             Assert.Contains(ConfigSettingsConstants.FormatIso, supportedFormats);
             Assert.Contains(ConfigSettingsConstants.FormatRvz, supportedFormats);
             Assert.Contains(ConfigSettingsConstants.FormatWbfs, supportedFormats);

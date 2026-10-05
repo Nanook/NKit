@@ -19,6 +19,13 @@ namespace Nanook.NKit.Configuration
         {
             return systemType switch
             {
+                SystemType.WiiU => new[]
+                {
+                    ConfigSettingsConstants.FormatApp,
+                    ConfigSettingsConstants.FormatWua,
+                    ConfigSettingsConstants.FormatLoadiine
+                },
+
                 SystemType.PS3 or SystemType.PS1 or SystemType.PS2 or SystemType.PcEngine or SystemType.CDi or SystemType.Saturn or SystemType.SegaCD or SystemType.Default => new[]
                 {
                     ConfigSettingsConstants.FormatCue,
@@ -102,6 +109,7 @@ namespace Nanook.NKit.Configuration
                 SystemType.XBox or SystemType.XBox360 => new[]
                 {
                     ConfigSettingsConstants.FormatIso,
+                    ConfigSettingsConstants.FormatXiso,
                     ConfigSettingsConstants.FormatCso,
                     ConfigSettingsConstants.FormatCso2,
                     ConfigSettingsConstants.FormatZso

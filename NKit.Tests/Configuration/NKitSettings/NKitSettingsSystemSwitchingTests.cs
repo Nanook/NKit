@@ -113,7 +113,7 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.GameCube, "invalidformat", "rvz:zstd:19:128kb:16")]
         [InlineData(SystemType.Dreamcast, "iso", "cue:split:bin:bin:sub")] // ISO not supported on Dreamcast
         [InlineData(SystemType.PSP, "wbfs:y", "cso:9:2kb:4")] // WBFS not supported on PSP
-        [InlineData(SystemType.WiiU, "cue:split:bin:bin:sub", "wux")] // CUE not supported on WiiU
+        [InlineData(SystemType.WiiU, "cue:split:bin:bin:sub", "wux/app")] // CUE not supported on WiiU
         public void SystemSwitchingWithInvalidFormats_FallsBackCorrectly(
             SystemType system, string invalidFormat, string expectedFallback)
         {

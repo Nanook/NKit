@@ -38,7 +38,7 @@ namespace Nanook.NKit.Configuration
                 SystemType.PSP => "cso:9:2kb:4",
                 SystemType.PS1 or SystemType.PS2 => "cso:9:2kb:4/cue:split:bin:bin:sub",
                 SystemType.XBox or SystemType.XBox360 => ConfigSettingsConstants.FormatIso,
-                SystemType.WiiU => ConfigSettingsConstants.FormatWux,
+                SystemType.WiiU => $"{ConfigSettingsConstants.FormatWux}/{ConfigSettingsConstants.FormatApp}",
                 SystemType.Dreamcast => "cue:split:bin:bin:sub", // Index-only system - single format string, not dual
                 SystemType.PcEngine or SystemType.CDi or SystemType.Saturn or SystemType.SegaCD => "iso/cue:split:bin:bin:sub", // Dual format systems
                 _ => "iso/cue:split:bin:bin:sub"
@@ -65,7 +65,11 @@ namespace Nanook.NKit.Configuration
                 "wbfs" => "wbfs",
                 "ciso" => "ciso",
                 "app" => "app",
+                "tmd" => "tmd",
                 "wux" => "wux",
+                "loadiine" => "loadiine",
+                "wua" => "wua",
+                "xiso" => "xiso",
                 "gdi" => "gdi",
                 "cue" => "cue:split:bin:bin:sub",
                 _ => GetFullDefaultFormat(systemType)
@@ -179,6 +183,8 @@ namespace Nanook.NKit.Configuration
         {
             return systemType switch
             {
+                SystemType.WiiU => ConfigSettingsConstants.FormatApp,
+
                 SystemType.PS1 or SystemType.PS2 or SystemType.PS3 or
                 SystemType.PcEngine or SystemType.CDi or SystemType.Saturn or
                 SystemType.SegaCD or SystemType.Default => ConfigSettingsConstants.FormatCue,
@@ -254,7 +260,7 @@ namespace Nanook.NKit.Configuration
         // ======= End Log Level Defaults =======
         // ======= UI Defaults =======
 
-        public static bool IsParallelismsSupported(string format) => IsBlockSizesSupported(format);
+        public static bool IsParallelismsSupported(string format) => IsBlockSizesSupported(format) || format == ConfigSettingsConstants.FormatWua;
 
         public static bool IsFixSupported(SystemType systemType)
         {
@@ -340,6 +346,7 @@ namespace Nanook.NKit.Configuration
         {
             return systemType switch
             {
+                SystemType.WiiU => true,
                 SystemType.PS1 or SystemType.PS2 or SystemType.PS3 or SystemType.PcEngine or SystemType.Dreamcast or SystemType.CDi or SystemType.Saturn or SystemType.SegaCD or SystemType.Default => true,
                 _ => false
             };
@@ -349,7 +356,7 @@ namespace Nanook.NKit.Configuration
         {
             return format switch
             {
-                ConfigSettingsConstants.FormatCue or ConfigSettingsConstants.FormatGdi => true,
+                ConfigSettingsConstants.FormatCue or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatApp => true,
                 _ => false
             };
         }

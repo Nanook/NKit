@@ -115,6 +115,19 @@ namespace Nanook.NKit.Configuration
 
         // ======= End CUE Format Generation =======
 
+        // ======= WUA Format Generation =======
+
+        /// <summary>
+        /// Generates a WUA format string with optional parallelism: "wua" or "wua:16"
+        /// </summary>
+        public static string GenerateWuaFormatString(int? parallelism = null)
+        {
+            int par = parallelism ?? ConfigSettingsDefaults.GetDefaultParallelism(SystemType.WiiU);
+            return $"{ConfigSettingsConstants.FormatWua}:{par}";
+        }
+
+        // ======= End WUA Format Generation =======
+
         // ======= Extract Configuration Generation =======
 
         /// <summary>

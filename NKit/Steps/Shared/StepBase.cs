@@ -85,8 +85,12 @@ namespace Nanook.NKit.Steps.Shared
                     // For FullScan + InScanCompare: verification compares Scan objects only
                     // (CRC is taken from Context.Scan); MD5/SHA1/XxHash are never read by the
                     // verify path, so skip streaming them to save ~20% of total convert time.
+                    // Do not skip when ContractReqChk is true — those steps embed the input
+                    // checksums in their output header (e.g. RVZ reserved block) and require
+                    // MD5/SHA1/XxHash regardless of the downstream verify method.
                     bool skipStreamHashing = si.FullScan
-                        && (si.VerifyMethod == VerifyMethod.InScanCompare || si.VerifyMethod == VerifyMethod.NoVerify);
+                        && (si.VerifyMethod == VerifyMethod.InScanCompare || si.VerifyMethod == VerifyMethod.NoVerify)
+                        && !this.ContractReqChk;
                     checksums = skipStreamHashing
                         ? new List<ChecksumType>()
                         : new List<ChecksumType> { ChecksumType.Crc32, ChecksumType.Md5, ChecksumType.Sha1, ChecksumType.XxHash };

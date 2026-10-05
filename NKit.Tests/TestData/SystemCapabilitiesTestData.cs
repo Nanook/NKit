@@ -91,13 +91,13 @@ namespace NKit.Tests.TestData
             new SystemCapability
             {
                 System = SystemType.WiiU,
-                Category = SystemCategory.SingleFormat,
-                SupportedFormats = new[] { "app", "iso", "wux" },
-                SingleFormats = new[] { "app", "iso", "wux" },
-                IndexedFormats = new string[0],
-                DefaultFormat = "wux",
+                Category = SystemCategory.DualFormat,
+                SupportedFormats = new[] { "app", "iso", "wux", "wua", "loadiine" },
+                SingleFormats = new[] { "iso", "wux" },
+                IndexedFormats = new[] { "app", "wua", "loadiine" },
+                DefaultFormat = "wux/app",
                 DefaultSingleFormat = "wux",
-                DefaultIndexedFormat = null,
+                DefaultIndexedFormat = "app",
                 MaxThreads = 32,
                 DefaultThreads = 16
             },

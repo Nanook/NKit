@@ -87,6 +87,9 @@ namespace Nanook.NKit
 
                 _iso = createImageContainer(id, canUseCustomChkSum);
 
+                if (_iso is WuxAsIso wux)
+                    wux.EnableCaching = _context.StepInfo?.FullScan ?? false;
+
                 int requestedBuffSize = _iso.Construct(stream, _iso is WiaAsIso);
 
                 // Detail: which container decoder claimed this source (winning entry of the 15-deep
