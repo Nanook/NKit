@@ -6,19 +6,19 @@ namespace NKit.Tests
     /// <summary>
     /// Resolves paths to external test asset directories that are not part of the repo.
     ///
-    /// On Windows the original hardcoded paths (D:\NKitFiles, etc.) are used as-is.
+    /// On Windows the original hardcoded paths (C:\Temp, etc.) are used as-is.
     /// On Linux (or in Docker), the paths are remapped via environment variables or
     /// known container mount points so the same tests can run without copying files.
     ///
     /// Environment variables (set by build/test.sh):
-    ///   NKIT_FILES_CONTAINER_PATH  — root mount for D:\NKitFiles (default: /NKitFiles)
+    ///   NKIT_FILES_CONTAINER_PATH  — root mount for C:\Temp\NKDS (default: /NKDS)
     /// </summary>
     public static class TestPaths
     {
         /// <summary>
-        /// Translates a path that begins with "D:\NKitFiles" to the platform-appropriate location.
+        /// Translates a path that begins with "C:\Temp" to the platform-appropriate location.
         /// On Windows: returned unchanged (backslashes preserved).
-        /// On Linux/macOS: D:\NKitFiles is replaced with $NKIT_FILES_CONTAINER_PATH (default /NKitFiles),
+        /// On Linux/macOS: C:\Temp is replaced with $NKIT_FILES_CONTAINER_PATH (default /Tmp),
         /// and all remaining backslashes are converted to forward slashes.
         /// </summary>
         public static string Resolve(string path)
@@ -29,11 +29,11 @@ namespace NKit.Tests
             {
                 // Linux / macOS / Docker
                 string nkitFilesRoot = Environment.GetEnvironmentVariable("NKIT_FILES_CONTAINER_PATH")
-                                       ?? "/NKitFiles";
+                                       ?? "/Tmp";
 
                 // Replace the Windows drive+root prefix with the container mount point
-                path = path.Replace(@"D:\NKitFiles", nkitFilesRoot)
-                           .Replace(@"D:/NKitFiles", nkitFilesRoot);
+                path = path.Replace(@"C:\Temp", nkitFilesRoot)
+                           .Replace(@"C:/Temp", nkitFilesRoot);
 
                 // Normalise remaining backslashes
                 path = path.Replace('\\', '/');

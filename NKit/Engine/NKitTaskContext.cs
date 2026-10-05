@@ -34,14 +34,14 @@ namespace Nanook.NKit
         {
             new[] { "Convert-WiiGc-Lossless", "rvz[nkit]/wbfs[nkit]/ciso[nkit]", "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" }, //Writes header on completion so no CRC/Hash - CRC could be supported
             new[] { "Convert-WiiGc-Lossy",    "wbfs/ciso",                       "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
-            new[] { "Convert-Gc-NKitIso",     "nkit.iso[nkit]",                  "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" }, //GameCube NKit ISO output — writes header on completion, no inline CRC/Hash
+            new[] { "Convert-Gc-NKitIso",     "nkitiso[nkit]",                   "n",      "n",    "y",      "n",     "n",   "n",      "image",       "n",    "n" }, //CRC comes from Context.Scan; nkit.iso header uses only the source CRC, no MD5/SHA1/XxHash needed
             new[] { "Convert-WiiU-Wux",       "wux",                             "n",      "n",    "y",      "n",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-WiiU-AppTmd",    "apptmd",                          "n",      "n",    "n",      "y",     "n",   "n",      "folderindex", "n",    "n" },
             new[] { "Convert-WiiU-Loadiine",  "loadiine",                        "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
             new[] { "Convert-WiiU-Wua",       "wua",                             "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-Wua-Loadiine",   "loadiine",                        "n",      "n",    "y",      "y",     "n",   "n",      "folderfiles", "n",    "n" },
             new[] { "Convert-Loadiine-Wua",   "wua",                             "n",      "n",    "y",      "y",     "n",   "n",      "image",       "n",    "n" },
-            new[] { "Convert-Folder-AppTmd",    "apptmd",                          "n",      "n",    "y",      "y",     "n",   "n",      "folderindex", "n",    "n" },
+            new[] { "Convert-Folder-AppTmd",  "apptmd",                          "n",      "n",    "y",      "y",     "n",   "n",      "folderindex", "n",    "n" },
             new[] { "Expand-WiiU-AppTmd",     "apptmd",                          "n",      "n",    "n",      "n",     "n",   "y",      "folderindex", "y",    "y" },
             new[] { "Convert-Iso-CsoZso",     "cso/zso",                         "n",      "y",    "y",      "n",     "n",   "n",      "image",       "n",    "n" },
             new[] { "Convert-Iso-DecIso",     "deciso",                          "n",      "n",    "y",      "n",     "n",   "y",      "image",       "y",    "y" },

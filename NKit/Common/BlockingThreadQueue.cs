@@ -6,74 +6,148 @@ using System.Threading.Tasks;
 
 namespace Nanook.NKit
 {
+    // Fixed-parallelism work queue backed by dedicated worker threads.
+    //
+    // The previous implementation dispatched work items via ThreadPool.QueueUserWorkItem and
+    // wrapped Process() in Task.Run. When called from a thread-pool context (e.g. the NKit
+    // pipeline's producer task) with MaxParallel=10, up to 11 thread-pool threads were needed
+    // simultaneously. Combined with 15 pipeline worker tasks also on the thread pool this caused
+    // thread-pool starvation: QueueUserWorkItem callbacks could not start, _inFlight never
+    // reached zero, and the caller's .Wait() blocked forever — reproducing as a pipeline hang
+    // at ~99% of a conversion.
+    //
+    // Fix: MaxParallel dedicated Thread instances are created at construction and reused across
+    // all Process() calls. They never compete with the thread pool. Process() returns a Task
+    // that completes (via TaskCompletionSource) when the last worker finishes its item after
+    // AddComplete() has been called. The caller's existing .Wait() on that Task is correct and
+    // harmless — it unblocks as soon as the last item is processed.
     internal class BlockingThreadQueue<T>
     {
-        private class threadState
+        private class WorkItem
         {
-            public ushort ThreadIndex;
-            public object Object;
-            public bool Allocated;
+            public T Object;
             public uint Index;
-            public override string ToString() => $"{Index}";
+            public int ThreadIndex;
         }
 
-        private class finaliseState
+        private class FinaliseSlot
         {
-            public threadState ThreadState;
-            public long FinaliseIndex;
-            public override string ToString() => $"{FinaliseIndex} : {ThreadState?.Index}";
+            public WorkItem Item;
+            public long ExpectedIndex;
         }
 
-        private readonly object _lq = new object();
-        private readonly object _lp = new object();
-        private readonly object _lf = new object();
-        private Queue<T> _q;
-        private volatile int _tc;
-        private long _fc;
-        private long _fp; //finalise process
-        private bool _complete;
+        // ── Shared state ──────────────────────────────────────────────────────────────
 
-        private threadState[] _threadsState;
-        private finaliseState[] _finaliseState;
+        private readonly object _lq = new object();   // guards _q, _complete, _batchActive
+        private readonly object _lp = new object();   // guards _inFlight
+        private readonly object _lf = new object();   // guards finalise slots
 
-        public BlockingThreadQueue(int maxQueue, int maxParallel, bool useFinalise)
-        {
-            _q = new Queue<T>();
+        private readonly Queue<WorkItem> _q = new Queue<WorkItem>();
+        private volatile bool _complete;    // no more items will be Added in this batch
+        private volatile bool _batchActive; // true between Init() and batch completion
+        private volatile bool _shutdown;    // true when object is no longer needed
 
-            this.MaxQueue = maxQueue;
-            this.MaxParallel = maxParallel;
-            UseFinalise = useFinalise;
-            _threadsState = new threadState[maxParallel];
-            for (ushort i = 0; i < _threadsState.Length; i++)
-                _threadsState[i] = new threadState() { ThreadIndex = i, Object = null };
+        private int _inFlight;              // items dispatched but not yet finished
+        private long _enqueueCount;         // monotonic counter for ordering (per batch)
+        private long _finaliseNext;         // next index the finalise thread expects (per batch)
 
-            _finaliseState = new finaliseState[maxParallel];
-            for (int i = 0; i < _finaliseState.Length; i++)
-                _finaliseState[i] = new finaliseState() { FinaliseIndex = i, ThreadState = null };
-        }
+        private Action<T, int> _process;
+        private Action<T> _finalise;
+
+        private TaskCompletionSource<bool> _batchTcs; // signalled when _inFlight hits 0 after _complete
+
+        private readonly Thread[] _workers;
+        private Thread _finaliseThread;
+        private readonly FinaliseSlot[] _finaliseSlots;
+
+        // ── Public surface ────────────────────────────────────────────────────────────
 
         public int MaxQueue { get; }
         public int MaxParallel { get; }
         public bool UseFinalise { get; }
-        public int QueueCount => _q.Count;
-        public int ProcessingCount => _tc;
+        public int QueueCount { get { lock (_lq) return _q.Count; } }
+        public int ProcessingCount { get { lock (_lp) return _inFlight; } }
 
-        internal void Init()
+        public BlockingThreadQueue(int maxQueue, int maxParallel, bool useFinalise)
         {
-            _q.Clear();
-            _tc = 0;
-            _fc = 0;
-            _fp = 0;
-            for (int i = 0; i < _threadsState.Length; i++)
+            this.MaxQueue = maxQueue;
+            this.MaxParallel = maxParallel;
+            this.UseFinalise = useFinalise;
+
+            if (useFinalise)
             {
-                _threadsState[i].Allocated = false;
-                _threadsState[i].Object = null;
-                _threadsState[i].Index = 0;
+                _finaliseSlots = new FinaliseSlot[maxParallel];
+                for (int i = 0; i < maxParallel; i++)
+                    _finaliseSlots[i] = new FinaliseSlot();
             }
 
-            for (int i = 0; i < _finaliseState.Length; i++)
-                _finaliseState[i].ThreadState = null;
-            _complete = false;
+            _workers = new Thread[maxParallel];
+            for (int i = 0; i < maxParallel; i++)
+            {
+                int idx = i;
+                _workers[i] = new Thread(() => workerLoop(idx)) { IsBackground = true, Name = $"BlockingThreadQueue-{idx}" };
+                _workers[i].Start();
+            }
+
+            if (useFinalise)
+            {
+                _finaliseThread = new Thread(finaliseLoop) { IsBackground = true, Name = "BlockingThreadQueue-Finalise" };
+                _finaliseThread.Start();
+            }
+        }
+
+        // Called by ImageBlockReader before each new batch of blocks.
+        // Must be called before Process() and before the first Add().
+        internal void Init()
+        {
+            lock (_lf)
+            {
+                if (_finaliseSlots != null)
+                {
+                    _finaliseNext = 0;
+                    foreach (FinaliseSlot s in _finaliseSlots)
+                        s.Item = null;
+                }
+            }
+
+            lock (_lp)
+            {
+                _inFlight = 0;
+            }
+
+            lock (_lq)
+            {
+                _q.Clear();
+                _complete = false;
+                _batchActive = false;
+                _enqueueCount = 0;
+                _batchTcs = null;
+                Monitor.PulseAll(_lq);
+            }
+        }
+
+        // Registers the process (and optional finalise) delegate for this batch and returns a
+        // Task that completes when every item added via Add()/AddComplete() has been processed.
+        // The caller adds items AFTER calling Process(), then calls AddComplete(), then awaits
+        // or .Wait()s the returned Task — matching ImageBlockReader's existing pattern exactly.
+        public Task Process(Action<T, int> process, Action<T> finalise)
+        {
+            if (this.UseFinalise && finalise == null)
+                throw new Exception("finalise cannot be null when UseFinalise is true");
+
+            _process = process;
+            _finalise = finalise;
+
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            lock (_lq)
+            {
+                _batchTcs = tcs;
+                _batchActive = true;
+                Monitor.PulseAll(_lq); // wake workers in case items arrive before they check
+            }
+
+            return tcs.Task;
         }
 
         public void Add(T item)
@@ -81,164 +155,145 @@ namespace Nanook.NKit
             lock (_lq)
             {
                 if (_complete)
-                    throw new Exception("Items can not be added when Complete");
+                    throw new Exception("Items cannot be added after AddComplete");
 
                 while (_q.Count == this.MaxQueue)
                     Monitor.Wait(_lq);
 
-                _q.Enqueue(item);
-                Monitor.PulseAll(_lq); // Use PulseAll for better reliability
+                WorkItem wi = new WorkItem { Object = item, Index = (uint)_enqueueCount++, ThreadIndex = -1 };
+                _q.Enqueue(wi);
+                lock (_lp)
+                    _inFlight++;
+
+                Monitor.PulseAll(_lq);
             }
         }
 
         public void AddComplete()
         {
+            TaskCompletionSource<bool> tcs = null;
             lock (_lq)
             {
                 _complete = true;
-                Monitor.PulseAll(_lq); // Use PulseAll
+                Monitor.PulseAll(_lq); // wake workers so they see _complete when queue drains
             }
-        }
-
-        public Task Process(Action<T, int> process, Action<T> finalise)
-        {
-            if (this.UseFinalise && finalise == null)
-                throw new Exception("finalise can not be null when UseFinalise is true");
-
-            return Task.Run(() =>
-            {
-                int tc = this.MaxParallel;
-                bool exit = false;
-
-                Task finaliseTask = null;
-                if (this.UseFinalise)
-                    finaliseTask = finaliseProcess(finalise);
-
-                while (!exit)
-                {
-                    threadState state;
-                    lock (_lq)
-                    {
-                        while (!exit && _q.Count == 0)
-                        {
-                            if (_complete)
-                                exit = true;
-                            else
-                                Monitor.Wait(_lq);
-                        }
-                        if (exit)
-                            break;
-
-                        // Move thread allocation logic inside queue lock to prevent race conditions
-                        lock (_lp)
-                        {
-                            while (_tc >= tc)
-                                Monitor.Wait(_lp);
-
-                            _tc++;
-                            state = _threadsState.First(a => !a.Allocated);
-                            state.Allocated = true;
-                        }
-
-                        state.Object = _q.Dequeue();
-                        state.Index = (uint)Interlocked.Read(ref _fc);
-                        Interlocked.Increment(ref _fc);
-                        Monitor.PulseAll(_lq);
-                    }
-
-                    ThreadPool.QueueUserWorkItem(obj =>
-                    {
-                        threadState ts = (threadState)obj;
-                        try
-                        {
-                            process((T)ts.Object, (int)ts.ThreadIndex);
-                        }
-                        finally
-                        {
-                            if (this.UseFinalise)
-                                finaliseObject(ts);
-                            else
-                                completeProcessing(ts);
-                        }
-                    }, state);
-                }
-
-                // Fixed: Remove double lock and use proper waiting pattern
-                while (_tc > 0)
-                {
-                    lock (_lp)
-                    {
-                        if (_tc > 0)
-                            Monitor.Wait(_lp, 100); // Add timeout to prevent infinite wait
-                    }
-                }
-
-                if (this.UseFinalise && finaliseTask != null)
-                {
-                    // Signal finalise to complete
-                    lock (_lf)
-                        Monitor.PulseAll(_lf);
-                    finaliseTask.Wait();
-                }
-            });
-        }
-
-        private void completeProcessing(threadState state)
-        {
+            // If no items were ever added (or all finished before AddComplete was called),
+            // _inFlight is already 0 — signal completion now.
             lock (_lp)
             {
-                state.Object = null;
-                state.Allocated = false;
-                _tc--;
-                Monitor.PulseAll(_lp); // Use PulseAll
+                if (_inFlight == 0)
+                    tcs = _batchTcs;
+            }
+            tcs?.TrySetResult(true);
+        }
+
+        // ── Worker thread loop ────────────────────────────────────────────────────────
+
+        private void workerLoop(int threadIndex)
+        {
+            while (true)
+            {
+                WorkItem wi = null;
+
+                lock (_lq)
+                {
+                    while (!_shutdown)
+                    {
+                        if (_batchActive && _q.Count > 0)
+                            break;
+                        Monitor.Wait(_lq);
+                    }
+                    if (_shutdown)
+                        return;
+
+                    wi = _q.Dequeue();
+                    wi.ThreadIndex = threadIndex;
+                    Monitor.PulseAll(_lq); // wake Add() if it was blocked on MaxQueue
+                }
+
+                try
+                {
+                    _process((T)wi.Object, threadIndex);
+                }
+                finally
+                {
+                    if (this.UseFinalise)
+                        enqueueForFinalise(wi);
+                    else
+                        decrementInFlight(wi);
+                }
             }
         }
 
-        private void finaliseObject(threadState ts)
+        private void decrementInFlight(WorkItem wi)
+        {
+            TaskCompletionSource<bool> tcs = null;
+            lock (_lp)
+            {
+                _inFlight--;
+                if (_inFlight == 0)
+                {
+                    // Only signal completion once _complete is set (no more items will arrive).
+                    // If _complete is not yet set, the last item could arrive after we check —
+                    // AddComplete() will not call us again, so we re-check inside Add's lock path.
+                    // In practice _inFlight can only reach 0 after _complete because Add() increments
+                    // _inFlight before the worker can decrement it.
+                    if (_complete)
+                        tcs = _batchTcs;
+                }
+            }
+            tcs?.TrySetResult(true);
+        }
+
+        // ── Finalise thread loop ──────────────────────────────────────────────────────
+
+        private void enqueueForFinalise(WorkItem wi)
         {
             lock (_lf)
             {
-                finaliseState fts = _finaliseState.First(a => a.ThreadState == null);
-                fts.ThreadState = ts;
-                Monitor.PulseAll(_lf); // Use PulseAll
+                FinaliseSlot slot = _finaliseSlots.First(s => s.Item == null);
+                slot.Item = wi;
+                slot.ExpectedIndex = wi.Index;
+                Monitor.PulseAll(_lf);
             }
         }
 
-        private Task finaliseProcess(Action<T> finalise)
+        private void finaliseLoop()
         {
-            return Task.Run(() =>
+            while (true)
             {
-                while (true)
+                WorkItem wi = null;
+
+                lock (_lf)
                 {
-                    finaliseState fts = null;
-
-                    lock (_lf)
+                    while (!_shutdown)
                     {
-                        // Check completion condition first
-                        if (_complete && _fp >= Interlocked.Read(ref _fc))
-                            break;
-
-                        fts = _finaliseState.FirstOrDefault(a => a.ThreadState?.Index == _fp);
-                        if (fts == null)
+                        FinaliseSlot slot = _finaliseSlots.FirstOrDefault(s => s.Item != null && s.ExpectedIndex == _finaliseNext);
+                        if (slot != null)
                         {
-                            Monitor.Wait(_lf, 100); // Add timeout
-                            continue; // Don't pulse when waiting
+                            wi = slot.Item;
+                            slot.Item = null;
+                            _finaliseNext++;
+                            break;
                         }
+                        Monitor.Wait(_lf, 50);
                     }
+                    if (_shutdown)
+                        return;
+                }
 
-                    if (fts != null)
+                if (wi != null)
+                {
+                    try
                     {
-                        Interlocked.Increment(ref _fp);
-                        threadState ts = fts.ThreadState;
-                        finalise((T)ts.Object);
-
-                        lock (_lf)
-                            fts.ThreadState = null;
-
-                        completeProcessing(ts);
+                        _finalise((T)wi.Object);
+                    }
+                    finally
+                    {
+                        decrementInFlight(wi);
                     }
                 }
-            });
+            }
         }
     }
 }

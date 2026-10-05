@@ -100,7 +100,7 @@ namespace Nanook.NKit
         // ── Contracts ─────────────────────────────────────────────────────────────────
 
         internal override bool ContractReqPatch    => false;
-        internal override bool ContractReqChk      => true;
+        internal override bool ContractReqChk      => false;
         internal override bool ContractFullScan    => true;
         internal override bool ContractIsLossy     => false;
         internal override bool ContractIsExpand    => false;

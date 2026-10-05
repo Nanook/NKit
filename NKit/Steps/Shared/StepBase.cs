@@ -82,18 +82,14 @@ namespace Nanook.NKit.Steps.Shared
                     checksums = new List<ChecksumType> { ChecksumType.XxHash };
                 else
                 {
-                    // For FullScan + InScanCompare: verification compares Scan objects only
-                    // (CRC is taken from Context.Scan); MD5/SHA1/XxHash are never read by the
-                    // verify path, so skip streaming them to save ~20% of total convert time.
-                    // Do not skip when ContractReqChk is true — those steps embed the input
-                    // checksums in their output header (e.g. RVZ reserved block) and require
-                    // MD5/SHA1/XxHash regardless of the downstream verify method.
-                    bool skipStreamHashing = si.FullScan
-                        && (si.VerifyMethod == VerifyMethod.InScanCompare || si.VerifyMethod == VerifyMethod.NoVerify)
-                        && !this.ContractReqChk;
-                    checksums = skipStreamHashing
-                        ? new List<ChecksumType>()
-                        : new List<ChecksumType> { ChecksumType.Crc32, ChecksumType.Md5, ChecksumType.Sha1, ChecksumType.XxHash };
+                    // si.ReqChk is set by TaskContext from the _StepDetail table — true only for
+                    // steps that embed source checksums in their output header (RVZ/WBFS/CISO
+                    // lossless, CSO/ZSO, nkit.iso). False for lossy formats, WUA, Loadiine,
+                    // AppTmd, Extract, Wipe, WUX, etc., so those steps skip streaming MD5/SHA1/
+                    // XxHash entirely and save the ~20% overhead.
+                    checksums = si.ReqChk
+                        ? new List<ChecksumType> { ChecksumType.Crc32, ChecksumType.Md5, ChecksumType.Sha1, ChecksumType.XxHash }
+                        : new List<ChecksumType>();
                 }
                 if (si.FullScan)
                     checksums.Remove(ChecksumType.Crc32); //remove crc
@@ -128,7 +124,7 @@ namespace Nanook.NKit.Steps.Shared
                 if (si.VerifyMethod == VerifyMethod.DataStore)
                 {
                     checksums.Add(ChecksumType.XxHash);
-                    if (this.ContractReqChk)
+                    if (si.ReqChk)
                     {
                         checksums.Add(ChecksumType.Md5);
                         checksums.Add(ChecksumType.Sha1);
@@ -137,11 +133,11 @@ namespace Nanook.NKit.Steps.Shared
                 else
                 {
                     //this needs to check if the hashes are in the dat. Fine for redump and tosec for now
-                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || this.ContractReqChk)
+                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || si.ReqChk)
                         checksums.Add(ChecksumType.Md5);
-                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || this.ContractReqChk)
+                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || si.ReqChk)
                         checksums.Add(ChecksumType.Sha1);
-                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || this.ContractReqChk)
+                    if ((checksums.Count == 0 && (si.VerifyMethod == VerifyMethod.DatLookup || si.VerifyMethod == VerifyMethod.DatMatch || si.VerifyMethod == VerifyMethod.InChecksums)) || si.ReqChk)
                         checksums.Add(ChecksumType.XxHash);
                 }
             }

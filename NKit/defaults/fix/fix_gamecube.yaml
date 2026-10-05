@@ -1,5 +1,7 @@
 # These images have junk generated with the wrong ID
 junkIdSubstitutions:
+  # Smash Bros DX Event Disc
+  D24J010000: AAAA
   # Dairantou Smash Brothers DX (Japan) (Taikenban)
   DALJ010000: DPIJ
   # 2002 FIFA World Cup (Japan) (Jitsuen-you Sample)
@@ -36,18 +38,24 @@ junkIdSubstitutions:
   PGSE010000: PGSJ
   # Need for Speed - Underground (Europe) (Alt)
   PZHP690000: GNDP
-  # Smash Bros DX Event Disc
-  D24J010000: AAAA
 
 # Some images require files to be kept at specific alignment boundaries in the NKit output stream.
 # When a file's source disc offset is a multiple of the alignment value, padding zeros are inserted
 # before it in the NKit stream so it stays aligned. Value is the alignment in bytes (hex).
 # Default behaviour (no entry) aligns files whose disc offset AND length are both multiples of 0x8000.
 fstFileAlignment:
-  # Nintendo Aging Disc DOL - files must stay 0x8000-aligned (loaded directly via DVD streaming)
-  102E010007: "8000"
-  # Nintendo Aging Disc DOL (alt ID)
-  301E010000: "8000"
+  101E010005: 8000
+  101J010003: 8000
+  101J010006: 8000
+  102E010007: 8000
+  102J010007: 8000
+  102P010007: 8000
+  301E010000: 8000
+  GNMEAF0000: 8000
+  GNMEAF0001: 8000
+  GPMEAF0000: 8000
+  GSYE6S0000: 8000
+  GSYP6S0000: 8000
 
 # Patches for a handful of images that generated junk does not match 100% - if the redump crc changes in future they can be commented them out, set FailMatchDelete=false to get a raw image that may match
 dataPatches:
