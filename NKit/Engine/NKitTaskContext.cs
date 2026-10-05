@@ -199,10 +199,10 @@ namespace Nanook.NKit
             //     converts single-step (Convert-WiiGc-Lossless -> Verify-Image) via the rows above.
             //   gamecube nkit.iso output — gamecube only, always lossless
             new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
-                      Verify-Image             (scan:N, vfy:InScanCompare,      ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "y",             "y/n", "y/n", "y/n", "y/n" },
+                      Verify-Image             (scan:N, vfy:InScanCompare,      ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkitiso[nkit]",                   "n",   "y",             "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
-                      Verify-Image             (scan:N, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "datLookup",     "y/n", "y/n", "y",   "y/n" },
-            new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Convert",         "gamecube",     "image",       "nkit.iso[nkit]",                  "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
+                      Verify-Image             (scan:N, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkitiso[nkit]",                   "n",   "datLookup",     "y/n", "y/n", "y",   "y/n" },
+            new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Convert",         "gamecube",     "image",       "nkitiso[nkit]",                   "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wii gamecube - lossy
             new[] { @"Convert-WiiGc-Lossy      (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:Y, vfy:ScanCompare,        ichk:N, ochk:N, write:N, del:Y)", "Convert",         "wii/gamecube", "image",       "wbfs/ciso",                       "n",   "y",             "y/n", "y",   "y/n", "y/n" },
