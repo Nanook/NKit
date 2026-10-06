@@ -1,6 +1,7 @@
 using Nanook.GrindCore;
 using Nanook.GrindCore.DeflateZLib;
 using Nanook.GrindCore.Lz4;
+using Nanook.NKit.Nintendo.WiiGc;
 using System;
 using System.IO;
 
@@ -101,7 +102,7 @@ namespace Nanook.NKit.Container
                 byte[] gap = _stream.ReadBytes((long)_blockReader.Items[0].Offset - _stream.Position);
                 if (gap.ReadUInt32B(0) == 0)
                 {
-                    if (gap.ReadString(4, 4) == "NKIT")
+                    if (gap.ReadString(4, 4) == WiiConsts.NKitId)
                     {
                         NKitHeader nhdr = new NKitHeader(gap, 4);
                         if (nhdr.HasSize)

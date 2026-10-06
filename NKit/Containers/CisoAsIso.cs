@@ -127,7 +127,7 @@ namespace Nanook.NKit.Container
                 _stream.Read(hdr, 0, size);
                 if (seek)
                     _stream.Position = p;
-                this.IsNkit = hdr.ReadString(0, 4) == "NKIT";
+                this.IsNkit = hdr.ReadString(0, 4) == WiiConsts.NKitId;
                 _nkitHeaderChecked = true;
                 if (this.IsNkit)
                     return hdr;

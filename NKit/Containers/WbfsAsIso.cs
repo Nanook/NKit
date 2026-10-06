@@ -65,7 +65,7 @@ namespace Nanook.NKit.Container
             _wbfsBlocks = _stream.ReadBytes(_wbfsSectorSize - (_wbfsHdr.Length + _wbfsDiscHdr.Length));
 
             int nkitOffset = 0x10000 - (_wbfsDiscHdr.Length + _wbfsHdr.Length);
-            _isNkit = _wbfsBlocks.ReadString(nkitOffset, 4) == "NKIT";
+            _isNkit = _wbfsBlocks.ReadString(nkitOffset, 4) == WiiConsts.NKitId;
 
             int maxBlocks = (_isNkit ? nkitOffset : _wbfsBlocks.Length) / 2; //amount of 2 byte offsets until end of first sector
             long pointer = 0;

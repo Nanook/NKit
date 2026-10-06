@@ -277,15 +277,8 @@
         public const string ExtTik = ".tik";
         public const string ExtCert = ".cert";
 
-        public const string FsTypeImageHeader = "ImageHeader";
-        public const string FsTypePartitionTable = "PartitionTable";
-        public const string FsTypePartitionHeader = "PartitionHeader";
-        public const string FsTypeFstBlock = "FstBlock";
-        public const string FsTypeFileSystem = "FileSystem";
-        public const string FsTypeOther = "Other";
-        public const string FsTypeRawKeyMissing = "RawKeyMissing";
-
-        public const string ContextItemCreatable = "Creatable";
-        public const string ContextItemState = "State";
+        // NOTE: Disc-area FsType string values and the per-buffer context-item keys moved to the
+        // system-neutral Nanook.NKit.AreaFsType / AreaContextItem (NKit/Common/AreaFsType.cs) —
+        // they are shared by every system's formatter/ImageBuilder, not WiiU-specific.
     }
 }

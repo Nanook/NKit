@@ -113,7 +113,7 @@ namespace Nanook.NKit.Builder
 
             // Determine the common key to use.
             string issuer = Encoding.ASCII.GetString(_hdr.Read(0x140, 64)).TrimEnd('\0');
-            IsRvt = issuer == "Root-CA00000002-XS00000006"; //Use the RVT-R key.
+            IsRvt = issuer == WiiConsts.RvtIssuer; //Use the RVT-R key.
             IsKorean = !IsRvt && _hdr.Read8(WiiConsts.WiiPrtHdrKoreanOffset) == 1; //Use the Korean Key
             IsRvtH = IsRvt && PartitionSize == 0;
             IsRvtR = IsRvt && !IsRvtH;

@@ -1,4 +1,5 @@
 using NKitDataStore;
+using Nanook.NKit.Nintendo.WiiU;
 using NKitDataStore.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -388,7 +389,7 @@ namespace Nanook.NKit.Container
                 // 1. First Pass: Try to find and parse the TMD (index file)
                 foreach (FileItem fi in folderItems)
                 {
-                    if ((fi.Type == FileItemType.Index || fi.FileName.ToLower().StartsWith("tmd") || fi.FileName.ToLower().EndsWith(".tmd")) && fi.Data != null)
+                    if ((fi.Type == FileItemType.Index || fi.FileName.ToLower().StartsWith("tmd") || fi.FileName.ToLower().EndsWith(WiiUConsts.ExtTmd)) && fi.Data != null)
                     {
                         try
                         {

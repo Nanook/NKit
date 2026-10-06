@@ -722,19 +722,19 @@ namespace Nanook.NKit.Nintendo.WiiU
                 foreach (FstFile f in fsInfo.FileSystem.Files)
                 {
                     byte[] fileData = null;
-                    if (f.Name.ToLower().EndsWith(".cert"))
+                    if (f.Name.ToLower().EndsWith(WiiUConsts.ExtCert))
                     {
                         if (si.FileCert == null)
                             si.FileCert = new byte[f.FsSize];
                         fileData = si.FileCert;
                     }
-                    if (f.Name.ToLower().EndsWith(".tik"))
+                    if (f.Name.ToLower().EndsWith(WiiUConsts.ExtTik))
                     {
                         if (si.FileTicket == null)
                             si.FileTicket = new byte[f.FsSize];
                         fileData = si.FileTicket;
                     }
-                    if (f.Name.ToLower().EndsWith(".tmd"))
+                    if (f.Name.ToLower().EndsWith(WiiUConsts.ExtTmd))
                     {
                         if (si.FileTmd == null)
                             si.FileTmd = new byte[f.FsSize];

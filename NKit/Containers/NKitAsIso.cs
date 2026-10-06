@@ -342,7 +342,7 @@ namespace Nanook.NKit.Container
             {
                 // Check for raw NKit: "NKIT" at offset 0x200 in disc header
                 string id = header.ReadString(0x200, 4);
-                if (id == "NKIT")
+                if (id == WiiConsts.NKitId)
                     return new NKitAsIso() { _streaming = streaming };
             }
 
@@ -394,7 +394,7 @@ namespace Nanook.NKit.Container
             _sourceStream.Position = 0;
 
             _nkitVersion = discHeader.ReadString(0x200, 8);
-            if (_nkitVersion != "NKIT v01")
+            if (_nkitVersion != WiiConsts.NKitIdV1)
                 throw new HandledException($"{_nkitVersion} not supported by this version");
 
             _nkitCrc = discHeader.ReadUInt32B(0x208);
