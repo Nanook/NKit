@@ -189,7 +189,7 @@ namespace Nanook.NKit
         {
             foreach (IStepContext step in steps)
             {
-                if (!step.StepInfo.WriteImage)
+                if (step.StepInfo == null || !step.StepInfo.WriteImage)
                     continue;
 
                 OutputType outputType = step.StepInfo.OutputType;
