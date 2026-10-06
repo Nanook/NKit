@@ -81,6 +81,7 @@ namespace Nanook.NKit.Engine.Core
 
             BlockingCollection<C2Section> completed = new BlockingCollection<C2Section>(
                 new ConcurrentQueue<C2Section>(), Math.Max(2, startWorkers * 2));
+            ManualResetEventSlim completedReady = new ManualResetEventSlim(false);
 
             // Engine-stage Detail scopes ([In]/[Pre]/[Out]; [Proc#N] built per-worker inside the
             // process adapter). Resolved from the Log's prefix-scope cache; null-safe when no Log.
@@ -95,7 +96,11 @@ namespace Nanook.NKit.Engine.Core
             C2SectionFactory factory = new C2SectionFactory(_image, _input, stream, inScope);
             C2PreProcessAdapter pre = new C2PreProcessAdapter(_preProcessor, preScope);
             C2ProcessAdapter proc = new C2ProcessAdapter();
-            C2CompleterAdapter completer = new C2CompleterAdapter(_stepContext, _overseer, sec => completed.Add(sec, ct), outScope);
+            C2CompleterAdapter completer = new C2CompleterAdapter(_stepContext, _overseer, sec =>
+            {
+                completed.Add(sec, ct);
+                completedReady.Set();
+            }, outScope);
 
             StreamBlockCore<C2Section, C2SectionContext>.AutoscaleOptions autoscale = new C2.StreamBlockCore<C2Section, C2SectionContext>.AutoscaleOptions
             {
@@ -136,13 +141,36 @@ namespace Nanook.NKit.Engine.Core
                 finally
                 {
                     completed.CompleteAdding();
+                    completedReady.Set(); // wake the consumer if it is waiting
                 }
             }, ct);
 
             try
             {
-                foreach (C2Section sec in completed.GetConsumingEnumerable())
-                    yield return sec.Processor;
+                // GetConsumingEnumerable() throws OperationCanceledException internally when
+                // CompleteAdding() unblocks a waiting thread — use TryTake + ManualResetEventSlim
+                // to wake immediately when a section arrives, with no exceptions or busy-spinning.
+                while (!completed.IsCompleted)
+                {
+                    C2Section sec;
+                    if (completed.TryTake(out sec))
+                    {
+                        yield return sec.Processor;
+                    }
+                    else
+                    {
+                        completedReady.Reset();
+                        // Check again after reset to avoid a race where an item arrived between
+                        // the failed TryTake and the Reset.
+                        if (!completed.TryTake(out sec))
+                            completedReady.Wait(5); // wake immediately when Set(); 5ms backstop
+                        else
+                            yield return sec.Processor;
+                    }
+                }
+                C2Section tail;
+                while (completed.TryTake(out tail))
+                    yield return tail.Processor;
 
                 run.GetAwaiter().GetResult();
             }
@@ -159,6 +187,7 @@ namespace Nanook.NKit.Engine.Core
                 // rather than leaking one set per image across a long-lived host (the UI) — handle
                 // and working-set creep even when the managed heap stays flat.
                 try { completed.Dispose(); } catch { }
+                try { completedReady.Dispose(); } catch { }
             }
         }
 

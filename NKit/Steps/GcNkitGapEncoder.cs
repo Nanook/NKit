@@ -245,20 +245,16 @@ namespace Nanook.NKit
             }
             else
             {
-                System.Threading.Tasks.Parallel.For(0, jbCount,
-                    new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 2) },
-                    j =>
-                    {
-                        long bs = jbStart + (long)j * NJunk.JunkBlockSize;
-                        if (!isJunkCoveredByRegion(bs, bs + NJunk.JunkBlockSize))
-                            NJunk.Fill(_discId, _discNo, bs, WiiConsts.FullSizeGameCube, bs, _junkPool[j]);
-                    });
-
+                // Serial — PrefillJunkCache runs on the completer thread which must not
+                // dispatch thread-pool work (would starve the pipeline workers and hang).
                 for (int j = 0; j < jbCount; j++)
                 {
                     long bs = jbStart + (long)j * NJunk.JunkBlockSize;
                     if (!isJunkCoveredByRegion(bs, bs + NJunk.JunkBlockSize))
+                    {
+                        NJunk.Fill(_discId, _discNo, bs, WiiConsts.FullSizeGameCube, bs, _junkPool[j]);
                         _junkBatchCache[bs] = _junkPool[j];
+                    }
                 }
             }
 
@@ -530,32 +526,25 @@ namespace Nanook.NKit
             int[] results   = _fillResults;
             byte[] fillBufs = _fillBytes;
 
-            System.Threading.Tasks.Parallel.For(0, units,
-                new System.Threading.Tasks.ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 2) },
-                u =>
+            // Serial — checkFillByte runs on the completer thread which must not dispatch
+            // thread-pool work (would starve the pipeline workers and hang).
+            for (int u = 0; u < units; u++)
+            {
+                int uOffset = offset + u * _FillCheckSize;
+                int uLen    = Math.Min(_FillCheckSize, offset + length - uOffset);
+                byte first  = data[uOffset];
+                bool same   = true;
+                for (int i = 1; i < uLen; i++)
                 {
-                    int uOffset = offset + u * _FillCheckSize;
-                    int uLen    = Math.Min(_FillCheckSize, offset + length - uOffset);
-                    byte first  = data[uOffset];
-                    bool same   = true;
-                    for (int i = 1; i < uLen; i++)
+                    if (data[uOffset + i] != first)
                     {
-                        if (data[uOffset + i] != first)
-                        {
-                            same = false;
-                            break;
-                        }
+                        same = false;
+                        break;
                     }
-                    if (same)
-                    {
-                        results[u]   = 0; // uniform
-                        fillBufs[u]  = first;
-                    }
-                    else
-                    {
-                        results[u] = 1; // mixed
-                    }
-                });
+                }
+                results[u]  = same ? 0 : 1;
+                fillBufs[u] = first;
+            }
 
             // All units must agree on the same fill byte
             byte candidate = fillBufs[0];
