@@ -243,7 +243,10 @@ namespace Nanook.NKit
                 input = null;
 
                 if (_taskContext != null)
-                    _taskContext.Log = null; _taskContext.HostLog = null; //don't dispose this
+                {
+                    _taskContext.Log = null;
+                    _taskContext.HostLog = null; //don't dispose this
+                }
                 _taskContext = null;
 
                 //force a tidy up

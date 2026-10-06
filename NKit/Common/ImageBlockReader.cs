@@ -371,6 +371,12 @@ namespace Nanook.NKit
         /// </summary>
         public void Release()
         {
+            // Shut down the BlockingThreadQueue's dedicated worker threads before releasing buffers.
+            // Without this, the MaxParallel background threads created at ImageBlockReader construction
+            // block forever on Monitor.Wait and are never reclaimed — leaking ~10 threads + handles per
+            // image across a long-lived host (the UI, or a batch CLI run).
+            try { _queue?.Shutdown(); } catch { }
+
             if (this.Items != null)
             {
                 foreach (ImageBlockInfo<T> it in this.Items)

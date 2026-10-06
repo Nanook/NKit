@@ -175,6 +175,18 @@ namespace Nanook.NKit.Container
 
         public void SetRemovedBlock(Action<MetaData> setBlock) => _setBlock = setBlock;
 
+        protected override void Dispose(bool disposing)
+        {
+            // Release the per-image block reader: shuts down its BlockingThreadQueue worker threads
+            // so an .isodec image's reader threads/handles do not leak across a long-lived host.
+            if (disposing)
+            {
+                try { _blockReader?.Release(); } catch { }
+                _blockReader = null;
+            }
+            base.Dispose(disposing);
+        }
+
         public override void Flush() => _stream.Flush();
 
         public override long Position { get => _position; set => _position = value; }

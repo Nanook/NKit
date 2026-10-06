@@ -225,9 +225,19 @@ public class OperationProgressViewModel : ViewModelBase, IDisposable
         IsCancelling = true;
     }
 
+    private bool _disposed;
+
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         _elapsedTimer.Stop();
+        // Cancel first so any in-flight work observing the token gets a clean cooperative signal
+        // before the CTS is disposed. Without this, disposing without cancelling causes stragglers
+        // that read CancellationToken to throw ObjectDisposedException — the "cancel fires at end
+        // of processing" symptom in the UI.
+        try { if (!_cts.IsCancellationRequested) _cts.Cancel(); } catch (ObjectDisposedException) { }
         _cts.Dispose();
     }
 }

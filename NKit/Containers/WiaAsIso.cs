@@ -384,7 +384,17 @@ namespace Nanook.NKit
         {
         }
 
-        protected override void Dispose(bool disposing) => base.Dispose(disposing);
+        protected override void Dispose(bool disposing)
+        {
+            // Release the per-image block reader: shuts down its BlockingThreadQueue worker threads
+            // (see ImageBlockReader.Release) so a .wia image's reader threads/handles do not leak.
+            if (disposing)
+            {
+                try { _blockReader?.Release(); } catch { }
+                _blockReader = null;
+            }
+            base.Dispose(disposing);
+        }
 
         public void SetRemovedBlock(Action<MetaData> setBlock) => _setBlock = setBlock;
 
