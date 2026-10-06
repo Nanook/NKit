@@ -169,6 +169,42 @@ namespace Nanook.NKit
             }
         }
 
+        // Permanently stop the worker (and finalise) threads and release them. After this the queue
+        // can no longer process batches. Idempotent and safe to call from Dispose/Release on the
+        // owner (ImageBlockReader). Without this the MaxParallel dedicated background threads created
+        // in the constructor block forever on Monitor.Wait and are never reclaimed — one set per
+        // ImageBlockReader (so one set per image container), which across a long-lived host (the UI,
+        // or a batch CLI run) leaks ~MaxParallel threads and their sync handles per image.
+        public void Shutdown()
+        {
+            // Flip the flag and wake every thread blocked in workerLoop/finaliseLoop so they observe
+            // _shutdown and return. Pulse under BOTH locks because the two loops wait on different
+            // monitors (_lq for workers, _lf for the finalise thread).
+            lock (_lq)
+            {
+                _shutdown = true;
+                Monitor.PulseAll(_lq);
+            }
+            if (_finaliseSlots != null)
+            {
+                lock (_lf)
+                    Monitor.PulseAll(_lf);
+            }
+
+            // Join so the threads are fully torn down before we return (bounded, defensive — the
+            // loops exit promptly once pulsed; never join the current thread).
+            if (_workers != null)
+            {
+                foreach (Thread t in _workers)
+                {
+                    try { if (t != null && t.IsAlive && t != Thread.CurrentThread) t.Join(2000); }
+                    catch { /* never throw from teardown */ }
+                }
+            }
+            try { if (_finaliseThread != null && _finaliseThread.IsAlive && _finaliseThread != Thread.CurrentThread) _finaliseThread.Join(2000); }
+            catch { /* never throw from teardown */ }
+        }
+
         public void AddComplete()
         {
             TaskCompletionSource<bool> tcs = null;
