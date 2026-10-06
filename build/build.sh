@@ -186,8 +186,6 @@ publish_app() {
         --framework "$TARGET_FRAMEWORK" \
         --runtime "$PUBLISH_RID" \
         --configuration "$CONFIGURATION" \
-        --self-contained true \
-        --property:PublishSingleFile=true \
         --property:StripSymbols=true \
         --property:AllowUnsafeBlocks=true \
         --property:PlatformName="$PUBLISH_RID" \
@@ -221,6 +219,9 @@ for dir in "publish/console/$PUBLISH_RID" "publish/gui/$PUBLISH_RID" "publish/nk
         rm -rf "$dir"/*.dSYM 2>/dev/null || true
         # AOT builds are statically linked — remove native shared libs from output
         rm -f "$dir"/libGrindCore.so "$dir"/libGrindCore.dylib "$dir"/GrindCore.dll 2>/dev/null || true
+        # Also remove the static lib itself — injected into the NuGet cache for the AOT linker,
+        # it may get copied to publish output but is already baked into the native binary.
+        rm -f "$dir"/libGrindCore.a "$dir"/GrindCore.lib 2>/dev/null || true
     fi
 done
 

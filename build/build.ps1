@@ -98,8 +98,6 @@ function Publish-App {
         "--framework", $TargetFramework,
         "--runtime", $Runtime,
         "--configuration", $Config,
-        "--self-contained", "true",
-        "--property:PublishSingleFile=true",
         "--property:StripSymbols=true",
         "--property:AllowUnsafeBlocks=true",
         "--property:PlatformName=$Runtime",
@@ -133,6 +131,10 @@ foreach ($appType in @("console", "gui", "nkds", "nkds-ui")) {
         Remove-Item "$dir/rd.xml" -ErrorAction SilentlyContinue
         # GrindCore.dll is statically linked, remove if present
         Remove-Item "$dir/GrindCore.dll" -ErrorAction SilentlyContinue
+        # Also remove the static lib — injected into NuGet cache for the AOT linker,
+        # it may get copied to publish output but is already baked into the native binary.
+        Remove-Item "$dir/GrindCore.lib" -ErrorAction SilentlyContinue
+        Remove-Item "$dir/libGrindCore.a" -ErrorAction SilentlyContinue
     }
 }
 

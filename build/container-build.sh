@@ -117,8 +117,6 @@ pub() {
   echo "### publish $apptype ###"
   dotnet publish "$proj" \
     --framework net10.0 --runtime "$RUNTIME" --configuration "$CONFIG" \
-    --self-contained true \
-    --property:PublishSingleFile=true \
     --property:StripSymbols=true \
     --property:AllowUnsafeBlocks=true \
     --property:PlatformName="$RUNTIME" \
