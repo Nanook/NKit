@@ -82,7 +82,7 @@ namespace Nanook.NKit
             foreach (AreaRecord area in areas)
             {
                 string fsType = area.Metadata.GetString(AreaValueType.FsType);
-                if (fsType == "ImageHeader")
+                if (fsType == AreaFsType.ImageHeader)
                 {
                     _discId = area.Metadata.GetString(AreaValueType.ID);
                     _discNo = (int)(area.Metadata.GetLong(AreaValueType.DiscNo) ?? 0);
@@ -95,8 +95,8 @@ namespace Nanook.NKit
             foreach (AreaRecord area in areas)
             {
                 string fsType = area.Metadata.GetString(AreaValueType.FsType);
-                bool isFileSystem = string.Equals(fsType, "FileSystem", StringComparison.OrdinalIgnoreCase);
-                bool isOther = string.Equals(fsType, "Other", StringComparison.OrdinalIgnoreCase);
+                bool isFileSystem = string.Equals(fsType, AreaFsType.FileSystem, StringComparison.OrdinalIgnoreCase);
+                bool isOther = string.Equals(fsType, AreaFsType.Other, StringComparison.OrdinalIgnoreCase);
 
                 WiiAreaContext context = new WiiAreaContext
                 {
@@ -155,7 +155,7 @@ namespace Nanook.NKit
             if (area.Index > 0)
             {
                 AreaRecord prevArea = allAreas[area.Index - 1];
-                if (string.Equals(prevArea.Metadata.GetString(AreaValueType.FsType), "PartitionHeader", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(prevArea.Metadata.GetString(AreaValueType.FsType), AreaFsType.PartitionHeader, StringComparison.OrdinalIgnoreCase))
                     headerArea = prevArea;
             }
 
@@ -308,8 +308,8 @@ namespace Nanook.NKit
                     WiiSecurity sec = new WiiSecurity(buffer.Length);
                     try
                     {
-                        bool creatable = (string)context.Items["Creatable"] == "1";
-                        byte[] buff = (byte[])context.Items["State"]!;
+                        bool creatable = (string)context.Items[AreaContextItem.Creatable] == "1";
+                        byte[] buff = (byte[])context.Items[AreaContextItem.State]!;
                         BitState state = buff == null || buff.Length == 0 ? null : new BitState(buff);
 
                         sec.Populate(titleKey, buffer, 0, buffer, 0, validSize, false, false, creatable, imageOffset, null, state, !creatable);
@@ -329,8 +329,8 @@ namespace Nanook.NKit
 
         protected override void OnBufferPopulatedWithSection(int validSize, BufferContext context)
         {
-            context.Items["Creatable"] = "1";
-            context.Items["State"] = null;
+            context.Items[AreaContextItem.Creatable] = "1";
+            context.Items[AreaContextItem.State] = null;
 
             OffsetSegment seg = context.Section?.Segments?.FirstOrDefault(seg => seg.Source.Type == BlockType.BlockPadding); // only can be 1 per buffer
             if (seg == null)
@@ -355,8 +355,8 @@ namespace Nanook.NKit
 
             if (firstBlock.Data[0] > 0)
             {
-                context.Items["Creatable"] = firstBlock.Data.Length > firstBlock.Data[0] ? "0" : "1"; // there were hashes
-                context.Items["State"] = firstBlock.Data.Read(1, firstBlock.Data[0]);
+                context.Items[AreaContextItem.Creatable] = firstBlock.Data.Length > firstBlock.Data[0] ? "0" : "1"; // there were hashes
+                context.Items[AreaContextItem.State] = firstBlock.Data.Read(1, firstBlock.Data[0]);
             }
 
             // Cache blocks for this segment (small, at most a couple blocks)

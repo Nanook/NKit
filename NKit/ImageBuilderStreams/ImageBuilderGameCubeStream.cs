@@ -24,7 +24,7 @@ namespace Nanook.NKit
             try
             {
                 // Find first FileSystem area and use its metadata for junk initialization
-                AreaRecord fsAreaRec = _imageReader.GetAreas().FirstOrDefault(a => string.Equals(a.Metadata.GetString(AreaValueType.FsType), "FileSystem", StringComparison.OrdinalIgnoreCase));
+                AreaRecord fsAreaRec = _imageReader.GetAreas().FirstOrDefault(a => string.Equals(a.Metadata.GetString(AreaValueType.FsType), AreaFsType.FileSystem, StringComparison.OrdinalIgnoreCase));
                 if (fsAreaRec != null)
                 {
                     string junkId = fsAreaRec.Metadata.GetString(AreaValueType.JunkID);
@@ -60,7 +60,7 @@ namespace Nanook.NKit
 
             // Determine if this area is a filesystem area
             string fsType = area.Metadata.GetString(AreaValueType.FsType);
-            bool isFileSystem = string.Equals(fsType, "FileSystem", StringComparison.OrdinalIgnoreCase);
+            bool isFileSystem = string.Equals(fsType, AreaFsType.FileSystem, StringComparison.OrdinalIgnoreCase);
 
             // Use Wii-style padding behavior: apply alignment+0x1C only when fragment is at start of gap
             try
