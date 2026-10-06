@@ -72,6 +72,7 @@ namespace Nanook.NKit.Configuration
                 "xiso" => "xiso",
                 "gdi" => "gdi",
                 "cue" => "cue:split:bin:bin:sub",
+                "nkitiso" => "nkitiso",
                 _ => GetFullDefaultFormat(systemType)
             };
         }
