@@ -309,6 +309,7 @@ namespace Nanook.NKit
 
                 base.OutStream.Write(_fst, 0, _fst.Length);
                 _crcFst.Sum(_fst, 0, _fst.Length);
+                base.OutStream.CrcSplit(); // seal header section for CrcPatch (no-op unless test mode)
 
                 _dstPos   = _hdrAreaSize;
                 _nullsPos = _hdrAreaSize + WiiConsts.DataNullsCount;
@@ -383,7 +384,10 @@ namespace Nanook.NKit
 
                     // First time entering this file — need at least the junk probe + alignment bytes.
                     // We also need enough to do the junk check (first _JunkProbe bytes).
-                    int minNeeded = Math.Min((int)fileSzPadded, _JunkProbe);
+                    // Use the actual file data length for the minimum (not the padded length) —
+                    // alignment padding bytes are zeros and may not exist in the carry if the file
+                    // sits at the very end of the disc image (e.g. a 1-byte last file).
+                    int minNeeded = Math.Min((int)Math.Min(fileSzPadded, e.FstFile.Length > 0 ? (long)e.FstFile.Length : fileSzPadded), _JunkProbe);
                     if (e.FileWritten == 0 && _carryLen < minNeeded)
                         return;
 
@@ -454,7 +458,20 @@ namespace Nanook.NKit
                     }
 
                     if (e.FileWritten < fileSzPadded)
-                        return; // need more data
+                    {
+                        // If we've consumed up to or past the image end, the remaining bytes are
+                        // alignment padding zeros that don't exist in the source — generate them.
+                        if (_srcPos >= _imageSize && e.FileWritten >= e.FstFile.Length)
+                        {
+                            long pad = fileSzPadded - e.FileWritten;
+                            outWrite(new byte[(int)pad], 0, (int)pad);
+                            _dstPos       += pad;
+                            e.FileWritten += pad;
+                            _entries[_eIdx] = e;
+                        }
+                        else
+                            return; // need more data
+                    }
 
                     // File complete.
                     long newNulls = _srcPos + WiiConsts.DataNullsCount;

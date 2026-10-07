@@ -308,13 +308,11 @@ namespace Nanook.NKit
             }
             byte[] cached = cacheItem.Cached;
             Array.Copy(cached, buff.Result, buff.Info.FullSize);
-            // Only evict immediately in sequential mode — each reference is served exactly once
-            // in order, so this fires exactly once with no concurrent readers. In random access
-            // mode (RVZ, CHD) a concurrent secondary can arrive after the CAS nulls Cached and
-            // see (null,null) with RefSrcBuff also null — unrecoverable. Defer to the end-of-
-            // batch cleanup loop in Read() which runs after all workers are done.
-            if (_sequentialRead && buff.Info.Index >= cacheItem.RefLastIdx)
-                System.Threading.Interlocked.CompareExchange(ref cacheItem.Cached, null, cached);
+            // Eviction is handled by the end-of-batch sequential cleanup in Read() which runs
+            // after processing.Wait() — i.e. after all workers have finished. The immediate
+            // CAS eviction here was unsafe: the "last secondary by index" could fire the CAS
+            // from a parallel worker before lower-indexed secondaries had run, leaving them
+            // to find (null, null) in the lock with no PulseAll ever coming.
         }
 
         private int setOutputBuffers(long readOffset, int readSize, ImageBlockInfo<T> currentBlock, int currentPos, AreaType areaType)
