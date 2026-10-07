@@ -14,18 +14,18 @@ namespace NKit.Tests.Full.Wiped
     {
         //Retail     / RVZ       / 1.36GiB / Fst in 2nd section, Files at the start of the image
         [Fact]
-        public void _63_Jurryre_Nzrevpna_Ceb_Gehpxre_Rhebcr_Ra_Se_Qr_Rf_rvz_ConvertWbfsn()
+        public void _63_Jurryre_Nzrevpna_Ceb_Gehpxre_Rhebcr_Ra_Se_Qr_Rf_rvz_ConvertNkitiso()
         {
             string fileName = @"63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).rvz";
             string inPath = Path.GetFullPath(Path.Combine(@"../../../../../WipedImages", "Gamecube"));
-            string outFolderName = $"Gamecube__63_Jurryre_Nzrevpna_Ceb_Gehpxre_Rhebcr_Ra_Se_Qr_Rf_rvz_ConvertWbfsn_{Guid.NewGuid():N}";
+            string outFolderName = $"Gamecube__63_Jurryre_Nzrevpna_Ceb_Gehpxre_Rhebcr_Ra_Se_Qr_Rf_rvz_ConvertNkitiso_{Guid.NewGuid():N}";
             string basePath = Directory.CreateDirectory(Path.Combine(".", outFolderName)).FullName;
             string dats = @"";
             string keys = @"";
             string fixInfo = @"";
             string fixFiles = @"";
 
-            SystemPresetSettings presets = base.CreatePresets("Convert", @"wbfs:n", inPath, fileName, outFolderName, dats, keys, fixInfo, fixFiles);
+            SystemPresetSettings presets = base.CreatePresets("Convert", @"nkitiso", inPath, fileName, outFolderName, dats, keys, fixInfo, fixFiles);
             presets.System = SystemType.GameCube;
 
             NKitTaskResults t = base.ProcessImage(presets);
@@ -71,16 +71,16 @@ namespace NKit.Tests.Full.Wiped
             Assert.NotNull(i);
             Assert.False(i.CanCrc);
             Assert.False(i.CanHash);
-            Assert.False(i.CreateInChecksum);
+            Assert.True(i.CreateInChecksum);
             Assert.False(i.CreateOutChecksum);
             Assert.True(i.CreateScan);
             Assert.False(i.DeleteSourceCandidate);
             Assert.True(i.FullScan);
             Assert.False(i.IsExpand);
             Assert.False(i.IsFix);
-            Assert.True(i.IsLossy);
+            Assert.False(i.IsLossy);
             Assert.True(i.WriteImage);
-            Assert.Equal("Convert-WiiGc-Lossy", i.Name);
+            Assert.Equal("Convert-Gc-NKitIso", i.Name);
             Assert.Equal(OutputType.Image, i.OutputType);
             Assert.False(i.ReqChk);
             Assert.False(i.ReqPatch);
@@ -88,9 +88,9 @@ namespace NKit.Tests.Full.Wiped
             Assert.Equal(VerifyMethod.NoVerify, i.VerifyMethod);
             Assert.Null(i.VerifyChecksums);
             Assert.NotNull(i.Config);
-            Assert.Equal("wbfs/ciso", i.Config);
+            Assert.Equal("nkitiso[nkit]", i.Config);
             Assert.NotNull(i.ImageConfig);
-            Assert.Equal("wbfs", i.ImageConfig);
+            Assert.Equal("nkitiso[nkit]", i.ImageConfig);
             Assert.NotNull(i.SrcParts);
             Assert.Equal(1, i.SrcParts.Length);
             Assert.Equal(0x57058000L, i.SrcParts[0].Size);
@@ -112,16 +112,21 @@ namespace NKit.Tests.Full.Wiped
             // Step Result
             ////////////////////////////////////////
             Assert.NotNull(r);
-            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).wbfs", r.FinalName);
+            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).nkit.iso", r.FinalName);
             Assert.Null(r.ChkCompared);
-            Assert.Null(r.InFileParts);
+            Assert.NotNull(r.InFileParts);
+            Assert.Equal(1, r.InFileParts.Length);
+            Assert.Equal(0x57058000L, r.InFileParts[0].Size);
+            Assert.NotNull(r.InFileParts[0].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:B667CF77", r.InFileParts[0].Checksums.ToString(true, true));
+            Assert.Null(r.InFileParts[0].FileName);
             Assert.NotNull(r.OutFileParts);
             Assert.Equal(1, r.OutFileParts.Length);
-            Assert.Equal(0x11200000L, r.OutFileParts[0].Size);
+            Assert.Equal(0x10f0a000L, r.OutFileParts[0].Size);
             Assert.NotNull(r.OutFileParts[0].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:A8CA91D5", r.OutFileParts[0].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:B667CF77", r.OutFileParts[0].Checksums.ToString(true, true));
             Assert.NotNull(r.OutFileParts[0].FileName);
-            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).wbfs~", r.OutFileParts[0].FileName);
+            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).nkit.iso~", r.OutFileParts[0].FileName);
             Assert.NotNull(r.ResultCrc);
             Assert.Equal(0xb667cf77U, r.ResultCrc.Value);
             Assert.NotNull(r.ResultSize);
@@ -157,7 +162,7 @@ namespace NKit.Tests.Full.Wiped
             Assert.Null(t.DatMatch);
             Assert.Null(t.ErrorMsg);
             Assert.NotNull(t.OutFileName);
-            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).wbfs", t.OutFileName);
+            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).nkit.iso", t.OutFileName);
             Assert.Null(t.OutKeyFilePath);
             Assert.NotNull(t.OutScanFilePath);
             Assert.Equal(Path.Combine(basePath, "63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).nkit.yaml"), t.OutScanFilePath);
@@ -167,13 +172,13 @@ namespace NKit.Tests.Full.Wiped
             Assert.Null(t.Key);
             Assert.NotNull(t.StepFiles);
             Assert.Equal(1, t.StepFiles.Count);
-            Assert.Equal(0x11200000L, t.StepFiles[0].Size);
+            Assert.Equal(0x10f0a000L, t.StepFiles[0].Size);
             Assert.False(t.StepFiles[0].IsIndex);
             Assert.True(t.StepFiles[0].IsImageName);
             Assert.NotNull(t.StepFiles[0].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:A8CA91D5", t.StepFiles[0].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:B667CF77", t.StepFiles[0].Checksums.ToString(true, true));
             Assert.NotNull(t.StepFiles[0].FileName);
-            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).wbfs~", t.StepFiles[0].FileName);
+            Assert.Equal("63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).nkit.iso~", t.StepFiles[0].FileName);
 
             ////////////////////////////////////////
             // Result Scan

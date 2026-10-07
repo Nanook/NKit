@@ -21,6 +21,7 @@ namespace NKit.Tests.Full.Wiped
 using Nanook.NKit;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace NKit.Tests.Full.Wiped

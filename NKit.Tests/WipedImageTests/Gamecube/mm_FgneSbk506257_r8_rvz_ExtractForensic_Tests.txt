@@ -2,6 +2,7 @@
 52cba4e6	2000	/000000000_FileSystem/__bi2.bin
 fcb79f1b	1b4e4	/000000000_FileSystem/__apploader.img
 086cd268	11f6b	/000000000_FileSystem/__fst.bin
+67c4e9d8	32d240	/000000000_FileSystem/__main.dol
 2c32cf5d	310a0	/000000000_FileSystem/NZNC.BIN
 2144df1c	4	/000000000_FileSystem/NZNC.OVA.punatrq
 c1210011	13a0	/000000000_FileSystem/NZNC.TAB

@@ -2,10 +2,14 @@
 using Nanook.NKit;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace NKit.Tests.Full.Wiped
 {
+    // Area="Full"/Group="Wiped" are inherited from WipedImageTestsBase; only the per-System trait
+    // is emitted per generated class so tests can be filtered by console system too.
+    [Trait("System", "Gamecube")]
     public partial class WipedImage_Gamecube_Tests : WipedImageTestsBase
     {
         //Demo       / RVZ       / 803MiB  / Image size not a multiple of 4, ends with a 1 byte file
@@ -113,9 +117,9 @@ namespace NKit.Tests.Full.Wiped
             Assert.Null(r.InFileParts);
             Assert.NotNull(r.OutFileParts);
             Assert.Equal(1, r.OutFileParts.Length);
-            Assert.Equal(0x32208000L, r.OutFileParts[0].Size);
+            Assert.Equal(0x32408000L, r.OutFileParts[0].Size);
             Assert.NotNull(r.OutFileParts[0].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:FAEA89A9", r.OutFileParts[0].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:BB3456CB", r.OutFileParts[0].Checksums.ToString(true, true));
             Assert.NotNull(r.OutFileParts[0].FileName);
             Assert.Equal("mm_FgneSbk506257_r8.ciso~", r.OutFileParts[0].FileName);
             Assert.NotNull(r.ResultCrc);
@@ -163,11 +167,11 @@ namespace NKit.Tests.Full.Wiped
             Assert.Null(t.Key);
             Assert.NotNull(t.StepFiles);
             Assert.Equal(1, t.StepFiles.Count);
-            Assert.Equal(0x32208000L, t.StepFiles[0].Size);
+            Assert.Equal(0x32408000L, t.StepFiles[0].Size);
             Assert.False(t.StepFiles[0].IsIndex);
             Assert.True(t.StepFiles[0].IsImageName);
             Assert.NotNull(t.StepFiles[0].Checksums.ToString(true, true));
-            Assert.Equal("Crc32:FAEA89A9", t.StepFiles[0].Checksums.ToString(true, true));
+            Assert.Equal("Crc32:BB3456CB", t.StepFiles[0].Checksums.ToString(true, true));
             Assert.NotNull(t.StepFiles[0].FileName);
             Assert.Equal("mm_FgneSbk506257_r8.ciso~", t.StepFiles[0].FileName);
 

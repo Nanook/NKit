@@ -2,10 +2,14 @@
 using Nanook.NKit;
 using System;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace NKit.Tests.Full.Wiped
 {
+    // Area="Full"/Group="Wiped" are inherited from WipedImageTestsBase; only the per-System trait
+    // is emitted per generated class so tests can be filtered by console system too.
+    [Trait("System", "Gamecube")]
     public partial class WipedImage_Gamecube_Tests : WipedImageTestsBase
     {
         //Retail     / RVZ       / 1.36GiB / 0 byte files
