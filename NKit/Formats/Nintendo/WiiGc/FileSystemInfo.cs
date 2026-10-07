@@ -439,6 +439,71 @@ namespace Nanook.NKit.Nintendo.WiiGc
             return false;
         }
 
+        /// <summary>
+        /// Called when the main DOL sits after the FST area and its data was not available
+        /// during the normal upfront FST parse. <paramref name="dolHeader"/> must be at least
+        /// 0xD8 bytes (18 section offsets at 0x00 + 18 section sizes at 0x90). The DOL is
+        /// registered as a virtual system file with the correct size and inserted into the
+        /// frozen file-system view so the SectionProcessor classifies it as __main.dol.
+        /// </summary>
+        internal void RegisterRelocatedDol(byte[] dolHeader)
+        {
+            if (_mainDol != null || MainDolOffset == 0 || dolHeader == null || dolHeader.Length < 0xD8)
+                return;
+
+            MainDolSize = 0;
+            for (int i = 0; i < 18; i++)
+            {
+                long secOff  = dolHeader.ReadUInt32B(i * 4);
+                long secSize = dolHeader.ReadUInt32B(0x90 + i * 4);
+                if (secOff > 0 && secSize > 0)
+                    MainDolSize = Math.Max(MainDolSize, secOff + secSize);
+            }
+            if (MainDolSize <= 0 || MainDolSize > _discSize - MainDolOffset)
+                MainDolSize = Math.Max(0, _discSize - MainDolOffset); // fallback
+
+            SystemFiles.Add(_mainDol = new FstFile(null, "__main.dol", MainDolOffset, MainDolSize, -1, false, false) { IsSystemFile = true });
+
+            // Insert into the frozen file list in offset order without a full rebuild.
+            // A full setFileSystem() re-run would trigger the Analysis back-walk which may
+            // mark the virtual DOL as Invalid (no FST entry, overlapping range) and throw.
+            if (FileSystem?.Files != null)
+            {
+                System.Collections.Generic.List<IFsFile> files = FileSystem.Files;
+                int insertAt = files.Count;
+                for (int i = 0; i < files.Count; i++)
+                {
+                    if (files[i].FsOffset > MainDolOffset)
+                    {
+                        insertAt = i;
+                        break;
+                    }
+                }
+                files.Insert(insertAt, _mainDol);
+
+                // Fix the Analysis of the file before __main.dol so its PostGapSize ends at
+                // MainDolOffset rather than spanning the entire pre-file region. This prevents
+                // the SectionProcessor from double-classifying the DOL region as both a gap
+                // (via the preceding file's PostGap) and a file (__main.dol).
+                if (insertAt > 0)
+                {
+                    FstFile prev = (FstFile)files[insertAt - 1];
+                    long prevEnd = prev.FsOffset + prev.FsSize;
+                    if (prev.Analysis != null && prevEnd <= MainDolOffset)
+                    {
+                        prev.Analysis.FsOffset = prevEnd;
+                        prev.Analysis.Size     = MainDolOffset - prevEnd;
+                    }
+                }
+
+                // Initialise the DOL's own Analysis — PostGap covers from DOL end to the next file.
+                long dolEnd = MainDolOffset + MainDolSize;
+                long nextFileStart = insertAt < files.Count - 1 ? files[insertAt + 1].FsOffset : FsSizeSource;
+                ((FstFile)_mainDol).Analysis.FsOffset = dolEnd;
+                ((FstFile)_mainDol).Analysis.Size     = Math.Max(0, nextFileStart - dolEnd);
+            }
+        }
+
         private void setFileSystem(long newFsSize)
         {
             if (_fstBin != null)

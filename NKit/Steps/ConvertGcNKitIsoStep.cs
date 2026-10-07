@@ -4,6 +4,7 @@ using Nanook.NKit.Steps.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nanook.NKit
 {
@@ -346,6 +347,40 @@ namespace Nanook.NKit
 
                     long fileSzPadded = e.FstFile.PaddedLength;
 
+                    // Synthetic DOL (Length == -1): resolve size from carry before anything else.
+                    if (e.FstFile.Length == -1)
+                    {
+                        long dolCarryOff = _mainDolAddr - _srcPos;
+                        if (dolCarryOff < 0 || dolCarryOff + 0xD8 > _carryLen)
+                            return; // DOL header not in carry yet — wait
+
+                        long dolSize = 0;
+                        for (int di = 0; di < 18; di++)
+                        {
+                            long secOff  = _carry.ReadUInt32B((int)(dolCarryOff + di * 4));
+                            long secSize = _carry.ReadUInt32B((int)(dolCarryOff + 0x90 + di * 4));
+                            if (secOff > 0 && secSize > 0)
+                                dolSize = Math.Max(dolSize, secOff + secSize);
+                        }
+                        if (dolSize <= 0 || dolSize > _imageSize - _mainDolAddr)
+                            dolSize = 0x100;
+
+                        e.FstFile.Length = (int)dolSize;
+                        fileSzPadded     = e.FstFile.PaddedLength;
+                        _entries[_eIdx]  = e;
+
+                        // Fix the following entry's gap now that we know the DOL size.
+                        if (_eIdx + 1 < _entries.Count)
+                        {
+                            long dolEnd            = _mainDolAddr + fileSzPadded;
+                            GcEntry nextEntry      = _entries[_eIdx + 1];
+                            long nextFileStart     = nextEntry.FstFile?.DataOffset ?? _imageSize;
+                            nextEntry.GapDiscStart = dolEnd;
+                            nextEntry.GapLength    = Math.Max(0, nextFileStart - dolEnd);
+                            _entries[_eIdx + 1]    = nextEntry;
+                        }
+                    }
+
                     // First time entering this file — need at least the junk probe + alignment bytes.
                     // We also need enough to do the junk check (first _JunkProbe bytes).
                     int minNeeded = Math.Min((int)fileSzPadded, _JunkProbe);
@@ -374,12 +409,13 @@ namespace Nanook.NKit
                             _dstPos += pad;
                         }
 
-                        // Update FST offset to compacted output position — must happen before any write.
-                        _fst.WriteUInt32B(e.FstFile.FstAddrOffset, (uint)_dstPos);
+                        // Update FST offset — skip for synthetic DOL (not in FST).
+                        if (e.FstFile.FstAddrOffset >= 0)
+                            _fst.WriteUInt32B(e.FstFile.FstAddrOffset, (uint)_dstPos);
                         if (e.FstFile.DataOffset == _mainDolAddr)
                             _dstMainDolAddr = _dstPos;
 
-                        if (isFileJunk(_carry, 0, e.FstFile, _srcPos))
+                        if (e.FstFile.FstAddrOffset >= 0 && isFileJunk(_carry, 0, e.FstFile, _srcPos))
                         {
                             // Junk file: zero FST size; propagate JunkFile info to next gap.
                             _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
@@ -714,6 +750,21 @@ namespace Nanook.NKit
                 return c != 0 ? c : a.Length.CompareTo(b.Length);
             });
 
+            // If the main DOL sits after the FST area and is not listed in the FST, inject it
+            // as a synthetic entry so the File phase processes it and tracks _dstMainDolAddr.
+            // FstAddrOffset=-1 means not in FST (skip FST write); Length=-1 means size unknown
+            // and will be computed lazily from the DOL header when carry data arrives.
+            long fstEnd = _fstPtr + _fstPad;
+            if (_mainDolAddr >= fstEnd && !files.Any(f => f.DataOffset == _mainDolAddr))
+                files.Add(new GcFstFile { DataOffset = _mainDolAddr, Length = -1, FstAddrOffset = -1, Alignment = -1, Extension = ".dol" });
+
+            // Re-sort after potential injection.
+            files.Sort((a, b) =>
+            {
+                int c = a.DataOffset.CompareTo(b.DataOffset);
+                return c != 0 ? c : a.Length.CompareTo(b.Length);
+            });
+
             // v1 alignment extensions: files with these extensions get 0x8000 alignment
             // even when their length is not a multiple of 0x8000.
             string[] _AlignExts = { ".tgc" };
@@ -790,9 +841,9 @@ namespace Nanook.NKit
         private class GcFstFile
         {
             public long   DataOffset;
-            public int    Length;
-            public long   PaddedLength => Length + (Length % 4 == 0 ? 0 : 4 - (Length % 4));
-            public int    FstAddrOffset;
+            public int    Length;         // -1 = unknown, computed lazily from DOL header in carry
+            public long   PaddedLength => Length <= 0 ? 0 : Length + (Length % 4 == 0 ? 0 : 4 - (Length % 4));
+            public int    FstAddrOffset; // -1 = not in FST (synthetic DOL); patch disc header only
             public long   Alignment;   // -1=none, 0=preserve disc offset, >0=align boundary
             public string Extension;   // lowercase file extension including dot, e.g. ".tgc"
         }

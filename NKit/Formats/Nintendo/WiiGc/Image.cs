@@ -874,6 +874,25 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
             _stream.Position = dataAreaStart; //restore the cursor for the normal sequential reads (peek never moved it, but the per-block Seek did)
             _stream.Retain(long.MaxValue);     //clear the floor; normal ReleaseTo-driven eviction resumes
+
+            // If the main DOL sits after the FST area it was not in the data read above.
+            // Seek to it now using the cached stream (seek is cheap — the block is already
+            // retained), read 0x90 bytes (18 section offsets + sizes), compute the DOL size,
+            // and register it as a virtual system file so the SectionProcessor can name it.
+            // Only seek for the DOL on non-NKit sources — on a nkit.iso the DOL is at a
+            // compacted position in the source, not at MainDolOffset in the decoded stream
+            // during the upfront parse. NKitAsIso handles it separately in emitRelocatedDol.
+            if (_fsInfo != null && _fsInfo.MainDolOffset > _fsInfo.FstOffset + _fsInfo.FstSize
+                && _fsInfo.NkitVersion == 0)
+            {
+                long dolStreamPos = dataAreaStart + _fsInfo.MainDolOffset;
+                byte[] dolHdr = new byte[0x90 + 18 * 4]; // offsets 0x00-0x47 + sizes 0x90-0xD7
+                _stream.Position = dolStreamPos;
+                int dolRead = _stream.Read(dolHdr, 0, -dolHdr.Length); // peek — does not advance cursor
+                if (dolRead >= dolHdr.Length)
+                    _fsInfo.RegisterRelocatedDol(dolHdr);
+                _stream.Position = dataAreaStart; // restore cursor
+            }
         }
 
         private AreaInfo setAreaBlockInfo(AreaInfo ai, IFileSystemInfo fsInfo, long fsOffset)
