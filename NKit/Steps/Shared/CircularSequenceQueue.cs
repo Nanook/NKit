@@ -70,6 +70,16 @@ namespace Nanook.NKit.Steps.Shared
         public int  ItemCount { get; }
         public bool IsComplete { get; private set; }
 
+        // Shut down all worker threads. Call from the owner's Dispose().
+        public void Dispose()
+        {
+            _shutdown = true;
+            foreach (Slot s in _slots)
+            {
+                try { s.Ready.Release(); } catch { }
+            }
+        }
+
         // Called by the producer (completer thread) to submit the current FillItem for
         // parallel processing. Blocks only if all slots are in use (backpressure).
         [DebuggerStepThrough]

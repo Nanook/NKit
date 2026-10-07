@@ -254,6 +254,10 @@ namespace Nanook.NKit.Container.ZArchive
         public void Dispose()
         {
             _sha256?.Dispose();
+            // Shut down the CircularSequenceQueue worker threads. Without this, each
+            // ZArchiveWriter instance leaks ItemCount threads that block indefinitely
+            // on slot.Ready.Wait() — across many test runs this exhausts thread limits.
+            try { _queue?.Dispose(); } catch { }
             // _tlsCompressor is intentionally not disposed here — it lives for the thread's lifetime
             // and is reused across all ZArchiveWriter instances on the same thread.
         }

@@ -876,12 +876,11 @@ namespace Nanook.NKit.Nintendo.WiiGc
             _stream.Retain(long.MaxValue);     //clear the floor; normal ReleaseTo-driven eviction resumes
 
             // If the main DOL sits after the FST area it was not in the data read above.
-            // Seek to it now using the cached stream (seek is cheap — the block is already
-            // retained), read 0x90 bytes (18 section offsets + sizes), compute the DOL size,
-            // and register it as a virtual system file so the SectionProcessor can name it.
-            // Only seek for the DOL on non-NKit sources — on a nkit.iso the DOL is at a
-            // compacted position in the source, not at MainDolOffset in the decoded stream
-            // during the upfront parse. NKitAsIso handles it separately in emitRelocatedDol.
+            // Seek to it using the cached stream, read the DOL header (18 section offsets +
+            // sizes = 0xD8 bytes), compute its size, and register it as a virtual system file
+            // so the SectionProcessor classifies the region as __main.dol rather than a gap.
+            // Skip for NKit sources — on a nkit.iso the DOL is at its compacted source position,
+            // not at MainDolOffset; NKitAsIso handles reconstruction via emitRelocatedDol.
             if (_fsInfo != null && _fsInfo.MainDolOffset > _fsInfo.FstOffset + _fsInfo.FstSize
                 && _fsInfo.NkitVersion == 0)
             {
