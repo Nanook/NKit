@@ -287,15 +287,17 @@ namespace Nanook.NKit
             {
                 lock (cacheItem)
                 {
-                    if (cacheItem.RefSrcBuff == null && cacheItem.Cached == null)
+                    // Both null means the primary has not yet set RefSrcBuff — wait for it.
+                    // RefSrcBuff is always set by the Read() loop BEFORE _queue.Add(), so a
+                    // PulseAll will come once the primary worker decodes and sets Cached.
+                    while (cacheItem.RefSrcBuff == null && cacheItem.Cached == null)
                         Monitor.Wait(cacheItem);
-                    if (cacheItem.Cached == null) //clean
+                    if (cacheItem.Cached == null) //primary not yet decoded — this worker decodes
                     {
-                        byte[] temp = buff.Buff; //switch the CiBuffer out for the cacheItem
+                        byte[] temp = buff.Buff;
                         buff.Buff = cacheItem.RefSrcBuff;
                         process(buff, threadIdx);
                         buff.Buff = temp;
-
                         cacheItem.Cached = (byte[])buff.Result.Clone();
                         Array.Copy(cacheItem.Cached, buff.Result, buff.Info.FullSize);
                         Monitor.PulseAll(cacheItem);
@@ -306,12 +308,12 @@ namespace Nanook.NKit
             }
             byte[] cached = cacheItem.Cached;
             Array.Copy(cached, buff.Result, buff.Info.FullSize);
-            // Evict immediately after the last reference — avoids holding the cached byte[]
-            // until the end-of-batch cleanup loop, which can be millions of items later for
-            // WUX images with cross-partition deduplication.
-            // Use CompareExchange so only one thread performs the eviction when multiple workers
-            // may concurrently serve references to the same cached primary block.
-            if (buff.Info.Index >= cacheItem.RefLastIdx)
+            // Only evict immediately in sequential mode — each reference is served exactly once
+            // in order, so this fires exactly once with no concurrent readers. In random access
+            // mode (RVZ, CHD) a concurrent secondary can arrive after the CAS nulls Cached and
+            // see (null,null) with RefSrcBuff also null — unrecoverable. Defer to the end-of-
+            // batch cleanup loop in Read() which runs after all workers are done.
+            if (_sequentialRead && buff.Info.Index >= cacheItem.RefLastIdx)
                 System.Threading.Interlocked.CompareExchange(ref cacheItem.Cached, null, cached);
         }
 

@@ -945,11 +945,19 @@ namespace Nanook.NKit.Container
             //    between them.
             //──────────────────────────────────────────────────────────────────
             long nullsPos = dstPos + WiiConsts.DataNullsCount;
+            bool mainDolPatched = false; // set when DolPtrOffset has been handled
 
             // First: parse the gap between FST end and first file
             long firstGapLen = (long)((FstFile)files[0]).FsOffset - srcPos;
             if (firstGapLen > 0 && dstPos < _imageSize)
+            {
                 dstPos = parseGcGap(ref srcPos, dstPos, ref nullsPos, (FstFile)files[0], true, firstGapLen);
+                // If the DOL is not in the FST and its nkit source position matches mainDolAddr,
+                // emit it as raw data and decode the post-DOL gap up to the first FST file.
+                // This handles the case where the DOL sits between the FST area and the first
+                // FST file (the only known layout for discs with a relocated DOL).
+                dstPos = emitRelocatedDol(mainDolAddr, ref mainDolPatched, ref srcPos, dstPos, ref nullsPos, (int)((FstFile)files[0]).FsOffset);
+            }
 
             // Then process each file sequentially: copy data, parse gap after
             // Gap encoding is only present when there's space between files in the NKit source
@@ -1011,6 +1019,54 @@ namespace Nanook.NKit.Container
                 _segments.Add(new Segment { IsoOffset = dstPos, Length = _imageSize - dstPos, Type = SegmentType.Zero });
                 dstPos = _imageSize;
             }
+        }
+
+        /// <summary>
+        /// After a gap decodes to <paramref name="dstPos"/> == <paramref name="mainDolAddr"/>,
+        /// if the DOL was not in the FST, emit it as raw data from the NKit source, then decode
+        /// the post-DOL gap encoding that follows it. Patches DolPtrOffset in the header.
+        /// Returns the updated dstPos (unchanged if the DOL is not here).
+        /// </summary>
+        private long emitRelocatedDol(long mainDolAddr, ref bool mainDolPatched, ref int srcPos, long dstPos, ref long nullsPos, int nextFstSrcOffset)
+        {
+            // mainDolAddr is the nkit SOURCE position of the DOL (written by finalise()).
+            // After decoding the pre-DOL gap, srcPos should be at the DOL in the nkit source.
+            if (mainDolPatched || (long)srcPos != mainDolAddr || srcPos + 0xD8 > _src.Length)
+                return dstPos;
+
+            // Read DOL header to compute size (18 section offsets + sizes).
+            long dolSize = 0;
+            for (int di = 0; di < 18; di++)
+            {
+                long secOff  = _src.ReadUInt32B(srcPos + di * 4);
+                long secSize = _src.ReadUInt32B(srcPos + 0x90 + di * 4);
+                if (secOff > 0 && secSize > 0)
+                    dolSize = Math.Max(dolSize, secOff + secSize);
+            }
+            if (dolSize <= 0)
+                return dstPos; // can't determine DOL size — leave as gap data
+
+            long dolAligned = dolSize + (dolSize % 4 == 0 ? 0 : 4 - dolSize % 4);
+            dolAligned = Math.Min(dolAligned, _imageSize - dstPos);
+            int toCopy = (int)Math.Min(dolAligned, _src.Length - srcPos);
+            if (toCopy > 0)
+            {
+                _segments.Add(new Segment { IsoOffset = dstPos, Length = toCopy, Type = SegmentType.Data, SrcOffset = srcPos });
+                srcPos += toCopy;
+                dstPos += toCopy;
+            }
+            nullsPos = dstPos + WiiConsts.DataNullsCount;
+
+            // Patch the header DOL pointer to the decoded output position.
+            _hdr.WriteUInt32B(WiiConsts.DolPtrOffset, (uint)(dstPos - dolAligned));
+            mainDolPatched = true;
+
+            // Decode the post-DOL gap encoding between DOL end and the next FST file.
+            long postDolGapLen = nextFstSrcOffset - srcPos;
+            if (postDolGapLen > 0 && dstPos < _imageSize)
+                dstPos = parseGcGap(ref srcPos, dstPos, ref nullsPos, null, false, postDolGapLen);
+
+            return dstPos;
         }
 
         /// <summary>
