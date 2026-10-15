@@ -27,7 +27,7 @@
 
     public enum KeyMode { File, Files }
 
-    public enum Verify { Y, N, DatLookup }
+    public enum Verify { Y, N, DatLookup, Dat = DatLookup }    // Dat is a documented alias for DatLookup (CLI/YAML accept "dat")
     public enum VerifyMethod { NoVerify, InChecksums, DataStore, DatLookup, DatMatch, ScanCompare, InScanCompare }
 
     public enum Region { Japan = 0, Usa = 1, Pal = 2, Korea = 4 }
