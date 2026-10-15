@@ -22,7 +22,7 @@ namespace Nanook.NKit
         // Bits 2-7: Stored components
         Sync = 0x04,  // bit 2: 12 bytes
         MsfMode = 0x08,  // bit 3: 4 bytes (MSF + mode)
-        Subheader = 0x10,  // bit 4: 8 bytes
+        Subheader = 0x10,  // bit 4: 8 bytes at 0x10 — Mode2 XA subheader (always stored) or non-standard-mode-byte intermediate-data (stored when non-zero)
         Edc = 0x20,  // bit 5: 4 bytes
         Ecc = 0x40,  // bit 6: 276 bytes (Mode1/Mode2Form1)
         ExtUserData = 0x80,  // bit 7: 280 bytes (Mode2Form2 only)
@@ -39,7 +39,8 @@ namespace Nanook.NKit
         /// <summary>Payload size for MsfMode (bit 3): 4 bytes (MSF 3 + mode 1).</summary>
         public const int MsfModeSize = 4;
 
-        /// <summary>Payload size for Subheader (bit 4): 8 bytes.</summary>
+        /// <summary>Payload size for Subheader (bit 4): 8 bytes at 0x10.
+        /// Mode2: XA subheader. Mode1: intermediate-data bytes (stored when non-zero).</summary>
         public const int SubheaderSize = 8;
 
         /// <summary>Payload size for Edc (bit 5): 4 bytes.</summary>

@@ -244,7 +244,21 @@ namespace Nanook.NKit
                     if (isMode1 || isMode2Form1)
                         Ecm.ReconstructEcc(buffer, sectorOffset, isMode1, isMode2Form1, isMode2Form2);
                     else if (isMode2Form2)
+                    {
                         Ecm.ReconstructEcc(buffer, sectorOffset, false, false, true);
+                        // ReconstructEcc for Mode2Form2 computes the EDC at 0x92C over bytes 0x10-0x92B.
+                        // The ext user data region (0x818-0x92F, stored in ExtUserData) includes
+                        // the EDC bytes at 0x92C-0x92F. ApplySubheaderAndExtData already wrote them,
+                        // but ReconstructEcc just overwrote 0x92C-0x92F with the computed value.
+                        // Re-apply the stored EDC bytes from the pack so the original non-standard
+                        // value is preserved. This is the last 4 bytes of the 280-byte ExtUserData.
+                        if (packData != null && extDataPositions != null && extDataPositions[i] >= 0)
+                        {
+                            const int edcOffsetInExtUserData = SectorFlagsHelper.ExtUserDataSize - SectorFlagsHelper.EdcSize; // 276
+                            Array.Copy(packData, extDataPositions[i] + edcOffsetInExtUserData,
+                                       buffer, sectorOffset + 0x92C, SectorFlagsHelper.EdcSize);
+                        }
+                    }
                 }
 
                 // Phase 2: Apply non-standard sync, MSF, EDC, ECC from pack AFTER ReconstructEcc.
