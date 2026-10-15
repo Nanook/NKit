@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Nanook.NKit.Builder
 {
-    internal class WiiPartitionDataWriter : Stream
+    public class WiiPartitionDataWriter : Stream
     {
         private readonly Stream _output;
         private byte[] _group;
@@ -45,17 +45,23 @@ namespace Nanook.NKit.Builder
             {
                 int size = (int)Math.Min(_group.Length, Length - Position);
                 _output.Read(_encData, 0, size);
+                // Reset _output.Position to the group start. The Read() advanced it by `size`;
+                // if the group fills during Write() below and Flush() fires internally,
+                // the encrypted data must be written back to the GROUP START, not after it.
+                Position = groupIdx * _group.Length;
                 _enc.Populate(_key, _encData, _group, size, true, true, false, Position, _h3, null, false);
                 _enc.Decrypt();
 
                 int r = Math.Min((size / WiiConsts.WiiSectorSize * WiiConsts.WiiSectorFsSize) - _groupPos, count);
                 Write(buffer, offset, r); //uses _groupPos to write in to CiBuffer
+                offset += r;  // advance source offset for next group iteration
                 count -= r;
 
                 _groupPos = (int)Buffer.HashedLenToFsLen(size, WiiConsts.WiiSectorSize, WiiConsts.WiiSectorHashSize, WiiConsts.WiiSectorFsSize); //force all used group blocks to write
                 Position = groupIdx * _group.Length; //move back to start of block
                 Flush();
                 groupIdx++;
+                _groupPos = 0; // reset FS write position for the next group
             }
             DataPosition = pos + count; //set the position at the end of the file
         }

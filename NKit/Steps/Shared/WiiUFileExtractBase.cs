@@ -179,7 +179,7 @@ namespace Nanook.NKit.Steps.Shared
 
                         string imagePath = Path.Combine(path, si.FsFile.IsSystemFile ? si.FsFile.Name.Substring(2) : si.FsFile.Name);
 
-                        base.ExtractHandler.WriteFs(section, _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, true);
+                        base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, true);
 
                         ProcessOverlaps(section, si);
 
@@ -467,3 +467,4 @@ namespace Nanook.NKit.Steps.Shared
         private string getPath(ISection section, string type, string path) => Path.Combine(_ptnPath, type, path.Trim('\\', '/'));
     }
 }
+
