@@ -295,18 +295,17 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 byte[] bootBin = new byte[WiiConsts.BootBinSize];
                 buffer.ReadFs(WiiConsts.BootBinOffset, bootBin, 0, bootBin.Length, 0, bootBin.Length, bootBin.Length);
 
-                if (bootBin.ReadUInt32B(0) == 0x00000000) //if bootbin starts with nulls it's bad. This catches the Wii System images that have 32bit incrementing Update Partition filler
+                if (bootBin.ReadUInt32B(0) == 0x00000000) //if bootbin starts with nulls it's bad.
                 {
-                    FstData = bootBin; //Allow the properties on this class to return bootbin data
-                    InvalidPartitionData = InvalidFileSystem = true; //WipePartition invalid. make fst invalid also
+                    FstData = bootBin;
+                    InvalidPartitionData = InvalidFileSystem = true;
                     FileSystem = null;
-                    return true; //we have all we can get
+                    return true;
                 }
 
                 long fstPtr = bootBin.ReadUInt32B(WiiConsts.FstPtrOffset);
                 long fstSize = bootBin.ReadUInt32B(WiiConsts.FstSizeOffset);
                 long fstEnd = (fstPtr + fstSize) * _imageInfo.Multiplier;
-
 
                 long sz = fstEnd / buffer.FsSize * buffer.FsSize;
                 if (sz < fstEnd)
@@ -426,8 +425,17 @@ namespace Nanook.NKit.Nintendo.WiiGc
             long minNotZero = MainDolOffset != 0 ? Math.Min(MainDolOffset, FstOffset) : FstOffset;
             if (minNotZero != 0 && AppldrBinOffset + AppldrBinSize > minNotZero)
             {
-                ((FstFile)SystemFiles[2]).FsSize = minNotZero - AppldrBinOffset; //Fix wii freeloader
-                ((FstFile)SystemFiles[2]).Analysis.FsOffset = SystemFiles[2].FsOffset + SystemFiles[2].FsSize;
+                // Find the apploader file in SystemFiles (it might not be at index 2)
+                foreach (IFsFile file in SystemFiles)
+                {
+                    if (file is FstFile fstFile && fstFile.FsOffset == AppldrBinOffset)
+                    {
+                        fstFile.FsSize = minNotZero - AppldrBinOffset; //Fix wii freeloader
+                        if (fstFile.Analysis != null)
+                            fstFile.Analysis.FsOffset = fstFile.FsOffset + fstFile.FsSize;
+                        break;
+                    }
+                }
             }
 
 
@@ -508,8 +516,9 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     FileSystem = Fst.Parse(FstData, (int)FstOffset, SystemFiles, _imageInfo.Multiplier);
                     InvalidFileSystem = FileSystem == null;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[FileSystemInfo.setFileSystem] {ex.GetType().Name}: {ex.Message}");
                     FileSystem = null;
                     InvalidFileSystem = true;
                 }

@@ -258,9 +258,16 @@ namespace Nanook.NKit
                 }
             }
 
-            // Also update the single-block cache to the last generated block
-            _junkCacheBlockStart = jbStart + (long)(jbCount - 1) * NJunk.JunkBlockSize;
-            Array.Copy(_junkPool[jbCount - 1], _junkCache, NJunk.JunkBlockSize);
+            // Sync the single-block cache only if the last block was actually generated.
+            // If it was skipped (covered by a classified NJunk region), _junkCache must NOT
+            // be updated — leaving _junkCacheBlockStart unchanged forces a fresh Fill on
+            // the next slow-path lookup, preventing stale/garbage junk bytes.
+            long lastBs = jbStart + (long)(jbCount - 1) * NJunk.JunkBlockSize;
+            if (_junkBatchCache.ContainsKey(lastBs))
+            {
+                _junkCacheBlockStart = lastBs;
+                Array.Copy(_junkPool[jbCount - 1], _junkCache, NJunk.JunkBlockSize);
+            }
         }
 
         public bool Feed(byte[] data, int offset, int length, long discOffset)
@@ -593,7 +600,9 @@ namespace Nanook.NKit
                     ClassifiedRegion r = _classifiedRegions[_classifiedIdx];
                     if (r.DiscStart <= discOffset && blockEnd <= r.DiscEnd)
                     {
-                        if (r.Type == DataType.NJunk)  return _ClassJunk;
+                        // NJunk fast-path disabled: always fall through to slow path so
+                        // the actual disc bytes are compared against NJunk.Fill, matching
+                        // v1's blockCompare exactly. Fill fast-path retained for scrub detection.
                         if (r.Type == DataType.Fill)
                         {
                             // Store the correct fill byte — data[offset] may be 0x00 for scrubbed sources.

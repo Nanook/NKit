@@ -359,6 +359,8 @@ namespace Nanook.NKit
                         for (int di = 0; di < 18; di++)
                         {
                             long secOff  = _carry.ReadUInt32B((int)(dolCarryOff + di * 4));
+                            // DOL section sizes are at 0x90 (v1 CopyFile agrees): 7 text sizes at 0x90..0xAB,
+                            // 11 data sizes at 0xAC..0xD7.  0x48 would read load addresses, not sizes.
                             long secSize = _carry.ReadUInt32B((int)(dolCarryOff + 0x90 + di * 4));
                             if (secOff > 0 && secSize > 0)
                                 dolSize = Math.Max(dolSize, secOff + secSize);
@@ -382,18 +384,18 @@ namespace Nanook.NKit
                         }
                     }
 
-                    // First time entering this file — need at least the junk probe + alignment bytes.
-                    // We also need enough to do the junk check (first _JunkProbe bytes).
-                    // Use the actual file data length for the minimum (not the padded length) —
-                    // alignment padding bytes are zeros and may not exist in the carry if the file
-                    // sits at the very end of the disc image (e.g. a 1-byte last file).
-                    int minNeeded = Math.Min((int)Math.Min(fileSzPadded, e.FstFile.Length > 0 ? (long)e.FstFile.Length : fileSzPadded), _JunkProbe);
-                    if (e.FileWritten == 0 && _carryLen < minNeeded)
-                        return;
-
-                    // Apply alignment padding — only once, on first entry (FileWritten == 0).
-                    if (e.FileWritten == 0)
+                    // ── Phase 1: probe classification ──────────────────────────────────────────────
+                    // Runs once: needs only _JunkProbe bytes to classify the file.
+                    // If probe passes on a large file, sets JunkProbePass and defers the full
+                    // verify to Phase 2 (which requires fileSzPadded bytes so consumeCarry is safe).
+                    // Alignment writes and FST offset update happen here exactly once.
+                    if (e.FileWritten == 0 && !e.JunkProbePass)
                     {
+                        int minNeeded1 = (int)Math.Min(fileSzPadded, e.FstFile.Length > 0 ? (long)e.FstFile.Length : fileSzPadded);
+                        minNeeded1 = Math.Min(minNeeded1, _JunkProbe);
+                        if (_carryLen < minNeeded1)
+                            return;
+
                         long align = e.FstFile.Alignment;
                         if (align == 0) // preserve: pad to original disc offset
                         {
@@ -421,7 +423,53 @@ namespace Nanook.NKit
 
                         if (e.FstFile.FstAddrOffset >= 0 && isFileJunk(_carry, 0, e.FstFile, _srcPos))
                         {
-                            // Junk file: zero FST size; propagate JunkFile info to next gap.
+                            if (e.FstFile.Length <= _JunkProbe)
+                            {
+                                // Small file: probe covers the whole file — junk confirmed.
+                                _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
+                                if (_eIdx + 1 < _entries.Count)
+                                {
+                                    GcEntry next = _entries[_eIdx + 1];
+                                    next.JunkFileLength    = (uint)e.FstFile.Length;
+                                    next.JunkFstAddrOffset = e.FstFile.FstAddrOffset;
+                                    int nullCount = 0;
+                                    // v1 counts nulls over the junk-probe window (0x30 bytes), not DataNullsCount (28).
+                                    for (int k = 0; k < Math.Min(e.FstFile.Length, _JunkProbe); k++)
+                                    {
+                                        if (_carry[k] != 0) break;
+                                        nullCount++;
+                                    }
+                                    next.JunkFileNulls  = nullCount;
+                                    _entries[_eIdx + 1] = next;
+                                }
+                                consumeCarry((int)fileSzPadded);
+                                _eIdx++;
+                                _phase = GcPhase.Gap;
+                                continue;
+                            }
+                            else
+                            {
+                                // Large file: probe passed but defer full-file verify to Phase 2.
+                                // Nothing is consumed here — carry still starts at byte 0 of the file.
+                                e.JunkProbePass = true;
+                                _entries[_eIdx] = e;
+                                return;
+                            }
+                        }
+                        // Probe failed — treat as data and fall through to streaming.
+                    }
+
+                    // ── Phase 2: full junk verify for large files ───────────────────────────────────
+                    // Only entered when probe passed (JunkProbePass == true).
+                    // Requires fileSzPadded bytes so consumeCarry(fileSzPadded) is always safe.
+                    if (e.FileWritten == 0 && e.JunkProbePass)
+                    {
+                        if (_carryLen < (int)fileSzPadded)
+                            return;
+
+                        if (isFileJunkFull(_carry, 0, e.FstFile))
+                        {
+                            // Full junk confirmed.
                             _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
                             if (_eIdx + 1 < _entries.Count)
                             {
@@ -429,7 +477,7 @@ namespace Nanook.NKit
                                 next.JunkFileLength    = (uint)e.FstFile.Length;
                                 next.JunkFstAddrOffset = e.FstFile.FstAddrOffset;
                                 int nullCount = 0;
-                                for (int k = 0; k < Math.Min(e.FstFile.Length, (long)WiiConsts.DataNullsCount); k++)
+                                for (int k = 0; k < Math.Min(e.FstFile.Length, _JunkProbe); k++)
                                 {
                                     if (_carry[k] != 0) break;
                                     nullCount++;
@@ -442,6 +490,11 @@ namespace Nanook.NKit
                             _phase = GcPhase.Gap;
                             continue;
                         }
+
+                        // Full check failed (probe false positive) — stream as data.
+                        // FileWritten == 0 and fileSzPadded bytes are in carry; streaming handles it.
+                        e.JunkProbePass = false;
+                        _entries[_eIdx] = e;
                     }
 
                     // Stream the file data from carry in whatever chunks are available.
@@ -505,6 +558,10 @@ namespace Nanook.NKit
                         _dstPos += writeUInt32BE(0x00000000u); // AllJunk, length=0
                         return true;
                     }
+
+                    // Reset the nulls window — matches v1 NkitFormat.ProcessGap and the
+                    // NKitAsIso decoder, both of which treat JunkFile as an implicit nullsPos clamp.
+                    _nullsPos = Math.Min(_nullsPos, _srcPos);
                 }
 
                 // Compute leading-nulls count (the nullsPos window).
@@ -512,6 +569,23 @@ namespace Nanook.NKit
                 int  leadNulls = (int)(e.GapLength < maxNulls ? e.GapLength
                                      : e.GapLength >= 0x40000 && !e.IsFirstOrLast ? 0L
                                      : maxNulls);
+
+                // When the entire gap sits within the nullsPos window (leadNulls == GapLength),
+                // count ACTUAL leading zeros from the carry rather than trusting the window.
+                // Some discs (e.g. StarFox E3 2002) have junk generator values in the last few
+                // bytes of a small inter-FST gap — blindly treating all of them as null causes
+                // zeros to be decoded where the source disc has non-zero junk, breaking the CRC.
+                if (leadNulls > 0 && e.GapLength <= leadNulls && e.GapLength <= _carryLen)
+                {
+                    int actual = 0;
+                    int checkLen = (int)e.GapLength;
+                    for (int ci = 0; ci < checkLen; ci++)
+                    {
+                        if (_carry[ci] != 0) break;
+                        actual++;
+                    }
+                    leadNulls = actual;
+                }
 
                 // Compute DOL protection range when the DOL is beyond the FST area.
                 long dolStart = -1L;
@@ -529,7 +603,7 @@ namespace Nanook.NKit
                             for (int di = 0; di < 18; di++)
                             {
                                 long secOff  = _carry.ReadUInt32B((int)(dolOff + di * 4));
-                                long secSize = _carry.ReadUInt32B((int)(dolOff + 0x48 + di * 4));
+                                long secSize = _carry.ReadUInt32B((int)(dolOff + 0x90 + di * 4));
                                 if (secOff > 0 && secSize > 0)
                                     dolSize = Math.Max(dolSize, secOff + secSize);
                             }
@@ -591,13 +665,19 @@ namespace Nanook.NKit
 
         // ── File junk check ───────────────────────────────────────────────────────────
 
+        // Phase 1 probe: checks the first _JunkProbe bytes only.
+        // Returns true when the probe window matches the junk pattern — for large files,
+        // full-file verification is handled by isFileJunkFull (Phase 2).
         private bool isFileJunk(byte[] carry, int offset, GcFstFile file, long srcPos)
         {
             // Zero-length files are always treated as junk (no bytes to preserve).
             if (file.Length == 0) return true;
 
             int nullsInFile = (int)Math.Max(0, _nullsPos - srcPos);
-            int probeLen    = (int)Math.Min(_JunkProbe, file.Length);
+            // Use PaddedLength (not just file.Length) so the alignment padding bytes
+            // are included in the junk comparison — matching v1's CopyFile which reads
+            // and checks the full padded size before classifying a file as junk.
+            int probeLen    = (int)Math.Min(_JunkProbe, file.PaddedLength);
 
             if (probeLen <= nullsInFile) return false;
 
@@ -610,12 +690,24 @@ namespace Nanook.NKit
                 actualLeadNulls++;
             }
 
-            if (!isJunkBytes(carry, offset, probeLen, file.DataOffset, actualLeadNulls))
-                return false;
-            if (file.Length <= _JunkProbe) return true;
+            // V1 skips the junk test entirely when all probe bytes are null: an all-zero file
+            // is kept as data, not classified as junk (even if junk at that position is also zero).
+            // Mirrors v1's: if (countNulls < f.Length) — only test junk if at least one non-null.
+            if (actualLeadNulls >= probeLen) return false;
 
-            return isJunkBytes(carry, offset + probeLen, file.Length - probeLen,
-                file.DataOffset + probeLen, 0);
+            return isJunkBytes(carry, offset, probeLen, file.DataOffset, actualLeadNulls);
+            // Note: for large files (Length > _JunkProbe) the caller (Phase 1) sets JunkProbePass
+            // and the remaining bytes are verified in isFileJunkFull (Phase 2).
+        }
+
+        // Phase 2 full-file verify: called only when the probe already passed.
+        // Checks the bytes AFTER the probe window (carry[probeLen..file.Length-1]).
+        // Requires fileSzPadded bytes in carry before being called so consumeCarry is safe.
+        private bool isFileJunkFull(byte[] carry, int offset, GcFstFile file)
+        {
+            int probeLen = (int)Math.Min(_JunkProbe, file.Length);
+            return isJunkBytes(carry, offset + probeLen, (int)(file.Length - probeLen),
+                               file.DataOffset + probeLen, 0);
         }
 
         private bool isJunkBytes(byte[] data, int offset, int length, long discOffset, int leadNulls)
@@ -772,7 +864,15 @@ namespace Nanook.NKit
             // FstAddrOffset=-1 means not in FST (skip FST write); Length=-1 means size unknown
             // and will be computed lazily from the DOL header when carry data arrives.
             long fstEnd = _fstPtr + _fstPad;
-            if (_mainDolAddr >= fstEnd && !files.Any(f => f.DataOffset == _mainDolAddr))
+            // Inject a synthetic DOL entry when the DOL sits after the FST area and is not
+            // listed in any FST entry (e.g. StarFox E3, Giftpia translation patch).
+            // The synthetic entry lets the File phase track _dstMainDolAddr so finalise()
+            // updates DolPtrOffset to the compacted nkit source position, and ensures the DOL
+            // bytes are encoded as Data rather than anonymous gap Other.
+            // Only skip injection when the DOL is in the tail (no FST files after it) — those
+            // discs encode the DOL naturally as trailing gap data.
+            if (_mainDolAddr >= fstEnd && !files.Any(f => f.DataOffset == _mainDolAddr)
+                                       && files.Any(f => f.DataOffset > _mainDolAddr))
                 files.Add(new GcFstFile { DataOffset = _mainDolAddr, Length = -1, FstAddrOffset = -1, Alignment = -1, Extension = ".dol" });
 
             // Re-sort after potential injection.
@@ -782,11 +882,9 @@ namespace Nanook.NKit
                 return c != 0 ? c : a.Length.CompareTo(b.Length);
             });
 
-            // v1 alignment extensions: files with these extensions get 0x8000 alignment
-            // even when their length is not a multiple of 0x8000.
+            // Compute per-file alignment — mirrors v1 NkitFormat.GetConvertFstFiles.
             string[] _AlignExts = { ".tgc" };
 
-            // Compute per-file alignment — mirrors v1 NkitFormat.GetConvertFstFiles.
             foreach (GcFstFile f in files)
             {
                 if (_fstFileAlignment == 0)
@@ -874,7 +972,8 @@ namespace Nanook.NKit
             public uint      JunkFileLength;
             public int       JunkFstAddrOffset;
             public int       JunkFileNulls;
-            public long      FileWritten;   // bytes of file data already written (for streaming large files)
+            public long      FileWritten;    // bytes of file data already written (for streaming large files)
+            public bool      JunkProbePass; // set when probe passed but full-file verify is pending (Phase 2)
         }
     }
 
