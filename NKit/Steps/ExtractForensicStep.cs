@@ -88,7 +88,7 @@ namespace Nanook.NKit
 
                         string imagePath = Path.Combine(path, si.FsFile.Name);
 
-                        if (base.ExtractHandler.WriteFs(section, _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, false))
+                        if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, false))
                             _extracted++;
                     }
                 }
@@ -98,7 +98,7 @@ namespace Nanook.NKit
                 string path = getPath(section, "");
                 base.ExtractHandler.CreateDirectory(_context.WritePath, path);
 
-                if (base.ExtractHandler.WriteFs(section, _context.WritePath, Path.Combine(path, "Data.bin"), section.AreaOffset, 0, (int)section.Size, -1, false))
+                if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), _context.WritePath, Path.Combine(path, "Data.bin"), section.AreaOffset, 0, (int)section.Size, -1, false))
                     _extracted++;
             }
         }

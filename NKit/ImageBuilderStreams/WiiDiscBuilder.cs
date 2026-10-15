@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Nanook.NKit.Builder
 {
-    internal class WiiDiscBuilder
+    public class WiiDiscBuilder
     {
         private const int _PartitionTableLength = 0x100;
 
@@ -22,7 +22,9 @@ namespace Nanook.NKit.Builder
         public string Title { get; set; }
         public int Region { get; set; }
         public byte[] RegionData { get; set; }
-        public ImageHeader DiscHeader => _hdr;
+        // ImageHeader is an internal format type; keep this accessor internal so the
+        // builder class can be public without leaking the internal surface.
+        internal ImageHeader DiscHeader => _hdr;
 
         public WiiDiscBuilder(Stream outStream)
         {
@@ -67,6 +69,38 @@ namespace Nanook.NKit.Builder
             Number = _hdr.DiscNo;
             Region = (int)_hdr.Data.ReadUInt32B(WiiConsts.WiiDiscHdrRgnOffset);
             RegionData = _hdr.Data.Read(WiiConsts.WiiDiscHdrRgn2Offset, 0x10);
+        }
+
+        /// <summary>
+        /// Overrides the disc ID in both the property and the in-memory disc header data.
+        /// Use this when NKit delivers a junk/zeroed image header (common with RVZ sources)
+        /// to ensure the output ISO has the correct disc identifier.
+        /// </summary>
+        public void OverrideDiscId6(string id6)
+        {
+            if (string.IsNullOrEmpty(id6)) return;
+            DiscId6 = id6;
+            _hdr.Data.WriteString(WiiConsts.DataHdrIdOffset, Math.Min(id6.Length, 6), id6);
+        }
+
+        /// <summary>
+        /// Normalises the Wii disc header that NKit often delivers as garbage/embedded
+        /// partition data from RVZ sources. Clears bytes 0x06-0x3FFFF (disc number,
+        /// version, reserved area and any NKit-internal ticket/cert fragments stored
+        /// there), then writes the Wii disc magic at 0x18. Leaves the disc ID (0-5),
+        /// the partition table area (0x40000+) and the region data (0x4E000+) untouched
+        /// so Complete() and OverrideDiscId6() can set them correctly.
+        /// </summary>
+        public void ApplyWiiDiscHeaderDefaults()
+        {
+            // Clear bytes 0x06 → 0x3FFFF: removes garbage disc-number, version, audio
+            // flags, reserved bytes AND any NKit-embedded ticket / cert chain fragments
+            // that RVZ image headers place in this region (e.g. "Root-CA..." at 0x140).
+            Array.Clear(_hdr.Data, 0x06, WiiConsts.WiiDiscHdrPtnOffset - 0x06);
+            // Write the mandatory Wii disc magic (required for Wii / Dolphin recognition)
+            _hdr.Data.WriteUInt32B(0x18, 0x5d1c9ea3);
+            Number   = 0;
+            Revision = 0;
         }
 
         /// <summary>

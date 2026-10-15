@@ -376,7 +376,7 @@ namespace Nanook.NKit
                     // The handler supports multi-part writes: real handler seeks-to-end,
                     // test handler combines CRCs on close.
                     base.ExtractHandler.CloseFs();
-                    base.ExtractHandler.WriteFs(section, _context.WritePath, state.ImagePath,
+                    base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), _context.WritePath, state.ImagePath,
                         state.TotalWritten, offsetInBuffer, writeSize, state.TotalSize, false);
 
                     state.TotalWritten += writeSize;
@@ -502,7 +502,7 @@ namespace Nanook.NKit
             // For split files, never replace — overlap data may have been written before writeFs
             bool replace = isSplit ? false : newFile;
 
-            if (base.ExtractHandler.WriteFs(section, rootPath, imagePath, pos, fsOffset, sizeFs, fsFullSize, replace))
+            if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), rootPath, imagePath, pos, fsOffset, sizeFs, fsFullSize, replace))
             {
                 if (isSplit && !newFile)
                     _fsTotal--;  //part > 1 - deduct the file

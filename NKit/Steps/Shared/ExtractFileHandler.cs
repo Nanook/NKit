@@ -21,7 +21,7 @@ namespace Nanook.NKit.Steps.Shared
             File.WriteAllBytes(fullPath, data);
         }
 
-        public bool WriteFs(ISection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
+        public bool WriteFs(IReadOnlySection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
         {
             bool newFile = false;
             bool replaced = false;

@@ -244,7 +244,7 @@ namespace Nanook.NKit
 
                         string imagePath = Path.Combine(path, si.FsFile.IsSystemFile ? si.FsFile.Name.Substring(2) : si.FsFile.Name);
 
-                        if (base.ExtractHandler.WriteFs(section, _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, true))
+                        if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), _context.WritePath, imagePath, si.File.OffsetInItem, (int)si.File.FsOffset, (int)si.File.FsSize, si.FsFile.FsSize, true))
                             _extracted++;
 
                         ProcessOverlaps(section, si);
