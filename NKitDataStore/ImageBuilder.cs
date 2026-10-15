@@ -647,7 +647,31 @@ namespace NKitDataStore
             // FileSystem areas: File and FileSystem types only
             // Other areas: nothing (all will be gaps for second pass)
             // Regular areas: all segments
-            foreach (OffsetSegment seg in segments.Where(a => (isFileSystem && (a.Source.Type == BlockType.File || a.Source.Type == BlockType.FileSystem)) || (!isFileSystem && !isOther)))
+            // For FileSystem areas: File segments take priority over FileSystem segments.
+            // Pre-compute the clean ranges covered by File segments so FileSystem segments
+            // don't overwrite those ranges (directory records must not clobber file data).
+            List<(long Start, long End)>? fileRanges = null;
+            if (isFileSystem)
+            {
+                fileRanges = new List<(long, long)>();
+                foreach (OffsetSegment seg in segments.Where(a => a.Source.Type == BlockType.File))
+                {
+                    long srcCleanBase2 = areaStrideLocal.OffsetToClean(seg.Source.Offset - area.Offset);
+                    long segCleanStart2 = srcCleanBase2 + seg.SourceOffset;
+                    long segCleanEnd2 = segCleanStart2 + seg.Size;
+                    long ws2 = Math.Max(segCleanStart2, bufFsOffset);
+                    long we2 = Math.Min(segCleanEnd2, bufFsEnd);
+                    if (ws2 < we2)
+                        fileRanges.Add((ws2, we2));
+                }
+                fileRanges.Sort((a, b) => a.Start.CompareTo(b.Start));
+            }
+
+            var segmentsToProcess = segments
+                .Where(a => (isFileSystem && (a.Source.Type == BlockType.File || a.Source.Type == BlockType.FileSystem)) || (!isFileSystem && !isOther))
+                .OrderBy(a => a.SegmentOffset)
+                .ToList();
+            foreach (OffsetSegment seg in segmentsToProcess)
             {
                 OffsetRecord src = seg.Source;
 
@@ -658,6 +682,32 @@ namespace NKitDataStore
 
                 long writeStart = Math.Max(segCleanStart, bufFsOffset);
                 long writeEnd = Math.Min(segCleanEnd, bufFsEnd);
+
+                // For FileSystem segments in a FileSystem area: skip ranges already covered by File segments.
+                // Directory table records must not overwrite actual file data.
+                if (isFileSystem && src.Type == BlockType.FileSystem && fileRanges != null && fileRanges.Count > 0)
+                {
+                    // Find file ranges that overlap [writeStart, writeEnd)
+                    // Only write the sub-ranges NOT covered by any File record
+                    long cursor = writeStart;
+                    foreach ((long fStart, long fEnd) in fileRanges)
+                    {
+                        if (fStart >= writeEnd) break;
+                        if (fEnd <= cursor) continue;
+                        // Write [cursor, min(fStart, writeEnd)) — the gap before this file range
+                        long subEnd = Math.Min(fStart, writeEnd);
+                        if (cursor < subEnd)
+                            populatePhysicalData(src, cursor, subEnd, context);
+                        cursor = Math.Max(cursor, fEnd);
+                    }
+                    // Write trailing [cursor, writeEnd) not covered by any File range
+                    if (cursor < writeEnd)
+                        populatePhysicalData(src, cursor, writeEnd, context);
+                    // Update lastProcessedPosition and gaps as normal (skip the gap tracking below)
+                    lastProcessedPosition = Math.Max(lastProcessedPosition, writeEnd);
+                    lastWas0ByteFile = seg.Size == 0;
+                    continue;
+                }
 
                 // gap before this segment
                 if (lastProcessedPosition < writeStart)
@@ -831,7 +881,6 @@ namespace NKitDataStore
 
                 copy(blockRecord.Data, srcOffsetInBlockActual, buffer.Data, (int)destCleanStart, buffer.Stride, toCopy);
                 buffer.MarkWritten((int)destCleanStart, toCopy, "block");
-                //Debug.WriteLine($"        WROTE (seq): blockIndex={blockIndex}, srcOff=0x{srcOffsetInBlockActual:X}, len=0x{toCopy:X}, dest=0x{destCleanStart:X}");
 
                 posInRecord += toCopy;
                 remainingToWrite -= toCopy;

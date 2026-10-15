@@ -172,32 +172,40 @@ namespace Nanook.NKit
 
         public void TestRangeBounds(long offset, long size, long boundsOffset, long boundsSize, RangeResult result)
         {
+            // Clamp to prevent long overflow in offset+size or boundsOffset+boundsSize arithmetic
+            // when directory entries or file sizes come from a malformed/truncated disc image.
+            if (size < 0)
+                size = 0;
+            if (boundsSize < 0)
+                boundsSize = 0;
+            long offsetEnd = (size > long.MaxValue - offset) ? long.MaxValue : offset + size;
+            long boundsEnd = (boundsSize > long.MaxValue - boundsOffset) ? long.MaxValue : boundsOffset + boundsSize;
+
             if (offset >= boundsOffset) //we have the start of the gap
             {
-                result.IsMatch = (offset == boundsOffset && size == 0) || offset < boundsOffset + boundsSize; //offset is between boundsOffset and bounds end
+                result.IsMatch = (offset == boundsOffset && size == 0) || offset < boundsEnd; //offset is between boundsOffset and bounds end
                 if (result.IsMatch)
                 {
                     result.BufferOffset = (int)(offset - boundsOffset); //should match gap.IgnoreStart
-                    result.Size = (int)(Math.Min(offset + size, boundsOffset + boundsSize) - offset);
+                    result.Size = (int)(Math.Min(offsetEnd, boundsEnd) - offset);
                 }
                 result.RangeOffset = 0;
-
             }
             else
             {
-                result.IsMatch = offset + size > boundsOffset; //end is between boundsOffset and bounds end
+                result.IsMatch = offsetEnd > boundsOffset; //end is between boundsOffset and bounds end
                 if (result.IsMatch)
                 {
                     result.RangeOffset = boundsOffset - offset;
-                    result.Size = (int)(Math.Min(offset + size, boundsOffset + boundsSize) - offset);
+                    result.Size = (int)(Math.Min(offsetEnd, boundsEnd) - offset);
                 }
                 result.BufferOffset = 0;
             }
 
             if (result.IsMatch)
             {
-                result.Size = (int)Math.Max(Math.Min(offset + size - boundsOffset, boundsSize) - result.BufferOffset, 0L);
-                result.RangeComplete = result.IsMatch && offset + size <= boundsOffset + boundsSize;
+                result.Size = (int)Math.Max(Math.Min(offsetEnd - boundsOffset, boundsSize) - result.BufferOffset, 0L);
+                result.RangeComplete = result.IsMatch && offsetEnd <= boundsEnd;
                 result.BufferFull = result.IsMatch && result.BufferOffset + result.Size == boundsSize;
             }
             else

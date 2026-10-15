@@ -140,7 +140,7 @@ namespace Nanook.NKit.Iso.Iso9660
                     long sectionAreaOffset = base.Buffer.AreaOffset; // byte offset from area start
                     long blockSize2 = base.Buffer.BlockSize;
                     long startLba = (physOff / blockSize2) + (sectionAreaOffset / blockSize2);
-                    this.SectorPadding = SectorPaddingPacker.Analyse(base.Buffer.Decrypted, sectorCount, startLba);
+                    this.SectorPadding = SectorPaddingPacker.Analyse(base.Buffer.Decrypted, sectorCount, startLba, base.Buffer.BlockFsOffset);
                     this.IsCreatable = SectorPaddingPacker.IsFullyCreatable(this.SectorPadding);
                 }
                 else

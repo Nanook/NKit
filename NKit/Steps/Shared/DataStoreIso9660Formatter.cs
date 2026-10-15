@@ -807,7 +807,7 @@ namespace Nanook.NKit.Steps.Shared
                     }
                     long startLba = (physicalOffset / blockSize) + ((section.ImageOffset - trackImageOffset) / blockSize);
 
-                    packData = SectorPaddingPacker.Pack(sectionData, sectorCount, startLba);
+                    packData = SectorPaddingPacker.Pack(sectionData, sectorCount, startLba, ai.BlockFsOffset);
                 }
 
                 if (packData != null)
@@ -976,7 +976,8 @@ namespace Nanook.NKit.Steps.Shared
                             if (link.FsType == FsType.RockRidge && resolvedType == "iso9660")
                             {
                                 string rrPath = buildFullPath(link);
-                                typeEntries[resolvedType] = rrPath;
+                                if (rrPath != null) // skip if empty name
+                                    typeEntries[resolvedType] = rrPath;
                             }
                             // Otherwise keep the existing entry (first wins, unless overridden by RockRidge)
                             continue;
@@ -986,11 +987,15 @@ namespace Nanook.NKit.Steps.Shared
                         if (resolvedType == "iso9660" && rockRidgeLink != null && link.FsType == FsType.Iso9660)
                         {
                             string rrPath = buildFullPath(rockRidgeLink);
+                            if (rrPath == null)
+                                continue; // skip entries with empty names
                             typeEntries[resolvedType] = rrPath;
                         }
                         else
                         {
                             string fullPath = buildFullPath(link);
+                            if (fullPath == null)
+                                continue; // skip entries with empty names
                             typeEntries[resolvedType] = fullPath;
                         }
                     }
@@ -1043,6 +1048,8 @@ namespace Nanook.NKit.Steps.Shared
         {
             string parentPath = link.Parent?.Path ?? "";
             string name = link.EncodedChildName ?? "";
+            if (string.IsNullOrEmpty(name))
+                return null; // invalid entry — callers must skip null paths
             if (string.IsNullOrEmpty(parentPath))
                 return "/" + name;
             return parentPath + "/" + name;

@@ -117,7 +117,13 @@ namespace Nanook.NKit.Iso.Iso9660
             byte alg = data[offset];
 
             if (alg != 8 && alg != 16)
-                throw new InvalidDataException("Corrupt compressed unicode string");
+            {
+                // UDF OSTA CS0 specifies only alg=8 (8-bit) and alg=16 (UTF-16BE).
+                // Some discs produce entries with alg=0 (empty/null) or other values.
+                // Return an empty string so the caller's empty-name guard discards
+                // the entry instead of crashing the entire filesystem parse.
+                return string.Empty;
+            }
 
             StringBuilder result = new StringBuilder(count);
 
