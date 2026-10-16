@@ -104,7 +104,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         /// <summary>
         /// Disc-ID / partition-table quirk fixes. Mirrors FixWiiGcStep.applyIdBasedFixes:
         ///  - 010E disc ID with a RELS game partition -> swap the leading disc-ID byte to '4'.
-        ///  - RSB (Super Smash Bros. Brawl): channel/VC partitions wrongly in table 0 (WBM bug)
+        ///  - RSB disc ID: channel/VC partitions wrongly in table 0 (WBM bug)
         ///    are moved to table 1, then the table is rewritten.
         /// </summary>
         public static bool ApplyIdBasedFixes(ImageHeader header, string gamePartitionId, ILogScope log)
@@ -112,7 +112,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             string hdrId = header.Data.ReadString(0, 4);
             bool changed = ApplyIdSwap(header, gamePartitionId, log);
 
-            if (hdrId.StartsWith("RSB")) //Super Smash Bros. Brawl
+            if (hdrId.StartsWith("RSB")) // RSB disc ID: channel/VC partitions wrongly in table 0
             {
                 bool moved = false;
                 foreach (PartitionInfo part in header.Partitions.Where(a => a.Type != PartitionType.Update && a.Type != PartitionType.Game))
