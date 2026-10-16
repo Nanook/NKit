@@ -565,6 +565,22 @@ namespace Nanook.NKit
                 }
 
                 // Compute leading-nulls count (the nullsPos window).
+                // Mirror NKitAsIso.parseGcGap: when the file that precedes this gap is a
+                // legitimate zero-size file (not a JunkFile), the decoder resets nullsPos to
+                // dstPos + DataNullsCount at the start of the gap (the 'else if (file.FsSize==0)'
+                // branch). Replicate that here so leadNulls matches the decoder's gapNulls.
+                if (e.JunkFileLength == 0 && _eIdx > 0)
+                {
+                    GcFstFile prevFile = _entries[_eIdx - 1].FstFile;
+                    if (prevFile != null && prevFile.Length == 0)
+                    {
+                        long newNulls = _srcPos + WiiConsts.DataNullsCount;
+                        if (newNulls % 4 != 0)
+                            newNulls += 4 - (newNulls % 4);
+                        _nullsPos = newNulls;
+                    }
+                }
+
                 long maxNulls  = Math.Max(0, _nullsPos - _srcPos);
                 int  leadNulls = (int)(e.GapLength < maxNulls ? e.GapLength
                                      : e.GapLength >= 0x40000 && !e.IsFirstOrLast ? 0L
