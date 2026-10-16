@@ -390,7 +390,7 @@ namespace Nanook.NKit.Container
 
             // Read the disc header to get NKit metadata.
             // Extended to AppLoaderOffset + 10 bytes so the no-magic GameCube fallback
-            // (apploader date at 0x2440) is reachable for discs like ind-nddemo.iso.
+            // (apploader date at 0x2440) is reachable for demo/non-standard GC discs.
             int headerReadSize = Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a; // 0x244A
             byte[] discHeader = new byte[headerReadSize];
             int headerRead = _sourceStream.Read(discHeader, 0, discHeader.Length);
@@ -408,8 +408,8 @@ namespace Nanook.NKit.Container
             _isGameCube = discHeader.ReadUInt32B(0x1c) == 0xc2339f3d;
             _isWii = discHeader.ReadUInt32B(0x18) == 0x5d1c9ea3;
 
-            // Fallback: GameCube discs without the standard magic (e.g. ind-nddemo.iso,
-            // Dodger Demo_shrunk.gcm).  Mirrors the check in NKitInput.createImageContainer.
+            // Fallback: GameCube discs without the standard magic (demo and non-standard
+            // GC discs).  Mirrors the check in NKitInput.createImageContainer.
             // Guard: disc ID non-zero, title non-null, apploader date matches YYYY/MM/DD.
             if (!_isGameCube && !_isWii && headerRead >= Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a)
                 _isGameCube = discHeader.ReadUInt32B(0x0) != 0 &&

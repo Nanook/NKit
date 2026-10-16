@@ -171,7 +171,7 @@ namespace Nanook.NKit.App.Cli
             new CliOption("no-archives", "na", new[] { "arc" }, OptionKind.Switch, true, false,
                 null, null, "arc", "Do not scan inside archives (archives are scanned by default)."),
             new CliOption("verify", "v", new[] { "v" }, OptionKind.Enum, true, false,
-                null, new[] { "y", "n", "dat" }, "v", "Verify results [y, n, dat]."),
+                null, new[] { "y", "n", "datlookup" }, "v", "Verify results [y, n, datlookup]."),
             new CliOption("system", "sys", new[] { "system" }, OptionKind.Value, true, false,
                 null, null, "system", "Limit processing to a single system."),
             new CliOption("temp", "t", new[] { "tmp" }, OptionKind.Path, true, false,

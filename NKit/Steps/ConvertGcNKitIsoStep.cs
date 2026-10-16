@@ -588,7 +588,7 @@ namespace Nanook.NKit
 
                 // When the entire gap sits within the nullsPos window (leadNulls == GapLength),
                 // count ACTUAL leading zeros from the carry rather than trusting the window.
-                // Some discs (e.g. StarFox E3 2002) have junk generator values in the last few
+                // Some discs have junk generator values in the last few
                 // bytes of a small inter-FST gap — blindly treating all of them as null causes
                 // zeros to be decoded where the source disc has non-zero junk, breaking the CRC.
                 if (leadNulls > 0 && e.GapLength <= leadNulls && e.GapLength <= _carryLen)
@@ -881,7 +881,7 @@ namespace Nanook.NKit
             // and will be computed lazily from the DOL header when carry data arrives.
             long fstEnd = _fstPtr + _fstPad;
             // Inject a synthetic DOL entry when the DOL sits after the FST area and is not
-            // listed in any FST entry (e.g. StarFox E3, Giftpia translation patch).
+            // listed in any FST entry (e.g. translation-patched or E3-style demo discs).
             // The synthetic entry lets the File phase track _dstMainDolAddr so finalise()
             // updates DolPtrOffset to the compacted nkit source position, and ensures the DOL
             // bytes are encoded as Data rather than anonymous gap Other.

@@ -84,7 +84,7 @@ recursive: y
 archives: y
 
 # Verify results?  CLI: --verify / -v
-# Options: [y, n, dat]
+# Options: [y, n, datlookup]
 # Default: y
 verify: y
 
