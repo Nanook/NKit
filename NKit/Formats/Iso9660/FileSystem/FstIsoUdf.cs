@@ -343,14 +343,16 @@ namespace Nanook.NKit.Iso.Iso9660
             {
                 UdfLongAllocationDescriptor d = UdfLongAllocationDescriptor.Parse(fileEntry.AllocationDescriptors, pos);
                 fsOff = baseOffsets[d.ExtentLocation.Partition] + (d.ExtentLocation.LogicalBlock * (long)_vol.Volume.LogicalBlockSize);
-                fsSize = d.ExtentLength;
+                // Cap at InformationLength: extent may be padded, or on non-standard discs the ICB
+                // may resolve to a wrong sector producing an inflated ExtentLength value.
+                fsSize = Math.Min((long)fileEntry.InformationLength, (long)d.ExtentLength);
                 return d.Size;
             }
             else
             {
                 UdfShortAllocationDescriptor d = UdfShortAllocationDescriptor.Parse(fileEntry.AllocationDescriptors, pos);
                 fsOff = baseOffsets[1] + (d.ExtentLocation * (long)_vol.Volume.LogicalBlockSize);
-                fsSize = d.ExtentLength;
+                fsSize = Math.Min((long)fileEntry.InformationLength, (long)d.ExtentLength);
                 return d.Size;
             }
         }
