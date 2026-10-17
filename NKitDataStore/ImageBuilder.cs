@@ -687,6 +687,22 @@ namespace NKitDataStore
                 // Directory table records must not overwrite actual file data.
                 if (isFileSystem && src.Type == BlockType.FileSystem && fileRanges != null && fileRanges.Count > 0)
                 {
+                    // Handle the gap BEFORE this segment — same logic as the standard path below.
+                    // Without this, the pre-segment gap is skipped by the 'continue', so gapRanges
+                    // never gets the entry and the second-pass BlockType.Other overlay for that gap
+                    // (non-null, non-file stored content) is silently dropped. This breaks round-trip
+                    // on hack/cheat discs (Action Replay etc.) whose real content lives in those gaps.
+                    if (lastProcessedPosition < writeStart)
+                    {
+                        long preGapSize = writeStart - lastProcessedPosition;
+                        long preGapOffsetInBuffer = lastProcessedPosition - bufFsOffset;
+                        long preOffsetInGap = 0;
+                        if (section.GapOffset > 0 && lastProcessedPosition == bufFsOffset && !lastWas0ByteFile)
+                            preOffsetInGap = Math.Max(0, lastProcessedPosition - prevFileEndFs);
+                        gapRanges.Add((lastProcessedPosition, preGapOffsetInBuffer, preGapSize));
+                        OnGapFill(preOffsetInGap, lastProcessedPosition, preGapOffsetInBuffer, preGapSize, context);
+                    }
+
                     // Find file ranges that overlap [writeStart, writeEnd)
                     // Only write the sub-ranges NOT covered by any File record
                     long cursor = writeStart;
@@ -703,7 +719,7 @@ namespace NKitDataStore
                     // Write trailing [cursor, writeEnd) not covered by any File range
                     if (cursor < writeEnd)
                         populatePhysicalData(src, cursor, writeEnd, context);
-                    // Update lastProcessedPosition and gaps as normal (skip the gap tracking below)
+                    // Update lastProcessedPosition and gaps as normal
                     lastProcessedPosition = Math.Max(lastProcessedPosition, writeEnd);
                     lastWas0ByteFile = seg.Size == 0;
                     continue;

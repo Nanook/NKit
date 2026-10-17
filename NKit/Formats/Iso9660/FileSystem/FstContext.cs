@@ -99,8 +99,15 @@ namespace Nanook.NKit.Iso.Iso9660
                             int allocSize = (int)Math.Min(f.FsSize, maxDirExtent);
                             _fsBuff = new byte[allocSize + 0x400];
                         }
-                        buffer.ReadFs(_rr.BufferOffset, _fsBuff, _fsBuffUsed, 0x8000, 0, 0x8000, _rr.Size);
-                        _fsBuffUsed += _rr.Size;
+                        // Guard: cap the read to what _fsBuff can actually hold. For very large
+                        // CUE images cached as one buffer, _rr.Size may exceed the 64 MiB-capped
+                        // allocation and would crash Buffer.Copy with "destination array too small".
+                        int readSize = Math.Min(_rr.Size, _fsBuff.Length - _fsBuffUsed);
+                        if (readSize > 0)
+                        {
+                            buffer.ReadFs(_rr.BufferOffset, _fsBuff, _fsBuffUsed, 0x8000, 0, 0x8000, readSize);
+                            _fsBuffUsed += readSize;
+                        }
                     }
                     if (_rr.RangeComplete)
                     {
