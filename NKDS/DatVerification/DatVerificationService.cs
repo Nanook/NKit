@@ -30,13 +30,19 @@ public sealed class DatVerificationService : IDatVerificationService
             List<DatEntryInfo> entries = dat.Items.Select(item =>
             {
                 uint combinedCrc = ComputeCombinedCrc(item);
+                // Sanitize the dat entry name for use as a filesystem-safe image title.
+                // Dat descriptions may contain characters invalid on Windows (most commonly ':').
+                // Replace ':' with '-' to match the convention used by most dat-management tools,
+                // and replace any other OS-invalid characters with '_' so the name is safe to use
+                // as a DataStore image title, VFS mount name, and export path on all platforms.
+                string name = SanitizeDatName(item.Name);
                 return new DatEntryInfo
                 {
-                    Name = item.Name,
+                    Name = name,
                     // Dat entry names are plain game titles — they contain dots as part of the name
                     // (e.g. "Super Mario Bros. Wii") and have no file extension. Using
                     // Path.GetFileNameWithoutExtension would incorrectly truncate at the last dot.
-                    NameStem = item.Name,
+                    NameStem = name,
                     CombinedCrc32 = combinedCrc
                 };
             }).ToList();
@@ -242,5 +248,26 @@ public sealed class DatVerificationService : IDatVerificationService
         }
 
         return results;
+    }
+
+    /// <summary>
+    /// Sanitizes a dat entry description for use as a filesystem-safe image title on Windows and Linux.
+    /// Replaces ':' with '-' (the convention used by most dat-management tools) and any remaining
+    /// OS-invalid filename characters with '_'.
+    /// </summary>
+    internal static string SanitizeDatName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return name;
+        // Colon is the most common culprit in dat descriptions (e.g. "Title: Subtitle").
+        // Replace with ' -' (space-dash) to preserve readability: "Title: Subtitle" → "Title- Subtitle".
+        name = name.Replace(":", "-");
+        // Replace any remaining Windows/filesystem-invalid characters with underscore.
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            if (c != ':' && name.IndexOf(c) >= 0)
+                name = name.Replace(c, '_');
+        }
+        return name;
     }
 }

@@ -67,7 +67,18 @@ namespace Nanook.NKit
             string newName = _finalName;
             string newExt = "";
             if (_stepContext.StepInfo.OutputType == OutputType.Image || _stepContext.StepInfo.OutputType == OutputType.Scan)
-                SourceFiles.GetFileNameParts(Path.Combine(_path, _finalName), out newPath, out newName, out _, out newExt);
+            {
+                // Only split stem/extension when _finalName actually has a known file extension.
+                // If GetKnownFileExtension returns "" the extension was already stripped (or this
+                // is a plain game title used as a folder name). Calling GetFileNameParts in that
+                // case wrongly treats dots inside the name (e.g. "Title 2.0 Edition") as an
+                // extension, inserting the disambiguation suffix mid-name (_8 before ".0 Edition").
+                string combinedPath = Path.Combine(_path, _finalName);
+                if (SourceFiles.GetKnownFileExtension(combinedPath).Length > 0)
+                    SourceFiles.GetFileNameParts(combinedPath, out newPath, out newName, out _, out newExt);
+                else
+                    newPath = _path; // name has no known extension — use it as-is as the stem
+            }
 
             newName = SourceFiles.CleanseFileName(newName);
 
