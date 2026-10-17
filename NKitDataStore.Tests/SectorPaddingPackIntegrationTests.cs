@@ -794,7 +794,13 @@ namespace NKitDataStore.Tests
                 using (FileStream fs = File.OpenRead(SwapMagicBinPath))
                 {
                     fs.Seek(sectionOffset, SeekOrigin.Begin);
-                    fs.Read(srcSection, 0, RawSectionSize);
+                    int totalSrc = 0;
+                    while (totalSrc < RawSectionSize)
+                    {
+                        int n = fs.Read(srcSection, totalSrc, RawSectionSize - totalSrc);
+                        if (n == 0) break;
+                        totalSrc += n;
+                    }
                 }
 
                 // Read reconstructed section from nkds
@@ -854,7 +860,6 @@ namespace NKitDataStore.Tests
             }
 
             const int sectorCount = 892;
-            const long startLba = 0;
             const int RawSectionSize = sectorCount * RawSectorSize; // 0x200340
             // Test all sections — compute from file size
             long binFileSize = new FileInfo(SwapMagicBinPath).Length;
@@ -873,7 +878,13 @@ namespace NKitDataStore.Tests
                 using (FileStream fs = File.OpenRead(SwapMagicBinPath))
                 {
                     fs.Seek(sectionImageOffset, SeekOrigin.Begin);
-                    fs.Read(sectionData, 0, RawSectionSize);
+                    int totalRead2 = 0;
+                    while (totalRead2 < RawSectionSize)
+                    {
+                        int n = fs.Read(sectionData, totalRead2, RawSectionSize - totalRead2);
+                        if (n == 0) break;
+                        totalRead2 += n;
+                    }
                 }
 
                 // Pack with the correct start LBA for this section
