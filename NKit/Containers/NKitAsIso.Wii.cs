@@ -95,7 +95,7 @@ namespace Nanook.NKit.Container
             // channel/other non-game, non-update partitions must use the game partition's junk id,
             // not zeros. The game partition may come before or after channel partitions.
             // Only applies when a game partition exists on this disc — pure-channel installation
-            // discs (e.g. Wii Menu Install Disc) have no game partition and their filler is zeros.
+            // discs have no game partition and use zeros for inter-partition filler.
             bool hasGamePartition = partitions.Any(p => p.Type == (uint)PartitionType.Game);
             byte[] gameJunkId = null;
             long gameJunkStart = 0;
@@ -129,7 +129,7 @@ namespace Nanook.NKit.Container
                     // Filler after a channel or other non-game, non-update partition must use the
                     // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros —
                     // but only on discs that actually have a game partition. Pure-channel install
-                    // discs (Wii Menu Install, etc.) have no game partition and use zeros.
+                    // discs have no game partition and use zeros.
                     if (hasGamePartition)
                     {
                         precedingType = (uint)PartitionType.Game;
@@ -615,9 +615,8 @@ namespace Nanook.NKit.Container
 
             Fst parsedFst = Fst.Parse(pFst, 0, null, 4L, out FstParseStatus fstStatus);
 
-            // Hacked/invalid FST (an entry pointing to offset 0, e.g. the FreeLoader disc). There
-            // is no usable file list to drive the per-file gap/junk walk. NKit v1 handles this
-            // "bad image" case (NkitReaderWii: conFiles == null) by treating the ENTIRE post-FST
+            // Hacked/invalid FST (an entry pointing to offset 0). There is no usable file list
+            // to drive the per-file gap/junk walk. NKit v1 handles this "bad image" case (NkitReaderWii: conFiles == null) by treating the ENTIRE post-FST
             // region as a single gap and decoding it through the gap decoder — NOT a verbatim copy
             // (gap regions are junk/nulls/fill-encoded in the NKit source). Mirror that here: one
             // decodeWiiFsGap over the whole remaining FS region, as the first-and-last file, so the
@@ -633,8 +632,8 @@ namespace Nanook.NKit.Container
                 if (fsPos < partFsSize)
                     addFsZero(runs, ref fsPos, partFsSize - fsPos, partFsSize);
 
-                // Capture preserved hashes verbatim (see the valid-FST path). A hacked disc like
-                // FreeLoader relies on this: its hashes are not recreatable, so they must be
+                // Capture preserved hashes verbatim (see the valid-FST path). Some hacked or
+                // non-standard discs have hashes that are not recreatable, so they must be
                 // reproduced exactly rather than regenerated.
                 subSrc += capturePreservedHashes(subSrc, hashFlags, partFsSize, out byte[] invalidPreservedHashes, out Dictionary<long, long> invalidPreservedMap);
 

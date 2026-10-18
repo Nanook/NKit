@@ -251,23 +251,9 @@ public sealed class DatVerificationService : IDatVerificationService
     }
 
     /// <summary>
-    /// Sanitizes a dat entry description for use as a filesystem-safe image title on Windows and Linux.
-    /// Replaces ':' with '-' (the convention used by most dat-management tools) and any remaining
-    /// OS-invalid filename characters with '_'.
+    /// Returns a filesystem-safe version of a dat entry name by delegating to
+    /// <see cref="SourceFiles.CleanseFileName"/>, which replaces ':' with '-' for readability
+    /// and replaces all remaining OS-invalid characters with spaces.
     /// </summary>
-    internal static string SanitizeDatName(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-            return name;
-        // Colon is the most common culprit in dat descriptions (e.g. "Title: Subtitle").
-        // Replace with ' -' (space-dash) to preserve readability: "Title: Subtitle" → "Title- Subtitle".
-        name = name.Replace(":", "-");
-        // Replace any remaining Windows/filesystem-invalid characters with underscore.
-        foreach (char c in Path.GetInvalidFileNameChars())
-        {
-            if (c != ':' && name.IndexOf(c) >= 0)
-                name = name.Replace(c, '_');
-        }
-        return name;
-    }
+    internal static string SanitizeDatName(string name) => SourceFiles.CleanseFileName(name);
 }
