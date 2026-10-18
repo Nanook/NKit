@@ -94,6 +94,9 @@ namespace Nanook.NKit.Container
             // Track the game partition's junk context separately (fix for issue #16): filler after
             // channel/other non-game, non-update partitions must use the game partition's junk id,
             // not zeros. The game partition may come before or after channel partitions.
+            // Only applies when a game partition exists on this disc — pure-channel installation
+            // discs (e.g. Wii Menu Install Disc) have no game partition and their filler is zeros.
+            bool hasGamePartition = partitions.Any(p => p.Type == (uint)PartitionType.Game);
             byte[] gameJunkId = null;
             long gameJunkStart = 0;
 
@@ -124,10 +127,15 @@ namespace Nanook.NKit.Container
                 else if (part.Type != (uint)PartitionType.Update)
                 {
                     // Filler after a channel or other non-game, non-update partition must use the
-                    // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros.
-                    precedingType = (uint)PartitionType.Game;
-                    precedingJunkId = gameJunkId ?? _junkIdBytes;
-                    precedingJunkStart = gameJunkId != null ? gameJunkStart : 0;
+                    // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros —
+                    // but only on discs that actually have a game partition. Pure-channel install
+                    // discs (Wii Menu Install, etc.) have no game partition and use zeros.
+                    if (hasGamePartition)
+                    {
+                        precedingType = (uint)PartitionType.Game;
+                        precedingJunkId = gameJunkId ?? _junkIdBytes;
+                        precedingJunkStart = gameJunkId != null ? gameJunkStart : 0;
+                    }
                 }
             }
 
@@ -319,14 +327,39 @@ namespace Nanook.NKit.Container
             // Determine the disc-filler junk context, matching SectionProcessor.createJunk:
             //   - after a Game partition (type 0): real junk keyed on that partition's JunkId and
             //     JunkStartFsOffset (the createJunk post-Game 'Other' rule)
-            //   - otherwise (after Update/other, or no preceding partition): NULLS (fullSize=0)
+            //   - after a Channel/other non-Game, non-Update partition: junk using the disc header
+            //     id and startOffset=0 (v1 uses JunkStream(disc_id, discNo, imageSize) = full junk)
+            //   - after an Update partition, or no preceding partition: NULLS (startOffset=imageSize
+            //     → NJunk.Fill returns zeros, matching v1's JunkStream(id, disc, 0))
             // discNo is always the disc header's value.
-            bool fillerIsJunk = precedingType == (uint)PartitionType.Game && precedingJunkId != null;
-            // Junk id/startOffset for the emitted Junk segments. Must be the GAME partition's boot
-            // JunkId + JunkStartFsOffset — NOT the disc-header id/0 (fillJunk's disc-level default),
-            // or the trailing post-Game junk mismatches (root cause of the Wii_Backup_USA decode bug).
-            byte[] fillerJunkId = fillerIsJunk ? precedingJunkId : _junkIdBytes;
-            long fillerJunkStart = fillerIsJunk ? precedingJunkStart : 0;
+            bool fillerIsJunk;
+            byte[] fillerJunkId;
+            long fillerJunkStart;
+            if (precedingType == (uint)PartitionType.Game)
+            {
+                // After a Game partition: real junk keyed on that partition's boot JunkId and its
+                // JunkStartFsOffset (matching SectionProcessor.createJunk's post-Game 'Other' rule).
+                fillerIsJunk = precedingJunkId != null;
+                fillerJunkId = precedingJunkId ?? _junkIdBytes;
+                fillerJunkStart = precedingJunkStart;
+            }
+            else if (precedingType != (uint)PartitionType.Update && precedingType != 0xFFFFFFFF)
+            {
+                // After a Channel or other non-Game, non-Update partition: full junk using the
+                // disc header id. v1: JunkStream(disc_id, discNo, imageSize) → all positions junk,
+                // equivalent to NJunk.Fill with startOffset=0.
+                fillerIsJunk = true;
+                fillerJunkId = _junkIdBytes;
+                fillerJunkStart = 0L;
+            }
+            else
+            {
+                // After an Update partition or no preceding partition: zeros.
+                // v1: JunkStream(id, disc, 0) → zero stream; equivalent to startOffset=imageSize.
+                fillerIsJunk = false;
+                fillerJunkId = _junkIdBytes;
+                fillerJunkStart = 0L;
+            }
 
             // Decode the encoded filler gap directly against the buffered source (long offsets),
             // emitting disc-space Zero/Junk/Fill/WiiSrcData segments. The gap word's size drives
