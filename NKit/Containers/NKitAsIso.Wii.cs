@@ -91,6 +91,11 @@ namespace Nanook.NKit.Container
             uint precedingType = 0xFFFFFFFF;
             byte[] precedingJunkId = null;
             long precedingJunkStart = 0; // preceding partition's JunkStartFsOffset (NJunk startOffset)
+            // Track the game partition's junk context separately (fix for issue #16): filler after
+            // channel/other non-game, non-update partitions must use the game partition's junk id,
+            // not zeros. The game partition may come before or after channel partitions.
+            byte[] gameJunkId = null;
+            long gameJunkStart = 0;
 
             foreach (WiiPartitionEntry part in partitions)
             {
@@ -110,6 +115,20 @@ namespace Nanook.NKit.Container
                 precedingType = part.Type;
                 precedingJunkId = partJunkId;
                 precedingJunkStart = partJunkStart;
+                // Issue #16: track the game partition's junk context for channel/other partition filler.
+                if (part.Type == (uint)PartitionType.Game)
+                {
+                    gameJunkId = partJunkId;
+                    gameJunkStart = partJunkStart;
+                }
+                else if (part.Type != (uint)PartitionType.Update)
+                {
+                    // Filler after a channel or other non-game, non-update partition must use the
+                    // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros.
+                    precedingType = (uint)PartitionType.Game;
+                    precedingJunkId = gameJunkId ?? _junkIdBytes;
+                    precedingJunkStart = gameJunkId != null ? gameJunkStart : 0;
+                }
             }
 
             // Trailing filler after the last partition, to the output image size.
@@ -520,6 +539,11 @@ namespace Nanook.NKit.Container
             long fstFsPos = subHdr.Length + pHdrToFst.Length;
             fsPos = headLen; // the head region is covered by HeadOverlay, emitted after patching
 
+            // Expose the current partition's FST buffer so decodeWiiFsGap can write back the real
+            // file size for JunkFile-encoded entries (issue #13). Reset to null on exit via the
+            // finally-equivalent pattern (field cleared after the partition map is built).
+            _wiiFst = pFst;
+
             Fst parsedFst = Fst.Parse(pFst, 0, null, 4L, out FstParseStatus fstStatus);
 
             // Hacked/invalid FST (an entry pointing to offset 0, e.g. the FreeLoader disc). There
@@ -584,17 +608,27 @@ namespace Nanook.NKit.Container
             // with `conFiles[0].GapLength -= hashes.FlagsLength`. Mirror that here.
             long firstGapLen = ((FstFile)files[0]).FsOffset - fsPos - flagsLen;
             if (firstGapLen > 0 && fsPos < partFsSize)
+            {
+                // Issue #14: advance the source cursor over the full first gap, like post-file gaps.
+                // v1 did this implicitly; the raw gap-decoding path only advanced by the words it
+                // read, leaving subSrc short when the encoded first gap was larger than the word
+                // size (e.g. when the first file's FsOffset > FST-end + flagsLen + 4).
+                long firstGapSrcStart = subSrc;
                 subSrc = decodeWiiFsGap(subSrc, runs, ref fsPos, ref nullsPos, (FstFile)files[0], true, firstGapLen, partFsSize);
+                if (subSrc - firstGapSrcStart < firstGapLen)
+                    subSrc = firstGapSrcStart + firstGapLen;
+            }
 
             for (int i = 0; i < files.Count; i++)
             {
                 FstFile ff = (FstFile)files[i];
                 bool isLast = i == files.Count - 1;
 
-                // Place the output cursor at the file's FS offset. The preceding gap should have
-                // advanced fsPos to here; fill any residual slack with zero.
-                if (fsPos < ff.FsOffset)
-                    addFsZero(runs, ref fsPos, ff.FsOffset - fsPos, partFsSize);
+                // Issue #15: ff.FsOffset is the file's offset in the COMPACTED v1 source (includes
+                // the hash-flags bitmask bytes before the first file), not an output position.
+                // v1 places each file at the running output cursor with no padding. Padding to
+                // ff.FsOffset inserts spurious zeros whenever the gaps decoded so far expanded by
+                // less than flagsLen, shifting the entire rest of the partition.
 
                 if (ff.FsOffset == mainDolAddr)
                     subHdr.WriteUInt32B(WiiConsts.DolPtrOffset, (uint)(fsPos / 4L));
@@ -690,6 +724,7 @@ namespace Nanook.NKit.Container
             _segments.Add(new Segment { IsoOffset = dstPos, Length = blockLen, Type = SegmentType.WiiPartition, Map = map });
             dstPos += blockLen;
 
+            _wiiFst = null; // clear after use — only valid during this partition's gap decoding
             partJunkIdOut = partJunkId;
             partJunkStartOut = map.JunkStartFsOffset;
             return subSrc;
@@ -781,6 +816,11 @@ namespace Nanook.NKit.Container
                 nullsPos = fsPos + Math.Min(nullsPos - fsPos, 0);
                 long nulls = (size & 0xFC) >> 2;
                 long junkFileLen = srcReadU32B(srcPos); srcPos += 4;
+                // Issue #13: write the real file size back into the FST. v1 stored size 0 in the
+                // FST for pure-junk files and kept the real size only in this JunkFile gap word.
+                // Without this write the FST entry stays at size 0, producing a wrong H2 hash.
+                if (file != null && _wiiFst != null)
+                    _wiiFst.WriteUInt32B(file.FstPtrOffset + 4, (uint)junkFileLen);
 
                 long jfAligned = junkFileLen + (junkFileLen % 4 == 0 ? 0 : 4 - (junkFileLen % 4));
                 if (jfAligned > 0)
@@ -1052,6 +1092,12 @@ namespace Nanook.NKit.Container
                 got += r;
             }
         }
+
+        // The FST buffer of the partition currently being decoded, set by parseWiiPartition before
+        // gap decoding begins. Allows decodeWiiFsGap to write the real file size into the FST for
+        // JunkFile-encoded entries (files whose content is pure junk — v1 stores size 0 in the FST
+        // and records the real size in the JunkFile gap word). Fix for issue #13.
+        private byte[] _wiiFst;
 
         // Generate FS-space partition junk at FS offset `fsOffset` using the partition's junk id.
         // Uses a dedicated cache (separate from disc junk's _junkBlock) memoised on (map, blockStart)
