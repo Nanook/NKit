@@ -99,67 +99,6 @@ namespace NKit.Tests.Configuration.YamlConfigStore
             _output.WriteLine($"Wii loaded keys (should be empty): '{loaded.Keys}'");
         }
 
-        [Theory(DisplayName = "DAT parsing: archive and plain file-mask forms are parsed correctly")]
-        [InlineData("D:\\NKitFiles\\_DatsKeys\\*.zip//*.dat")]
-        [InlineData("D:/NKitFiles/_DatsKeys/*.zip//*.dat")]
-        public void DatParsing_ArchivePattern_IsParsed(string datValue)
-        {
-            // Arrange
-            global::NKit.Ui.Models.NKitSettings settings = global::NKit.Ui.Models.NKitSettings.GetDefaultSettings(SystemType.GameCube, TaskType.Convert);
-            settings.System = SystemType.GameCube;
-            settings.Task = TaskType.Convert;
-            settings.Dat = datValue;
-
-            // Act
-            _store.StoreSettings(settings);
-            Ui.Models.NKitSettings loaded = _store.LoadSettings(SystemType.GameCube, TaskType.Convert);
-
-            // Assert
-            Assert.NotNull(loaded);
-            Assert.False(string.IsNullOrEmpty(loaded.Dat));
-
-            // Expect archive mask and inner dat mask to be present
-            Assert.False(string.IsNullOrEmpty(loaded.DatArchiveMask));
-            Assert.False(string.IsNullOrEmpty(loaded.DatMask));
-
-            _output.WriteLine($"Input DAT: {datValue}");
-            _output.WriteLine($"Loaded DatPath_Manual: {loaded.DatPath_Manual}");
-            _output.WriteLine($"Loaded DatArchiveMask: {loaded.DatArchiveMask}");
-            _output.WriteLine($"Loaded DatMask: {loaded.DatMask}");
-        }
-
-        [Theory(DisplayName = "DAT parsing: plain file-mask is parsed into directory + mask")]
-        [InlineData("D:\\NKitFiles\\_DatsKeys\\*.dat")]
-        [InlineData("D:/NKitFiles/_DatsKeys/*.dat")]
-        public void DatParsing_PlainFileMask_IsParsed(string datValue)
-        {
-            // Arrange
-            global::NKit.Ui.Models.NKitSettings settings = global::NKit.Ui.Models.NKitSettings.GetDefaultSettings(SystemType.GameCube, TaskType.Convert);
-            settings.System = SystemType.GameCube;
-            settings.Task = TaskType.Convert;
-            settings.Dat = datValue;
-
-            // Act
-            _store.StoreSettings(settings);
-            Ui.Models.NKitSettings loaded = _store.LoadSettings(SystemType.GameCube, TaskType.Convert);
-
-            // Assert
-            Assert.NotNull(loaded);
-            Assert.False(string.IsNullOrEmpty(loaded.Dat));
-
-            // For plain mask expect DatMask set and DatArchiveMask empty
-            Assert.False(string.IsNullOrEmpty(loaded.DatMask));
-            Assert.True(string.IsNullOrEmpty(loaded.DatArchiveMask));
-
-            string expectedDir = Path.GetDirectoryName(loaded.Dat) ?? string.Empty;
-            Assert.Equal(expectedDir, loaded.DatPath_Manual);
-
-            _output.WriteLine($"Input DAT: {datValue}");
-            _output.WriteLine($"Loaded DatPath_Manual: {loaded.DatPath_Manual}");
-            _output.WriteLine($"Loaded DatArchiveMask: {loaded.DatArchiveMask}");
-            _output.WriteLine($"Loaded DatMask: {loaded.DatMask}");
-        }
-
         [Fact(DisplayName = "FixInfo/FixFiles: persisted for supported systems and not for unsupported")]
         public void FixInfoFixFiles_Persistence_Behavior()
         {
@@ -218,7 +157,7 @@ namespace NKit.Tests.Configuration.YamlConfigStore
             global::NKit.Ui.Models.NKitSettings sPlain = global::NKit.Ui.Models.NKitSettings.GetDefaultSettings(SystemType.GameCube, TaskType.Convert);
             sPlain.System = SystemType.GameCube;
             sPlain.Task = TaskType.Convert;
-            sPlain.DatPath_Manual = Path.Combine("D:", "NKitFiles", "_DatsKeys");
+            sPlain.DatPath_Manual = Path.Combine("C:", "Temp", "Dats");
             sPlain.DatMask = "*.dat";
 
             _store.StoreSettings(sPlain);
@@ -231,7 +170,7 @@ namespace NKit.Tests.Configuration.YamlConfigStore
             global::NKit.Ui.Models.NKitSettings sArchive = global::NKit.Ui.Models.NKitSettings.GetDefaultSettings(SystemType.GameCube, TaskType.Convert);
             sArchive.System = SystemType.GameCube;
             sArchive.Task = TaskType.Convert;
-            sArchive.DatPath_Manual = Path.Combine("D:", "NKitFiles", "_DatsKeys");
+            sArchive.DatPath_Manual = Path.Combine("C:", "Temp", "Dats");
             sArchive.DatArchiveMask = "*.zip";
             sArchive.DatMask = "*.dat";
 

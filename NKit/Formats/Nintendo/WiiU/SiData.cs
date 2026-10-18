@@ -30,8 +30,8 @@ namespace Nanook.NKit.Nintendo.WiiU
         }
         internal SiData(byte[] key, IndexFile idx, byte[] fst)
         {
-            byte[] tik = idx.Additional.FirstOrDefault(a => a.Extension.ToLower() == ".tik" || a.FileName.ToLower().StartsWith("tik"))?.Data;
-            byte[] crt = idx.Additional.FirstOrDefault(a => a.Extension.ToLower() == ".cert" || a.FileName.ToLower().StartsWith("cetk"))?.Data;
+            byte[] tik = idx.Additional.FirstOrDefault(a => a.Extension.ToLower() == WiiUConsts.ExtTik || a.FileName.ToLower().StartsWith("tik"))?.Data;
+            byte[] crt = idx.Additional.FirstOrDefault(a => a.Extension.ToLower() == WiiUConsts.ExtCert || a.FileName.ToLower().StartsWith("cetk"))?.Data;
             setup(key, idx.Data, tik, crt, fst);
         }
 

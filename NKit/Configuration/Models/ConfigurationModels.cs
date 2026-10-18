@@ -221,6 +221,15 @@ namespace Nanook.NKit.Configuration
     }
 
     /// <summary>
+    /// Configuration for WUA (ZArchive) format. Only one parameter: parallelism (number of
+    /// compression worker threads). e.g. "wua" or "wua:16".
+    /// </summary>
+    public class WuaFormatConfiguration
+    {
+        public int Parallelism { get; set; }
+    }
+
+    /// <summary>
     /// Configuration for extract operations
     /// </summary>
     public class ExtractConfiguration

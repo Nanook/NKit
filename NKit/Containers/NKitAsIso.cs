@@ -342,7 +342,7 @@ namespace Nanook.NKit.Container
             {
                 // Check for raw NKit: "NKIT" at offset 0x200 in disc header
                 string id = header.ReadString(0x200, 4);
-                if (id == "NKIT")
+                if (id == WiiConsts.NKitId)
                     return new NKitAsIso() { _streaming = streaming };
             }
 
@@ -388,13 +388,16 @@ namespace Nanook.NKit.Container
                 _sourceStream = stream;
             }
 
-            // Read the disc header to get NKit metadata
-            byte[] discHeader = new byte[0x440];
-            _sourceStream.Read(discHeader, 0, discHeader.Length);
+            // Read the disc header to get NKit metadata.
+            // Extended to AppLoaderOffset + 10 bytes so the no-magic GameCube fallback
+            // (apploader date at 0x2440) is reachable for demo/non-standard GC discs.
+            int headerReadSize = Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a; // 0x244A
+            byte[] discHeader = new byte[headerReadSize];
+            int headerRead = _sourceStream.Read(discHeader, 0, discHeader.Length);
             _sourceStream.Position = 0;
 
             _nkitVersion = discHeader.ReadString(0x200, 8);
-            if (_nkitVersion != "NKIT v01")
+            if (_nkitVersion != WiiConsts.NKitIdV1)
                 throw new HandledException($"{_nkitVersion} not supported by this version");
 
             _nkitCrc = discHeader.ReadUInt32B(0x208);
@@ -404,6 +407,16 @@ namespace Nanook.NKit.Container
 
             _isGameCube = discHeader.ReadUInt32B(0x1c) == 0xc2339f3d;
             _isWii = discHeader.ReadUInt32B(0x18) == 0x5d1c9ea3;
+
+            // Fallback: GameCube discs without the standard magic (demo and non-standard
+            // GC discs).  Mirrors the check in NKitInput.createImageContainer.
+            // Guard: disc ID non-zero, title non-null, apploader date matches YYYY/MM/DD.
+            if (!_isGameCube && !_isWii && headerRead >= Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a)
+                _isGameCube = discHeader.ReadUInt32B(0x0) != 0 &&
+                              discHeader.ReadUInt32B(0x20) != 0 &&
+                              System.Text.RegularExpressions.Regex.IsMatch(
+                                  discHeader.ReadString(Nintendo.WiiGc.WiiConsts.AppLoaderOffset, 0x0a),
+                                  @"[0-9]{4}(/[0-9]{2}){2}$");
 
             // Wii must always decode cached: the partition has to be read in full to obtain the
             // preserved-hash bitmask and data, so forward-only streaming is not supported.
@@ -945,11 +958,19 @@ namespace Nanook.NKit.Container
             //    between them.
             //──────────────────────────────────────────────────────────────────
             long nullsPos = dstPos + WiiConsts.DataNullsCount;
+            bool mainDolPatched = false; // set when DolPtrOffset has been handled
 
             // First: parse the gap between FST end and first file
             long firstGapLen = (long)((FstFile)files[0]).FsOffset - srcPos;
             if (firstGapLen > 0 && dstPos < _imageSize)
+            {
                 dstPos = parseGcGap(ref srcPos, dstPos, ref nullsPos, (FstFile)files[0], true, firstGapLen);
+                // If the DOL is not in the FST and its nkit source position matches mainDolAddr,
+                // emit it as raw data and decode the post-DOL gap up to the first FST file.
+                // This handles the case where the DOL sits between the FST area and the first
+                // FST file (the only known layout for discs with a relocated DOL).
+                dstPos = emitRelocatedDol(mainDolAddr, ref mainDolPatched, ref srcPos, dstPos, ref nullsPos, (int)((FstFile)files[0]).FsOffset);
+            }
 
             // Then process each file sequentially: copy data, parse gap after
             // Gap encoding is only present when there's space between files in the NKit source
@@ -1011,6 +1032,54 @@ namespace Nanook.NKit.Container
                 _segments.Add(new Segment { IsoOffset = dstPos, Length = _imageSize - dstPos, Type = SegmentType.Zero });
                 dstPos = _imageSize;
             }
+        }
+
+        /// <summary>
+        /// After a gap decodes to <paramref name="dstPos"/> == <paramref name="mainDolAddr"/>,
+        /// if the DOL was not in the FST, emit it as raw data from the NKit source, then decode
+        /// the post-DOL gap encoding that follows it. Patches DolPtrOffset in the header.
+        /// Returns the updated dstPos (unchanged if the DOL is not here).
+        /// </summary>
+        private long emitRelocatedDol(long mainDolAddr, ref bool mainDolPatched, ref int srcPos, long dstPos, ref long nullsPos, int nextFstSrcOffset)
+        {
+            // mainDolAddr is the nkit SOURCE position of the DOL (written by finalise()).
+            // After decoding the pre-DOL gap, srcPos should be at the DOL in the nkit source.
+            if (mainDolPatched || (long)srcPos != mainDolAddr || srcPos + 0xD8 > _src.Length)
+                return dstPos;
+
+            // Read DOL header to compute size (18 section offsets + sizes).
+            long dolSize = 0;
+            for (int di = 0; di < 18; di++)
+            {
+                long secOff  = _src.ReadUInt32B(srcPos + di * 4);
+                long secSize = _src.ReadUInt32B(srcPos + 0x90 + di * 4);
+                if (secOff > 0 && secSize > 0)
+                    dolSize = Math.Max(dolSize, secOff + secSize);
+            }
+            if (dolSize <= 0)
+                return dstPos; // can't determine DOL size — leave as gap data
+
+            long dolAligned = dolSize + (dolSize % 4 == 0 ? 0 : 4 - dolSize % 4);
+            dolAligned = Math.Min(dolAligned, _imageSize - dstPos);
+            int toCopy = (int)Math.Min(dolAligned, _src.Length - srcPos);
+            if (toCopy > 0)
+            {
+                _segments.Add(new Segment { IsoOffset = dstPos, Length = toCopy, Type = SegmentType.Data, SrcOffset = srcPos });
+                srcPos += toCopy;
+                dstPos += toCopy;
+            }
+            nullsPos = dstPos + WiiConsts.DataNullsCount;
+
+            // Patch the header DOL pointer to the decoded output position.
+            _hdr.WriteUInt32B(WiiConsts.DolPtrOffset, (uint)(dstPos - dolAligned));
+            mainDolPatched = true;
+
+            // Decode the post-DOL gap encoding between DOL end and the next FST file.
+            long postDolGapLen = nextFstSrcOffset - srcPos;
+            if (postDolGapLen > 0 && dstPos < _imageSize)
+                dstPos = parseGcGap(ref srcPos, dstPos, ref nullsPos, null, false, postDolGapLen);
+
+            return dstPos;
         }
 
         /// <summary>

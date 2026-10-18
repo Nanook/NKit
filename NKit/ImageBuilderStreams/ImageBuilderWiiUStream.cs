@@ -153,7 +153,7 @@ namespace Nanook.NKit
             {
                 string fsType = area.Metadata.GetString(AreaValueType.FsType);
                 //try { Trace.WriteLine($"[Area] Id={area.Id} Offset=0x{area.Offset:X} Size=0x{area.Size:X} FsType={fsType}"); } catch { }
-                if (fsType == WiiUConsts.FsTypeImageHeader)
+                if (fsType == AreaFsType.ImageHeader)
                 {
                     try
                     {
@@ -164,7 +164,7 @@ namespace Nanook.NKit
                     }
                     catch { }
                 }
-                else if (fsType == WiiUConsts.FsTypePartitionTable)
+                else if (fsType == AreaFsType.PartitionTable)
                 {
                     try
                     {
@@ -175,7 +175,7 @@ namespace Nanook.NKit
                     }
                     catch { }
                 }
-                else if (fsType == WiiUConsts.FsTypePartitionHeader)
+                else if (fsType == AreaFsType.PartitionHeader)
                 {
                     try
                     {
@@ -190,7 +190,7 @@ namespace Nanook.NKit
                     }
                     catch { }
                 }
-                else if (fsType == WiiUConsts.FsTypeFstBlock)
+                else if (fsType == AreaFsType.FstBlock)
                 {
                     try
                     {
@@ -279,11 +279,11 @@ namespace Nanook.NKit
                     }
                     catch { }
                 }
-                else if (fsType == WiiUConsts.FsTypeOther)
+                else if (fsType == AreaFsType.Other)
                 {
                     // nothing to do for Other areas in this template
                 }
-                else if (fsType == WiiUConsts.FsTypeFileSystem)
+                else if (fsType == AreaFsType.FileSystem)
                 {
                     applyTitleKey(area);
                     // Attempt to populate SiData for SI partitions by reading files from the stored filesystem
@@ -426,9 +426,9 @@ namespace Nanook.NKit
             foreach (AreaRecord area in areas)
             {
                 string fsType = area.Metadata.GetString(AreaValueType.FsType);
-                bool isFileSystem = string.Equals(fsType, WiiUConsts.FsTypeFileSystem, StringComparison.OrdinalIgnoreCase);
-                bool isOther = string.Equals(fsType, WiiUConsts.FsTypeOther, StringComparison.OrdinalIgnoreCase);
-                if (string.Equals(fsType, WiiUConsts.FsTypePartitionHeader, StringComparison.OrdinalIgnoreCase))
+                bool isFileSystem = string.Equals(fsType, AreaFsType.FileSystem, StringComparison.OrdinalIgnoreCase);
+                bool isOther = string.Equals(fsType, AreaFsType.Other, StringComparison.OrdinalIgnoreCase);
+                if (string.Equals(fsType, AreaFsType.PartitionHeader, StringComparison.OrdinalIgnoreCase))
                     partitionType = Enum.Parse<PartitionType>(area.Metadata.GetString(AreaValueType.PartitionType));
                 WiiUAreaContext ctx = new WiiUAreaContext
                 {
@@ -546,8 +546,8 @@ namespace Nanook.NKit
         protected override void OnBufferPopulatedWithSection(int validSize, BufferContext context)
         {
             // Basic implementation that restores hash chunks from BlockPadding segments
-            context.Items[WiiUConsts.ContextItemCreatable] = "1";
-            context.Items[WiiUConsts.ContextItemState] = null;
+            context.Items[AreaContextItem.Creatable] = "1";
+            context.Items[AreaContextItem.State] = null;
 
             WiiUAreaContext areaContext = _areaContexts[context.Area.Id];
             if (!areaContext.IsFileSystem && !areaContext.IsOther)
@@ -589,8 +589,8 @@ namespace Nanook.NKit
 
                 if (firstBlock.Data[0] > 0)
                 {
-                    context.Items[WiiUConsts.ContextItemCreatable] = firstBlock.Data.Length > firstBlock.Data[0] ? "0" : "1";
-                    context.Items[WiiUConsts.ContextItemState] = firstBlock.Data.Read(1, firstBlock.Data[0]);
+                    context.Items[AreaContextItem.Creatable] = firstBlock.Data.Length > firstBlock.Data[0] ? "0" : "1";
+                    context.Items[AreaContextItem.State] = firstBlock.Data.Read(1, firstBlock.Data[0]);
                 }
 
                 BlockRecord[] cachedBlocks = new BlockRecord[blocksNeeded];
@@ -671,7 +671,7 @@ namespace Nanook.NKit
                 // - FstBlock uses the title key for Game partitions, otherwise the header key
                 // - PartitionHeader and others default to the image header key
                 string fsType = areaContext.Area.Metadata.GetString(AreaValueType.FsType);
-                AreaType type = fsType == WiiUConsts.FsTypePartitionHeader ? AreaType.PartitionHeader : AreaType.Other;
+                AreaType type = fsType == AreaFsType.PartitionHeader ? AreaType.PartitionHeader : AreaType.Other;
 
                 byte[] iv = new byte[16];
                 bool isFlatContainer = _imageReader.Image.Format != ImageFormat.Iso && _imageReader.Image.Format != ImageFormat.Bin;

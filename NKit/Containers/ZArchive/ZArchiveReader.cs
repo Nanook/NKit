@@ -76,6 +76,17 @@ namespace Nanook.NKit.Container.ZArchive
         private int _cacheUsed;
 
         private readonly byte[] _decompBuffer = new byte[BlockSize];
+        // Thread-local decompressor — one ZStdBlock per thread, created once and reused across
+        // all block reads. Avoids allocating and freeing a native ZSTD_DCtx per block.
+        [ThreadStatic]
+        private static ZStdBlock _tlsDecompressor;
+
+        private static ZStdBlock getDecompressor()
+        {
+            if (_tlsDecompressor == null)
+                _tlsDecompressor = new ZStdBlock(new GrindCore.CompressionOptions { BlockSize = BlockSize });
+            return _tlsDecompressor;
+        }
 
         // ────────────────────────────────────────────────────────────────────
         // Construction
@@ -406,8 +417,7 @@ namespace Nanook.NKit.Container.ZArchive
                 readExact(_stream, _decompBuffer, 0, compressedSize);
 
                 int destLen = BlockSize;
-                using ZStdBlock zs = new ZStdBlock(new GrindCore.CompressionOptions { BlockSize = BlockSize });
-                zs.Decompress(_decompBuffer, 0, compressedSize, dest, 0, ref destLen);
+                getDecompressor().Decompress(_decompBuffer, 0, compressedSize, dest, 0, ref destLen);
 
                 if (destLen != BlockSize)
                     throw new HandledException($"ZArchive: decompressed block {blockIndex} to {destLen} bytes, expected {BlockSize}.");

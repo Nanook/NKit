@@ -54,39 +54,68 @@ namespace Nanook.NKit.Iso.Iso9660
         public FstFile Current(IBuffer buffer, Func<FstFile, byte[], int, long> getSize)
         {
             _curr = buffer;
-            FstFile f = _ahead.Count == 0 ? null : _ahead[0];
-            if (f != null)
+            while (_ahead.Count > 0)
             {
+                FstFile f = _ahead[0];
                 long fOffset = FsOffToOff(f.FsOffset);
-                if (fOffset < buffer.ImageOffset + buffer.Size)
+                if (fOffset >= buffer.ImageOffset + buffer.Size)
+                    break; // the next pending extent starts beyond this buffer — wait for next block
+
+                // Guard: if this entry's FS offset is beyond the physical volume (truncated disc /
+                // malformed PVD sector count), TestFsRange could overflow (now handled by
+                // TestRangeBounds clamping), but as a belt-and-suspenders defence remove the
+                // entry if its FS offset lies so far beyond the volume start that even the
+                // offset-from-buffer would overflow int.  Entries whose f.FsOffset is simply
+                // BEFORE buffer.FsOffset are normal ongoing multi-section files (e.g. BIG.DAT
+                // started in section 0 but continues here) — leave them in _ahead.
+                long bufferOffsetL = f.FsOffset - buffer.FsOffset;
+                if (bufferOffsetL > int.MaxValue)
                 {
-                    if (f.FsSize == -1)
+                    _ahead.RemoveAt(0);
+                    continue;
+                }
+
+                if (f.FsSize == -1)
+                {
+                    long relOffset = fOffset - buffer.AreaOffset;
+                    // Guard: relOffset must fit in an int and land inside the buffer.
+                    int relOffsetInt = (relOffset >= 0 && relOffset < buffer.Size) ? (int)relOffset : 0;
+                    f.FsSize = getSize == null ? BlockFsSize : getSize(f, buffer.Decrypted, relOffsetInt);
+                    setFileAnalysis(_files.KeyIndex(f.FsOffset, out _));
+                }
+
+                buffer.TestFsRange(f.FsOffset, f.FsSize, _rr);
+                if (_rr.IsMatch)
+                {
+                    if (f.Type != FsItemType.File)
                     {
-                        f.FsSize = getSize == null ? BlockFsSize : getSize(f, buffer.Decrypted, (int)(fOffset - buffer.AreaOffset));
-                        setFileAnalysis(_files.KeyIndex(f.FsOffset, out _));
+                        if (_rr.RangeOffset == 0)
+                            _fsBuffUsed = 0;
+                        if (f.FsSize > _fsBuff.Length)
+                        {
+                            // Cap to prevent overflow on a malformed/huge FsSize from a truncated
+                            // disc. Real directory extents are at most a few megabytes.
+                            const int maxDirExtent = 64 * 1024 * 1024; // 64 MiB hard cap
+                            int allocSize = (int)Math.Min(f.FsSize, maxDirExtent);
+                            _fsBuff = new byte[allocSize + 0x400];
+                        }
+                        // Guard: cap the read to what _fsBuff can actually hold. For very large
+                        // CUE images cached as one buffer, _rr.Size may exceed the 64 MiB-capped
+                        // allocation and would crash Buffer.Copy with "destination array too small".
+                        int readSize = Math.Min(_rr.Size, _fsBuff.Length - _fsBuffUsed);
+                        if (readSize > 0)
+                        {
+                            buffer.ReadFs(_rr.BufferOffset, _fsBuff, _fsBuffUsed, 0x8000, 0, 0x8000, readSize);
+                            _fsBuffUsed += readSize;
+                        }
                     }
-                    buffer.TestFsRange(f.FsOffset, f.FsSize, _rr);
-                    if (_rr.IsMatch)
+                    if (_rr.RangeComplete)
                     {
-                        if (f.Type != FsItemType.File)
-                        {
-                            if (_rr.RangeOffset == 0)
-                                _fsBuffUsed = 0;
-                            if (f.FsSize > _fsBuff.Length)
-                                _fsBuff = new byte[f.FsSize + 0x400];
-                            buffer.ReadFs(_rr.BufferOffset, _fsBuff, _fsBuffUsed, 0x8000, 0, 0x8000, _rr.Size);
-                            _fsBuffUsed += _rr.Size;
-                        }
-                        if (_rr.RangeComplete)
-                        {
-                            _ahead.RemoveAt(0);
-                            return f;
-                        }
-                        else
-                        {
-                        }
+                        _ahead.RemoveAt(0);
+                        return f;
                     }
                 }
+                break; // entry is in this buffer's range but not yet complete — wait for more data
             }
             return null;
         }
@@ -172,7 +201,16 @@ namespace Nanook.NKit.Iso.Iso9660
                 _files.Insert(index, f);
                 setFileAnalysis(index);
                 if (f.Type != FsItemType.File)
-                    _ahead.InsertIfMissing(f, out bool _);
+                {
+                    // Skip directory extents whose FS offset lies beyond the physical volume.
+                    // A truncated disc or malformed PVD sector-count can produce entries with
+                    // LBAs past the end of the BIN file; chasing them causes an integer overflow
+                    // when converting the raw image offset back to a buffer-relative int.
+                    // PhysicalVolumeSize is in raw image bytes; FsOffToOff converts FS offset to raw.
+                    bool beyondVolume = PhysicalVolumeSize > 0 && FsOffToOff(fsOffset) >= PhysicalVolumeSize;
+                    if (!beyondVolume)
+                        _ahead.InsertIfMissing(f, out bool _);
+                }
                 _fidelityFiles.Add(f);
             }
             else

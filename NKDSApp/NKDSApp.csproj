@@ -5,7 +5,6 @@
 		<AssemblyName>nkds</AssemblyName>
 		<TargetFramework>net10.0</TargetFramework>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<SelfContained>false</SelfContained>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>false</IsTestProject>
 

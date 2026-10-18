@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -39,7 +39,7 @@ namespace Nanook.NKit.Steps.Shared
 
         public void WriteBytes(string rootPath, string imagePath, byte[] data) => this.Files.Add(imagePath, new ExtractFileTestItem() { FileName = imagePath, Crc = Crc.Compute(data), Size = data.Length });
 
-        public bool WriteFs(ISection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
+        public bool WriteFs(IReadOnlySection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
         {
             bool newFile = false;
             bool replaced = false;

@@ -8,6 +8,16 @@ namespace Nanook.NKit
     /// Detects non-recreatable bytes by comparing actual sector data against values
     /// computed by Ecm.ReconstructPrefix and Ecm.ReconstructEcc.
     ///
+    /// Per-sector flag bits (see <see cref="SectorFlags"/>):
+    ///   Sync     (bit 2): sync pattern differs from standard (12 bytes at 0x00).
+    ///   MsfMode  (bit 3): MSF or mode byte differs from LBA-computed value (4 bytes at 0x0C).
+    ///   Subheader(bit 4): for Mode2 — XA subheader (8 bytes at 0x10) is always stored because
+    ///                      it is content; for Mode1 — intermediate-data bytes (0x10-0x17) are
+    ///                      stored when non-zero because reconstruction leaves them as gap zeros.
+    ///   Edc      (bit 5): stored EDC differs from Ecm.ReconstructEcc output.
+    ///   Ecc      (bit 6): stored ECC differs from Ecm.ReconstructEcc output.
+    ///   ExtUserData(bit 7): Mode2Form2 extended user data (280 bytes at 0x818) always stored.
+    ///
     /// The per-sector reconstruct-and-compare (<see cref="Analyse"/>) is the expensive part and is
     /// intended to run ONCE, in parallel, in the ISO9660 SectionProcessor. <see cref="Serialize"/>
     /// then builds the compact on-disk pack from the precomputed flags (cheap). <see cref="Pack"/>
@@ -28,7 +38,11 @@ namespace Nanook.NKit
         /// <param name="sectionData">The decrypted section byte array containing raw 2352-byte sectors.</param>
         /// <param name="sectorCount">Number of sectors in the section.</param>
         /// <param name="startLba">The starting LBA for the first sector (from PhysicalOffset).</param>
-        public static SectorFlags[] Analyse(byte[] sectionData, int sectorCount, long startLba)
+        /// <param name="blockFsOffset">Byte offset of user data within each sector (0x10 for Mode1
+        /// discs, 0x18 for Mode2 discs). When &gt; 0x10, bytes [0x10-0x17] are not part of the stored
+        /// user data and must be persisted via <see cref="SectorFlags.Subheader"/> even for genuine
+        /// Mode1 sectors (mode byte 0x01) so they survive the DataStore round-trip.</param>
+        public static SectorFlags[] Analyse(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = 0x10)
         {
             if (sectionData == null || sectionData.Length == 0 || sectorCount <= 0)
                 return null;
@@ -102,9 +116,45 @@ namespace Nanook.NKit
                 if (msfModeMismatch)
                     flags |= SectorFlags.MsfMode;
 
-                // Mode2 sectors: unconditionally store subheader (8 bytes at offset 0x10)
+                // Subheader / intermediate-data bytes at 0x10-0x17 (8 bytes).
+                //
+                // Mode2 sectors: the subheader (file/channel/subMode/codingInfo × 2) is pure
+                // content — it cannot be derived from the LBA or user data.  Always store it so
+                // the EDC/ECC computation during reconstruction uses the correct bytes.
+                //
+                // Non-standard mode byte (not 0x01 / not 0x02): the sector is treated as Mode1
+                // during reconstruction, but blockFsOffset=0x10 only applies to genuine Mode1
+                // (mode=0x01).  Gap fill zeros bytes 0x10-0x17 for any sector without a file
+                // record, so if they contain non-zero data in the original they will be lost.
+                // Store them when non-zero.
+                //
+                // Genuine Mode1 (mode=0x01) on a Mode1 disc (blockFsOffset=0x10): bytes 0x10-0x17
+                // are the user data start and are correctly restored from the datastore — no need
+                // to store them separately in the pack.
+                //
+                // Genuine Mode1 (mode=0x01) on a Mode2 disc (blockFsOffset=0x18): bytes 0x10-0x17
+                // are NOT in the user data range [0x18-0x817] and will be zero-filled during
+                // reconstruction.  They must be stored in the pack to survive the DataStore
+                // round-trip.  This happens on "hack" discs (copy-protection, Action Replay etc.)
+                // that occasionally embed genuine Mode1 sectors inside an otherwise Mode2 area.
                 if (isMode2Form1 || isMode2Form2)
+                {
                     flags |= SectorFlags.Subheader;
+                }
+                else if (modeByte != 0x01 || blockFsOffset > 0x10)
+                {
+                    bool intermediateNonZero = false;
+                    for (int b = 0x10; b < 0x18; b++)
+                    {
+                        if (sectionData[sectorOffset + b] != 0)
+                        {
+                            intermediateNonZero = true;
+                            break;
+                        }
+                    }
+                    if (intermediateNonZero)
+                        flags |= SectorFlags.Subheader;
+                }
 
                 // Now compute expected EDC and ECC.
                 // ReconstructEcc uses the sector's current prefix bytes for computation,
@@ -160,13 +210,13 @@ namespace Nanook.NKit
         /// fully recreatable — i.e. NO sector needs sync, MSF/mode, EDC, ECC, subheader, or
         /// extended user data stored.
         ///
-        /// Subheader (Mode2 CD-XA, 8 bytes at 0x10) and ExtUserData (Mode2Form2, 280 bytes at 0x818)
-        /// are CONTENT that CANNOT be regenerated from the LBA + user data — and the Mode2 subheader
-        /// is itself an INPUT to the EDC/ECC computation. They MUST therefore be persisted in the
-        /// pack. A section that contains any of them is NOT fully creatable: skipping its pack would
-        /// drop the subheader/ext-data and the reader would reconstruct EDC/ECC over a zeroed
-        /// subheader, producing bytes that differ from the original (a Mode2/2352 round-trip failure).
-        /// Only Mode1/audio sections with all-standard sync/MSF/EDC/ECC are truly creatable.
+        /// Subheader (bit 4) covers three cases:
+        ///   - Mode2 sectors: the XA subheader (8 bytes at 0x10) is content, not derivable from LBA.
+        ///   - Non-standard mode byte (not 0x01/0x02): bytes 0x10-0x17 are not in the datastore
+        ///     user data range when blockFsOffset=0x18, so gap fill zeros them.
+        ///   - Genuine Mode1 (mode=0x01) on a Mode2 disc (blockFsOffset > 0x10): bytes 0x10-0x17
+        ///     are also outside the stored user data range and must be preserved.
+        /// ExtUserData (Mode2Form2, 280 bytes at 0x818) is also pure content.
         /// Returns false if <paramref name="sectorFlags"/> is null/empty.
         /// </summary>
         public static bool IsFullyCreatable(SectorFlags[] sectorFlags)
@@ -287,9 +337,9 @@ namespace Nanook.NKit
         /// <param name="sectorCount">Number of sectors in the section.</param>
         /// <param name="startLba">The starting LBA for the first sector (from PhysicalOffset).</param>
         /// <returns>The packed byte array (version + header + flags + payload), or null if input is invalid.</returns>
-        public static byte[] Pack(byte[] sectionData, int sectorCount, long startLba)
+        public static byte[] Pack(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = 0x10)
         {
-            SectorFlags[] flags = Analyse(sectionData, sectorCount, startLba);
+            SectorFlags[] flags = Analyse(sectionData, sectorCount, startLba, blockFsOffset);
             if (flags == null)
                 return null;
             return Serialize(sectionData, flags);

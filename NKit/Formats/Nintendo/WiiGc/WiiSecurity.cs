@@ -192,7 +192,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     if (!h0.IsAllValid(_dec, _decOffset, sec.Sha, (int)WiiConsts.WiiGroupSize, true, out bool cr))
                         anyInvalid = true;
 
-                    //ensure the blank areas are blank - some customs fail this - Mario Kart Black
+                    //ensure the blank areas are blank - some custom/modified discs fail this
                     if (!anyInvalid && (
                         !_dec.Equals(sec.Offset + WiiConsts.H0Offset + WiiConsts.H0Len, WiiConsts.H1Offset - (WiiConsts.H0Offset + WiiConsts.H0Len), 0) ||
                         !_dec.Equals(sec.Offset + WiiConsts.H1Offset + WiiConsts.H1Len, WiiConsts.H2Offset - (WiiConsts.H1Offset + WiiConsts.H1Len), 0) ||

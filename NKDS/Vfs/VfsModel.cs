@@ -1,5 +1,6 @@
 using NKitDataStore;
 using NKitDataStore.Interfaces;
+using NKDS.DatVerification;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
@@ -564,8 +565,11 @@ namespace Nanook.NKit.Vfs
                 int itemDsIndex = recordWithYaml.DataStoreIndex;
                 // ImageRecord.Name is always stored without extension; ImageFormat provides it
                 string fileExtension = imageRecord.Format.GetFileExtension();
-                string mountName = imageRecord.Name + fileExtension;
-                string folderName = imageRecord.Name;
+                // Sanitize the name for the OS filesystem — stored names may contain ':' if they
+                // were added before the dat-verification rename sanitization was in place.
+                string safeName = DatVerificationService.SanitizeDatName(imageRecord.Name);
+                string mountName = safeName + fileExtension;
+                string folderName = safeName;
 
                 parsedLookup.TryGetValue((itemDsIndex, imageRecord.Id), out NkFs nkfs);
 

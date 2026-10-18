@@ -175,7 +175,7 @@ namespace NKitCore
                             admitWake = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                         wake = admitWake.Task;
                     }
-                    await Task.WhenAny(wake, Task.Delay(25, admitToken)).ConfigureAwait(false);
+                    await Task.WhenAny(wake, Task.Delay(25)).ConfigureAwait(false);
                 }
             }
 
@@ -468,7 +468,10 @@ namespace NKitCore
 
                 try
                 {
-                    await Task.Delay(_autoscale.ScaleEvaluationMs, at).ConfigureAwait(false); // warm up
+                    // Poll with short unconditional delays to avoid Task.Delay(n, token) throwing
+                    // TaskCanceledException as a first-chance exception on shutdown.
+                    for (int _w = 0; _w < _autoscale.ScaleEvaluationMs && !at.IsCancellationRequested; _w += 25)
+                        await Task.Delay(25).ConfigureAwait(false); // warm up
 
                     while (!at.IsCancellationRequested && WorkPending())
                     {
@@ -568,7 +571,11 @@ namespace NKitCore
                             }
                         }
 
-                        await Task.Delay(_autoscale.SampleIntervalMs, at).ConfigureAwait(false);
+                        // Task.Delay(interval, token) throws TaskCanceledException when the token
+                        // fires, causing debugger first-chance breaks. Instead poll with a short
+                        // unconditional delay and check IsCancellationRequested to exit cleanly.
+                        for (int _w = 0; _w < _autoscale.SampleIntervalMs && !at.IsCancellationRequested; _w += 25)
+                            await Task.Delay(25).ConfigureAwait(false);
                     }
                 }
                 catch (OperationCanceledException) { }
@@ -617,7 +624,7 @@ namespace NKitCore
                                     writerWake = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                                 wake = writerWake.Task;
                             }
-                            await Task.WhenAny(wake, Task.Delay(25, token)).ConfigureAwait(false);
+                            await Task.WhenAny(wake, Task.Delay(25)).ConfigureAwait(false);
                             token.ThrowIfCancellationRequested();
                             continue;
                         }
@@ -659,7 +666,7 @@ namespace NKitCore
                         while (!mt.IsCancellationRequested)
                         {
                             try { _metricsSink(GetSnapshot(context)); } catch { }
-                            await Task.Delay(_metricsIntervalMs, mt).ConfigureAwait(false);
+                            await Task.Delay(_metricsIntervalMs).ConfigureAwait(false);
                         }
                     }
                     catch (OperationCanceledException) { }

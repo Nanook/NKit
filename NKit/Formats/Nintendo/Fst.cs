@@ -89,6 +89,9 @@ namespace Nanook.NKit.Nintendo
         {
             status = FstParseStatus.Ok;
 
+            if (fstData == null || fstData.Length < 0x0c)
+                return null;
+
             FstFolder fld = new FstFolder(null, "");
 
             if (systemFiles != null)

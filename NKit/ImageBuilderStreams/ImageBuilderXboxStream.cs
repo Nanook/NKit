@@ -56,8 +56,8 @@ namespace Nanook.NKit
             foreach (AreaRecord area in areas)
             {
                 string fsType = area.Metadata.GetString(AreaValueType.FsType);
-                bool isFileSystem = string.Equals(fsType, "FileSystem", StringComparison.OrdinalIgnoreCase);
-                bool isOther = string.Equals(fsType, "Other", StringComparison.OrdinalIgnoreCase);
+                bool isFileSystem = string.Equals(fsType, AreaFsType.FileSystem, StringComparison.OrdinalIgnoreCase);
+                bool isOther = string.Equals(fsType, AreaFsType.Other, StringComparison.OrdinalIgnoreCase);
 
                 XboxAreaContext context = new XboxAreaContext
                 {

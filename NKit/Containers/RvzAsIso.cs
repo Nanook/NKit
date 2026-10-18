@@ -14,6 +14,19 @@ namespace Nanook.NKit
     internal class RvzAsIso : Stream, IAsIso
     {
         private const int _NkitHeaderLen = 0x8 + 0x4 + 0x10 + 0x14 + 0x8;
+
+        // Thread-local ZStd decompressor — one context per thread, reused across all blocks.
+        // unpack() is called from parallel worker threads (decodeBlock), so thread-local
+        // ensures each thread has its own isolated, reusable ZSTD_DCtx with no locking.
+        [ThreadStatic]
+        private static ZStdBlock _tlsZstdDecompressor;
+
+        private static ZStdBlock getZstdDecompressor(int blockSize)
+        {
+            if (_tlsZstdDecompressor == null)
+                _tlsZstdDecompressor = new ZStdBlock(new GrindCore.CompressionOptions() { BlockSize = blockSize });
+            return _tlsZstdDecompressor;
+        }
         private Stream _stream;
         private bool _allowSeek;
         private long _position;
@@ -340,8 +353,7 @@ namespace Nanook.NKit
                     return destDataLength;
 
                 case 5: //zstd
-                    using (ZStdBlock ls = new ZStdBlock(new GrindCore.CompressionOptions() { BlockSize = dstData.Length }))
-                        ls.Decompress(srcData, 0, size, dstData, 0, ref destDataLength);
+                    getZstdDecompressor(dstData.Length).Decompress(srcData, 0, size, dstData, 0, ref destDataLength);
                     return destDataLength;
 
                 default: //none

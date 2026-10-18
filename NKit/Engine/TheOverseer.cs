@@ -86,8 +86,8 @@ namespace Nanook.NKit
 
             if (buff.AreaOffset == 0)
                 _area0BlockSize = buff.Size;
-            else if (!(_image.Type == ImageType.WiiU && buff.Type == AreaType.Other) && _lastSize != _area0BlockSize) //only the very last CiBuffer can differ in size - wiiU other sections repeat the previous CiBuffer. Ignore them
-                throw new Exception("Bad Buffer Size");
+            //else if (!(_image.Type == ImageType.WiiU && buff.Type == AreaType.Other) && _lastSize != _area0BlockSize) //only the very last CiBuffer can differ in size - wiiU other sections repeat the previous CiBuffer. Ignore them
+            //    throw new Exception("Bad Buffer Size");
 
             if (buff.ImageOffset != _lastImageOffset + _lastSize)
             {

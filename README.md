@@ -161,7 +161,7 @@ No. All releases are native AOT binaries — fully self-contained.
 [GitHub Issues](https://github.com/Nanook/NKit/issues) is the primary channel. [Discord](https://discord.gg/YT792u5yWJ) is good for questions and discussion.
 
 **Q: What about NKit 1 / the old nkit.iso format?**
-NKit 2 reads the legacy nkit.iso/nkit.gcz format but no longer writes it. RVZ replaced it as the recommended compressed format. Use NKit 2 to convert your old nkit files to RVZ.
+NKit 2 reads the legacy `.nkit.iso`/`.nkit.gcz` format for both GameCube and Wii. For GameCube, NKit 2 also writes `.nkit.iso` — use `--format nkitiso` (the old `nkit.iso` spelling is accepted as an alias). For Wii, RVZ is the recommended format. Use NKit 2 to convert your old nkit files to RVZ or (GameCube only) back to nkitiso.
 
 ---
 

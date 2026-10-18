@@ -125,7 +125,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // RVT-H (GcRvtH path) have no hashes to validate, so IsValid is false by default there —
             // reporting those as "Bad" is a false positive, so skip them.
             if (!IsValid && this.SectionHasVerifiableHashes)
-                log.Log(LogLevel.Warning,
+                log.Log(LogLevel.Detail,
                     $"Bad section off 0x{ImageOffset:X} size 0x{Size:X} in partition '{_fsInfo?.Id ?? "?"}'"
                     + $" (path={pathLabel}, creatable:{(IsCreatable ? "y" : "n")})");
         }

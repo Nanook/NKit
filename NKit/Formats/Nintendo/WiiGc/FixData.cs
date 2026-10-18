@@ -47,6 +47,13 @@ namespace Nanook.NKit.Nintendo.WiiGc
         }
 
         /// <summary>
+        /// Per-disc-ID8 FST file alignment override. -1 = default (align 0x8000-offset + 0x8000-length
+        /// files to 0x8000), 0 = preserve original disc offsets, >0 = align all files whose disc
+        /// offset is a multiple of this value to the next boundary of this value in the NKit stream.
+        /// </summary>
+        public long FstFileAlignment { get; private set; }
+
+        /// <summary>
         /// Basic lookup: returns the recovery update partition matching the given update CRC, or
         /// null if none is available. Recovery files are named {SHA1}_{TYPE}_{CRC8}; only entries
         /// backed by a real file (Filename != null) are considered. This is the single home for
@@ -128,6 +135,18 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         this.ForceJunkId = (string)v;
                 }
 
+                if (_yaml.ContainsKey("fstFileAlignment"))
+                {
+                    if (((Dictionary<object, object>)_yaml["fstFileAlignment"]).TryGetValue(id8, out object v))
+                        this.FstFileAlignment = long.Parse((string)v, NumberStyles.HexNumber);
+                    else
+                        this.FstFileAlignment = -1L;
+                }
+                else
+                {
+                    this.FstFileAlignment = -1L;
+                }
+
                 if (_yaml.ContainsKey("redumpFstCrcs"))
                     this.FstCrcs = ((List<object>)_yaml["redumpFstCrcs"]).Select(a => uint.Parse((string)a, NumberStyles.HexNumber)).ToArray();
 
@@ -152,6 +171,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 this.ApploaderFsts = new uint[0];
                 this.RedumpUpdateCrcs = new uint[0];
                 this.RegionData = new Dictionary<byte[], int>();
+                this.FstFileAlignment = -1L;
             }
         }
 

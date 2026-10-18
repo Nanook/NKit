@@ -1,3 +1,5 @@
+using Nanook.NKit.Configuration;
+using Nanook.NKit.Configuration.Models;
 using Nanook.NKit.Container.ZArchive;
 using Nanook.NKit.Nintendo;
 using Nanook.NKit.Steps.Shared;
@@ -23,6 +25,7 @@ namespace Nanook.NKit
     internal class ConvertWiiULoadiineStep : WiiUFileExtractBase
     {
         private readonly bool _isWua;
+        private readonly int _workers;
         private ZArchiveWriter _archiveWriter;
         private ZArchiveExtractHandler _archiveHandler;
         private IStepContext _convertContext;
@@ -50,7 +53,17 @@ namespace Nanook.NKit
             string fmt = context.StepConfig?.ToLowerInvariant() ?? "loadiine";
             _isWua   = fmt.StartsWith("wua", StringComparison.OrdinalIgnoreCase);
             _srcScan = context.StepInfo?.SrcScan;
-            context.AddSettingsInfo("ConvertTo", _isWua ? "wua" : "loadiine");
+            if (_isWua)
+            {
+                WuaFormatConfiguration wuaCfg = ConfigSettingsFormatParser.ParseWuaFormat(context.StepConfig ?? "wua");
+                _workers = wuaCfg.Parallelism;
+                context.AddSettingsInfo("ConvertTo", $"wua (parallelism:{_workers})");
+            }
+            else
+            {
+                _workers = 0;
+                context.AddSettingsInfo("ConvertTo", "loadiine");
+            }
             base.CheckContract(context.StepInfo);
         }
 
@@ -62,7 +75,7 @@ namespace Nanook.NKit
             if (_isWua)
             {
                 base.OutStream.NewPart(ProposedName().Replace(".wua", ""), ".wua", true);
-                _archiveWriter  = new ZArchiveWriter(base.OutStream);
+                _archiveWriter  = new ZArchiveWriter(base.OutStream, _workers);
                 _archiveHandler = new ZArchiveExtractHandler(_archiveWriter);
                 base.ExtractHandler = _archiveHandler;
             }

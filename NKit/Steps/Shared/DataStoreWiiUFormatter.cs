@@ -828,7 +828,7 @@ namespace Nanook.NKit.Steps.Shared
                 {
                     string idxFileName = idx.FileName?.ToLower() ?? "";
                     string idxExt = idx.Extension?.ToLower() ?? "";
-                    if (idxExt != ".tmd" && idxFileName != "tmd" && idxFileName.StartsWith("tmd."))
+                    if (idxExt != WiiUConsts.ExtTmd && idxFileName != "tmd" && idxFileName.StartsWith("tmd."))
                     {
                         isCdnFormat = true;
                         if (int.TryParse(idxFileName.Substring(4), out int ver))

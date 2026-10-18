@@ -404,6 +404,5 @@ transferring
 CACHED
 
 # Personal dev — never ship
-NKitApp/nkit-dev.yaml
-NKit.UI/nkit-ui-dev.yaml
+**/nkit-*.yaml
 **/Properties/launchSettings.json

@@ -172,6 +172,13 @@ namespace Nanook.NKit
 
         public void TestRangeBounds(long offset, long size, long boundsOffset, long boundsSize, RangeResult result)
         {
+            // Clamp to prevent long overflow in offset+size or boundsOffset+boundsSize arithmetic
+            // when directory entries or file sizes come from a malformed/truncated disc image.
+            if (size < 0)
+                size = 0;
+            if (boundsSize < 0)
+                boundsSize = 0;
+
             if (offset >= boundsOffset) //we have the start of the gap
             {
                 result.IsMatch = (offset == boundsOffset && size == 0) || offset < boundsOffset + boundsSize; //offset is between boundsOffset and bounds end
@@ -181,7 +188,6 @@ namespace Nanook.NKit
                     result.Size = (int)(Math.Min(offset + size, boundsOffset + boundsSize) - offset);
                 }
                 result.RangeOffset = 0;
-
             }
             else
             {

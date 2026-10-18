@@ -65,7 +65,7 @@ namespace Nanook.NKit.Container
             _wbfsBlocks = _stream.ReadBytes(_wbfsSectorSize - (_wbfsHdr.Length + _wbfsDiscHdr.Length));
 
             int nkitOffset = 0x10000 - (_wbfsDiscHdr.Length + _wbfsHdr.Length);
-            _isNkit = _wbfsBlocks.ReadString(nkitOffset, 4) == "NKIT";
+            _isNkit = _wbfsBlocks.ReadString(nkitOffset, 4) == WiiConsts.NKitId;
 
             int maxBlocks = (_isNkit ? nkitOffset : _wbfsBlocks.Length) / 2; //amount of 2 byte offsets until end of first sector
             long pointer = 0;
@@ -158,6 +158,18 @@ namespace Nanook.NKit.Container
         }
 
         public void SetRemovedBlock(Action<MetaData> setBlock) => _setBlock = setBlock;
+
+        protected override void Dispose(bool disposing)
+        {
+            // Release the per-image block reader: shuts down its BlockingThreadQueue worker threads
+            // so a .wbfs image's reader threads/handles do not leak across a long-lived host.
+            if (disposing)
+            {
+                try { _blockReader?.Release(); } catch { }
+                _blockReader = null;
+            }
+            base.Dispose(disposing);
+        }
 
         public override void Flush() => _stream.Flush();
 

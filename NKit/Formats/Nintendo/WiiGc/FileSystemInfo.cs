@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -294,26 +295,17 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 byte[] bootBin = new byte[WiiConsts.BootBinSize];
                 buffer.ReadFs(WiiConsts.BootBinOffset, bootBin, 0, bootBin.Length, 0, bootBin.Length, bootBin.Length);
 
-                if (bootBin.ReadUInt32B(0) == 0x00000000) //if bootbin starts with nulls it's bad. This catches the Wii System images that have 32bit incrementing Update Partition filler
+                if (bootBin.ReadUInt32B(0) == 0x00000000) //if bootbin starts with nulls it's bad.
                 {
-                    FstData = bootBin; //Allow the properties on this class to return bootbin data
-                    InvalidPartitionData = InvalidFileSystem = true; //WipePartition invalid. make fst invalid also
+                    FstData = bootBin;
+                    InvalidPartitionData = InvalidFileSystem = true;
                     FileSystem = null;
-                    return true; //we have all we can get
+                    return true;
                 }
 
                 long fstPtr = bootBin.ReadUInt32B(WiiConsts.FstPtrOffset);
                 long fstSize = bootBin.ReadUInt32B(WiiConsts.FstSizeOffset);
                 long fstEnd = (fstPtr + fstSize) * _imageInfo.Multiplier;
-
-                // Guard against overflow or unreasonably large FST (e.g., update partition with no real filesystem)
-                //if (fstEnd <= 0 || fstEnd > buffer.FsSize * 1024)
-                //{
-                //    FstData = bootBin;
-                //    InvalidPartitionData = InvalidFileSystem = true;
-                //    FileSystem = null;
-                //    return true;
-                //}
 
                 long sz = fstEnd / buffer.FsSize * buffer.FsSize;
                 if (sz < fstEnd)
@@ -421,7 +413,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 for (int i = 0; i < dolOffsets; i++)
                 {
                     if (FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) != 0) //7 text offsets, 11 data offsets
-                        MainDolSize = Math.Max(MainDolSize, FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) + FstData.ReadUInt32B((int)MainDolOffset + 0x90 + (i * 4)));
+                        MainDolSize = Math.Max(MainDolSize, (long)FstData.ReadUInt32B((int)MainDolOffset + 0x0 + (i * 4)) + (long)FstData.ReadUInt32B((int)MainDolOffset + 0x90 + (i * 4)));
                 }
                 SystemFiles.Add(_mainDol = new FstFile(null, "__main.dol", MainDolOffset, MainDolSize, -1, false, false) { IsSystemFile = true });
             }
@@ -433,8 +425,17 @@ namespace Nanook.NKit.Nintendo.WiiGc
             long minNotZero = MainDolOffset != 0 ? Math.Min(MainDolOffset, FstOffset) : FstOffset;
             if (minNotZero != 0 && AppldrBinOffset + AppldrBinSize > minNotZero)
             {
-                ((FstFile)SystemFiles[2]).FsSize = minNotZero - AppldrBinOffset; //Fix wii freeloader
-                ((FstFile)SystemFiles[2]).Analysis.FsOffset = SystemFiles[2].FsOffset + SystemFiles[2].FsSize;
+                // Find the apploader file in SystemFiles (it might not be at index 2)
+                foreach (IFsFile file in SystemFiles)
+                {
+                    if (file is FstFile fstFile && fstFile.FsOffset == AppldrBinOffset)
+                    {
+                        fstFile.FsSize = minNotZero - AppldrBinOffset; //Fix wii freeloader
+                        if (fstFile.Analysis != null)
+                            fstFile.Analysis.FsOffset = fstFile.FsOffset + fstFile.FsSize;
+                        break;
+                    }
+                }
             }
 
 
@@ -447,6 +448,65 @@ namespace Nanook.NKit.Nintendo.WiiGc
             return false;
         }
 
+        /// <summary>
+        /// Called when the main DOL sits after the FST area and its header was not in FstData
+        /// during the upfront parse. The caller peeks the DOL header bytes from the cached
+        /// stream. Registers __main.dol as a virtual system file and inserts it into the frozen
+        /// file-system view so the SectionProcessor names it rather than treating it as a gap.
+        /// </summary>
+        internal void RegisterRelocatedDol(byte[] dolHeader)
+        {
+            if (_mainDol != null || MainDolOffset == 0 || dolHeader == null || dolHeader.Length < 0xD8)
+                return;
+
+            MainDolSize = 0;
+            for (int i = 0; i < 18; i++)
+            {
+                long secOff  = dolHeader.ReadUInt32B(i * 4);
+                long secSize = dolHeader.ReadUInt32B(0x90 + i * 4);
+                if (secOff > 0 && secSize > 0)
+                    MainDolSize = Math.Max(MainDolSize, secOff + secSize);
+            }
+            if (MainDolSize <= 0 || MainDolSize > _discSize - MainDolOffset)
+                MainDolSize = Math.Max(0, _discSize - MainDolOffset);
+
+            SystemFiles.Add(_mainDol = new FstFile(null, "__main.dol", MainDolOffset, MainDolSize, -1, false, false) { IsSystemFile = true });
+
+            // Insert into the frozen file list in offset order without a full setFileSystem rebuild.
+            if (FileSystem?.Files != null)
+            {
+                System.Collections.Generic.List<IFsFile> files = FileSystem.Files;
+                int insertAt = files.Count;
+                for (int i = 0; i < files.Count; i++)
+                {
+                    if (files[i].FsOffset > MainDolOffset)
+                    {
+                        insertAt = i;
+                        break;
+                    }
+                }
+                files.Insert(insertAt, _mainDol);
+
+                // Truncate the preceding file's PostGap so it ends at MainDolOffset.
+                if (insertAt > 0)
+                {
+                    FstFile prev = (FstFile)files[insertAt - 1];
+                    long prevEnd = prev.FsOffset + prev.FsSize;
+                    if (prev.Analysis != null && prevEnd <= MainDolOffset)
+                    {
+                        prev.Analysis.FsOffset = prevEnd;
+                        prev.Analysis.Size     = MainDolOffset - prevEnd;
+                    }
+                }
+
+                // Set the DOL's own PostGap to cover from DOL end to next file.
+                long dolEnd        = MainDolOffset + MainDolSize;
+                long nextFileStart = insertAt < files.Count - 1 ? files[insertAt + 1].FsOffset : FsSizeSource;
+                ((FstFile)_mainDol).Analysis.FsOffset = dolEnd;
+                ((FstFile)_mainDol).Analysis.Size     = Math.Max(0, nextFileStart - dolEnd);
+            }
+        }
+
         private void setFileSystem(long newFsSize)
         {
             if (_fstBin != null)
@@ -456,8 +516,9 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     FileSystem = Fst.Parse(FstData, (int)FstOffset, SystemFiles, _imageInfo.Multiplier);
                     InvalidFileSystem = FileSystem == null;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[FileSystemInfo.setFileSystem] {ex.GetType().Name}: {ex.Message}");
                     FileSystem = null;
                     InvalidFileSystem = true;
                 }

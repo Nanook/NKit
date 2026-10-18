@@ -447,7 +447,7 @@ namespace Nanook.NKit
                 pos = l;
             }
 
-            if (base.ExtractHandler.WriteFs(section, rootPath, imagePath, pos, fsOffset, sizeFs, fsFullSize, newFile))
+            if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), rootPath, imagePath, pos, fsOffset, sizeFs, fsFullSize, newFile))
             {
                 if (isSplit && !newFile)
                     _fsTotal--;  //part > 1 - deduct the file

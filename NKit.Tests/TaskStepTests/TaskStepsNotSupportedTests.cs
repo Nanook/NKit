@@ -15,7 +15,7 @@ namespace NKit.Tests.Engine.Output
         [InlineData("001", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "isodec")]
         [InlineData("002", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "gcz")]
         [InlineData("003", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "wia")]
-        [InlineData("004", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "nkitiso")]
+        // "004" removed — "nkitiso" is now a valid GameCube format (routes to Convert-Gc-NKitIso)
         [InlineData("005", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "nkitgcz")]
         [InlineData("006", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "cue")]
         [InlineData("007", "gamecube", ".iso,.iso.dec,.gcz,.ciso,.wbfs,.wia,.rvz,.nkit.iso,.nkit.gcz", "gdi")]

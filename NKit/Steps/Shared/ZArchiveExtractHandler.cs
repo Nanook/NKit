@@ -78,7 +78,7 @@ namespace Nanook.NKit.Steps.Shared
                 _writer.Write(data, 0, data.Length);
         }
 
-        public bool WriteFs(ISection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
+        public bool WriteFs(IReadOnlySection section, string rootPath, string imagePath, long pos, int fsOffset, int fsSize, long fullFsSize, bool replace)
         {
             if (_skip || _titleFolder == null) return false;
 

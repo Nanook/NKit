@@ -5,8 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Nanook.NKit.Builder
-{
-    //TODO:
+{    //TODO:
     // - Wipe end of block data
     // - Wipe end of H3 Table
     // - Regen the H3 entry on Patch
@@ -18,12 +17,13 @@ namespace Nanook.NKit.Builder
     // - Having the Main.dol located in the filesystem (not before the fst)
     // - 2 Disc images where the Max Fst size needs to be set differently on both discs
 
-    internal class WiiPartitionBuilder
+    public class WiiPartitionBuilder
     {
         private readonly byte[] _hdr;
         private byte[] _bootBin;
         private readonly FstBuilder _fst;
-        private readonly WiiPartitionDataWriter _stream;
+        private WiiPartitionDataWriter _stream;
+        private Stream _output; // stored so SetDataHeader can create _stream after writing the header
         private long _offset;
         private long _mainDolOffset;
 
@@ -113,7 +113,7 @@ namespace Nanook.NKit.Builder
 
             // Determine the common key to use.
             string issuer = Encoding.ASCII.GetString(_hdr.Read(0x140, 64)).TrimEnd('\0');
-            IsRvt = issuer == "Root-CA00000002-XS00000006"; //Use the RVT-R key.
+            IsRvt = issuer == WiiConsts.RvtIssuer; //Use the RVT-R key.
             IsKorean = !IsRvt && _hdr.Read8(WiiConsts.WiiPrtHdrKoreanOffset) == 1; //Use the Korean Key
             IsRvtH = IsRvt && PartitionSize == 0;
             IsRvtR = IsRvt && !IsRvtH;
@@ -139,13 +139,21 @@ namespace Nanook.NKit.Builder
             Key = titleKey;
             Aes.Key = Key;
 
-            _stream = new WiiPartitionDataWriter(output, Key, H3Table, 0);
+            // Store output for SetDataHeader to use — _stream must be created AFTER the
+            // partition header is written (in SetDataHeader) so that _areaOffset == data_area_start,
+            // not partition_start. Creating it here would put _areaOffset at partition_start and
+            // every data write would land inside the cert chain (wrong by partitionHeaderSize bytes).
+            _output = output;
 
         }
 
         public void SetDataHeader(byte[] bootBin, byte[] bi2Bin, byte[] appLoaderBin, byte[] mainDol, long reservedFstSize)
         {
-            _stream.BaseStream.Write(_hdr, 0, _hdr.Length); //write WipePartition header
+            // Write the partition header (ticket, TMD, cert chain) to the output BEFORE creating
+            // _stream. Creating WiiPartitionDataWriter captures output.Position as _areaOffset;
+            // writing the header first ensures _areaOffset == data_area_start, not partition_start.
+            _output.Write(_hdr, 0, _hdr.Length); //write WipePartition header
+            _stream = new WiiPartitionDataWriter(_output, Key, H3Table, 0);
 
             //write WipePartition data sys files
             _bootBin = bootBin;
@@ -254,7 +262,13 @@ namespace Nanook.NKit.Builder
             _bootBin.WriteUInt32B(WiiConsts.FstSizeMaxOffset, (uint)(fst.Length - pad) >> 2);
             Array.Clear(_bootBin, WiiConsts.NKitHeaderPos, WiiConsts.NKitHeaderSize); //wipe nkit header
 
-            s.Position = offset + (_hdr.ReadUInt32B(WiiConsts.WiiPrtHdrSizeOffset) << 2);
+            // Dump raw FST bytes for unit testing (tghost_fst_dump.bin in %TEMP%)
+            try { File.WriteAllBytes(Path.Combine(Path.GetTempPath(), "tghost_fst_dump.bin"), fst); } catch { }
+
+            uint dataOffsetField = _hdr.ReadUInt32B(WiiConsts.WiiPrtHdrSizeOffset);
+            long dataAreaSeek = offset + ((long)dataOffsetField << 2);
+
+            s.Position = dataAreaSeek;
             using (WiiPartitionDataWriter w = new WiiPartitionDataWriter(s, Key, H3Table, PartitionSize))
             {
                 w.DataPosition = 0;

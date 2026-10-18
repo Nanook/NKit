@@ -90,9 +90,9 @@ namespace Nanook.NKit
                         return new IndexFile(path, fileName, extension, postFix, 0, content.Length, Nanook.NKit.Crc.Compute(content), isTemp, isArchived, content) { FileType = IndexFileType.Gdi, Items = items.ToArray(), Additional = addFiles };
                 }
             }
-            else if (fileName.ToLower().StartsWith("tmd") || extension.ToLower() == ".tmd")
+            else if (fileName.ToLower().StartsWith("tmd") || extension.ToLower() == Nanook.NKit.Nintendo.WiiU.WiiUConsts.ExtTmd)
             {
-                int tmdVer = extension.ToLower() == ".tmd" || fileName.ToLower() == "tmd" ? -1 : int.Parse(fileName.Substring(4));
+                int tmdVer = extension.ToLower() == Nanook.NKit.Nintendo.WiiU.WiiUConsts.ExtTmd || fileName.ToLower() == "tmd" ? -1 : int.Parse(fileName.Substring(4));
                 NKit.Nintendo.WiiU.TmdInfo tmd = new Nintendo.WiiU.TmdInfo(content);
                 for (int i = 0; i < tmd.TotalContents; i++)
                 {

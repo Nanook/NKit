@@ -287,15 +287,17 @@ namespace Nanook.NKit
             {
                 lock (cacheItem)
                 {
-                    if (cacheItem.RefSrcBuff == null && cacheItem.Cached == null)
+                    // Both null means the primary has not yet set RefSrcBuff — wait for it.
+                    // RefSrcBuff is always set by the Read() loop BEFORE _queue.Add(), so a
+                    // PulseAll will come once the primary worker decodes and sets Cached.
+                    while (cacheItem.RefSrcBuff == null && cacheItem.Cached == null)
                         Monitor.Wait(cacheItem);
-                    if (cacheItem.Cached == null) //clean
+                    if (cacheItem.Cached == null) //primary not yet decoded — this worker decodes
                     {
-                        byte[] temp = buff.Buff; //switch the CiBuffer out for the cacheItem
+                        byte[] temp = buff.Buff;
                         buff.Buff = cacheItem.RefSrcBuff;
                         process(buff, threadIdx);
                         buff.Buff = temp;
-
                         cacheItem.Cached = (byte[])buff.Result.Clone();
                         Array.Copy(cacheItem.Cached, buff.Result, buff.Info.FullSize);
                         Monitor.PulseAll(cacheItem);
@@ -304,7 +306,13 @@ namespace Nanook.NKit
                     }
                 }
             }
-            Array.Copy(cacheItem.Cached, buff.Result, buff.Info.FullSize);
+            byte[] cached = cacheItem.Cached;
+            Array.Copy(cached, buff.Result, buff.Info.FullSize);
+            // Eviction is handled by the end-of-batch sequential cleanup in Read() which runs
+            // after processing.Wait() — i.e. after all workers have finished. The immediate
+            // CAS eviction here was unsafe: the "last secondary by index" could fire the CAS
+            // from a parallel worker before lower-indexed secondaries had run, leaving them
+            // to find (null, null) in the lock with no PulseAll ever coming.
         }
 
         private int setOutputBuffers(long readOffset, int readSize, ImageBlockInfo<T> currentBlock, int currentPos, AreaType areaType)
@@ -363,6 +371,12 @@ namespace Nanook.NKit
         /// </summary>
         public void Release()
         {
+            // Shut down the BlockingThreadQueue's dedicated worker threads before releasing buffers.
+            // Without this, the MaxParallel background threads created at ImageBlockReader construction
+            // block forever on Monitor.Wait and are never reclaimed — leaking ~10 threads + handles per
+            // image across a long-lived host (the UI, or a batch CLI run).
+            try { _queue?.Shutdown(); } catch { }
+
             if (this.Items != null)
             {
                 foreach (ImageBlockInfo<T> it in this.Items)

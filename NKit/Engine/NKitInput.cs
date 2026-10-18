@@ -87,6 +87,9 @@ namespace Nanook.NKit
 
                 _iso = createImageContainer(id, canUseCustomChkSum);
 
+                if (_iso is WuxAsIso wux)
+                    wux.EnableCaching = _context.StepInfo?.FullScan ?? false;
+
                 int requestedBuffSize = _iso.Construct(stream, _iso is WiaAsIso);
 
                 // Detail: which container decoder claimed this source (winning entry of the 15-deep
@@ -138,7 +141,7 @@ namespace Nanook.NKit
                     detectedSystem = SystemType.Wii;
                 else if (_iso.Format == ContainerType.TmdApp || _iso is TmdAppAsIso || (temp.Length >= Nintendo.WiiU.WiiUConsts.HeaderIdOffset + 4 && temp.ReadUInt32B(Nintendo.WiiU.WiiUConsts.HeaderIdOffset) == Nintendo.WiiU.WiiUConsts.HeaderId))
                     detectedSystem = SystemType.WiiU;
-                else if (temp.Length >= Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a && temp.ReadUInt32B(0x0) != 0 && temp.ReadUInt32B(0x20) != 0 && Regex.IsMatch(temp.ReadString(Nintendo.WiiGc.WiiConsts.AppLoaderOffset, 0x0a), @"[0-9]{4}(/[0-9]{2}){2}$")) //No wii or gc magic, but has a title - v1.1 BugFix for Dodger Demo_shrunk.gcm / ind-nddemo.iso
+                else if (temp.Length >= Nintendo.WiiGc.WiiConsts.AppLoaderOffset + 0x0a && temp.ReadUInt32B(0x0) != 0 && temp.ReadUInt32B(0x20) != 0 && Regex.IsMatch(temp.ReadString(Nintendo.WiiGc.WiiConsts.AppLoaderOffset, 0x0a), @"[0-9]{4}(/[0-9]{2}){2}$")) //No wii or gc magic, but has a title - v1.1 BugFix for GC demo/non-standard discs without magic bytes
                     detectedSystem = SystemType.GameCube;
 
                 if (detectedSystem == SystemType.NotSet && _context.SystemType != SystemType.NotSet)

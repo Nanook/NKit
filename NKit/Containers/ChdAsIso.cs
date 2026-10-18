@@ -803,6 +803,13 @@ namespace Nanook.NKit.Container
         {
             try { _md5Calc?.Dispose(); } catch { }
             try { _sha1Calc?.Dispose(); } catch { }
+            // Release the per-image block reader: shuts down its BlockingThreadQueue worker threads
+            // (see ImageBlockReader.Release) so a .chd image's reader threads/handles do not leak.
+            if (disposing)
+            {
+                try { _blockReader?.Release(); } catch { }
+                _blockReader = null;
+            }
             base.Dispose(disposing);
         }
 

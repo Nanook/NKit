@@ -631,6 +631,10 @@ namespace Nanook.NKit
             if (name == null)
                 return null;
 
+            // Pre-substitute colon with dash for readability ("Title: Subtitle" → "Title- Subtitle")
+            // before the general invalid-char sweep, which would otherwise collapse it to a space.
+            name = name.Replace(":", "-");
+
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 

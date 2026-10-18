@@ -67,7 +67,18 @@ namespace Nanook.NKit
             string newName = _finalName;
             string newExt = "";
             if (_stepContext.StepInfo.OutputType == OutputType.Image || _stepContext.StepInfo.OutputType == OutputType.Scan)
-                SourceFiles.GetFileNameParts(Path.Combine(_path, _finalName), out newPath, out newName, out _, out newExt);
+            {
+                // Only split stem/extension when _finalName actually has a known file extension.
+                // If GetKnownFileExtension returns "" the extension was already stripped (or this
+                // is a plain game title used as a folder name). Calling GetFileNameParts in that
+                // case wrongly treats dots inside the name (e.g. "Title 2.0 Edition") as an
+                // extension, inserting the disambiguation suffix mid-name (_8 before ".0 Edition").
+                string combinedPath = Path.Combine(_path, _finalName);
+                if (SourceFiles.GetKnownFileExtension(combinedPath).Length > 0)
+                    SourceFiles.GetFileNameParts(combinedPath, out newPath, out newName, out _, out newExt);
+                else
+                    newPath = _path; // name has no known extension — use it as-is as the stem
+            }
 
             newName = SourceFiles.CleanseFileName(newName);
 
@@ -189,18 +200,51 @@ namespace Nanook.NKit
         {
             foreach (IStepContext step in steps)
             {
-                if ((step.Result?.OutFileParts?.Length ?? 0) != 0 && step.StepInfo.WriteImage)
+                if (step.StepInfo == null || !step.StepInfo.WriteImage)
+                    continue;
+
+                OutputType outputType = step.StepInfo.OutputType;
+
+                // Image / Files outputs write individual temp files (name ends with TempChar) loosely
+                // into the shared temp path. Delete each one listed in OutFileParts.
+                if (outputType == OutputType.Image || outputType == OutputType.Files)
                 {
-                    foreach (Part f in step.Result.OutFileParts)
+                    if ((step.Result?.OutFileParts?.Length ?? 0) != 0)
                     {
-                        try
+                        foreach (Part f in step.Result.OutFileParts)
                         {
-                            string fn = Path.Combine(step.WritePath, f.FileName);
-                            if (File.Exists(fn))
-                                File.Delete(fn);
+                            try
+                            {
+                                string fn = Path.Combine(step.WritePath, f.FileName);
+                                if (File.Exists(fn))
+                                    File.Delete(fn);
+                            }
+                            catch { }
                         }
-                        catch { }
                     }
+                }
+                // FolderIndex / FolderFiles outputs (CUE/GDI index formats, extract-to-folder) write
+                // into a DEDICATED temp directory created per-step at WritePath (a unique folder under
+                // OutPath whose name ends with TempChar). On success it is renamed to the final name via
+                // Directory.Move; on error nothing moves it, so the whole temp directory — with its
+                // partially-written index + track files — must be removed here. Deleting the individual
+                // OutFileParts (as the Image path does) is not enough: the directory and any files not
+                // yet registered in OutFileParts would be left behind. Guard tightly so we only ever
+                // remove our own temp directory: a folder output type, a path that still carries the
+                // temp marker suffix (i.e. not yet renamed to its final name), and an existing directory.
+                else if (outputType == OutputType.FolderIndex || outputType == OutputType.FolderFiles)
+                {
+                    try
+                    {
+                        string dir = step.WritePath;
+                        if (!string.IsNullOrEmpty(dir)
+                            && dir.EndsWith(TempChar, StringComparison.Ordinal)
+                            && Directory.Exists(dir))
+                        {
+                            Directory.Delete(dir, recursive: true);
+                        }
+                    }
+                    catch { }
                 }
             }
         }

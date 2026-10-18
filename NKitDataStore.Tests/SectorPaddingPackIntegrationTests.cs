@@ -15,6 +15,10 @@ namespace NKitDataStore.Tests
         private readonly ITestOutputHelper _output;
         private readonly string _testDir;
 
+        // Path to Swap Magic 3 BIN — if present, the live-disc test runs; otherwise it is skipped.
+        private const string SwapMagicBinPath =
+            @"D:\NKitFiles\PS2_Iso\Swap Magic 3 (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) (Unl) (CD Version 3.00)\Swap Magic 3 (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) (Unl) (CD Version 3.00).bin";
+
         private const int RawSectorSize = 0x930; // 2352 bytes
 
         /// <summary>Standard CD sync pattern: 00 FF FF FF FF FF FF FF FF FF FF 00</summary>
@@ -612,6 +616,360 @@ namespace NKitDataStore.Tests
             // Full array comparison
             Assert.Equal(sectionData, reconstructed);
             _output.WriteLine($"End-to-end round-trip verified: {sectorCount} sectors byte-identical");
+        }
+
+        /// <summary>
+        /// End-to-end test: Mode2Form1 section with Swap Magic-style copy-protection sectors.
+        /// Sectors 0-24 have standard subheader (00 00 08 00), sectors 25-29 have all-0x55
+        /// subheader and non-standard ECC (all 0x55). Stores through DataStore and reconstructs
+        /// via ImageBuilderIso9660Stream. Must be byte-identical to original.
+        /// Uses realistic 892-sector section size (0x200340 bytes) matching Swap Magic disc.
+        /// </summary>
+        [Fact]
+        public void EndToEnd_Mode2Form1_SwapMagicStyleFillSectors_ByteIdentical()
+        {
+            const int sectorCount = 892;  // real Swap Magic section size
+            const long startLba = 0;
+            const int RawSectionSize = sectorCount * RawSectorSize; // 0x200340
+
+            byte[] sectionData = new byte[RawSectionSize];
+
+            for (int i = 0; i < sectorCount; i++)
+            {
+                int off = i * RawSectorSize;
+                // Fill user data with 0x55 (Swap Magic fill pattern)
+                for (int j = 0; j < 0x800; j++)
+                    sectionData[off + 0x18 + j] = 0x55;
+                sectionData[off + 0x0F] = 0x02;
+
+                if (i < 25)
+                {
+                    // Standard subheader: 00 00 08 00 (Form1)
+                    sectionData[off + 0x10] = 0x00; sectionData[off + 0x11] = 0x00;
+                    sectionData[off + 0x12] = 0x08; sectionData[off + 0x13] = 0x00;
+                    sectionData[off + 0x14] = 0x00; sectionData[off + 0x15] = 0x00;
+                    sectionData[off + 0x16] = 0x08; sectionData[off + 0x17] = 0x00;
+                    Ecm.ReconstructPrefix(sectionData, off, false, startLba + i);
+                    Ecm.ReconstructEcc(sectionData, off, false, true, false);
+                    // EDC/ECC are recreatable for standard sectors
+                }
+                else
+                {
+                    // Non-standard subheader: all 0x55 (Swap Magic style, Form1: 0x55 & 0x20 = 0)
+                    for (int j = 0x10; j < 0x18; j++) sectionData[off + j] = 0x55;
+                    Ecm.ReconstructPrefix(sectionData, off, false, startLba + i);
+                    // Standard ECC would be computed from 0x55 data — instead stomp with 0x55 fill
+                    for (int j = 0x81C; j < 0x930; j++) sectionData[off + j] = 0x55;
+                    // Also stomp EDC with non-standard value
+                    sectionData[off + 0x818] = 0x55; sectionData[off + 0x819] = 0x55;
+                    sectionData[off + 0x81A] = 0x55; sectionData[off + 0x81B] = 0x55;
+                }
+            }
+
+            // Pack — Analyse should detect non-standard ECC/EDC for sectors 25-29
+            byte[] packData = SectorPaddingPacker.Pack(sectionData, sectorCount, startLba);
+            Assert.NotNull(packData);
+            _output.WriteLine($"Pack size: {packData.Length} bytes");
+
+            // Verify sectors 25-891 have Ecc flag set (non-standard ECC)
+            SectorFlags[] flags = SectorPaddingPacker.Analyse(sectionData, sectorCount, startLba);
+            for (int i = 25; i < sectorCount; i++)
+                Assert.NotEqual(SectorFlags.None, flags[i] & SectorFlags.Ecc);
+
+            // Store in DataStore
+            string storePath = Path.Combine(_testDir, "e2e_swapm");
+            Directory.CreateDirectory(storePath);
+            using DataStore store = new DataStore(storePath);
+            string setName = "PS2";
+
+            // Extract Mode2Form1 user data (0x18-0x817 per sector)
+            byte[] userData = new byte[sectorCount * 0x800];
+            for (int i = 0; i < sectorCount; i++)
+                Array.Copy(sectionData, i * RawSectorSize + 0x18, userData, i * 0x800, 0x800);
+
+            using (IImageWriter writer = TestDataStoreHelper.AddImage(store, setName, "SwapMagic.iso",
+                shardSize: 0, system: "PS2", format: ImageFormat.Iso))
+            {
+                AreaMetadata metadata = new AreaMetadata();
+                metadata.Set(AreaValueType.FsType, "FileSystem");
+                metadata.Set(AreaValueType.BlockSize, (long)RawSectorSize);
+                metadata.Set(AreaValueType.PhysicalOffset, startLba);
+                metadata.Set(AreaValueType.Type, "Mode2");
+                long imageSize = sectionData.Length;
+                writer.CreateArea(
+                    offset: 0, size: imageSize,
+                    crc32: TestHashUtil.ComputeCrc32(sectionData),
+                    xxhash64: TestHashUtil.ComputeXXHash64(sectionData),
+                    strideBlockSize: RawSectorSize, strideDataOffset: 0x18, strideDataLength: 0x800,
+                    sectionSize: RawSectionSize, metadata: metadata);
+                writer.WriteData(0, userData, BlockType.File, offsetStart: 0);
+                writer.WriteData(0, packData, BlockType.BlockPadding, offsetStart: 0);
+                writer.FinalizeImage(imageSize, TestHashUtil.ComputeCrc32(sectionData), TestHashUtil.ComputeXXHash64(sectionData));
+            }
+            TestDataStoreHelper.WaitForSetIdle(store, setName);
+
+            // Reconstruct via ImageBuilderIso9660Stream
+            List<ImageRecord> images = store.ListImagesInSet(setName);
+            Assert.Single(images);
+            using IImageReader reader = store.OpenImageReader(new GlobalImageKey(setName, images[0].Id));
+            using ImageBuilderIso9660Stream builder = new ImageBuilderIso9660Stream(reader);
+
+            byte[] reconstructed = new byte[sectionData.Length];
+            builder.Position = 0;
+            int totalRead = 0;
+            while (totalRead < sectionData.Length)
+            {
+                int bytesRead = builder.Read(reconstructed, totalRead, sectionData.Length - totalRead);
+                if (bytesRead == 0) break;
+                totalRead += bytesRead;
+            }
+
+            // Find first diff for diagnostics
+            for (int i = 0; i < sectorCount; i++)
+            {
+                int sectorOffset = i * RawSectorSize;
+                for (int b = 0; b < RawSectorSize; b++)
+                {
+                    if (sectionData[sectorOffset + b] != reconstructed[sectorOffset + b])
+                    {
+                        _output.WriteLine(
+                            $"First diff: sector {i} byte 0x{b:X3} orig=0x{sectionData[sectorOffset+b]:X2} got=0x{reconstructed[sectorOffset+b]:X2}");
+                        goto doneCheck;
+                    }
+                }
+            }
+            doneCheck:
+            Assert.Equal(sectionData, reconstructed);
+            _output.WriteLine("Swap Magic style fill sectors: byte-identical ✓");
+        }
+
+        // Path to a previously deduped Swap Magic 3 nkds directory
+        private const string SwapMagicNkdsDir = @"D:\Temp\_swap_clean_104124";
+
+        /// <summary>
+        /// Reads sections from the actual deduped Swap Magic nkds and compares against
+        /// the raw BIN. Saves the first mismatching section to D:\Temp\ for binary diff.
+        /// This tests the full OffsetsManager+ImageBuilder pipeline with all 364 sections
+        /// loaded simultaneously — the real failure condition.
+        /// </summary>
+        [Fact]
+        public void ReadFromRealNkds_SwapMagic_FindFirstMismatch()
+        {
+            if (!File.Exists(SwapMagicBinPath) || !Directory.Exists(SwapMagicNkdsDir))
+            {
+                _output.WriteLine("Skipped: disc or nkds directory not found");
+                return;
+            }
+
+            const int RawSectionSize = 892 * RawSectorSize; // 0x200340
+            long binFileSize = new FileInfo(SwapMagicBinPath).Length;
+            int numSections = (int)(binFileSize / RawSectionSize);
+            _output.WriteLine($"Reading {numSections} sections from real nkds");
+
+            // Open the real nkds
+            using DataStore store = new DataStore(SwapMagicNkdsDir);
+            List<ImageRecord> images = store.ListImagesInSet("PS2");
+            if (images.Count == 0) { _output.WriteLine("No PS2 images in nkds"); return; }
+
+            _output.WriteLine($"Found {images.Count} image(s): {images[0].Name}");
+            GlobalImageKey key = new GlobalImageKey("PS2", images[0].Id);
+            using IImageReader reader = store.OpenImageReader(key);
+
+            // Diagnostic: dump segment list for section 260 to understand why user data is missing
+            // Diagnostic: dump segment list for section 260 to understand why user data is missing
+            {
+                // (removed - diagnostic complete)
+            }
+
+            using ImageBuilderIso9660Stream builder = new ImageBuilderIso9660Stream(reader);
+
+            byte[] reconBuffer = new byte[RawSectionSize];
+
+            for (int secIdx = 0; secIdx < numSections; secIdx++)
+            {
+                long sectionOffset = (long)secIdx * RawSectionSize;
+
+                // Read raw source section
+                byte[] srcSection = new byte[RawSectionSize];
+                using (FileStream fs = File.OpenRead(SwapMagicBinPath))
+                {
+                    fs.Seek(sectionOffset, SeekOrigin.Begin);
+                    int totalSrc = 0;
+                    while (totalSrc < RawSectionSize)
+                    {
+                        int n = fs.Read(srcSection, totalSrc, RawSectionSize - totalSrc);
+                        if (n == 0) break;
+                        totalSrc += n;
+                    }
+                }
+
+                // Read reconstructed section from nkds
+                builder.Position = sectionOffset;
+                int totalRead = 0;
+                while (totalRead < RawSectionSize)
+                {
+                    int n = builder.Read(reconBuffer, totalRead, RawSectionSize - totalRead);
+                    if (n == 0) break;
+                    totalRead += n;
+                }
+
+                // Compare
+                int firstDiffSector = -1, firstDiffByte = -1;
+                for (int s = 0; s < 892 && firstDiffSector < 0; s++)
+                {
+                    for (int b = 0; b < RawSectorSize; b++)
+                    {
+                        if (srcSection[s * RawSectorSize + b] != reconBuffer[s * RawSectorSize + b])
+                        {
+                            firstDiffSector = s; firstDiffByte = b; break;
+                        }
+                    }
+                }
+
+                if (firstDiffSector >= 0)
+                {
+                    int off = firstDiffSector * RawSectorSize + firstDiffByte;
+                    _output.WriteLine($"MISMATCH section {secIdx} (offset 0x{sectionOffset:X}):" +
+                        $" sector {firstDiffSector} byte 0x{firstDiffByte:X3}" +
+                        $" src=0x{srcSection[off]:X2} got=0x{reconBuffer[off]:X2}");
+                    File.WriteAllBytes($@"D:\Temp\swapm_real_sec{secIdx}_orig.bin", srcSection);
+                    byte[] recon = new byte[RawSectionSize];
+                    Array.Copy(reconBuffer, recon, RawSectionSize);
+                    File.WriteAllBytes($@"D:\Temp\swapm_real_sec{secIdx}_recon.bin", recon);
+                    _output.WriteLine($@"Saved D:\Temp\swapm_real_sec{secIdx}_orig.bin + _recon.bin");
+                    Assert.Fail($"Section {secIdx} mismatch at sector {firstDiffSector} byte 0x{firstDiffByte:X3}");
+                    return;
+                }
+                else if (secIdx < 5 || secIdx == numSections - 1)
+                    _output.WriteLine($"  Section {secIdx}: ✓");
+            }
+            _output.WriteLine("All sections: byte-identical ✓");
+        }
+        /// AND section 1 (sectors 892-1784) — the first two full sections — and verifies the
+        /// full DataStore round-trip produces byte-identical output for both.
+        /// Saves mismatching sections to D:\Temp\ for binary comparison.
+        /// Skipped when the disc file is not available.
+        /// </summary>
+        [Fact]
+        public void EndToEnd_SwapMagic_LiveDisc_Section0_ByteIdentical()
+        {
+            if (!File.Exists(SwapMagicBinPath))
+            {
+                _output.WriteLine($"Skipped: {SwapMagicBinPath} not found");
+                return;
+            }
+
+            const int sectorCount = 892;
+            const int RawSectionSize = sectorCount * RawSectorSize; // 0x200340
+            // Test all sections — compute from file size
+            long binFileSize = new FileInfo(SwapMagicBinPath).Length;
+            int numSections = (int)(binFileSize / RawSectionSize);
+            _output.WriteLine($"Testing {numSections} sections from {binFileSize} byte disc");
+
+            bool anyFailed = false;
+
+            for (int secIdx = 0; secIdx < numSections; secIdx++)
+            {
+                long sectionImageOffset = (long)secIdx * RawSectionSize;
+                long sectionLba = secIdx * sectorCount;
+
+                // Read section from disc
+                byte[] sectionData = new byte[RawSectionSize];
+                using (FileStream fs = File.OpenRead(SwapMagicBinPath))
+                {
+                    fs.Seek(sectionImageOffset, SeekOrigin.Begin);
+                    int totalRead2 = 0;
+                    while (totalRead2 < RawSectionSize)
+                    {
+                        int n = fs.Read(sectionData, totalRead2, RawSectionSize - totalRead2);
+                        if (n == 0) break;
+                        totalRead2 += n;
+                    }
+                }
+
+                // Pack with the correct start LBA for this section
+                byte[] packData = SectorPaddingPacker.Pack(sectionData, sectorCount, sectionLba);
+                Assert.NotNull(packData);
+                _output.WriteLine($"Section {secIdx} (LBA {sectionLba}-{sectionLba+sectorCount-1}): pack={packData.Length} bytes");
+
+                // Store in DataStore — one image per section for isolation
+                string storePath = Path.Combine(_testDir, $"e2e_live_sec{secIdx}");
+                Directory.CreateDirectory(storePath);
+                using DataStore store = new DataStore(storePath);
+                string setName = "PS2";
+
+                byte[] userData = new byte[sectorCount * 0x800];
+                for (int i = 0; i < sectorCount; i++)
+                    Array.Copy(sectionData, i * RawSectorSize + 0x18, userData, i * 0x800, 0x800);
+
+                using (IImageWriter writer = TestDataStoreHelper.AddImage(store, setName, $"SwapMagicSec{secIdx}.iso",
+                    shardSize: 0, system: "PS2", format: ImageFormat.Iso))
+                {
+                    AreaMetadata metadata = new AreaMetadata();
+                    metadata.Set(AreaValueType.FsType, "FileSystem");
+                    metadata.Set(AreaValueType.BlockSize, (long)RawSectorSize);
+                    metadata.Set(AreaValueType.PhysicalOffset, sectionLba);
+                    metadata.Set(AreaValueType.Type, "Mode2");
+                    writer.CreateArea(
+                        offset: 0, size: RawSectionSize,
+                        crc32: TestHashUtil.ComputeCrc32(sectionData),
+                        xxhash64: TestHashUtil.ComputeXXHash64(sectionData),
+                        strideBlockSize: RawSectorSize, strideDataOffset: 0x18, strideDataLength: 0x800,
+                        sectionSize: RawSectionSize, metadata: metadata);
+                    writer.WriteData(0, userData, BlockType.File, offsetStart: 0);
+                    writer.WriteData(0, packData, BlockType.BlockPadding, offsetStart: 0);
+                    writer.FinalizeImage(RawSectionSize, TestHashUtil.ComputeCrc32(sectionData), TestHashUtil.ComputeXXHash64(sectionData));
+                }
+                TestDataStoreHelper.WaitForSetIdle(store, setName);
+
+                // Reconstruct
+                List<ImageRecord> images = store.ListImagesInSet(setName);
+                Assert.Single(images);
+                using IImageReader reader = store.OpenImageReader(new GlobalImageKey(setName, images[0].Id));
+                using ImageBuilderIso9660Stream builder = new ImageBuilderIso9660Stream(reader);
+
+                byte[] reconstructed = new byte[RawSectionSize];
+                builder.Position = 0;
+                int totalRead = 0;
+                while (totalRead < RawSectionSize)
+                {
+                    int n = builder.Read(reconstructed, totalRead, RawSectionSize - totalRead);
+                    if (n == 0) break;
+                    totalRead += n;
+                }
+
+                // Find and report first diff
+                int firstDiffSector = -1, firstDiffByte = -1;
+                for (int s = 0; s < sectorCount && firstDiffSector < 0; s++)
+                {
+                    for (int b = 0; b < RawSectorSize; b++)
+                    {
+                        if (sectionData[s * RawSectorSize + b] != reconstructed[s * RawSectorSize + b])
+                        {
+                            firstDiffSector = s; firstDiffByte = b; break;
+                        }
+                    }
+                }
+
+                if (firstDiffSector >= 0)
+                {
+                    int off = firstDiffSector * RawSectorSize + firstDiffByte;
+                    _output.WriteLine($"  Section {secIdx} DIFF: sector {firstDiffSector} byte 0x{firstDiffByte:X3}" +
+                        $" orig=0x{sectionData[off]:X2} got=0x{reconstructed[off]:X2}");
+                    // Save both for binary comparison
+                    File.WriteAllBytes($@"D:\Temp\swapm_sec{secIdx}_orig.bin", sectionData);
+                    File.WriteAllBytes($@"D:\Temp\swapm_sec{secIdx}_recon.bin", reconstructed);
+                    _output.WriteLine($@"  Saved: D:\Temp\swapm_sec{secIdx}_orig.bin + _recon.bin");
+                    anyFailed = true;
+                    break; // stop at first mismatch
+                }
+                else
+                {
+                    _output.WriteLine($"  Section {secIdx}: byte-identical ✓");
+                }
+            }
+
+            Assert.False(anyFailed, "One or more sections had reconstruction mismatches — see D:\\Temp\\swapm_sec*.bin");
         }
     }
 }

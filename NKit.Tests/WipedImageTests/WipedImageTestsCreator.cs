@@ -188,6 +188,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Dreamcast", task, taskOptions, "Zrzbevrf Bss 7aq - Znxvat Qvfp (Wncna).chd", "Retail     / CHD       / 1.10GiB / Type2 (Data Audio Data Audio Audio)", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:n")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:n")]
@@ -200,6 +201,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Gamecube", task, taskOptions, "63 Jurryre - Nzrevpna Ceb Gehpxre (Rhebcr) (Ra,Se,Qr,Rf).rvz", "Retail     / RVZ       / 1.36GiB / Fst in 2nd section, Files at the start of the image", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:y")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:y")]
@@ -212,6 +214,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Gamecube", task, taskOptions, "Crnpu'f_Pnfgyr_Tnzrphor_Grpu_Qrzb.rvz", "Demo       / RVZ       / 1.36GiB / No Magic ID", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:n")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:n")]
@@ -224,6 +227,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Gamecube", task, taskOptions, "FreeLoader for GameCube (Europe) (Unl) (v1.04).rvz", "Unlicenced / RVZ       / 1.36GiB / Hacked", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:y")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:y")]
@@ -241,6 +245,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Gamecube", task, taskOptions, "Gbjre bs Qehntn, Gur (Wncna) (nkitv1).zip", "Retail     / RVZ       / 1.36GiB / NKitv1 iso edited to look like a shrunk iso with edited header", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:y")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:y")]
@@ -253,6 +258,7 @@ namespace NKit.Tests.Full.Wiped
             createTests("Gamecube", task, taskOptions, "Uneirfg Zbba - N Jbaqreshy Yvsr (Rhebcr).rvz", "Retail     / RVZ       / 1.36GiB / 0 byte files", null, null, null, null, true);
 
         //[Theory]
+        [InlineData("Convert", "nkitiso")]
         [InlineData("Convert", "ciso:n")]
         [InlineData("Convert", "rvz")]
         [InlineData("Convert", "wbfs:n")]

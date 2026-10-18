@@ -30,13 +30,19 @@ public sealed class DatVerificationService : IDatVerificationService
             List<DatEntryInfo> entries = dat.Items.Select(item =>
             {
                 uint combinedCrc = ComputeCombinedCrc(item);
+                // Sanitize the dat entry name for use as a filesystem-safe image title.
+                // Dat descriptions may contain characters invalid on Windows (most commonly ':').
+                // Replace ':' with '-' to match the convention used by most dat-management tools,
+                // and replace any other OS-invalid characters with '_' so the name is safe to use
+                // as a DataStore image title, VFS mount name, and export path on all platforms.
+                string name = SanitizeDatName(item.Name);
                 return new DatEntryInfo
                 {
-                    Name = item.Name,
+                    Name = name,
                     // Dat entry names are plain game titles — they contain dots as part of the name
                     // (e.g. "Super Mario Bros. Wii") and have no file extension. Using
                     // Path.GetFileNameWithoutExtension would incorrectly truncate at the last dot.
-                    NameStem = item.Name,
+                    NameStem = name,
                     CombinedCrc32 = combinedCrc
                 };
             }).ToList();
@@ -243,4 +249,11 @@ public sealed class DatVerificationService : IDatVerificationService
 
         return results;
     }
+
+    /// <summary>
+    /// Returns a filesystem-safe version of a dat entry name by delegating to
+    /// <see cref="SourceFiles.CleanseFileName"/>, which replaces ':' with '-' for readability
+    /// and replaces all remaining OS-invalid characters with spaces.
+    /// </summary>
+    internal static string SanitizeDatName(string name) => SourceFiles.CleanseFileName(name);
 }

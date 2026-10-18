@@ -111,12 +111,15 @@ namespace Nanook.NKit
             try
             {
                 _writer.FinalizeArchive();
+                _writer.Dispose();
                 _writer = null;
                 _wuaStream?.Dispose();
                 _wuaStream = null;
             }
             catch (Exception ex)
             {
+                try { _writer?.Dispose(); } catch { }
+                _writer = null;
                 throw new HandledException(ex, "ConvertLoadiineWua: failed to finalise ZArchive");
             }
 
