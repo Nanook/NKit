@@ -535,31 +535,67 @@ namespace Nanook.NKit.Container
             byte[] partJunkId = subHdr.Read(WiiConsts.DataHdrIdOffset, 4);
             int partDiscNo = subHdr[WiiConsts.DataHdrDiscNoOffset];
 
-            // Clear NKit fields; set encrypted-hash marker the standard image expects.
-            Array.Clear(subHdr, WiiConsts.NKitHeaderPos, WiiConsts.NKitHeaderSize);
-            subHdr.WriteUInt16B(WiiConsts.DataHdrEncHashOffset, 0x0101);
+            // Clear NKit fields and set the encrypted-hash marker that the standard image expects —
+            // but ONLY for normal (non-wiped) partitions. For wiped partitions the NKit encoder
+            // wrote the boot.bin verbatim (no NKit header written, no enc-hash marker set), so we
+            // must leave subHdr untouched to reproduce the exact original decrypted bytes.
+            if (!wipedPartition)
+            {
+                Array.Clear(subHdr, WiiConsts.NKitHeaderPos, WiiConsts.NKitHeaderSize);
+                subHdr.WriteUInt16B(WiiConsts.DataHdrEncHashOffset, 0x0101);
+            }
 
-            long fstOffset = subHdr.ReadUInt32B(WiiConsts.FstPtrOffset) * 4L;
-            long mainDolAddr = subHdr.ReadUInt32B(WiiConsts.DolPtrOffset) * 4L;
-            int fstSize = (int)(subHdr.ReadUInt32B(WiiConsts.FstSizeOffset) * 4L);
+            // Wiped-partition NKit source layout (v1 encoder, null-ID path):
+            //   [boot.bin 0x440 bytes] [4 bytes partition-size field] [gap encoding from FS 0x440]
+            // There is NO hdrToFst, FST, or hashFlags in the source for wiped partitions.
+            // For normal partitions the source contains all of those before the file gaps.
+            // The fstOffset/fstSize fields come from subHdr but are only used for source reads on
+            // the normal path; the wiped path skips those reads entirely.
+            long fstOffset;
+            long mainDolAddr;
+            int fstSize;
+            int hdrToFstSize;
+            byte[] pHdrToFst;
+            byte[] pFst;
+            int flagsLen;
+            byte[] hashFlags;
 
-            int hdrToFstSize = (int)(fstOffset - subHdr.Length);
-            byte[] pHdrToFst = new byte[hdrToFstSize];
-            srcCopy(subSrc, pHdrToFst, 0, hdrToFstSize);
-            subSrc += hdrToFstSize;
+            if (wipedPartition)
+            {
+                // Wiped: no hdrToFst/FST/hashFlags in NKit source. Source cursor is already past
+                // the 4-byte partition-size field; gap encoding starts at current subSrc.
+                fstOffset = subHdr.Length;       // treat as immediately after boot.bin (no hdrToFst)
+                mainDolAddr = 0;
+                fstSize = 0;
+                hdrToFstSize = 0;
+                pHdrToFst = new byte[0];
+                pFst = new byte[0];
+                flagsLen = 0;
+                hashFlags = new byte[0];
+            }
+            else
+            {
+                fstOffset = subHdr.ReadUInt32B(WiiConsts.FstPtrOffset) * 4L;
+                mainDolAddr = subHdr.ReadUInt32B(WiiConsts.DolPtrOffset) * 4L;
+                fstSize = (int)(subHdr.ReadUInt32B(WiiConsts.FstSizeOffset) * 4L);
 
-            byte[] pFst = new byte[fstSize];
-            srcCopy(subSrc, pFst, 0, fstSize);
-            subSrc += fstSize;
+                hdrToFstSize = (int)(fstOffset - subHdr.Length);
+                pHdrToFst = new byte[hdrToFstSize];
+                srcCopy(subSrc, pHdrToFst, 0, hdrToFstSize);
+                subSrc += hdrToFstSize;
 
-            // Read the hash flags bitmask (which groups have preserved hashes that couldn't be
-            // recreated). We defer hash generation, so we don't emit these — but we must consume
-            // the trailing preserved-hash DATA after the files+gaps, sized by this bitmask.
-            int flagsLen = wiiHashFlagsLength(partFsSize);
-            byte[] hashFlags = new byte[flagsLen];
-            srcCopy(subSrc, hashFlags, 0, flagsLen);
+                pFst = new byte[fstSize];
+                srcCopy(subSrc, pFst, 0, fstSize);
+                subSrc += fstSize;
 
-            subSrc += flagsLen;
+                // Read the hash flags bitmask (which groups have preserved hashes that couldn't be
+                // recreated). We defer hash generation, so we don't emit these — but we must consume
+                // the trailing preserved-hash DATA after the files+gaps, sized by this bitmask.
+                flagsLen = wiiHashFlagsLength(partFsSize);
+                hashFlags = new byte[flagsLen];
+                srcCopy(subSrc, hashFlags, 0, flagsLen);
+                subSrc += flagsLen;
+            }
 
             // Build the FS-space DECODE MAP (no expansion). fsPos is the output cursor in the
             // partition's contiguous FS space; runs describe how to generate each range on demand.
