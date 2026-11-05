@@ -49,12 +49,15 @@ namespace Nanook.NKit.Configuration.Services
             PathResolutionService pathResolution = new PathResolutionService(platformService, fileSystem);
 
             string configDirectory = pathResolution.GetSystemConfigDirectory(platformContext.Platform);
-            // User data directory should be the user's home directory for all platforms
-            string userDataDirectory = pathResolution.GetUserHomeDirectory();
 
-            // For macOS bundles, store user data next to the bundle (same as config) so UI settings live alongside the .app
-            // if (platformContext.Platform == PlatformType.MacOS && platformContext.IsBundle)
-            //    userDataDirectory = configDirectory;
+            // On Linux, user data lives alongside config under ~/.config/nkit.
+            // The system-mode path builder appends "nkit/" to userDataDirectory, so use the
+            // parent of configDirectory (~/.config) to land everything in the same place.
+            // On all other platforms use the home directory as before.
+            string userDataDirectory = platformContext.Platform == PlatformType.Linux
+                ? fileSystem.GetParentDirectory(configDirectory)
+                : pathResolution.GetUserHomeDirectory();
+
             string configFileName = _coreService.GetConfigFileName(platformService);
 
             return new ConfigurationContext(

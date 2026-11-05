@@ -126,7 +126,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
         private static string getSystemUserDirectory(PlatformType platform) => platform switch
         {
             PlatformType.Windows => "C:\\Users\\TestUser",  // Expanded path to match what the real implementation produces
-            PlatformType.Linux => "/home/testuser",
+            PlatformType.Linux => "/home/testuser/.config",  // Parent of config dir; nkit/ is appended to give ~/.config/nkit
             PlatformType.OSX => "/Users/testuser/Documents",
             _ => "/test/user"
         };

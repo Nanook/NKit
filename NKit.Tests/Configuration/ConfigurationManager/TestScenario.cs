@@ -144,7 +144,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
                 PlatformModeDetectionTests.Platform.Windows =>
                     "C:\\Users\\TestUser",  // Home directory without nkit subdirectory
                 PlatformModeDetectionTests.Platform.Linux =>
-                    "/home/testuser",  // Home directory without nkit subdirectory
+                    "/home/testuser/.config",  // Parent of config dir; nkit/ is appended to give ~/.config/nkit
                 PlatformModeDetectionTests.Platform.macOS =>
                     "/Users/testuser/Documents",  // Home directory without nkit subdirectory
                 _ => throw new ArgumentException($"Unknown platform: {platform}")

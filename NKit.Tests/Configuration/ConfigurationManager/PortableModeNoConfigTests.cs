@@ -218,19 +218,53 @@ namespace NKit.Tests.Configuration.ConfigurationManager
 
             // Verify file exists after copy
             bool targetExists = mockFileSystem.FileExists(targetConfigPath);
-            if (targetExists)
-            {
-                // If file exists, verify it was copied from defaults
-                string content = mockFileSystem.ReadAllText(targetConfigPath);
-                Assert.NotNull(content);
-                Assert.Contains("Default config", content);
-            }
-            else
-            {
-                // If file doesn't exist, that's also acceptable behavior in this implementation
-                // The current implementation may not create it in all scenarios
-                Assert.True(true, "Config file creation behavior may vary based on implementation");
-            }
+            Assert.True(targetExists, "Config file must be created when defaults/nkit.yaml exists");
+            string createdContent = mockFileSystem.ReadAllText(targetConfigPath);
+            Assert.NotNull(createdContent);
+            Assert.Contains("Default config", createdContent);
+        }
+
+        [Fact(DisplayName = "Linux CLI in system mode with defaults: config is created at ~/.config/nkit/nkit.yaml")]
+        public void Linux_CLI_WithDefaults_SystemMode_CreatesConfigAtCorrectLocation()
+        {
+            // Arrange — Linux CLI, system install: no nkit.yaml next to binary, but defaults/nkit.yaml present
+            MockPlatformService mockPlatform = new MockPlatformService(
+                PlatformModeDetectionTests.Platform.Linux,
+                PlatformModeDetectionTests.AppType.CLI,
+                "/opt/nkit");
+            MockFileSystemService mockFileSystem = new MockFileSystemService();
+
+            // No local config (triggers system mode), not writable (typical system directory)
+            mockFileSystem.SetDirectoryExists("/opt/nkit", true);
+            mockFileSystem.SetDirectoryWritable("/opt/nkit", false);
+            mockFileSystem.SetFileExists(mockFileSystem.CombinePath("/opt/nkit", "nkit.yaml"), false);
+
+            // defaults/nkit.yaml exists next to the binary (shipped as part of the package)
+            string defaultsDir = mockFileSystem.CombinePath("/opt/nkit", "defaults");
+            string defaultsConfigPath = mockFileSystem.CombinePath(defaultsDir, "nkit.yaml");
+            mockFileSystem.SetDirectoryExists(defaultsDir, true);
+            mockFileSystem.SetFileExists(defaultsConfigPath, true);
+            mockFileSystem.SetFileContents(defaultsConfigPath, "# Linux default config");
+
+            // System config directory does not exist yet on first run
+            string systemConfigDir = "/home/testuser/.config/nkit";
+            mockFileSystem.SetDirectoryExists(systemConfigDir, false);
+            mockFileSystem.SetDirectoryWritable(systemConfigDir, true);
+            string systemConfigPath = mockFileSystem.CombinePath(systemConfigDir, "nkit.yaml");
+            mockFileSystem.SetFileExists(systemConfigPath, false);
+
+            // Act
+            using ConfigManager configManager = new ConfigManager(mockPlatform, mockFileSystem);
+            ConfigurationInfo info = configManager.GetConfigurationInfo();
+            SetupResult result = configManager.EnsureConfiguration();
+
+            // Assert
+            Assert.False(info.IsPortableMode, "Should use system mode when no local config exists");
+            Assert.Equal(systemConfigDir, info.ConfigDirectory);
+            Assert.True(result.ConfigFileCreated, "Config should be created from defaults/nkit.yaml on first run");
+            Assert.True(mockFileSystem.FileExists(systemConfigPath), "Config must be written to ~/.config/nkit/nkit.yaml");
+            string content = mockFileSystem.ReadAllText(systemConfigPath);
+            Assert.Contains("Linux default config", content);
         }
 
         [Fact(DisplayName = "Behavior: No config creation without defaults in CLI mode")]
