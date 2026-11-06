@@ -218,7 +218,7 @@ namespace NKitDataStore.Tests
             {
                 List<ImageRecord> remaining = store.ListImagesInSet(setName);
                 // None of the removed IDs should appear
-                Assert.Empty(remaining.Where(im => removedIds.Contains(im.Id)));
+                Assert.DoesNotContain(remaining, im => removedIds.Contains(im.Id));
                 // The live images should still be there
                 Assert.Equal(imageCount / 2, remaining.Count);
             }
@@ -363,6 +363,77 @@ namespace NKitDataStore.Tests
                 Assert.False(health.HasRemovedImages);
                 Assert.False(health.NeedsCompaction);
                 Assert.True(health.IndexFileSizeBytes > 0);
+            }
+        }
+
+        // ── Property 8: Read-only shards do not prevent fast compact ─────────
+        //
+        // Fast compact only touches the index file (.nkds). Shard files (_NNNN.nkds)
+        // are never opened. This test marks shards read-only, runs CompactSetFast,
+        // verifies success, and confirms shards are byte-for-byte unchanged.
+
+        [Fact]
+        public void CompactSetFast_WithReadOnlyShards_Succeeds()
+        {
+            string testDir = Path.Combine(_tempDir, Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(testDir);
+
+            const string setName = "ReadOnlyShardTest";
+
+            // Separate mode (explicit shard size) — shards live in _NNNN.nkds files
+            using (DataStore store = new DataStore(testDir))
+            {
+                store.CreateSet(setName, shardSize: 50L * 1024 * 1024 * 1024, blockSize: 65536);
+                for (int i = 0; i < 4; i++)
+                    writeImage(store, setName, $"img{i}.iso", makePayload(i + 5000, 65536 * 2));
+            }
+
+            string[] shardFiles = Directory.GetFiles(testDir, $"{setName}_*.nkds");
+            Assert.NotEmpty(shardFiles);
+
+            // Snapshot shard bytes
+            Dictionary<string, byte[]> shardSnapshots = shardFiles.ToDictionary(f => f, File.ReadAllBytes);
+
+            // Make shards read-only
+            foreach (string shard in shardFiles)
+                File.SetAttributes(shard, File.GetAttributes(shard) | FileAttributes.ReadOnly);
+
+            try
+            {
+                // CompactSetFast must succeed even with read-only shards
+                using (DataStore store = new DataStore(testDir))
+                {
+                    Exception ex = Record.Exception(() => store.CompactSetFast(setName));
+                    Assert.Null(ex); // must not throw
+
+                    // Index is now clean
+                    IndexHealthInfo health = store.GetIndexHealth(setName);
+                    Assert.Equal(0, health.DeltaCount);
+
+                    // All images still readable
+                    List<ImageRecord> images = store.ListImagesInSet(setName);
+                    Assert.Equal(4, images.Count);
+                    foreach (ImageRecord img in images)
+                    {
+                        byte[] actual = readImage(store, setName, img.Id);
+                        Assert.Equal(makePayload((int)img.Id - 1 + 5000, 65536 * 2), actual);
+                    }
+                }
+
+                // Shards must be byte-for-byte identical — nothing was written to them
+                foreach (KeyValuePair<string, byte[]> kvp in shardSnapshots)
+                {
+                    byte[] after = File.ReadAllBytes(kvp.Key);
+                    Assert.Equal(kvp.Value, after);
+                }
+            }
+            finally
+            {
+                // Always restore write permission so the test dir can be cleaned up
+                foreach (string shard in shardFiles)
+                {
+                    try { File.SetAttributes(shard, File.GetAttributes(shard) & ~FileAttributes.ReadOnly); } catch { }
+                }
             }
         }
     }
