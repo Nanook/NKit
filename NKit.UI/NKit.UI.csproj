@@ -71,18 +71,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.1.2" />
+		<PackageReference Include="Avalonia" Version="12.1.5" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 		<!-- Avalonia.Diagnostics was removed in Avalonia 12; Dev Tools are now separate (Avalonia Accelerate) -->
-		<PackageReference Include="Material.Avalonia" Version="3.20.0" />
-		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.20.0" />
+		<PackageReference Include="Material.Avalonia" Version="3.21.0" />
+		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.21.0" />
 		<PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
-		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.6" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
-		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.2" />
+		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.5" />
 
 
 		<PackageReference Include="YamlDotNet" Version="18.1.0" />

@@ -493,7 +493,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
             .DisposeWith(_disposables);
 
         Toolbar.SettingsCommand
-            .Subscribe(_ => ShowSettingsDialog.Handle(RxVoid.Default).Subscribe())
+            .Subscribe(unused => _ = ShowSettingsDialog.Handle(RxVoid.Default))
             .DisposeWith(_disposables);
     }
 

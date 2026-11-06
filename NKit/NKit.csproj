@@ -32,8 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="GrindCore" Version="0.9.0" />
-		<PackageReference Include="GrindCore.SharpCompress" Version="0.50.5" />
+		<PackageReference Include="GrindCore" Version="0.10.0" />
+		<PackageReference Include="GrindCore.SharpCompress" Version="0.50.8" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="11.0.0-preview.3.26207.106" />
 	</ItemGroup>
 	<ItemGroup>

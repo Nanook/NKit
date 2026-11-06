@@ -305,8 +305,8 @@ public class StatsCalculationViewModel : ViewModelBase, IDisposable
         using IDisposable sub = this.WhenAnyValue(x => x.ProcessedCount, x => x.TotalCount)
             .Subscribe(t =>
             {
-                progressVm.ItemsProcessed = t.Item1;
-                progressVm.TotalItems = t.Item2;
+                progressVm.ItemsProcessed = t.Property1;
+                progressVm.TotalItems = t.Property2;
                 progressVm.Elapsed = sw.Elapsed;
             });
 

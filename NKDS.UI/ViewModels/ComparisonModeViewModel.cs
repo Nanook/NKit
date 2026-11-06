@@ -238,7 +238,7 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
         IObservable<bool> canEnter = this.WhenAnyValue(
                 x => x.IsActive,
                 x => x.IsLoading,
-                x => x._imageList.TotalImageCount,
+                x => x.ImageList.TotalImageCount,
                 (isActive, isLoading, totalCount) => !isActive && !isLoading && totalCount > 0);
 
         EnterComparisonModeCommand = ReactiveCommand.CreateFromTask(
@@ -288,10 +288,11 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
         CancelLoadingCommand.DisposeWith(_disposables);
 
         // ComputeGroupsCommand: IsActive && !IsComputingGroups && Cache.Count >= 2
-        IObservable<bool> canComputeGroups = this.WhenAnyValue(x => x.IsActive, x => x.IsComputingGroups)
+        IObservable<bool> canComputeGroups = this.WhenAnyValue(x => x.IsActive)
             .CombineLatest(
+                this.WhenAnyValue(x => x.IsComputingGroups),
                 _hashCacheService.CacheChanged.StartWith(_hashCacheService.Cache),
-                (state, cache) => state.Item1 && !state.Item2 && cache.Count >= 2);
+                (isActive, isComputingGroups, cache) => isActive && !isComputingGroups && cache.Count >= 2);
 
         ComputeGroupsCommand = ReactiveCommand.CreateFromTask(
             ExecuteComputeGroupsAsync, canComputeGroups);
@@ -307,13 +308,12 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
         // Update StatusText reactively based on IsActive, TotalImageCount, and SelectedImageCount
         this.WhenAnyValue(
                 x => x.IsActive,
-                x => x._imageList.TotalImageCount,
-                x => x._imageList.SelectedImageCount)
-            .Subscribe(tuple =>
+                x => x.ImageList.TotalImageCount,
+                x => x.ImageList.SelectedImageCount)
+            .Subscribe(t =>
             {
-                (bool isActive, int totalCount, int selectedCount) = tuple;
-                StatusText = isActive
-                    ? $"Comparison Mode: {totalCount} images loaded ({selectedCount} selected)"
+                StatusText = t.Property1
+                    ? $"Comparison Mode: {t.Property2} images loaded ({t.Property3} selected)"
                     : string.Empty;
             })
             .DisposeWith(_disposables);

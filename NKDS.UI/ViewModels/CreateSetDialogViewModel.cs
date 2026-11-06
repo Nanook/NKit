@@ -216,9 +216,9 @@ public class CreateSetDialogViewModel : ViewModelBase
         IObservable<bool> canConfirm = this.WhenAnyValue(
                 x => x.SetNameError,
                 x => x.FolderPathError,
-                x => x.FolderPath)
-            .Select(((string? nameErr, string? folderErr, string folderPath) t) =>
-                t.nameErr == null && t.folderErr == null && !string.IsNullOrWhiteSpace(t.folderPath))
+                x => x.FolderPath,
+                (nameErr, folderErr, folderPath) =>
+                    nameErr == null && folderErr == null && !string.IsNullOrWhiteSpace(folderPath))
             .DistinctUntilChanged();
 
         ConfirmCommand = ReactiveCommand.Create(() =>

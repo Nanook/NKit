@@ -75,17 +75,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.1.2" />
+		<PackageReference Include="Avalonia" Version="12.1.5" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 		<!-- Avalonia 12 includes DevTools in the main package; no separate Diagnostics package needed -->
-		<PackageReference Include="Material.Avalonia" Version="3.20.0" />
-		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.20.0" />
+		<PackageReference Include="Material.Avalonia" Version="3.21.0" />
+		<PackageReference Include="Material.Avalonia.DataGrid" Version="3.21.0" />
 		<PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" />
-		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.2" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="12.1.6" />
 		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.17" />
-		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.2" />
+		<PackageReference Include="Avalonia.LinuxFramebuffer" Version="12.1.5" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="11.0.0-preview.3.26207.106" />
 	</ItemGroup>
 
