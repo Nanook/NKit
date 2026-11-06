@@ -38,7 +38,7 @@ namespace Nanook.NKit.Configuration
                 SystemType.PSP => "cso:9:2kb:4",
                 SystemType.PS1 or SystemType.PS2 => "cso:9:2kb:4/cue:split:bin:bin:sub",
                 SystemType.XBox or SystemType.XBox360 => ConfigSettingsConstants.FormatIso,
-                SystemType.WiiU => $"{ConfigSettingsConstants.FormatWux}/{ConfigSettingsConstants.FormatApp}",
+                SystemType.WiiU => $"{ConfigSettingsConstants.FormatWux}/{ConfigSettingsConstants.FormatWua}",
                 SystemType.Dreamcast => "cue:split:bin:bin:sub", // Index-only system - single format string, not dual
                 SystemType.PcEngine or SystemType.CDi or SystemType.Saturn or SystemType.SegaCD => "iso/cue:split:bin:bin:sub", // Dual format systems
                 _ => "iso/cue:split:bin:bin:sub"
@@ -184,7 +184,7 @@ namespace Nanook.NKit.Configuration
         {
             return systemType switch
             {
-                SystemType.WiiU => ConfigSettingsConstants.FormatApp,
+                SystemType.WiiU => ConfigSettingsConstants.FormatWua,
 
                 SystemType.PS1 or SystemType.PS2 or SystemType.PS3 or
                 SystemType.PcEngine or SystemType.CDi or SystemType.Saturn or
@@ -357,7 +357,9 @@ namespace Nanook.NKit.Configuration
         {
             return format switch
             {
-                ConfigSettingsConstants.FormatCue or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatApp => true,
+                ConfigSettingsConstants.FormatCue or ConfigSettingsConstants.FormatGdi or
+                ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatWua or
+                ConfigSettingsConstants.FormatLoadiine => true,
                 _ => false
             };
         }

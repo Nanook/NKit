@@ -212,7 +212,11 @@ sys:
     dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
     mask: mi:*                   #select all files - mask mode
     #mask: ri:^(.*)$             #select all files - regex mode
-    format: wux
+    format: wux/wua:4            #lossless WUX / lossy ZArchive (parallelism:4)
+    #format: wux/app             #lossless WUX / lossy NUS CDN AppTmd (.app+.tmd+.tik+.cert)
+    #format: wux/loadiine        #lossless WUX / lossy Loadiine folder (decrypted game files)
+    #format: iso/wua:4           #lossless WUD image / lossy ZArchive
+    #format: app/wua:4           #lossy AppTmd or disc images / lossy ZArchive from folder sources
   ps1:
     base-in: 
     dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted

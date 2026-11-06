@@ -95,9 +95,9 @@ namespace NKit.Tests.TestData
                 SupportedFormats = new[] { "app", "iso", "wux", "wua", "loadiine" },
                 SingleFormats = new[] { "iso", "wux" },
                 IndexedFormats = new[] { "app", "wua", "loadiine" },
-                DefaultFormat = "wux/app",
+                DefaultFormat = "wux/wua",
                 DefaultSingleFormat = "wux",
-                DefaultIndexedFormat = "app",
+                DefaultIndexedFormat = "wua",
                 MaxThreads = 32,
                 DefaultThreads = 16
             },

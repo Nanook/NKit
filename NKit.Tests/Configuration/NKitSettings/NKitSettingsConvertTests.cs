@@ -55,7 +55,7 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.PSP, "cso:9:2kb:4", "cso", null)]
         [InlineData(SystemType.XBox, "iso", "iso", null)]
         [InlineData(SystemType.XBox360, "iso", "iso", null)]
-        [InlineData(SystemType.WiiU, "wux/app", "wux", "app")]
+        [InlineData(SystemType.WiiU, "wux/wua", "wux", "wua")]
         [InlineData(SystemType.Dreamcast, "cue:split:bin:bin:sub", null, "cue")]
         [InlineData(SystemType.PS3, "deciso/cue:split:bin:bin:sub", "deciso", "cue")]
         [InlineData(SystemType.PS1, "cso:9:2kb:4/cue:split:bin:bin:sub", "cso", "cue")]
@@ -205,8 +205,8 @@ namespace NKit.Tests.Configuration.NKitSettings
         // Simple generation (appropriate systems)
         [InlineData(SystemType.GameCube, "iso", "", "", "", "", "", false, "", "", "", "iso")]
         [InlineData(SystemType.PS3, "deciso", "", "", "", "", "", false, "", "", "", "deciso/cue:split:bin:bin:sub")]
-        [InlineData(SystemType.WiiU, "app", "", "", "", "", "", false, "", "", "", "app/app")]
-        [InlineData(SystemType.WiiU, "wux", "", "", "", "", "", false, "", "", "", "wux/app")]
+        [InlineData(SystemType.WiiU, "app", "", "", "", "", "", false, "", "", "", "app/wua")]
+        [InlineData(SystemType.WiiU, "wux", "", "", "", "", "", false, "", "", "", "wux/wua")]
         [InlineData(SystemType.Dreamcast, "", "gdi", "", "", "", "", false, "", "", "", "gdi")]
 
         // Dual format generation (PS1 system)
@@ -507,7 +507,7 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.XBox, "rvz:zstd:19:128kb:16", "iso")] // Incompatible format
         [InlineData(SystemType.Dreamcast, "iso", "cue:split:bin:bin:sub")] // Wrong category
         [InlineData(SystemType.PSP, "wbfs:y:128kb:16", "cso:9:2kb:4")] // Incompatible format
-        [InlineData(SystemType.WiiU, "cso:9:2kb:4", "wux/app")] // Incompatible format
+        [InlineData(SystemType.WiiU, "cso:9:2kb:4", "wux/wua")] // Incompatible format
         public void InvalidFormats_FallbackToSystemDefaults(
             SystemType systemType, string invalidFormat, string expectedFallback)
         {
@@ -674,10 +674,10 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.XBox, "cso2:7:8kb:2", "cso2", "", "", "7", "8kb", "2", false, "", "", "")]
         [InlineData(SystemType.XBox, "zso:10:4kb:1", "zso", "", "", "10", "4kb", "1", false, "", "", "")]
 
-        // WiiU format combinations (dual-format system — indexed side defaults to "app")
-        [InlineData(SystemType.WiiU, "app", "app", "app", "", "", "", "", false, "", "", "")]
-        [InlineData(SystemType.WiiU, "iso", "iso", "app", "", "", "", "", false, "", "", "")]
-        [InlineData(SystemType.WiiU, "wux", "wux", "app", "", "", "", "", false, "", "", "")]
+        // WiiU format combinations (dual-format system — indexed side defaults to "wua")
+        [InlineData(SystemType.WiiU, "app", "app", "wua", "", "", "", "", false, "", "", "")]
+        [InlineData(SystemType.WiiU, "iso", "iso", "wua", "", "", "", "", false, "", "", "")]
+        [InlineData(SystemType.WiiU, "wux", "wux", "wua", "", "", "", "", false, "", "", "")]
 
         // Dreamcast format combinations (index-only system)
         [InlineData(SystemType.Dreamcast, "cue:split:bin:bin:sub", "", "cue", "", "", "", "", false, "split", "bin", "bin")]
@@ -745,9 +745,10 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.XBox360, "cso")]
         [InlineData(SystemType.XBox360, "cso2")]
         [InlineData(SystemType.XBox360, "zso")]
-        [InlineData(SystemType.WiiU, "app")]
         [InlineData(SystemType.WiiU, "iso")]
         [InlineData(SystemType.WiiU, "wux")]
+        [InlineData(SystemType.WiiU, "loadiine")]
+        [InlineData(SystemType.WiiU, "wua")]
         [InlineData(SystemType.Dreamcast, "cue")]
         [InlineData(SystemType.Dreamcast, "gdi")]
         [InlineData(SystemType.PS3, "cue")]
@@ -868,8 +869,8 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.Dreamcast, "rvz", "cue:split:bin:bin:sub")] // RVZ not supported
         [InlineData(SystemType.XBox, "wbfs", "iso")] // WBFS not supported
         [InlineData(SystemType.XBox, "app", "iso")] // APP not supported
-        [InlineData(SystemType.WiiU, "cso", "wux/app")] // CSO not supported
-        [InlineData(SystemType.WiiU, "rvz", "wux/app")] // RVZ not supported
+        [InlineData(SystemType.WiiU, "cso", "wux/wua")] // CSO not supported
+        [InlineData(SystemType.WiiU, "rvz", "wux/wua")] // RVZ not supported
         public void InvalidFormatCombinations_FallbackCorrectly(
             SystemType systemType, string invalidFormat, string expectedFallback)
         {

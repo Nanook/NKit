@@ -46,7 +46,22 @@ namespace Nanook.NKit.Configuration
         /// </summary>
         public static IReadOnlyList<string> GetSupportedDualSingleFormats(SystemType systemType)
         {
-            // get all supported formats then remove those that exist as dual index formats
+            // WiiU is special: "app" is both a valid single format (convert a disc image to an
+            // AppTmd folder) and a valid indexed format (re-encrypt an existing AppTmd folder).
+            // Loadiine and WUA are also valid single formats — the engine's Convert-WiiU-Loadiine
+            // and Convert-WiiU-Wua steps both declare srcType=image/folderindex, so WUX/ISO disc
+            // image sources can be converted to either. Return the full set explicitly here.
+            if (systemType == SystemType.WiiU)
+                return new[]
+                {
+                    ConfigSettingsConstants.FormatApp,
+                    ConfigSettingsConstants.FormatIso,
+                    ConfigSettingsConstants.FormatWux,
+                    ConfigSettingsConstants.FormatLoadiine,
+                    ConfigSettingsConstants.FormatWua
+                };
+
+            // All other systems: single = all supported minus the dual-index formats
             List<string> allFormats = GetSupportedFormats(systemType).ToList();
             IReadOnlyList<string> dualIndexFormats = GetSupportedDualIndexFormats(systemType);
             foreach (string format in dualIndexFormats)
@@ -118,7 +133,6 @@ namespace Nanook.NKit.Configuration
                 SystemType.WiiU => new[]
                 {
                     ConfigSettingsConstants.FormatApp,
-                    ConfigSettingsConstants.FormatTmd,
                     ConfigSettingsConstants.FormatIso,
                     ConfigSettingsConstants.FormatWux,
                     ConfigSettingsConstants.FormatLoadiine,

@@ -563,7 +563,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             Assert.Contains(ConfigSettingsConstants.FormatIso, supportedFormats);
         }
 
-        [Theory(DisplayName = "WiiU: Supports APP, TMD, ISO, WUX, Loadiine, WUA")]
+        [Theory(DisplayName = "WiiU: Supports APP, ISO, WUX, Loadiine, WUA")]
         [InlineData(SystemType.WiiU)]
         public void WiiU_SupportsCorrectFormats(SystemType systemType)
         {
@@ -571,7 +571,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             IReadOnlyList<string> supportedFormats = ConfigSettingsRanges.GetSupportedFormats(systemType);
 
             // Assert
-            Assert.Equal(6, supportedFormats.Count);
+            Assert.Equal(5, supportedFormats.Count);
             Assert.Contains(ConfigSettingsConstants.FormatApp, supportedFormats);
             Assert.Contains(ConfigSettingsConstants.FormatIso, supportedFormats);
             Assert.Contains(ConfigSettingsConstants.FormatWux, supportedFormats);
