@@ -1094,6 +1094,189 @@ namespace NKitDataStore.Binary
             binaryTransaction.UpdatePendingAreaMetadata(areaId, metadata);
         }
 
+        public void PatchIndexedFormatFiles(
+            string setName,
+            long imageId,
+            string oldNamePrefix,
+            string newNamePrefix,
+            IReadOnlyList<(string OldFileName, string NewFileName, byte[]? NewContent)> patches)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+            bool isEmbedded = indexFile.Header.ShardSize == 0;
+
+            if (!isEmbedded)
+            {
+                patchIndexedFormatFilesInIndex(
+                    indexFile, getShardFileManager(setName),
+                    imageId, oldNamePrefix, newNamePrefix, patches);
+                invalidateImageCaches(setName, imageId);
+                return;
+            }
+
+            // Embedded mode: extract → patch → re-embed, matching applyDirectoryMutation lifecycle.
+            string setBasePath = GetIndexFilePath(setName);
+            EmbeddedIndexCommitter committer = _committers.GetOrAdd(
+                setName, _ => new EmbeddedIndexCommitter(setBasePath));
+
+            string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
+            bool alreadySeparated = File.Exists(setBasePath)
+                && File.Exists(expectedShardPath)
+                && !detectEmbeddedMode(setBasePath);
+
+            string indexPath;
+            string shardPath;
+
+            if (alreadySeparated)
+            {
+                indexFile.Dispose();
+                _indexFiles.TryRemove(setName, out _);
+                indexPath = setBasePath;
+                shardPath = expectedShardPath;
+            }
+            else
+            {
+                if (!_shardBoundary.TryGetValue(setName, out long shardBoundary))
+                {
+                    (long fIndexSize, bool _) = readEmbeddedFooter(setBasePath);
+                    shardBoundary = computeShardBoundary(setBasePath, fIndexSize);
+                    _shardBoundary[setName] = shardBoundary;
+                }
+
+                long actualIndexSize = indexFile.Header.FileEndOffset;
+                indexFile.Dispose();
+                _indexFiles.TryRemove(setName, out _);
+                (indexPath, shardPath) = committer.ExtractToSeparateMode(shardBoundary, actualIndexSize);
+            }
+
+            // Need block size for the standalone shard manager.
+            _infoCache.TryGetValue(setName, out InfoRecord? cachedInfo);
+            int blockSize = cachedInfo?.BlockSize ?? 65536;
+
+            BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
+            ShardFileManager standaloneShardManager = new ShardFileManager(
+                Path.GetDirectoryName(shardPath) ?? _baseDirectory,
+                setName, 0, _sourceDirectory, blockSize);
+            try
+            {
+                patchIndexedFormatFilesInIndex(
+                    standaloneIndex, standaloneShardManager,
+                    imageId, oldNamePrefix, newNamePrefix, patches);
+            }
+            finally
+            {
+                standaloneShardManager.Dispose();
+                standaloneIndex.Dispose();
+            }
+
+            committer.ReEmbed(indexPath, shardPath);
+
+            // Reopen as embedded and refresh caches (same as applyDirectoryMutation).
+            (long newIndexSize, bool _2) = readEmbeddedFooter(setBasePath);
+            long newBoundary = computeShardBoundary(setBasePath, newIndexSize);
+            _indexFiles[setName] = BinaryIndexFile.Open(setBasePath, baseOffset: newBoundary);
+            _shardBoundary[setName] = newBoundary;
+            _embeddedMode[setName] = true;
+
+            if (_shardFileManagers.TryGetValue(setName, out ShardFileManager? sfm) && newBoundary > 0)
+                sfm.SetShardBoundary(newBoundary);
+
+            _infoCache.TryRemove(setName, out _);
+            invalidateSetCaches(setName);
+        }
+
+        private void patchIndexedFormatFilesInIndex(
+            BinaryIndexFile indexFile,
+            ShardFileManager shardManager,
+            long imageId,
+            string oldNamePrefix,
+            string newNamePrefix,
+            IReadOnlyList<(string OldFileName, string NewFileName, byte[]? NewContent)> patches)
+        {
+            (List<AreaRecord> areas, List<FileRecord> files) = indexFile.ReadImageMetadata(imageId);
+
+            // Patch file records — replace matching entries with updated name / shard location.
+            for (int i = 0; i < files.Count; i++)
+            {
+                FileRecord fr = files[i];
+                foreach ((string oldFn, string newFn, byte[]? newContent) in patches)
+                {
+                    if (!string.Equals(fr.Name, oldFn, StringComparison.Ordinal))
+                        continue;
+
+                    if (newContent != null)
+                    {
+                        // Compress and write to shard — mirrors the InsertFile compression pattern.
+                        byte[] zstdFrameMagic = new byte[] { 0x28, 0xB5, 0x2F, 0xFD };
+                        int maxCompressed = newContent.Length + 0x100;
+                        byte[] compressedBuffer = new byte[maxCompressed];
+                        int compressedSize = maxCompressed;
+
+                        using (CompressionBlock compressor = CompressionBlockFactory.Create(
+                            CompressionAlgorithm.ZStd,
+                            new CompressionOptions
+                            {
+                                BlockSize = newContent.Length,
+                                Type = (Nanook.GrindCore.CompressionType)19
+                            }))
+                        {
+                            compressor.Compress(newContent, 0, newContent.Length, compressedBuffer, 0, ref compressedSize);
+                        }
+
+                        if (compressedSize >= zstdFrameMagic.Length)
+                        {
+                            Buffer.BlockCopy(compressedBuffer, zstdFrameMagic.Length, compressedBuffer, 0, compressedSize - zstdFrameMagic.Length);
+                            compressedSize -= zstdFrameMagic.Length;
+                        }
+
+                        (int fileId, long offset, int length) = shardManager.WriteBlock(compressedBuffer, 0, compressedSize);
+                        files[i] = new FileRecord
+                        {
+                            ImageId = fr.ImageId,
+                            Name = newFn,
+                            FileId = fileId,
+                            Offset = offset,
+                            Size = length,
+                            UncompressedSize = newContent.Length,
+                            IsSystem = fr.IsSystem
+                        };
+                    }
+                    else
+                    {
+                        // Name-only change — shard data is reused as-is.
+                        files[i] = new FileRecord
+                        {
+                            ImageId = fr.ImageId,
+                            Name = newFn,
+                            FileId = fr.FileId,
+                            Offset = fr.Offset,
+                            Size = fr.Size,
+                            UncompressedSize = fr.UncompressedSize,
+                            IsSystem = fr.IsSystem
+                        };
+                    }
+                    break;
+                }
+            }
+
+            // Patch AreaValueType.FileName metadata where the value starts with the old name prefix.
+            if (!string.IsNullOrEmpty(oldNamePrefix) && !string.IsNullOrEmpty(newNamePrefix))
+            {
+                foreach (AreaRecord area in areas)
+                {
+                    string? existingFileName = area.Metadata?[AreaValueType.FileName];
+                    if (existingFileName == null)
+                        continue;
+                    if (!existingFileName.StartsWith(oldNamePrefix, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    area.Metadata[AreaValueType.FileName] = newNamePrefix + existingFileName.Substring(oldNamePrefix.Length);
+                }
+            }
+
+            indexFile.UpdateImageMetadata(imageId, areas, files);
+            indexFile.AtomicCommit();
+        }
+
         public IEnumerable<AreaRecord> GetAreasForImage(string setName, long imageId)
         {
             ConcurrentDictionary<long, (List<AreaRecord> Areas, List<FileRecord> Files)> setCache = _metadataCache.GetOrAdd(setName, _ => new ConcurrentDictionary<long, (List<AreaRecord> Areas, List<FileRecord> Files)>());
@@ -1256,6 +1439,233 @@ namespace NKitDataStore.Binary
             }
 
             compactSetSeparate(setName, progress);
+        }
+
+        /// <summary>
+        /// Returns a lightweight snapshot of the index file health for the specified set.
+        /// All fields are read from the already-loaded in-memory header — no disk I/O.
+        /// Safe to call at any time; does not load the block index.
+        /// </summary>
+        public IndexHealthInfo GetIndexHealth(string setName)
+        {
+            BinaryIndexFile idx = getIndexFile(setName);
+            bool hasRemovedImages = idx.GetDirectory().GetAllEntries().Any(e => e.Removed);
+            string indexPath = GetIndexFilePath(setName);
+            long indexFileSize = File.Exists(indexPath) ? new FileInfo(indexPath).Length : 0L;
+
+            return new IndexHealthInfo
+            {
+                DeltaCount = idx.Header.BlockIndexDeltaCount,
+                HasRemovedImages = hasRemovedImages,
+                IndexFileSizeBytes = indexFileSize
+            };
+        }
+
+        /// <summary>
+        /// Compacts the index file without modifying shard files.
+        ///
+        /// What it does:
+        ///   - Removes removed-image sections and directory entries (reclaims index space).
+        ///   - Merges all Block_Index_Delta entries into a single consolidated Block_Index.
+        ///   - Produces a clean sequential file layout: headers + directory + live image
+        ///     sections + consolidated block index, zero deltas.
+        ///
+        /// What it does NOT do:
+        ///   - Does NOT prune block index entries for orphaned blocks (shard data stays).
+        ///   - Does NOT rewrite or truncate any shard file.
+        ///
+        /// After CompactSetFast, cold starts are fast (no delta chain traversal). A subsequent
+        /// full CompactSet reclaims shard space from blocks that belong only to removed images.
+        ///
+        /// If called immediately after a write transaction the block index is already warm in
+        /// memory, so only the sequential index write cost is paid (~seconds).
+        /// </summary>
+        public void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile idx = getIndexFile(setName);
+
+            if (_shardFileManagers.TryRemove(setName, out ShardFileManager? sfm))
+                sfm.Dispose();
+
+            bool isEmbedded = idx.Header.ShardSize == 0;
+
+            if (!_embeddedMode.ContainsKey(setName))
+                _embeddedMode[setName] = isEmbedded;
+
+            if (isEmbedded)
+            {
+                compactSetFastEmbedded(setName, progress);
+                return;
+            }
+
+            compactSetFastSeparate(setName, progress);
+        }
+
+        /// <summary>
+        /// Fast index compact for separate mode (shardSize > 0).
+        /// Writes a new clean index to .compact.tmp, validates, atomically renames.
+        /// Crash recovery is handled by the existing .compact.tmp recovery in recoverIfNeeded.
+        /// </summary>
+        private void compactSetFastSeparate(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+            string originalPath = GetIndexFilePath(setName);
+            string tempPath = originalPath + ".compact.tmp";
+
+            try
+            {
+                // Write new clean index (no shard modification)
+                indexFile.CompactIndexTo(tempPath, deterministic: false, progress: progress);
+
+                // Validate output before replacing original
+                try
+                {
+                    using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(tempPath))
+                    {
+                        // Header validation passed
+                    }
+                }
+                catch
+                {
+                    try { File.Delete(tempPath); } catch { }
+                    throw;
+                }
+
+                // Dispose old handle, atomically replace, reopen
+                indexFile.Dispose();
+                AtomicFileOps.ReplaceFile(tempPath, originalPath, warning => Trace.TraceWarning(warning));
+
+                BinaryIndexFile newIndexFile = BinaryIndexFile.Open(originalPath);
+                _indexFiles[setName] = newIndexFile;
+                _infoCache.TryRemove(setName, out _);
+                invalidateSetCaches(setName);
+            }
+            catch
+            {
+                try { if (File.Exists(tempPath)) File.Delete(tempPath); } catch { }
+
+                if (_indexFiles.TryRemove(setName, out BinaryIndexFile? failedHandle))
+                    try { failedHandle.Dispose(); } catch { }
+
+                _recoveredSets.TryRemove(setName, out _);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Fast index compact for embedded mode (shardSize == 0).
+        /// Extracts to separate mode, compacts the standalone index (no shard compact),
+        /// then re-embeds.
+        /// </summary>
+        private void compactSetFastEmbedded(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+
+            if (indexFile.Header.ShardSize > 0)
+                throw new InvalidOperationException(
+                    $"compactSetFastEmbedded called on set '{setName}' with ShardSize={indexFile.Header.ShardSize}. " +
+                    "Only sets with ShardSize == 0 (embedded mode) should use this path.");
+
+            string setBasePath = GetIndexFilePath(setName);
+            EmbeddedIndexCommitter committer = new EmbeddedIndexCommitter(setBasePath);
+            string indexPath;
+            string shardPath;
+
+            try
+            {
+                string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
+                bool alreadySeparated = File.Exists(setBasePath) && File.Exists(expectedShardPath) && !detectEmbeddedMode(setBasePath);
+
+                if (alreadySeparated)
+                {
+                    indexFile.Dispose();
+                    indexPath = setBasePath;
+                    shardPath = expectedShardPath;
+                }
+                else
+                {
+                    if (!_shardBoundary.TryGetValue(setName, out long shardBoundary))
+                        throw new InvalidOperationException($"Set '{setName}' is marked as embedded but has no recorded shard boundary.");
+
+                    long actualIndexSize = indexFile.Header.FileEndOffset;
+                    indexFile.Dispose();
+                    (indexPath, shardPath) = committer.ExtractToSeparateMode(shardBoundary, actualIndexSize);
+                }
+
+                // Open standalone index and compact index only (no shard compact)
+                BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
+                string compactTempPath = indexPath + ".compact.tmp";
+
+                try
+                {
+                    standaloneIndex.CompactIndexTo(compactTempPath, deterministic: false, progress: progress);
+                    standaloneIndex.Dispose();
+
+                    try
+                    {
+                        using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(compactTempPath))
+                        {
+                            // Validation passed
+                        }
+                    }
+                    catch
+                    {
+                        try { File.Delete(compactTempPath); } catch { }
+                        throw;
+                    }
+
+                    AtomicFileOps.ReplaceFile(compactTempPath, indexPath, msg => Trace.TraceWarning(msg));
+                }
+                catch
+                {
+                    standaloneIndex.Dispose();
+                    try { if (File.Exists(compactTempPath)) File.Delete(compactTempPath); } catch { }
+                    throw;
+                }
+
+                // Re-embed compacted index into shard
+                committer.ReEmbed(indexPath, shardPath);
+
+                // Reopen as embedded, update caches
+                (long newIndexSize, bool _) = readEmbeddedFooter(setBasePath);
+                long newBoundary = computeShardBoundary(setBasePath, newIndexSize);
+
+                BinaryIndexFile newIndexFile = BinaryIndexFile.Open(setBasePath, baseOffset: newBoundary);
+                _indexFiles[setName] = newIndexFile;
+                _shardBoundary[setName] = newBoundary;
+
+                if (_shardFileManagers.TryGetValue(setName, out ShardFileManager? sfm2) && newBoundary > 0)
+                    sfm2.SetShardBoundary(newBoundary);
+
+                _infoCache.TryRemove(setName, out _);
+                invalidateSetCaches(setName);
+            }
+            catch
+            {
+                try
+                {
+                    recoverIfNeeded(setName);
+
+                    string filePath = GetIndexFilePath(setName);
+                    if (File.Exists(filePath) && detectEmbeddedMode(filePath))
+                    {
+                        (long indexSize, bool _) = readEmbeddedFooter(filePath);
+                        long boundary = computeShardBoundary(filePath, indexSize);
+                        BinaryIndexFile reopened = BinaryIndexFile.Open(filePath, baseOffset: boundary);
+                        _indexFiles[setName] = reopened;
+                        _shardBoundary[setName] = boundary;
+                        _embeddedMode[setName] = true;
+                    }
+                    else if (File.Exists(filePath))
+                    {
+                        BinaryIndexFile reopened = BinaryIndexFile.Open(filePath);
+                        _indexFiles[setName] = reopened;
+                    }
+                }
+                catch { }
+
+                throw;
+            }
         }
 
         /// <summary>

@@ -418,12 +418,15 @@ namespace NKitDataStore.Binary
             }
 #endif
 
-            // Deserialize the main index
+            // Deserialize the main index into a flat sorted array (28 bytes/entry, no dict overhead)
             InMemoryBlockIndex index = InMemoryBlockIndex.Deserialize(mainData);
 
-            // If there are deltas, follow the linked list and merge each one
+            // If there are deltas, collect all entry arrays then batch-merge in one pass.
+            // Batch merging produces a new sorted array (two-pointer merge with newest-wins
+            // semantics) rather than inflating a ConcurrentDictionary with loaded entries.
             if (_primaryHeader.BlockIndexDeltaCount > 0 && _primaryHeader.BlockIndexDeltaHeadOffset != 0)
             {
+                List<BlockIndexEntry[]> deltaRuns = new List<BlockIndexEntry[]>(_primaryHeader.BlockIndexDeltaCount);
                 long nextDeltaOffset = _primaryHeader.BlockIndexDeltaHeadOffset;
 
                 while (nextDeltaOffset != 0)
@@ -520,13 +523,17 @@ namespace NKitDataStore.Binary
                         }
                     }
 
-                    // Merge this delta into the index
-                    BlockIndexDelta delta = new BlockIndexDelta { Entries = entries };
-                    index.MergeDelta(delta);
+                    // Collect this delta run (newest first — chain head = newest)
+                    deltaRuns.Add(entries);
 
                     // Follow the linked list to the next (older) delta
                     nextDeltaOffset = nextOffset;
                 }
+
+                // Batch-merge all delta runs into the sorted array.
+                // Two-pointer merge: newest run wins on key conflict.
+                // Produces a new contiguous sorted BlockIndexEntry[] — no ConcurrentDictionary overhead.
+                index = index.WithMergedDeltas(deltaRuns);
             }
 
             _blockIndex = index;
@@ -1260,6 +1267,265 @@ namespace NKitDataStore.Binary
 
             // Step 10: Flush to disk
             newStream.Flush(flushToDisk: true);
+        }
+
+        /// <summary>
+        /// Writes a new clean index file to <paramref name="tempPath"/> without touching shard files.
+        ///
+        /// Differences from <see cref="CompactTo"/>:
+        /// - Skips the live-block-key gathering pass (no per-image BlockMap scan).
+        /// - Retains ALL block index entries — including entries for blocks from removed images.
+        ///   Those blocks remain physically present in shards and are still valid dedup targets.
+        ///   A subsequent full <see cref="CompactTo"/> (with shard rewrite) removes them later.
+        /// - Removed images are excluded from the directory and their sections are dropped.
+        /// - All deltas are merged into one consolidated Block_Index (delta count = 0).
+        ///
+        /// This produces a clean, defragmented index that eliminates delta-chain cold-start
+        /// overhead while leaving shard data completely untouched. Crash-safety model is
+        /// identical to <see cref="CompactTo"/>: write to temp → validate → atomic rename.
+        /// </summary>
+        public void CompactIndexTo(string tempPath, bool deterministic = false,
+            IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            // Step 1: Gather non-removed images from the current directory
+            IEnumerable<ImageDirectoryEntry> nonRemovedImages = _directory.GetNonRemovedEntries();
+            List<ImageDirectoryEntry> imagesToCopy = deterministic
+                ? nonRemovedImages.OrderBy(e => e.ImageId).ToList()
+                : nonRemovedImages.ToList();
+
+            progress?.Report((5, "Gathering images"));
+
+            // Step 2: Load full block index (main + all deltas).
+            // No pruning — all entries are kept. If _blockIndex is already warm (called right
+            // after a write transaction), this is free — no disk I/O.
+            InMemoryBlockIndex mergedIndex = LoadBlockIndex();
+            BlockIndexEntry[] allEntries = mergedIndex.GetEntries();
+
+            progress?.Report((20, "Loading block index"));
+
+            // Step 3: Build directory with placeholder offsets (same pattern as CompactTo)
+            ImageDirectory newDirectory = new ImageDirectory();
+            foreach (ImageDirectoryEntry sourceEntry in imagesToCopy)
+            {
+                ImageDirectoryEntry newEntry = new ImageDirectoryEntry
+                {
+                    ImageId = sourceEntry.ImageId,
+                    Name = sourceEntry.Name,
+                    Size = sourceEntry.Size,
+                    Crc32 = sourceEntry.Crc32,
+                    XxHash64 = sourceEntry.XxHash64,
+                    System = sourceEntry.System,
+                    Format = sourceEntry.Format,
+                    RollbackFileId = sourceEntry.RollbackFileId,
+                    RollbackOffset = sourceEntry.RollbackOffset,
+                    Removed = false,
+                    MetadataSectionOffset = sourceEntry.MetadataSectionOffset,
+                    MetadataSectionCompressedSize = sourceEntry.MetadataSectionCompressedSize,
+                    MetadataSectionUncompressedSize = sourceEntry.MetadataSectionUncompressedSize,
+                    BlockMapSectionOffset = sourceEntry.BlockMapSectionOffset,
+                    BlockMapSectionCompressedSize = sourceEntry.BlockMapSectionCompressedSize,
+                    BlockMapSectionUncompressedSize = sourceEntry.BlockMapSectionUncompressedSize
+                };
+                newDirectory.AddOrUpdate(newEntry);
+            }
+
+            byte[] estimateDirectoryBytes;
+            if (deterministic)
+            {
+                IOrderedEnumerable<ImageDirectoryEntry> sortedEntries = newDirectory.GetAllEntries().OrderBy(e => e.ImageId);
+                estimateDirectoryBytes = ImageDirectorySerializer.Serialize(sortedEntries);
+            }
+            else
+            {
+                estimateDirectoryBytes = newDirectory.Serialize();
+            }
+            byte[] estimateCompressedDir = ImageDirectorySerializer.CompressDirectory(estimateDirectoryBytes);
+            int newDirectoryRegionCapacity = estimateCompressedDir.Length + DefaultDirectoryRegionCapacity;
+
+            progress?.Report((25, "Writing index"));
+
+            // Step 4: Create the output file
+            using FileStream newStream = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
+
+            byte[] emptyHeader = new byte[FileHeader.HeaderSize];
+            newStream.Write(emptyHeader, 0, FileHeader.HeaderSize);
+            newStream.Write(emptyHeader, 0, FileHeader.HeaderSize);
+
+            byte[] regionPadding = new byte[newDirectoryRegionCapacity];
+            newStream.Write(regionPadding, 0, regionPadding.Length);
+
+            // Step 5: Copy live image sections
+            int imagesCopied = 0;
+            int totalImages = imagesToCopy.Count;
+            foreach (ImageDirectoryEntry sourceEntry in imagesToCopy)
+            {
+                _stream.Position = _baseOffset + sourceEntry.MetadataSectionOffset;
+                byte[] metadataBytes = new byte[sourceEntry.MetadataSectionCompressedSize];
+                ReadExactly(_stream, metadataBytes, 0, sourceEntry.MetadataSectionCompressedSize);
+
+                _stream.Position = _baseOffset + sourceEntry.BlockMapSectionOffset;
+                byte[] blockMapBytes = new byte[sourceEntry.BlockMapSectionCompressedSize];
+                ReadExactly(_stream, blockMapBytes, 0, sourceEntry.BlockMapSectionCompressedSize);
+
+                long newMetadataOffset = newStream.Position;
+                newStream.Write(metadataBytes, 0, metadataBytes.Length);
+
+                long newBlockMapOffset = newStream.Position;
+                newStream.Write(blockMapBytes, 0, blockMapBytes.Length);
+
+                ImageDirectoryEntry? existingEntry = newDirectory.GetEntry(sourceEntry.ImageId);
+                if (existingEntry != null)
+                {
+                    existingEntry.MetadataSectionOffset = newMetadataOffset;
+                    existingEntry.BlockMapSectionOffset = newBlockMapOffset;
+                }
+
+                imagesCopied++;
+                if (totalImages > 0)
+                    progress?.Report((25 + (imagesCopied * 40 / totalImages), "Copying image sections"));
+            }
+
+            progress?.Report((65, "Compressing block index"));
+
+            // Step 6: Write the full (un-pruned) block index — no deltas in output
+            long blockIndexOffset = newStream.Position;
+            IProgress<int>? serializerProgress = progress != null
+                ? new Progress<int>(pct => progress.Report((65 + (pct * 25 / 100), "Compressing block index")))
+                : null;
+            long blockIndexSize = BlockIndexSerializer.SerializeTo(newStream, allEntries, progress: serializerProgress);
+
+            progress?.Report((90, "Finalizing"));
+
+            long fileEndOffset = newStream.Position;
+
+            // Step 7: Re-serialize directory with final offsets and write into reserved region
+            byte[] directoryBytes;
+            if (deterministic)
+            {
+                IOrderedEnumerable<ImageDirectoryEntry> sortedEntries = newDirectory.GetAllEntries().OrderBy(e => e.ImageId);
+                directoryBytes = ImageDirectorySerializer.Serialize(sortedEntries);
+            }
+            else
+            {
+                directoryBytes = newDirectory.Serialize();
+            }
+            byte[] compressedDir = ImageDirectorySerializer.CompressDirectory(directoryBytes);
+            int imageDirectoryUncompressedSize = directoryBytes.Length;
+
+            // Stable capacity guard (same as CompactTo — prevents oscillation on re-compact)
+            int stableCapacity = Math.Max(compressedDir.Length, estimateCompressedDir.Length) + DefaultDirectoryRegionCapacity;
+            if (stableCapacity != newDirectoryRegionCapacity)
+            {
+                // Rewrite from scratch with corrected capacity
+                newDirectoryRegionCapacity = stableCapacity;
+                newStream.Position = 0;
+                newStream.SetLength(0);
+
+                byte[] emptyHdr = new byte[FileHeader.HeaderSize];
+                newStream.Write(emptyHdr, 0, FileHeader.HeaderSize);
+                newStream.Write(emptyHdr, 0, FileHeader.HeaderSize);
+
+                byte[] regionPad = new byte[newDirectoryRegionCapacity];
+                newStream.Write(regionPad, 0, regionPad.Length);
+
+                ImageDirectory rewriteDirectory = new ImageDirectory();
+                foreach (ImageDirectoryEntry sourceEntry in imagesToCopy)
+                {
+                    _stream.Position = _baseOffset + sourceEntry.MetadataSectionOffset;
+                    byte[] metaBytes = new byte[sourceEntry.MetadataSectionCompressedSize];
+                    ReadExactly(_stream, metaBytes, 0, sourceEntry.MetadataSectionCompressedSize);
+
+                    _stream.Position = _baseOffset + sourceEntry.BlockMapSectionOffset;
+                    byte[] bmBytes = new byte[sourceEntry.BlockMapSectionCompressedSize];
+                    ReadExactly(_stream, bmBytes, 0, sourceEntry.BlockMapSectionCompressedSize);
+
+                    long newMetaOff = newStream.Position;
+                    newStream.Write(metaBytes, 0, metaBytes.Length);
+                    long newBmOff = newStream.Position;
+                    newStream.Write(bmBytes, 0, bmBytes.Length);
+
+                    ImageDirectoryEntry newEntry = new ImageDirectoryEntry
+                    {
+                        ImageId = sourceEntry.ImageId,
+                        Name = sourceEntry.Name,
+                        Size = sourceEntry.Size,
+                        Crc32 = sourceEntry.Crc32,
+                        XxHash64 = sourceEntry.XxHash64,
+                        System = sourceEntry.System,
+                        Format = sourceEntry.Format,
+                        RollbackFileId = sourceEntry.RollbackFileId,
+                        RollbackOffset = sourceEntry.RollbackOffset,
+                        Removed = false,
+                        MetadataSectionOffset = newMetaOff,
+                        MetadataSectionCompressedSize = sourceEntry.MetadataSectionCompressedSize,
+                        MetadataSectionUncompressedSize = sourceEntry.MetadataSectionUncompressedSize,
+                        BlockMapSectionOffset = newBmOff,
+                        BlockMapSectionCompressedSize = sourceEntry.BlockMapSectionCompressedSize,
+                        BlockMapSectionUncompressedSize = sourceEntry.BlockMapSectionUncompressedSize
+                    };
+                    rewriteDirectory.AddOrUpdate(newEntry);
+                }
+
+                blockIndexOffset = newStream.Position;
+                blockIndexSize = BlockIndexSerializer.SerializeTo(newStream, allEntries, progress: null);
+                fileEndOffset = newStream.Position;
+
+                if (deterministic)
+                {
+                    IOrderedEnumerable<ImageDirectoryEntry> sortedEntries2 = rewriteDirectory.GetAllEntries().OrderBy(e => e.ImageId);
+                    directoryBytes = ImageDirectorySerializer.Serialize(sortedEntries2);
+                }
+                else
+                {
+                    directoryBytes = rewriteDirectory.Serialize();
+                }
+                compressedDir = ImageDirectorySerializer.CompressDirectory(directoryBytes);
+                imageDirectoryUncompressedSize = directoryBytes.Length;
+                newDirectory = rewriteDirectory;
+            }
+
+            long imageDirectoryOffset = DirectoryRegionStartOffset;
+            newStream.Position = DirectoryRegionStartOffset;
+            newStream.Write(compressedDir, 0, compressedDir.Length);
+
+            int remainingPadding = newDirectoryRegionCapacity - compressedDir.Length;
+            if (remainingPadding > 0)
+            {
+                byte[] zeroPad = new byte[remainingPadding];
+                newStream.Write(zeroPad, 0, zeroPad.Length);
+            }
+
+            // Step 8: Write final headers — BlockIndexDeltaCount = 0, no deltas in output
+            FileHeader newHeader = new FileHeader
+            {
+                Magic = FileHeader.MagicBytes,
+                MajorVersion = FileHeader.CurrentMajorVersion,
+                MinorVersion = FileHeader.CurrentMinorVersion,
+                ImageDirectoryOffset = imageDirectoryOffset,
+                ImageDirectorySize = compressedDir.Length,
+                ImageDirectoryUncompressedSize = imageDirectoryUncompressedSize,
+                BlockIndexOffset = blockIndexOffset,
+                BlockIndexSize = blockIndexSize,
+                BlockIndexDeltaHeadOffset = 0,
+                BlockIndexDeltaCount = 0,
+                FileEndOffset = fileEndOffset,
+                ShardSize = _primaryHeader.ShardSize,
+                BlockSize = _primaryHeader.BlockSize,
+                MaxOffsetBlocks = _primaryHeader.MaxOffsetBlocks,
+                ImageCount = newDirectory.Count,
+                DirectoryRegionCapacity = newDirectoryRegionCapacity
+            };
+
+            byte[] headerBuffer = new byte[FileHeader.HeaderSize];
+            FileHeaderSerializer.Write(headerBuffer, newHeader);
+
+            newStream.Position = 0;
+            newStream.Write(headerBuffer, 0, FileHeader.HeaderSize);
+            newStream.Write(headerBuffer, 0, FileHeader.HeaderSize);
+
+            newStream.Flush(flushToDisk: true);
+
+            progress?.Report((100, "Done"));
         }
 
         /// <summary>

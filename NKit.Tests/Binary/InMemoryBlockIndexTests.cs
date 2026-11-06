@@ -235,8 +235,11 @@ namespace NKit.Tests.NKDS.Binary
             if (size != newEntry.Size)
                 return false;
 
-            // Verify total count didn't increase (replacement, not addition)
-            if (index.Count != mainEntries.Length)
+            // In the flat-array design the sorted array is immutable and AddEntry writes to
+            // the session dict, so Count = _sortedEntries.Length + _sessionEntries.Count.
+            // Adding a duplicate key inserts one session entry alongside the shadowed sorted
+            // entry, giving Count = mainEntries.Length + 1.
+            if (index.Count != mainEntries.Length + 1)
                 return false;
 
             return true;

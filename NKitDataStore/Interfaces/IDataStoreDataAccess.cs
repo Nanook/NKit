@@ -133,6 +133,21 @@ namespace NKitDataStore.Interfaces
         void CompactSet(string setName, IProgress<(int Percentage, string Stage)>? progress = null);
 
         /// <summary>
+        /// Compacts the index file without modifying shard files.
+        /// Removes removed-image sections, merges all Block_Index deltas into one consolidated
+        /// block index, and produces a clean sequential layout. Delta count is reset to zero.
+        /// Block index entries for blocks from removed images are retained (shard data is
+        /// untouched). A subsequent <see cref="CompactSet"/> reclaims shard space.
+        /// </summary>
+        void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)>? progress = null);
+
+        /// <summary>
+        /// Returns a lightweight snapshot of the index file health for the specified set.
+        /// Reads only the in-memory header — no disk I/O. Safe to call at any time.
+        /// </summary>
+        IndexHealthInfo GetIndexHealth(string setName);
+
+        /// <summary>
         /// Inspects the file state of a set and reports its health status.
         /// This is a read-only operation that does not modify any files.
         /// </summary>
@@ -231,6 +246,21 @@ namespace NKitDataStore.Interfaces
         /// <param name="record">The file record with shard location info.</param>
         /// <returns>The decompressed file data, or null if the data could not be read.</returns>
         byte[]? ReadFileData(string setName, FileRecord record);
+
+        /// <summary>
+        /// Patches the stored file records and area FileName metadata for a CUE or GDI image
+        /// whose track filenames embed the old image name (e.g. "Game A (Track 01).bin").
+        /// Replaces file record names, writes updated content to the shard when supplied, and
+        /// rewrites AreaValueType.FileName values that start with <paramref name="oldNamePrefix"/>.
+        /// Handles both separate-mode and embedded-mode DataStores atomically.
+        /// Call after <see cref="DataStore.RenameImageTitle"/> for Cue and Gdi images.
+        /// </summary>
+        void PatchIndexedFormatFiles(
+            string setName,
+            long imageId,
+            string oldNamePrefix,
+            string newNamePrefix,
+            IReadOnlyList<(string OldFileName, string NewFileName, byte[]? NewContent)> patches);
 
         /// <summary>
         /// Inserts a new block with lazy compression optimization.

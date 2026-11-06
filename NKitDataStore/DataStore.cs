@@ -2,7 +2,10 @@ using NKitDataStore.Binary;
 using NKitDataStore.Compression;
 using NKitDataStore.Interfaces;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NKitDataStore
@@ -321,31 +324,30 @@ namespace NKitDataStore
             // Collect the whole title group in this set: the TmdAppFolder umbrella whose Name == base,
             // plus every App child whose ExtractBaseName == base. For a plain image this list is just
             // the target itself (no umbrella, no tmd children), so it renames exactly one record.
-            List<(long Id, string NewName)> renames = new List<(long, string)>();
+            List<(long Id, string NewName, ImageFormat Format)> renames = new List<(long, string, ImageFormat)>();
             foreach (ImageRecord img in ListAllImages(r => r.SetName == key.SetName && !r.Removed))
             {
                 if (img.Format == ImageFormat.TmdAppFolder && string.Equals(img.Name, currentBase, StringComparison.OrdinalIgnoreCase))
-                    renames.Add((img.Id, newBaseName)); // umbrella -> new base (no suffix)
+                    renames.Add((img.Id, newBaseName, img.Format)); // umbrella -> new base (no suffix)
                 else if (string.Equals(ExtractBaseName(img.Name), currentBase, StringComparison.OrdinalIgnoreCase))
                 {
                     // tmd child -> "{newBase} [tmd.N]" preserving its index
                     string? index = ExtractIndexFileName(img.Name); // e.g. "tmd.0"
-                    renames.Add((img.Id, index != null ? $"{newBaseName} [{index}]" : newBaseName));
+                    renames.Add((img.Id, index != null ? $"{newBaseName} [{index}]" : newBaseName, img.Format));
                 }
             }
 
             // If the identified image wasn't captured above (plain image with no base match — e.g. a
             // name that isn't tmd-disambiguated and has no umbrella), rename just it.
             if (renames.Count == 0)
-                renames.Add((key.ImageId, newBaseName));
+                renames.Add((key.ImageId, newBaseName, target.Format));
 
             IDataStoreTransaction transaction = _dataAccess.BeginTransaction(key.SetName);
             try
             {
-                foreach ((long id, string newName) in renames)
+                foreach ((long id, string newName, ImageFormat _) in renames)
                     _dataAccess.UpdateImageName(key.SetName, transaction, id, newName);
                 transaction.Commit();
-                return renames.Count;
             }
             catch
             {
@@ -357,6 +359,158 @@ namespace NKitDataStore
             {
                 transaction.Dispose();
             }
+
+            // After renaming, patch CUE/GDI index content for any image whose track filenames
+            // embed the old image name (produced by NKit conversion or from CHD synthesis).
+            foreach ((long id, string _, ImageFormat format) in renames)
+            {
+                if (format == ImageFormat.Cue || format == ImageFormat.Gdi)
+                    patchCueGdiAfterRename(key.SetName, id, format, currentBase, newBaseName);
+            }
+
+            return renames.Count;
+        }
+
+        /// <summary>
+        /// Patches the stored CUE or GDI index content and related sidecar file records for a
+        /// just-renamed image. Track filenames that embed the old image name (produced by NKit
+        /// conversion or CHD synthesis) are updated to use the new name. Area FileName metadata
+        /// is updated to match so DataStoreAsIso reconstruction stays consistent.
+        /// Images whose stored track filenames do not start with <paramref name="oldName"/>
+        /// (e.g. generic "track01.bin" sources) are left untouched by the prefix check.
+        /// </summary>
+        private void patchCueGdiAfterRename(
+            string setName, long imageId, ImageFormat format, string oldName, string newName)
+        {
+            string indexExt = format == ImageFormat.Cue ? ".cue" : ".gdi";
+            List<(string OldFileName, string NewFileName, byte[]? NewContent)> patches =
+                new List<(string, string, byte[]?)>();
+
+            foreach (FileRecord file in _dataAccess.GetFilesForImage(setName, imageId))
+            {
+                string fileExt  = Path.GetExtension(file.Name).ToLowerInvariant();
+                string fileStem = Path.GetFileNameWithoutExtension(file.Name);
+                bool   isIndex  = string.Equals(fileExt, indexExt, StringComparison.OrdinalIgnoreCase);
+                bool   stemMatch = string.Equals(fileStem, oldName, StringComparison.OrdinalIgnoreCase);
+
+                if (isIndex)
+                {
+                    byte[]? rawBytes  = _dataAccess.ReadFileData(setName, file);
+                    byte[]? newContent = rawBytes == null ? null
+                        : format == ImageFormat.Cue
+                            ? patchCueContent(rawBytes, oldName, newName)
+                            : patchGdiContent(rawBytes, oldName, newName);
+
+                    string newFileName = stemMatch ? newName + indexExt : file.Name;
+                    patches.Add((file.Name, newFileName, newContent));
+                }
+                else if (stemMatch)
+                {
+                    // Sidecar (.sub, .ccd, …): name-only rename, content unchanged.
+                    patches.Add((file.Name, newName + fileExt, null));
+                }
+            }
+
+            if (patches.Count == 0)
+                return;
+
+            _dataAccess.PatchIndexedFormatFiles(setName, imageId, oldName, newName, patches);
+        }
+
+        /// <summary>
+        /// Returns patched CUE bytes where FILE directives whose quoted filename starts with
+        /// <paramref name="oldName"/> have the prefix replaced with <paramref name="newName"/>.
+        /// Returns null when no FILE directive references the old name (no-op).
+        /// </summary>
+        private static byte[]? patchCueContent(byte[] rawBytes, string oldName, string newName)
+        {
+            string text   = Encoding.UTF8.GetString(rawBytes);
+            string[] lines = text.Split('\n');
+            bool changed  = false;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string trimmed = lines[i].TrimStart();
+                if (!trimmed.StartsWith("FILE \"", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                int closeQuote = trimmed.IndexOf('"', 6);
+                if (closeQuote < 0)
+                    continue;
+
+                string filename = trimmed.Substring(6, closeQuote - 6);
+                if (!filename.StartsWith(oldName, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string patchedFilename = newName + filename.Substring(oldName.Length);
+                int    leading         = lines[i].Length - trimmed.Length;
+                lines[i] = lines[i].Substring(0, leading)
+                            + "FILE \""
+                            + patchedFilename
+                            + trimmed.Substring(closeQuote); // includes closing quote and rest of line
+                changed = true;
+            }
+
+            return changed ? Encoding.UTF8.GetBytes(string.Join("\n", lines)) : null;
+        }
+
+        /// <summary>
+        /// Returns patched GDI bytes where the filename token on each track line that starts with
+        /// <paramref name="oldName"/> has the prefix replaced with <paramref name="newName"/>.
+        /// Returns null when no track filename references the old name (no-op).
+        /// GDI line format: {trackNo} {blockIdx} {mode} {blockSize} [{"}]{filename}[{"}] 0
+        /// </summary>
+        private static byte[]? patchGdiContent(byte[] rawBytes, string oldName, string newName)
+        {
+            string   text     = Encoding.UTF8.GetString(rawBytes);
+            string[] lines    = text.Split('\n');
+            string   escaped  = Regex.Escape(oldName);
+            bool     changed  = false;
+            bool     pastCount = false;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string trimmed = lines[i].TrimEnd('\r').Trim();
+                if (string.IsNullOrEmpty(trimmed))
+                    continue;
+
+                if (!pastCount)
+                {
+                    pastCount = true; // first non-empty line is the track count
+                    continue;
+                }
+
+                // Quoted filename: ... "oldName..." 0
+                Match m = Regex.Match(trimmed,
+                    @"^(\d+\s+\d+\s+\d+\s+\d+\s+)""(" + escaped + @"[^""]*)""(\s+0\s*)$",
+                    RegexOptions.IgnoreCase);
+
+                if (m.Success)
+                {
+                    string patchedFilename = newName + m.Groups[2].Value.Substring(oldName.Length);
+                    bool   needsQuotes     = patchedFilename.Contains(' ');
+                    string qt              = needsQuotes ? "\"" : "";
+                    lines[i] = m.Groups[1].Value + qt + patchedFilename + qt + m.Groups[3].Value;
+                    changed = true;
+                    continue;
+                }
+
+                // Unquoted filename: ... oldName... 0
+                m = Regex.Match(trimmed,
+                    @"^(\d+\s+\d+\s+\d+\s+\d+\s+)(" + escaped + @"[^\s]*)(\s+0\s*)$",
+                    RegexOptions.IgnoreCase);
+
+                if (m.Success)
+                {
+                    string patchedFilename = newName + m.Groups[2].Value.Substring(oldName.Length);
+                    bool   needsQuotes     = patchedFilename.Contains(' ');
+                    string qt              = needsQuotes ? "\"" : "";
+                    lines[i] = m.Groups[1].Value + qt + patchedFilename + qt + m.Groups[3].Value;
+                    changed = true;
+                }
+            }
+
+            return changed ? Encoding.UTF8.GetBytes(string.Join("\n", lines)) : null;
         }
 
         public void UpdateImageFormat(GlobalImageKey key, ImageFormat format)
@@ -465,11 +619,37 @@ namespace NKitDataStore
             if (string.IsNullOrWhiteSpace(setName))
                 throw new ArgumentException("Set name cannot be null or empty", nameof(setName));
 
-            string setDbPath = Path.Combine(_baseDirectory, $"{setName}{DatabaseFileExtension}");
+            string setDbPath = Path.Combine(this._baseDirectory, $"{setName}{DatabaseFileExtension}");
             if (!File.Exists(setDbPath))
                 throw new InvalidOperationException($"Set '{setName}' does not exist.");
 
-            _dataAccess.CompactSet(setName, progress);
+            this._dataAccess.CompactSet(setName, progress);
+        }
+
+        /// <inheritdoc/>
+        public void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            if (string.IsNullOrWhiteSpace(setName))
+                throw new ArgumentException("Set name cannot be null or empty", nameof(setName));
+
+            string setDbPath = Path.Combine(this._baseDirectory, $"{setName}{DatabaseFileExtension}");
+            if (!File.Exists(setDbPath))
+                throw new InvalidOperationException($"Set '{setName}' does not exist.");
+
+            this._dataAccess.CompactSetFast(setName, progress);
+        }
+
+        /// <inheritdoc/>
+        public IndexHealthInfo GetIndexHealth(string setName)
+        {
+            if (string.IsNullOrWhiteSpace(setName))
+                throw new ArgumentException("Set name cannot be null or empty", nameof(setName));
+
+            string setDbPath = Path.Combine(this._baseDirectory, $"{setName}{DatabaseFileExtension}");
+            if (!File.Exists(setDbPath))
+                throw new InvalidOperationException($"Set '{setName}' does not exist.");
+
+            return this._dataAccess.GetIndexHealth(setName);
         }
 
         /// <summary>
