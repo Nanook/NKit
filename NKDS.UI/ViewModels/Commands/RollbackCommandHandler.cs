@@ -63,14 +63,18 @@ public class RollbackCommandHandler : ICommandHandler
             try
             {
                 // 5. Exclusive access → rollback → reconcile
-                await ctx.ExclusiveAccessManager.WithExclusiveAccessAsync(
-                    dataStorePath,
-                    path =>
+                // Use SessionManager.WithExclusiveAccessAsync (same pattern as Compact, Add, Remove):
+                // closes the session, runs the operation, reopens from disk so the reconcile below
+                // sees the authoritative post-rollback state.
+                await ctx.SessionManager.WithExclusiveAccessAsync(async () =>
+                {
+                    await Task.Run(() =>
                     {
                         using NkdsOperations ops = new NkdsOperations();
                         IProgress<OperationProgress> reporter = progressVm.CreateProgressReporter();
-                        ops.Rollback(path, targetSetName, dialogVm.SelectedTargetId.Value, reporter);
+                        ops.Rollback(dataStorePath, targetSetName, dialogVm.SelectedTargetId.Value, reporter);
                     });
+                });
 
                 // 6. Post-operation reconciliation
                 await ctx.SyncService.ReconcileAsync(targetSetName);
