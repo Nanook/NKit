@@ -42,6 +42,9 @@ public sealed class DatResultModel
     /// </summary>
     public uint Crc32 { get; init; }
 
+    /// <summary>CRC32 formatted for display. "Pending" when zero (image not yet committed).</summary>
+    public string Crc32Display => Crc32 == 0 ? "Pending" : Crc32.ToString("X8");
+
     /// <summary>The image ID (for rename operations). Null for Missing entries.</summary>
     public long? ImageId { get; init; }
 
