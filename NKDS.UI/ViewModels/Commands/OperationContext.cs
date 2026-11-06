@@ -25,7 +25,7 @@ public record OperationContext(
     // Dialog interactions — passed from MainWindowViewModel
     Interaction<AddImagesDialogViewModel, bool> ShowAddImagesDialog,
     Interaction<ExportDialogViewModel, bool> ShowExportDialog,
-    Interaction<CompactDialogViewModel, bool> ShowCompactDialog,
+    Interaction<CompactDialogViewModel, CompactDialogResult> ShowCompactDialog,
     Interaction<RollbackDialogViewModel, bool> ShowRollbackDialog,
     Interaction<MountDialogViewModel, bool> ShowMountDialog,
     Interaction<Add1GmrDialogViewModel, bool> ShowAdd1GmrDialog,

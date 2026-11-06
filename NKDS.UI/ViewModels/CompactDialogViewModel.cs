@@ -6,51 +6,54 @@ using System.Collections.ObjectModel;
 namespace NkdsUi.ViewModels;
 
 /// <summary>
-/// ViewModel for the Compact dialog. Displays a checklist of all available sets,
-/// allowing the user to select one or more sets to compact.
+/// Result returned by the Compact Sets dialog.
+/// </summary>
+public enum CompactDialogResult
+{
+    /// <summary>User dismissed the dialog without choosing an operation.</summary>
+    Cancelled = 0,
+    /// <summary>Full compact: rewrites shards and removes orphaned blocks. Irreversible.</summary>
+    FullCompact,
+    /// <summary>Fast compact: rebuilds the index only. Shard files are never touched.</summary>
+    FastCompact
+}
+
+/// <summary>
+/// ViewModel for the Compact Sets dialog. Displays a checklist of all available sets
+/// and offers Fast Compact (index-only, safe) and Full Compact (reclaims shard space,
+/// irreversible) as distinct actions.
 /// </summary>
 public class CompactDialogViewModel : ViewModelBase
 {
     private string? _warningMessage;
 
-    /// <summary>
-    /// Available sets with their checked state.
-    /// </summary>
+    /// <summary>Available sets with their checked state.</summary>
     public ObservableCollection<CompactSetItem> Sets { get; }
 
-    /// <summary>
-    /// The set names that were selected (checked) when the user confirms.
-    /// </summary>
+    /// <summary>The set names that were selected (checked) when the user confirms.</summary>
     public IReadOnlyList<string> SelectedSetNames =>
-        Sets.Where(s => s.IsChecked).Select(s => s.Name).ToList();
+        this.Sets.Where(s => s.IsChecked).Select(s => s.Name).ToList();
 
-    /// <summary>
-    /// Warning or informational message displayed in the dialog.
-    /// </summary>
+    /// <summary>Warning or informational message displayed in the dialog.</summary>
     public string? WarningMessage
     {
         get => _warningMessage;
         set => this.RaiseAndSetIfChanged(ref _warningMessage, value);
     }
 
-    /// <summary>
-    /// Command to confirm the compact operation. Enabled when at least one set is checked.
-    /// </summary>
+    /// <summary>Perform a full compact (irreversible). Enabled when at least one set is checked.</summary>
     public ReactiveCommand<RxVoid, RxVoid> ConfirmCommand { get; }
 
-    /// <summary>
-    /// Command to cancel and close the dialog without performing any operation.
-    /// </summary>
+    /// <summary>Perform a fast compact (index-only, safe). Enabled when at least one set is checked.</summary>
+    public ReactiveCommand<RxVoid, RxVoid> ConfirmFastCommand { get; }
+
+    /// <summary>Cancel and close the dialog without performing any operation.</summary>
     public ReactiveCommand<RxVoid, RxVoid> CancelCommand { get; }
 
-    /// <summary>
-    /// Command to select all sets.
-    /// </summary>
+    /// <summary>Select all sets.</summary>
     public ReactiveCommand<RxVoid, RxVoid> SelectAllCommand { get; }
 
-    /// <summary>
-    /// Command to deselect all sets.
-    /// </summary>
+    /// <summary>Deselect all sets.</summary>
     public ReactiveCommand<RxVoid, RxVoid> SelectNoneCommand { get; }
 
     /// <summary>
@@ -60,36 +63,31 @@ public class CompactDialogViewModel : ViewModelBase
     /// <param name="activeSetName">The currently active set name (checked by default).</param>
     public CompactDialogViewModel(IReadOnlyList<string> availableSetNames, string? activeSetName)
     {
-        // Filter out the "All" pseudo-entry from the set list
-        List<string> realSets = availableSetNames.Where(n => !string.Equals(n, "All", StringComparison.OrdinalIgnoreCase)).ToList();
+        List<string> realSets = availableSetNames
+            .Where(n => !string.Equals(n, "All", StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-        Sets = new ObservableCollection<CompactSetItem>(
+        this.Sets = new ObservableCollection<CompactSetItem>(
             realSets.Select(name => new CompactSetItem
             {
                 Name = name,
                 IsChecked = name == activeSetName
             }));
 
-        IObservable<bool> canConfirm = Sets.ToObservable()
-            .Select(_ => Sets.Any(s => s.IsChecked))
-            .StartWith(Sets.Any(s => s.IsChecked));
-
-        // Re-evaluate canConfirm when any item's IsChecked changes
-        canConfirm = Signal.Merge(
-            Sets.Select(s => s.WhenAnyValue(x => x.IsChecked)).Merge().Select(_ => RxVoid.Default),
+        IObservable<bool> canConfirm = Signal.Merge(
+            this.Sets.Select(s => s.WhenAnyValue(x => x.IsChecked)).Merge().Select(_ => RxVoid.Default),
             Signal.Emit(RxVoid.Default)
-        ).Select(_ => Sets.Any(s => s.IsChecked));
+        ).Select(_ => this.Sets.Any(s => s.IsChecked));
 
-        ConfirmCommand = ReactiveCommand.Create(() => { }, canConfirm);
-        CancelCommand = ReactiveCommand.Create(() => { });
-        SelectAllCommand = ReactiveCommand.Create(() => { foreach (CompactSetItem s in Sets) s.IsChecked = true; });
-        SelectNoneCommand = ReactiveCommand.Create(() => { foreach (CompactSetItem s in Sets) s.IsChecked = false; });
+        this.ConfirmCommand = ReactiveCommand.Create(() => { }, canConfirm);
+        this.ConfirmFastCommand = ReactiveCommand.Create(() => { }, canConfirm);
+        this.CancelCommand = ReactiveCommand.Create(() => { });
+        this.SelectAllCommand = ReactiveCommand.Create(() => { foreach (CompactSetItem s in this.Sets) s.IsChecked = true; });
+        this.SelectNoneCommand = ReactiveCommand.Create(() => { foreach (CompactSetItem s in this.Sets) s.IsChecked = false; });
     }
 }
 
-/// <summary>
-/// Represents a single set in the compact checklist.
-/// </summary>
+/// <summary>Represents a single set in the compact checklist.</summary>
 public class CompactSetItem : ReactiveObject
 {
     private bool _isChecked;

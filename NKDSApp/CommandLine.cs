@@ -27,7 +27,6 @@ namespace Nanook.NKit.Vfs
         Remove,
         Restore,
         Compact,
-        CompactFast,
         Export,
         Verify,
         Create,
@@ -61,6 +60,7 @@ namespace Nanook.NKit.Vfs
         public bool ScanArchives { get; init; } = true;
         public bool IncludeImageDetails { get; init; }
         public bool ShowRemoved { get; init; }
+        public bool FullCompact { get; init; }
         public bool MountShowImage { get; init; } = true;
         public bool MountShowFileSystem { get; init; } = true;
         public bool MountShowSystem { get; init; }
@@ -102,6 +102,7 @@ namespace Nanook.NKit.Vfs
             public bool ScanArchives { get; set; } = true;
             public bool IncludeImageDetails { get; set; }
             public bool ShowRemoved { get; set; }
+            public bool FullCompact { get; set; }
             public bool? MountShowImage { get; set; }
             public bool? MountShowFileSystem { get; set; }
             public bool? MountShowSystem { get; set; }
@@ -633,56 +634,57 @@ namespace Nanook.NKit.Vfs
 
             using IDataStore dataStore = openDataStore(request.DataStorePath);
 
-            Console.WriteLine($"Compacting set '{request.SetName}'...");
-            try
+            if (request.FullCompact)
             {
-                dataStore.CompactSet(request.SetName);
-                Console.WriteLine("Compaction complete.");
-            }
-            catch (Exception ex)
-            {
-                throw new CommandLineException($"Error compacting '{request.SetName}': {ex.Message}");
-            }
-        }
-
-        public static void ExecuteCompactFast(NkdsCommandRequest request)
-        {
-            if (string.IsNullOrWhiteSpace(request.SetName))
-                throw new CommandLineException("A datastore set file (.nkds) must be specified for fast compaction.");
-
-            using IDataStore dataStore = openDataStore(request.DataStorePath);
-
-            IndexHealthInfo health = dataStore.GetIndexHealth(request.SetName);
-            if (!health.NeedsCompaction)
-            {
-                Console.WriteLine($"Set '{request.SetName}' is already clean (0 deltas, no removed images). Fast compact is not needed.");
-                return;
-            }
-
-            Console.WriteLine($"Fast compacting set '{request.SetName}' ({health.DeltaCount} delta(s))...");
-
-            ConsoleProgressReporter reporter = new ConsoleProgressReporter();
-            try
-            {
-                dataStore.CompactSetFast(request.SetName, new Progress<(int Percentage, string Stage)>(p =>
+                // Full compact: rewrites shards, permanently reclaims space from removed images
+                Console.WriteLine($"Full compacting set '{request.SetName}'...");
+                Console.WriteLine("⚠  This operation is irreversible. Removed images will be permanently deleted.");
+                try
                 {
-                    reporter.Report(new NKDS.Models.OperationProgress
-                    {
-                        Percentage = p.Percentage,
-                        CurrentItem = $"{request.SetName} [{p.Stage}]",
-                        ItemsProcessed = 0,
-                        TotalItems = 1
-                    });
-                }));
-                reporter.Complete();
-
-                IndexHealthInfo after = dataStore.GetIndexHealth(request.SetName);
-                Console.WriteLine($"Fast compact complete. Delta count: {after.DeltaCount}.");
+                    dataStore.CompactSet(request.SetName);
+                    Console.WriteLine("Full compact complete.");
+                }
+                catch (Exception ex)
+                {
+                    throw new CommandLineException($"Error compacting '{request.SetName}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                reporter.Complete();
-                throw new CommandLineException($"Error during fast compact of '{request.SetName}': {ex.Message}");
+                // Fast compact (default): index-only, shard files are never touched
+                IndexHealthInfo health = dataStore.GetIndexHealth(request.SetName);
+                if (!health.NeedsCompaction)
+                {
+                    Console.WriteLine($"Set '{request.SetName}' is already clean ({health.DeltaCount} delta(s), no removed images). No compact needed.");
+                    Console.WriteLine("Use 'nkds compact --full' to reclaim shard disk space from removed images.");
+                    return;
+                }
+
+                Console.WriteLine($"Fast compacting set '{request.SetName}' ({health.DeltaCount} delta(s))...");
+
+                ConsoleProgressReporter reporter = new ConsoleProgressReporter();
+                try
+                {
+                    dataStore.CompactSetFast(request.SetName, new Progress<(int Percentage, string Stage)>(p =>
+                    {
+                        reporter.Report(new NKDS.Models.OperationProgress
+                        {
+                            Percentage = p.Percentage,
+                            CurrentItem = $"{request.SetName} [{p.Stage}]",
+                            ItemsProcessed = 0,
+                            TotalItems = 1
+                        });
+                    }));
+                    reporter.Complete();
+
+                    IndexHealthInfo after = dataStore.GetIndexHealth(request.SetName);
+                    Console.WriteLine($"Fast compact complete. Delta count: {after.DeltaCount}.");
+                }
+                catch (Exception ex)
+                {
+                    reporter.Complete();
+                    throw new CommandLineException($"Error during fast compact of '{request.SetName}': {ex.Message}");
+                }
             }
         }
 
@@ -1010,6 +1012,12 @@ namespace Nanook.NKit.Vfs
                     state.ShowRemoved = true;
                     index++;
                     break;
+                case "full":
+                    if (command != NkdsCommand.Compact)
+                        throw new CommandLineException($"--full is only valid for the compact command.");
+                    state.FullCompact = true;
+                    index++;
+                    break;
                 case "recursive":
                     if (isMaskedTaskCommand(command))
                         throw new CommandLineException($"The {command.ToString().ToLowerInvariant()} command does not support --recursive. Use --mask with an explicit .nkds path.");
@@ -1280,6 +1288,7 @@ namespace Nanook.NKit.Vfs
                 ScanArchives = state.ScanArchives,
                 IncludeImageDetails = state.IncludeImageDetails,
                 ShowRemoved = state.ShowRemoved,
+                FullCompact = state.FullCompact,
                 MountShowImage = anyMountOption ? (state.MountShowImage ?? false) : true,
                 MountShowFileSystem = anyMountOption ? (state.MountShowFileSystem ?? false) : true,
                 MountShowSystem = anyMountOption ? (state.MountShowSystem ?? false) : false,
@@ -1812,10 +1821,6 @@ namespace Nanook.NKit.Vfs
                 case "cp":
                     command = NkdsCommand.Compact;
                     return true;
-                case "compact-fast":
-                case "cpf":
-                    command = NkdsCommand.CompactFast;
-                    return true;
                 case "export":
                     command = NkdsCommand.Export;
                     return true;
@@ -1879,6 +1884,7 @@ namespace Nanook.NKit.Vfs
                 "details" => "details",
                 "recursive" or "r" => "recursive",
                 "no-archives" => "noarchives",
+                "full" => "full",
                 "ogmr" => "ogmr",
                 "max-fsyaml-size" or "maxfsyamlsize" => "maxfsyamlsize",
                 "help" or "h" or "?" => "help",

@@ -186,7 +186,6 @@ public class ToolbarViewModel : ViewModelBase, IDisposable
     public ReactiveCommand<RxVoid, RxVoid> RemoveCommand { get; }
     public ReactiveCommand<RxVoid, RxVoid> RestoreCommand { get; }
     public ReactiveCommand<RxVoid, RxVoid> CompactCommand { get; }
-    public ReactiveCommand<RxVoid, RxVoid> CompactFastCommand { get; }
     public ReactiveCommand<RxVoid, RxVoid> RollbackCommand { get; }
     public ReactiveCommand<RxVoid, RxVoid> StatsCommand { get; }
     public ReactiveCommand<RxVoid, RxVoid> GraphsCommand { get; }
@@ -421,9 +420,6 @@ public class ToolbarViewModel : ViewModelBase, IDisposable
         CompactCommand = ReactiveCommand.Create(() => { }, canExecuteSetMutating);
         CompactCommand.DisposeWith(_disposables);
 
-        CompactFastCommand = ReactiveCommand.Create(() => { }, canExecuteSetMutating);
-        CompactFastCommand.DisposeWith(_disposables);
-
         RollbackCommand = ReactiveCommand.Create(() => { }, canExecuteSetMutating);
         RollbackCommand.DisposeWith(_disposables);
 
@@ -483,7 +479,6 @@ public class ToolbarViewModel : ViewModelBase, IDisposable
         SubscribeCommandToItem(RemoveCommand, ToolbarOperationKind.Remove);
         SubscribeCommandToItem(RestoreCommand, ToolbarOperationKind.Restore);
         SubscribeCommandToItem(CompactCommand, ToolbarOperationKind.Compact);
-        SubscribeCommandToItem(CompactFastCommand, ToolbarOperationKind.CompactFast);
         SubscribeCommandToItem(RollbackCommand, ToolbarOperationKind.Rollback);
         SubscribeCommandToItem(StatsCommand, ToolbarOperationKind.Stats);
         SubscribeCommandToItem(GraphsCommand, ToolbarOperationKind.Graphs);

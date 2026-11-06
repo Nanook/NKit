@@ -264,7 +264,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             {
                 CompactDialogViewModel dialogVm = interaction.Input;
                 CompactDialog dialog = new Dialogs.CompactDialog { DataContext = dialogVm };
-                bool result = await dialog.ShowDialog<bool>(this);
+                CompactDialogResult result = await dialog.ShowDialog<CompactDialogResult>(this);
                 interaction.SetOutput(result);
             }).DisposeWith(disposables);
 

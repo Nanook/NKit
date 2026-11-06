@@ -5,7 +5,7 @@
         x:DataType="vm:CompactDialogViewModel"
         Title="Compact Sets"
         Icon="/Assets/NkdsIcon.ico"
-        Width="420" Height="380"
+        Width="440" Height="400"
         CanResize="False"
         WindowStartupLocation="CenterOwner">
 
@@ -16,9 +16,14 @@
                     HorizontalAlignment="Right"
                     Spacing="12"
                     Margin="0,16,0,0">
+            <Button Content="Fast Compact"
+                    Command="{Binding ConfirmFastCommand}"
+                    Classes="dialogConfirm"
+                    ToolTip.Tip="Rebuild index only — merge deltas, remove dead sections. Shard files are never touched."/>
             <Button Content="Compact"
                     Command="{Binding ConfirmCommand}"
-                    Classes="dialogConfirm"/>
+                    Classes="dialogConfirm"
+                    ToolTip.Tip="Full compact — permanently reclaims shard space. Irreversible."/>
             <Button Content="Cancel"
                     Command="{Binding CancelCommand}"
                     Classes="dialogCancel"/>
@@ -27,9 +32,12 @@
         <!-- Content -->
         <StackPanel Spacing="12">
             <!-- Description -->
-            <TextBlock Text="Compact reclaims disk space by permanently purging removed images and their unreferenced blocks."
-                       TextWrapping="Wrap"
-                       Opacity="0.85"/>
+            <TextBlock TextWrapping="Wrap" Opacity="0.85">
+                <Run Text="Compact" FontWeight="SemiBold"/> — reclaims disk space by permanently purging removed images and their blocks.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Opacity="0.85">
+                <Run Text="Fast Compact" FontWeight="SemiBold"/> — rebuilds the index only: merges deltas, removes dead sections. Shard files are never touched. Safe to run anytime.
+            </TextBlock>
 
             <!-- Set Checklist -->
             <StackPanel Spacing="4">
@@ -55,7 +63,7 @@
                         BorderThickness="1"
                         CornerRadius="4"
                         Padding="4"
-                        MaxHeight="160">
+                        MaxHeight="140">
                     <ScrollViewer>
                         <ItemsControl ItemsSource="{Binding Sets}">
                             <ItemsControl.ItemTemplate>
@@ -70,8 +78,8 @@
                 </Border>
             </StackPanel>
 
-            <!-- Warning about permanent deletion -->
-            <TextBlock Text="⚠ This operation is irreversible. Removed images will be permanently deleted."
+            <!-- Irreversibility warning (full compact only) -->
+            <TextBlock Text="⚠ Compact is irreversible. Removed images will be permanently deleted."
                        TextWrapping="Wrap"
                        Foreground="#FF9800"
                        FontSize="12"

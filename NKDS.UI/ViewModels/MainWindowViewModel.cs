@@ -39,7 +39,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly AddCommandHandler _addHandler = new();
     private readonly ExportCommandHandler _exportHandler = new();
     private readonly CompactCommandHandler _compactHandler = new();
-    private readonly CompactFastCommandHandler _compactFastHandler = new();
     private readonly RollbackCommandHandler _rollbackHandler = new();
     private readonly RemoveCommandHandler _removeHandler = new();
     private readonly RestoreCommandHandler _restoreHandler = new();
@@ -104,7 +103,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     public Interaction<CreateSetDialogViewModel, bool> ShowCreateSetDialog { get; } = new();
     public Interaction<AddImagesDialogViewModel, bool> ShowAddImagesDialog { get; } = new();
     public Interaction<ExportDialogViewModel, bool> ShowExportDialog { get; } = new();
-    public Interaction<CompactDialogViewModel, bool> ShowCompactDialog { get; } = new();
+    public Interaction<CompactDialogViewModel, CompactDialogResult> ShowCompactDialog { get; } = new();
     public Interaction<RollbackDialogViewModel, bool> ShowRollbackDialog { get; } = new();
     public Interaction<MountDialogViewModel, bool> ShowMountDialog { get; } = new();
     public Interaction<Add1GmrDialogViewModel, bool> ShowAdd1GmrDialog { get; } = new();
@@ -455,10 +454,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
         Toolbar.CompactCommand
             .Subscribe(_ => subscribeHandler(_compactHandler))
-            .DisposeWith(_disposables);
-
-        Toolbar.CompactFastCommand
-            .Subscribe(_ => subscribeHandler(_compactFastHandler))
             .DisposeWith(_disposables);
 
         Toolbar.RollbackCommand
