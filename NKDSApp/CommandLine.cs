@@ -27,6 +27,7 @@ namespace Nanook.NKit.Vfs
         Remove,
         Restore,
         Compact,
+        CompactFast,
         Export,
         Verify,
         Create,
@@ -641,6 +642,47 @@ namespace Nanook.NKit.Vfs
             catch (Exception ex)
             {
                 throw new CommandLineException($"Error compacting '{request.SetName}': {ex.Message}");
+            }
+        }
+
+        public static void ExecuteCompactFast(NkdsCommandRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SetName))
+                throw new CommandLineException("A datastore set file (.nkds) must be specified for fast compaction.");
+
+            using IDataStore dataStore = openDataStore(request.DataStorePath);
+
+            IndexHealthInfo health = dataStore.GetIndexHealth(request.SetName);
+            if (!health.NeedsCompaction)
+            {
+                Console.WriteLine($"Set '{request.SetName}' is already clean (0 deltas, no removed images). Fast compact is not needed.");
+                return;
+            }
+
+            Console.WriteLine($"Fast compacting set '{request.SetName}' ({health.DeltaCount} delta(s))...");
+
+            ConsoleProgressReporter reporter = new ConsoleProgressReporter();
+            try
+            {
+                dataStore.CompactSetFast(request.SetName, new Progress<(int Percentage, string Stage)>(p =>
+                {
+                    reporter.Report(new NKDS.Models.OperationProgress
+                    {
+                        Percentage = p.Percentage,
+                        CurrentItem = $"{request.SetName} [{p.Stage}]",
+                        ItemsProcessed = 0,
+                        TotalItems = 1
+                    });
+                }));
+                reporter.Complete();
+
+                IndexHealthInfo after = dataStore.GetIndexHealth(request.SetName);
+                Console.WriteLine($"Fast compact complete. Delta count: {after.DeltaCount}.");
+            }
+            catch (Exception ex)
+            {
+                reporter.Complete();
+                throw new CommandLineException($"Error during fast compact of '{request.SetName}': {ex.Message}");
             }
         }
 
@@ -1769,6 +1811,10 @@ namespace Nanook.NKit.Vfs
                 case "compact":
                 case "cp":
                     command = NkdsCommand.Compact;
+                    return true;
+                case "compact-fast":
+                case "cpf":
+                    command = NkdsCommand.CompactFast;
                     return true;
                 case "export":
                     command = NkdsCommand.Export;

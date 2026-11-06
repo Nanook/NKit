@@ -96,6 +96,9 @@ namespace Nanook.NKit.Vfs
                     case NkdsCommand.Compact:
                         NkdsCommandLine.ExecuteCompact(request);
                         return 0;
+                    case NkdsCommand.CompactFast:
+                        NkdsCommandLine.ExecuteCompactFast(request);
+                        return 0;
                     case NkdsCommand.Export:
                         NkdsCommandLine.ExecuteExport(request);
                         return 0;

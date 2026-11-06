@@ -39,6 +39,7 @@ namespace Nanook.NKit.Vfs
             ("remove",  "Mark images as removed"),
             ("restore", "Restore images previously removed"),
             ("compact", "Permanently delete marked images and unused blocks"),
+            ("compact-fast", "Rebuild index only — merge deltas, remove dead sections, no shard rewrite"),
             ("rollback","Rollback a set to a specific image"),
             ("ogmr",    "Batch import routed by an OGMR YAML"),
         };
@@ -96,6 +97,7 @@ namespace Nanook.NKit.Vfs
                 case "remove":
                 case "restore": buildIdsCommand(argv); break;
                 case "compact": buildDatastoreOnly(argv); break;
+                case "compact-fast": buildDatastoreOnly(argv); break;
                 case "rollback": buildRollback(argv); break;
                 case "ogmr": buildOgmr(argv); break;
             }

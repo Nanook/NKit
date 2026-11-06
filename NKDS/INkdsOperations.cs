@@ -1,5 +1,7 @@
 using NKDS.Models;
 
+using NKitDataStore;
+
 namespace NKDS;
 
 /// <summary>
@@ -54,6 +56,22 @@ public interface INkdsOperations : IDisposable
         ResolvedKeyFixPaths keyFixPaths = null);
     Task<OperationResult> CompactAsync(string dataStorePath, string setName,
         IProgress<OperationProgress> progress = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Compacts the index file only — no shard data is touched. Merges all Block_Index deltas,
+    /// removes dead image sections, and produces a clean sequential layout. Delta count resets
+    /// to zero, restoring fast cold-start times. Call whenever GetIndexHealth returns
+    /// NeedsCompaction = true. If the block index is warm from a recent write, only the
+    /// sequential index write cost is paid.
+    /// </summary>
+    Task<OperationResult> CompactFastAsync(string dataStorePath, string setName,
+        IProgress<OperationProgress> progress = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns a lightweight health snapshot for the specified set. Reads only the in-memory
+    /// header — no disk I/O. Use to decide whether CompactFastAsync is recommended.
+    /// </summary>
+    IndexHealthInfo GetIndexHealth(string dataStorePath, string setName);
 
     // Mount operations
     Task<OperationResult> MountAsync(string dataStorePath, string setName, string mountPoint, MountOptions options,

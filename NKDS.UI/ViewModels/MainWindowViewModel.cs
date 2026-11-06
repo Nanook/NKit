@@ -39,6 +39,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly AddCommandHandler _addHandler = new();
     private readonly ExportCommandHandler _exportHandler = new();
     private readonly CompactCommandHandler _compactHandler = new();
+    private readonly CompactFastCommandHandler _compactFastHandler = new();
     private readonly RollbackCommandHandler _rollbackHandler = new();
     private readonly RemoveCommandHandler _removeHandler = new();
     private readonly RestoreCommandHandler _restoreHandler = new();
@@ -454,6 +455,10 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
         Toolbar.CompactCommand
             .Subscribe(_ => subscribeHandler(_compactHandler))
+            .DisposeWith(_disposables);
+
+        Toolbar.CompactFastCommand
+            .Subscribe(_ => subscribeHandler(_compactFastHandler))
             .DisposeWith(_disposables);
 
         Toolbar.RollbackCommand

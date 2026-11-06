@@ -164,6 +164,7 @@ namespace Nanook.NKit.Vfs
                 NkdsCommand.Remove => getRemoveHelp(),
                 NkdsCommand.Restore => getRestoreHelp(),
                 NkdsCommand.Compact => getCompactHelp(),
+                NkdsCommand.CompactFast => getCompactFastHelp(),
                 NkdsCommand.Export => getExportHelp(),
                 NkdsCommand.Verify => getVerifyHelp(),
                 NkdsCommand.Create => getCreateHelp(),
@@ -195,6 +196,7 @@ namespace Nanook.NKit.Vfs
               remove   (rm) Mark images as removed within a set.
               restore  (rst) Restore images previously marked as removed.
               compact  (cp) Permanently delete marked images and unused blocks.
+              compact-fast (cpf) Rebuild index only — merge deltas, no shard rewrite.
               export   (copy, convert) Export images from a set through the NKit pipeline.
               verify   (vfy) Verify images through the NKit pipeline.
               create   (newset) Create a new set in a datastore.
@@ -437,6 +439,36 @@ namespace Nanook.NKit.Vfs
 
             Example:
               nkds compact --datastore {{ExampleIndexFilePath}}
+            """;
+
+        private static string getCompactFastHelp() =>
+            $$"""
+            nkds compact-fast - Rebuild index only. Merge deltas, remove dead sections. No shard rewrite.
+
+            Usage:
+              nkds compact-fast --datastore <path.nkds>
+              nkds compact-fast help
+
+            What it does:
+              - Merges all Block_Index_Delta entries into one consolidated block index.
+              - Removes directory entries and sections for images marked as removed.
+              - Never reads or writes any shard file.
+              - Resets the delta count to zero — the next startup is fast.
+
+            What it does NOT do:
+              - Does not reclaim shard disk space (run 'nkds compact' for that).
+
+            When to use:
+              - Run this whenever startup is slow (many deltas accumulated from frequent adds).
+              - Run this before 'nkds compact' if you want a two-stage cleanup.
+              - Run automatically if the 'stats' command reports NeedsCompaction = true.
+
+            Options:
+              --datastore, -ds <path>   `.nkds` set path
+              --help, -h, -?            Show help
+
+            Example:
+              nkds compact-fast --datastore {{ExampleIndexFilePath}}
             """;
 
         private static string getVerifyHelp() =>
