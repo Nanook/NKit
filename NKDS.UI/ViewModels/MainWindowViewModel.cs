@@ -613,6 +613,18 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     {
         IsDatWindowOpen = false;
         _datHandler.OnDatWindowClosed(_sharedState);
+
+        // Reconcile all currently loaded sets: the dat window may have renamed images, which
+        // can affect sort order and may include deletions of duplicate rows not visible in the
+        // current filter. PropertyChanged is raised during rename for immediate feedback; this
+        // reconcile is the post-close cleanup that re-sorts and catches any remaining deltas.
+        IEnumerable<string> setNames = this.ImageList.GetAllImages()
+            .Select(r => r.SetName)
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Distinct(StringComparer.Ordinal);
+
+        foreach (string setName in setNames)
+            _ = this._syncService.ReconcileAsync(setName);
     }
 
     // ─── Session Event Handlers ─────────────────────────────────────────────────

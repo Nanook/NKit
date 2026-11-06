@@ -433,7 +433,11 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
                 {
                     ImageRowViewModel? row = allImageRows.FirstOrDefault(r => r.Id == renamed.Id && r.SetName == result.SetName);
                     if (row != null)
+                    {
                         row.Image.Name = renamed.Name;
+                        // Raise PropertyChanged so the DataGrid binding refreshes immediately
+                        ((ReactiveObject)row).RaisePropertyChanged(nameof(ImageRowViewModel.Name));
+                    }
                 }
             }
             catch (Exception ex)
