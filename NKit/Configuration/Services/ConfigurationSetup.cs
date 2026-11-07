@@ -162,6 +162,17 @@ namespace Nanook.NKit.Configuration.Services
 
             try { candidatePaths.Add(fileSystem.CombinePath(Directory.GetCurrentDirectory(), ConfigSettingsConstants.DirectoryNameDefaults, context.ConfigFileName)); } catch { }
 
+            // On non-Windows system installs (Linux, macOS), also search FHS-relative and XDG
+            // data directories so package-manager installs find the defaults template.
+            // These paths are computed by PathResolutionService and passed in via ConfigurationContext.
+            if (context.DataSearchPaths != null)
+            {
+                foreach (string dataDir in context.DataSearchPaths)
+                    if (!string.IsNullOrEmpty(dataDir))
+                        candidatePaths.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameDefaults, context.ConfigFileName));
+            }
+
+
             foreach (string sourcePath in candidatePaths)
             {
                 try
@@ -246,6 +257,20 @@ namespace Nanook.NKit.Configuration.Services
                     candidates.Add(fileSystem.CombinePath(Directory.GetCurrentDirectory(), ConfigSettingsConstants.DirectoryNameFix));
                 }
                 catch { }
+
+                // On non-Windows system installs, also search FHS-relative and XDG data directories.
+                if (context.DataSearchPaths != null)
+                {
+                    foreach (string dataDir in context.DataSearchPaths)
+                    {
+                        if (!string.IsNullOrEmpty(dataDir))
+                        {
+                            candidates.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameDefaults));
+                            candidates.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameFix));
+                        }
+                    }
+                }
+
 
                 int copied = 0;
                 HashSet<string> seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

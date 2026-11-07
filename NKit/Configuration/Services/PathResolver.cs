@@ -58,6 +58,12 @@ namespace Nanook.NKit.Configuration.Services
                 ? fileSystem.GetParentDirectory(configDirectory)
                 : pathResolution.GetUserHomeDirectory();
 
+            // For non-Windows system installs, supply the FHS-relative and XDG data dirs so
+            // ConfigurationSetup can find the defaults template and fix files when the binary
+            // lives in a read-only prefix (e.g. /usr/bin, /opt/homebrew/bin).
+            string[] dataSearchPaths = pathResolution.GetSystemDataSearchPaths(
+                platformContext.Platform, platformContext.ExecutableDirectory);
+
             string configFileName = _coreService.GetConfigFileName(platformService);
 
             return new ConfigurationContext(
@@ -68,7 +74,8 @@ namespace Nanook.NKit.Configuration.Services
                 isMacOSBundle: platformContext.IsBundle,
                 configSource: ConfigSource.None, // Will be determined later
                 configFile: null, // Will be determined later
-                configFileName: configFileName);
+                configFileName: configFileName,
+                dataSearchPaths: dataSearchPaths);
         }
 
         private static string getPortableConfigDirectory(PlatformContext platformContext,

@@ -7,6 +7,7 @@ namespace Nanook.NKit.Configuration.Services
     {
         Home,
         XdgConfigHome,
+        XdgDataDirs,
         HomeDrive,
         HomePath,
         UserProfile

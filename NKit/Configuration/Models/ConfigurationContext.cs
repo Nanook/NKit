@@ -15,6 +15,14 @@ namespace Nanook.NKit.Configuration.Models
         public ConfigSource ConfigSource { get; }
         public string ConfigFile { get; }
         public string ConfigFileName { get; }
+        /// <summary>
+        /// Ordered list of application data directories to search when no defaults template is
+        /// found next to the binary. Populated for non-Windows platforms in system mode.
+        /// On Linux: FHS path (../share/nkit) + XDG_DATA_DIRS entries.
+        /// On macOS: FHS path only (covers Homebrew on Intel and Apple Silicon).
+        /// Null on Windows and in portable mode.
+        /// </summary>
+        public string[] DataSearchPaths { get; }
 
         public ConfigurationContext(
             string executableDirectory,
@@ -24,7 +32,8 @@ namespace Nanook.NKit.Configuration.Models
             bool isMacOSBundle,
             ConfigSource configSource,
             string configFile,
-            string configFileName)
+            string configFileName,
+            string[] dataSearchPaths = null)
         {
             // Normalize directories to avoid accidental duplicate separators when combined later
             ExecutableDirectory = trimTrailingDirectorySeparators(executableDirectory ?? throw new ArgumentNullException(nameof(executableDirectory)));
@@ -35,6 +44,7 @@ namespace Nanook.NKit.Configuration.Models
             ConfigSource = configSource;
             ConfigFile = configFile;
             ConfigFileName = configFileName ?? throw new ArgumentNullException(nameof(configFileName));
+            DataSearchPaths = dataSearchPaths;
         }
 
         private static string trimTrailingDirectorySeparators(string path)
@@ -62,7 +72,8 @@ namespace Nanook.NKit.Configuration.Models
                 IsMacOSBundle,
                 configSource,
                 configFile,
-                ConfigFileName);
+                ConfigFileName,
+                DataSearchPaths);
         }
     }
 }

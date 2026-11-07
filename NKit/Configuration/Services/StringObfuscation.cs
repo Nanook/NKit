@@ -16,6 +16,7 @@ namespace Nanook.NKit.Configuration.Services
         // Environment variable encoded data
         private static readonly byte[] HomeBytes = { 0x0A, 0x0D, 0x0F, 0x07 }; // "HOME"
         private static readonly byte[] XdgConfigHomeBytes = { 0x1A, 0x06, 0x05, 0x1D, 0x01, 0x0D, 0x0C, 0x04, 0x0B, 0x05, 0x1D, 0x0A, 0x0D, 0x0F, 0x07 }; // "XDG_CONFIG_HOME"
+        private static readonly byte[] XdgDataDirsBytes = { 0x1A, 0x06, 0x05, 0x1D, 0x06, 0x03, 0x16, 0x03, 0x1D, 0x06, 0x0B, 0x10, 0x11 }; // "XDG_DATA_DIRS"
         private static readonly byte[] HomeDriveBytes = { 0x0A, 0x0D, 0x0F, 0x07, 0x06, 0x10, 0x0B, 0x14, 0x07 }; // "HOMEDRIVE"
         private static readonly byte[] HomePathBytes = { 0x0A, 0x0D, 0x0F, 0x07, 0x12, 0x03, 0x16, 0x0A }; // "HOMEPATH"
         private static readonly byte[] UserProfileBytes = { 0x17, 0x11, 0x07, 0x10, 0x12, 0x10, 0x0D, 0x04, 0x0B, 0x0E, 0x07 }; // "USERPROFILE"
@@ -44,6 +45,7 @@ namespace Nanook.NKit.Configuration.Services
             {
                 [EnvironmentVariableType.Home] = DecodeBytes(HomeBytes),
                 [EnvironmentVariableType.XdgConfigHome] = DecodeBytes(XdgConfigHomeBytes),
+                [EnvironmentVariableType.XdgDataDirs] = DecodeBytes(XdgDataDirsBytes),
                 [EnvironmentVariableType.HomeDrive] = DecodeBytes(HomeDriveBytes),
                 [EnvironmentVariableType.HomePath] = DecodeBytes(HomePathBytes),
                 [EnvironmentVariableType.UserProfile] = DecodeBytes(UserProfileBytes)

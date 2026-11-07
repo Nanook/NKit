@@ -95,6 +95,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
                 "HOMEDRIVE" => "C:",
                 "HOMEPATH" => "\\Users\\TestUser",
                 "XDG_CONFIG_HOME" => null, // Return null to use default ~/.config
+                "XDG_DATA_DIRS" => null,   // Return null to use default /usr/local/share:/usr/share
                 _ => null
             };
         }
