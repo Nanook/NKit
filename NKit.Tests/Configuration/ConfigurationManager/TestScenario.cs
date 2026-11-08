@@ -137,16 +137,17 @@ namespace NKit.Tests.Configuration.ConfigurationManager
 
         private static string getSystemUserDataDirectory(PlatformModeDetectionTests.Platform platform)
         {
-            // After the path fix, UserDataDirectory in system mode is the home directory WITHOUT the nkit subdirectory
-            // The nkit subdirectory is added later by DefaultPathProvider and ConfigurationSetup
+            // UserDataDirectory in system mode is the home directory WITHOUT the nkit subdirectory.
+            // ConfigurationSetup appends "nkit/" later to form ~/nkit/ (data) while config lives in
+            // ~/.config/nkit/ (Linux), ~/Documents/nkit (macOS), %APPDATA%/nkit (Windows).
             return platform switch
             {
                 PlatformModeDetectionTests.Platform.Windows =>
-                    "C:\\Users\\TestUser",  // Home directory without nkit subdirectory
+                    "C:\\Users\\TestUser",  // Home directory
                 PlatformModeDetectionTests.Platform.Linux =>
-                    "/home/testuser/.config",  // Parent of config dir; nkit/ is appended to give ~/.config/nkit
+                    "/home/testuser",  // Home directory; ConfigurationSetup appends nkit/ → ~/nkit
                 PlatformModeDetectionTests.Platform.macOS =>
-                    "/Users/testuser/Documents",  // Home directory without nkit subdirectory
+                    "/Users/testuser/Documents",  // Documents folder (macOS convention)
                 _ => throw new ArgumentException($"Unknown platform: {platform}")
             };
         }

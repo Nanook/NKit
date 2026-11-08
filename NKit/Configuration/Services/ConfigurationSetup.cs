@@ -165,11 +165,18 @@ namespace Nanook.NKit.Configuration.Services
             // On non-Windows system installs (Linux, macOS), also search FHS-relative and XDG
             // data directories so package-manager installs find the defaults template.
             // These paths are computed by PathResolutionService and passed in via ConfigurationContext.
+            // Check both <dataDir>/defaults/<config> (repo/zip layout) and <dataDir>/<config>
+            // directly (some package managers install the template at the data dir root).
             if (context.DataSearchPaths != null)
             {
                 foreach (string dataDir in context.DataSearchPaths)
+                {
                     if (!string.IsNullOrEmpty(dataDir))
+                    {
                         candidatePaths.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameDefaults, context.ConfigFileName));
+                        candidatePaths.Add(fileSystem.CombinePath(dataDir, context.ConfigFileName));
+                    }
+                }
             }
 
 

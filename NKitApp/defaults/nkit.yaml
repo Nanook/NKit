@@ -21,9 +21,13 @@
 
 # All directories for config values can be relative or absolute. The following Keywords are supported:
 #     $appPath$       - path of the launched exe
-#     $configPath$    - config directory (portable mode: exe directory, user mode: user config directory)
+#     $configPath$    - config directory (portable mode: exe directory, system mode: user config directory)
+#                       e.g. portable: /opt/nkit  |  linux: ~/.config/nkit  |  macOS: ~/Documents/nkit
 #     $userPath$      - user data directory for logs, scans, results
-#                       (portable mode: exe directory, user mode: user home directory)
+#                       (portable mode: exe directory, system mode: user home directory)
+#                       e.g. portable: /opt/nkit  |  linux: ~  |  macOS: ~/Documents
+#                       Note: scan-out / log / results-out below use $userPath$/nkit/ which resolves
+#                       to ~/nkit/ — keeping large output data separate from config files
 #     $task$          - task being performed
 #     $system$        - system being processed
 #     $date$          - Current date as yyyymmdd
@@ -132,8 +136,8 @@ log: $userPath$/nkit/logs/$date$_log.txt
 results: y
 
 # Directory to save summary files.  CLI: --results-out / -ro.  Legacy: resultsOut
-# Default: $userPath$/nkit/logs/$system$_$task$_results.txt
-results-out: $userPath$/nkit/logs/$system$_$task$_results.txt
+# Default: $userPath$/nkit/logs/results/$system$_$task$_results.txt
+results-out: $userPath$/nkit/logs/results/$system$_$task$_results.txt
 
 # Dedupe configuration - format: <setName>:<shardSize>:<blockSize>:<auxMode>.  CLI: --dedupe / -dd
 # All parts are optional. Examples:

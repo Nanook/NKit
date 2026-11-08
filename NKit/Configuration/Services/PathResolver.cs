@@ -50,13 +50,11 @@ namespace Nanook.NKit.Configuration.Services
 
             string configDirectory = pathResolution.GetSystemConfigDirectory(platformContext.Platform);
 
-            // On Linux, user data lives alongside config under ~/.config/nkit.
-            // The system-mode path builder appends "nkit/" to userDataDirectory, so use the
-            // parent of configDirectory (~/.config) to land everything in the same place.
-            // On all other platforms use the home directory as before.
-            string userDataDirectory = platformContext.Platform == PlatformType.Linux
-                ? fileSystem.GetParentDirectory(configDirectory)
-                : pathResolution.GetUserHomeDirectory();
+            // User data (scans, logs, results, dedupe) lives in ~/nkit/ on all platforms.
+            // Config (nkit.yaml, dats, fix, keys) lives in the platform config directory
+            // (~/.config/nkit/ on Linux, ~/Documents/nkit on macOS, %APPDATA%/nkit on Windows).
+            // Keeping these separate avoids filling the config dir with large growing data.
+            string userDataDirectory = pathResolution.GetUserHomeDirectory();
 
             // For non-Windows system installs, supply the FHS-relative and XDG data dirs so
             // ConfigurationSetup can find the defaults template and fix files when the binary
