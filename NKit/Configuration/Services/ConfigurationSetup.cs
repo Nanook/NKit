@@ -29,8 +29,7 @@ namespace Nanook.NKit.Configuration.Services
             {
                 ConfigSettingsConstants.DirectoryNameDats,
                 ConfigSettingsConstants.DirectoryNameKeys,
-                ConfigSettingsConstants.DirectoryNameFix,
-                ConfigSettingsConstants.DirectoryNameScans
+                ConfigSettingsConstants.DirectoryNameFix
             };
 
             // All directory names are lowercase — $system$ is lowercased during path expansion
