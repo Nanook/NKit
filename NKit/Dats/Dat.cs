@@ -39,7 +39,7 @@ namespace Nanook.NKit.Dats
                         long size = rom.Attribute("size").Value == "" ? 0 : long.Parse(rom.Attribute("size").Value);
                         return new DatItemPart(rom.Attribute("name").Value, crc, (md5?.Length ?? 0) == 0 ? null : md5, (sha1?.Length ?? 0) == 0 ? null : sha1, size);
                     });
-                    Items.Add(new DatItem(e.Element("description").Value, roms));
+                    Items.Add(new DatItem(e.Attribute("name").Value, roms));
                 }
             }
             catch (Exception ex)
