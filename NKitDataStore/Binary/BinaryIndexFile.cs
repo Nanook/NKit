@@ -957,6 +957,67 @@ namespace NKitDataStore.Binary
         }
 
         /// <summary>
+        /// Builds a block index by reading the BlockLocations from each live image's
+        /// Image_BlockMap_Section. Memory-efficient alternative to LoadBlockIndex() when
+        /// the delta chain is very large — avoids O(N_deltas × entries_per_delta) peak RAM.
+        ///
+        /// Uses a flat List rather than a Dictionary to minimise per-entry overhead:
+        /// shared blocks appear once per image then are deduplicated in a single sort pass,
+        /// keeping peak allocation close to (unique_blocks × 28 bytes) rather than the
+        /// ~48 bytes/entry a Dictionary requires.
+        /// </summary>
+        private BlockIndexEntry[] buildBlockIndexFromImages(List<ImageDirectoryEntry> images)
+        {
+            // Estimate capacity: assume ~10 000 blocks per image as a starting point so
+            // the list avoids excessive resizing on large collections.
+            int estimatedCapacity = images.Count * 10000;
+            if (estimatedCapacity < 65536)
+                estimatedCapacity = 65536;
+
+            List<BlockIndexEntry> all = new List<BlockIndexEntry>(estimatedCapacity);
+
+            foreach (ImageDirectoryEntry entry in images)
+            {
+                (List<OffsetRecord> _, Dictionary<BlockKey, (int FileId, long Offset, int Size)> blockLocations)
+                    = ReadImageBlockMap(entry.ImageId);
+
+                foreach (KeyValuePair<BlockKey, (int FileId, long Offset, int Size)> kv in blockLocations)
+                {
+                    all.Add(new BlockIndexEntry
+                    {
+                        Key = kv.Key,
+                        FileId = kv.Value.FileId,
+                        Offset = kv.Value.Offset,
+                        Size = kv.Value.Size
+                    });
+                }
+            }
+
+            // Sort by key so we can deduplicate in a single linear pass.
+            all.Sort();
+
+            // In-place dedup: for equal keys keep the first occurrence.
+            // (All images sharing a block reference the same physical location, so any
+            // occurrence is equally valid.)
+            int writeIdx = 0;
+            for (int i = 0; i < all.Count; i++)
+            {
+                if (writeIdx == 0 || all[i].Key.XxHash64 != all[writeIdx - 1].Key.XxHash64
+                                  || all[i].Key.Crc32     != all[writeIdx - 1].Key.Crc32)
+                {
+                    all[writeIdx++] = all[i];
+                }
+            }
+
+            // Copy unique range into a precisely-sized result array, then release the list.
+            BlockIndexEntry[] result = new BlockIndexEntry[writeIdx];
+            for (int i = 0; i < writeIdx; i++)
+                result[i] = all[i];
+
+            return result;
+        }
+
+        /// <summary>
         /// Compacts the current binary index file into a new clean file at the specified path.
         /// The compacted file contains:
         /// 1. Header + SecondaryHeader (placeholder, then final)
@@ -984,36 +1045,14 @@ namespace NKitDataStore.Binary
 
             progress?.Report((5, "Gathering images"));
 
-            // Step 2: Load the full block index (main + all deltas), then prune
-            // entries not referenced by any live image's BlockLocations.
-            InMemoryBlockIndex mergedIndex = LoadBlockIndex();
+            // Step 2: Build the block index from per-image block maps, keeping only entries
+            // referenced by live images. This is memory-efficient: avoids loading the full
+            // delta chain (which can require many GB of RAM for delta-heavy containers).
+            // Since we only iterate live images, orphaned blocks from removed images are
+            // naturally excluded — identical to what LoadBlockIndex() + pruning would produce.
+            BlockIndexEntry[] compactedEntries = buildBlockIndexFromImages(imagesToCopy);
 
-            progress?.Report((15, "Loading block index"));
-
-            // Step 3: Build a set of all BlockKeys referenced by live images
-            HashSet<BlockKey> liveBlockKeys = new HashSet<BlockKey>();
-            int imagesScanned = 0;
-            int totalToScan = imagesToCopy.Count;
-            foreach (ImageDirectoryEntry liveImage in imagesToCopy)
-            {
-                // Read each live image's block map to get its referenced BlockKeys
-                (List<OffsetRecord> _, Dictionary<BlockKey, (int FileId, long Offset, int Size)>? blockLocations) = ReadImageBlockMap(liveImage.ImageId);
-                foreach (BlockKey key in blockLocations.Keys)
-                {
-                    liveBlockKeys.Add(key);
-                }
-                imagesScanned++;
-                // Report 15-40% during block map scanning
-                progress?.Report((15 + (imagesScanned * 25 / totalToScan), "Scanning block maps"));
-            }
-
-            // Filter the block index to only retain entries referenced by live images
-            BlockIndexEntry[] allEntries = mergedIndex.GetEntries();
-            BlockIndexEntry[] compactedEntries = allEntries
-                .Where(e => liveBlockKeys.Contains(e.Key))
-                .ToArray();
-
-            progress?.Report((42, "Pruning unreferenced blocks"));
+            progress?.Report((42, "Building block index"));
 
             // Step 4: Pre-compute the directory region capacity.
             // We need to know the compressed directory size to determine the region capacity,
@@ -1295,13 +1334,23 @@ namespace NKitDataStore.Binary
 
             progress?.Report((5, "Gathering images"));
 
-            // Step 2: Load full block index (main + all deltas).
-            // No pruning — all entries are kept. If _blockIndex is already warm (called right
-            // after a write transaction), this is free — no disk I/O.
-            InMemoryBlockIndex mergedIndex = LoadBlockIndex();
-            BlockIndexEntry[] allEntries = mergedIndex.GetEntries();
+            // Step 2: Build the block index from per-image block maps.
+            //
+            // This avoids loading the delta chain via LoadBlockIndex(), which requires
+            // O(main_index + all_delta_entries) memory. For a container with thousands of
+            // uncompacted deltas the chain merge can exceed 10 GB of peak RAM and fail with OOM.
+            //
+            // Reading block locations directly from each image's Image_BlockMap_Section is
+            // memory-efficient: only the accumulator (~28 bytes × unique_block_count) and one
+            // image section at a time are in memory simultaneously.
+            //
+            // Difference from warm-index path: orphaned block index entries (blocks whose only
+            // referencing image has been soft-deleted) are not retained after this compact.
+            // Those blocks remain physically in the shards until a full CompactSet removes them.
+            // This is acceptable — a subsequent full compact cleans them up.
+            BlockIndexEntry[] allEntries = buildBlockIndexFromImages(imagesToCopy);
 
-            progress?.Report((20, "Loading block index"));
+            progress?.Report((20, "Building block index"));
 
             // Step 3: Build directory with placeholder offsets (same pattern as CompactTo)
             ImageDirectory newDirectory = new ImageDirectory();
