@@ -191,6 +191,9 @@ if ($BuildGui -and (Test-Path "publish/gui/$Runtime")) {
     if (Test-Path "NKit/defaults")         { Copy-Item "NKit/defaults" "publish/gui/$Runtime/" -Recurse -Force }
     if (Test-Path "NKit.Ui/ConfigInfo.txt") { Copy-Item "NKit.Ui/ConfigInfo.txt" "publish/gui/$Runtime/" }
 }
+if ($BuildNkdsUi -and (Test-Path "publish/nkds-ui/$Runtime")) {
+    # fix files are copied by the CSPROJ CopyNKitDefaults target during publish
+}
 
 # --- Archive ---
 if (-not $NoArchive) {
@@ -255,9 +258,12 @@ if (-not $NoArchive) {
         $uiZip = Join-Path $OutDir "NKit_${Runtime}_UI_${ArchiveLabel}.zip"
         $guiDir = "publish/gui/$Runtime"
 
-        # Include nkds-ui in gui archive
+        # Include nkds-ui exe and its yaml (portable mode trigger) in gui archive
         if ($BuildNkdsUi -and (Test-Path "publish/nkds-ui/$Runtime/nkds-ui.exe")) {
             Copy-Item "publish/nkds-ui/$Runtime/nkds-ui.exe" "$guiDir/"
+            if (Test-Path "publish/nkds-ui/$Runtime/nkds-ui.yaml") {
+                Copy-Item "publish/nkds-ui/$Runtime/nkds-ui.yaml" "$guiDir/"
+            }
         }
 
         New-PasswordZip -SourceDir $guiDir -ZipPath $uiZip -Password "nkit"

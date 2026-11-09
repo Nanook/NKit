@@ -50,11 +50,12 @@ namespace Nanook.NKit.Configuration.Services
 
             string configDirectory = pathResolution.GetSystemConfigDirectory(platformContext.Platform);
 
-            // User data (scans, logs, results, dedupe) lives in ~/nkit/ on all platforms.
-            // Config (nkit.yaml, dats, fix, keys) lives in the platform config directory
-            // (~/.config/nkit/ on Linux, ~/Documents/nkit on macOS, %APPDATA%/nkit on Windows).
-            // Keeping these separate avoids filling the config dir with large growing data.
-            string userDataDirectory = pathResolution.GetUserHomeDirectory();
+            // User data (scans, logs, results, dedupe) lives in $XDG_STATE_HOME/nkit/ on Linux
+            // (~/.local/state/nkit/ by default), ~/Documents/nkit on macOS, and
+            // C:\Users\..\nkit on Windows. Config stays in its platform config directory.
+            // XDG_STATE_HOME is the right home for operational output data (logs, scans, results)
+            // that persists between runs but isn't precious user content like saves or datasets.
+            string userDataDirectory = pathResolution.GetSystemUserStateDirectory(platformContext.Platform);
 
             // For non-Windows system installs, supply the FHS-relative and XDG data dirs so
             // ConfigurationSetup can find the defaults template and fix files when the binary

@@ -28,15 +28,16 @@ namespace Nanook.NKit.Vfs
                 Console.WriteLine();
             }
 
-            // Always print config/data paths so users know where their files live.
+            // Print app header then config/data paths.
+            Console.WriteLine($"NKDS v{Nanook.NKit.AppSettings.GetVersion()}");
             {
                 string configDir = Nanook.NKit.AppSettings.GetConfigDirectory();
                 string dataDir   = Nanook.NKit.AppSettings.GetUserDataDirectory();
                 Console.WriteLine($"Config: {configDir}");
                 if (!string.Equals(configDir, dataDir, StringComparison.OrdinalIgnoreCase))
                     Console.WriteLine($"Data:   {dataDir}");
-                Console.WriteLine();
             }
+            Console.WriteLine();
 
             // Interactive mode rules (mirrors nkit's CliFrontEnd logic):
             //

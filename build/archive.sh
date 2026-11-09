@@ -72,6 +72,10 @@ create_archives() {
                 if [ -f "$nkds_ui_dir/$nkds_ui_bin" ]; then
                     cp "$nkds_ui_dir/$nkds_ui_bin" "$gui_dir/"
                 fi
+                # Bundle nkds-ui.yaml (portable mode trigger) alongside the exe
+                if [ -f "$nkds_ui_dir/nkds-ui.yaml" ]; then
+                    cp "$nkds_ui_dir/nkds-ui.yaml" "$gui_dir/"
+                fi
             fi
 
             (cd "$gui_dir" && zip -r "$REPO_ROOT/$ui_zip" .)

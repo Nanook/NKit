@@ -115,23 +115,15 @@
 	  </None>
 	</ItemGroup>
 
-	<!-- Create defaults directory structure during publish (not for macOS - uses bundle Resources) -->
-	<Target Name="CreateDefaultsStructure" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)' != 'osx-x64' AND '$(RuntimeIdentifier)' != 'osx-arm64'">
-		<Message Text="Creating defaults directory structure for GUI app..." Importance="high" />
-		
-		<!-- Create defaults directory -->
-		<MakeDir Directories="$(PublishDir)defaults" />
+	<Target Name="CopyNKitDefaults" AfterTargets="Publish">
+		<PropertyGroup>
+			<_NKitFixSourceDir>$(MSBuildProjectDirectory)\..\NKit\defaults\fix</_NKitFixSourceDir>
+		</PropertyGroup>
+		<Message Text="Copying NKit fix files to publish defaults/fix..." Importance="high" />
 		<MakeDir Directories="$(PublishDir)defaults\fix" />
-		
-		<!-- Copy fix files from NKit project output to defaults/fix ONLY (not root) -->
 		<ItemGroup>
-			<SourceFixFiles Include="$(PublishDir)defaults\fix\*.yaml" />
+			<_NKitFixFiles Include="$(_NKitFixSourceDir)\*.yaml" />
 		</ItemGroup>
-		<Copy SourceFiles="@(SourceFixFiles)" DestinationFolder="$(PublishDir)defaults\fix" Condition="Exists('$(PublishDir)defaults\fix')" />
-		
-		<!-- Remove fix files from root - they should only be in defaults -->
-		<RemoveDir Directories="$(PublishDir)defaults\fix" />
-		
-		<Message Text="✅ Defaults directory structure created for GUI app (fix files in defaults only)" Importance="high" />
+		<Copy SourceFiles="@(_NKitFixFiles)" DestinationFolder="$(PublishDir)defaults\fix" SkipUnchangedFiles="true" />
 	</Target>
 </Project>

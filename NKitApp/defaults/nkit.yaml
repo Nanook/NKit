@@ -24,10 +24,11 @@
 #     $configPath$    - config directory (portable mode: exe directory, system mode: user config directory)
 #                       e.g. portable: /opt/nkit  |  linux: ~/.config/nkit  |  macOS: ~/Documents/nkit
 #     $userPath$      - user data directory for logs, scans, results
-#                       (portable mode: exe directory, system mode: user home directory)
-#                       e.g. portable: /opt/nkit  |  linux: ~  |  macOS: ~/Documents
+#                       (portable mode: exe directory, system mode: user state/home directory)
+#                       e.g. portable: /opt/nkit  |  linux: ~/.local/state  |  macOS: ~/Documents
 #                       Note: scan-out / log / results-out below use $userPath$/nkit/ which resolves
-#                       to ~/nkit/ — keeping large output data separate from config files
+#                       to ~/.local/state/nkit/ on Linux, ~/Documents/nkit on macOS
+#                       — keeping large output data separate from config files
 #     $task$          - task being performed
 #     $system$        - system being processed
 #     $date$          - Current date as yyyymmdd

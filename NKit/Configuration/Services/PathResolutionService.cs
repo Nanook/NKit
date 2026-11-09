@@ -159,6 +159,12 @@ namespace Nanook.NKit.Configuration.Services
         public string GetXdgConfigHome() => getEnvironmentVariable(EnvironmentVariableType.XdgConfigHome);
 
         /// <summary>
+        /// Gets the XDG state home directory for Linux
+        /// ($XDG_STATE_HOME, default ~/.local/state)
+        /// </summary>
+        public string GetXdgStateHome() => getEnvironmentVariable(EnvironmentVariableType.XdgStateHome);
+
+        /// <summary>
         /// Returns the ordered list of system-wide data directories to search for NKit data files
         /// on non-Windows platforms.
         ///
@@ -258,6 +264,26 @@ namespace Nanook.NKit.Configuration.Services
 
             string appDirName = getPathComponent(PathComponentType.ApplicationDirectoryName);
             return _fileSystem.CombinePath(baseConfigDir, appDirName);
+        }
+
+        /// <summary>
+        /// Gets Linux user state directory (~/.local/state/nkit or $XDG_STATE_HOME/nkit).
+        /// Used for operational output data: logs, scans, results.
+        /// Returns the BASE directory (without the nkit/ suffix) so the caller can append it.
+        /// </summary>
+        public string GetSystemUserStateDirectory(PlatformType platform)
+        {
+            if (platform != PlatformType.Linux)
+                return GetUserHomeDirectory();
+
+            string xdgStateHome = GetXdgStateHome();
+            if (!string.IsNullOrEmpty(xdgStateHome))
+                return xdgStateHome;
+
+            return _fileSystem.CombinePath(
+                GetUserHomeDirectory(),
+                getPathComponent(PathComponentType.Local),
+                getPathComponent(PathComponentType.State));
         }
 
         // ======= End System Directory Resolution =======

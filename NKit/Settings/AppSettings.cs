@@ -723,7 +723,10 @@ namespace Nanook.NKit
             l.Info(() => $"NKit v{this.Version} :: Help & Usage - https://github.com/Nanook/NKit/wiki"); // header — no tag
             l.Info(() => Log.Divider);
             l.Info(() => $"Config [{this.ConfigSource}]" + (this.ConfigFile == null ? "" : $" {this.ConfigFile.Name}"));
-            l.Info(() => $"ConfigPath [{GetConfigDirectory()}]");
+            l.Info(() => $"Config: {GetConfigDirectory()}");
+            string dataDir = GetUserDataDirectory();
+            if (!string.Equals(dataDir, GetConfigDirectory(), StringComparison.OrdinalIgnoreCase))
+                l.Info(() => $"Data:   {dataDir}");
 
             if (this.SystemType != SystemType.NotSet)
                 l.Info(() => $"System filter [{this.SystemType}]");

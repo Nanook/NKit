@@ -16,7 +16,8 @@ namespace Nanook.NKit.Configuration.Services
         // Environment variable encoded data
         private static readonly byte[] HomeBytes = { 0x0A, 0x0D, 0x0F, 0x07 }; // "HOME"
         private static readonly byte[] XdgConfigHomeBytes = { 0x1A, 0x06, 0x05, 0x1D, 0x01, 0x0D, 0x0C, 0x04, 0x0B, 0x05, 0x1D, 0x0A, 0x0D, 0x0F, 0x07 }; // "XDG_CONFIG_HOME"
-        private static readonly byte[] XdgDataDirsBytes = { 0x1A, 0x06, 0x05, 0x1D, 0x06, 0x03, 0x16, 0x03, 0x1D, 0x06, 0x0B, 0x10, 0x11 }; // "XDG_DATA_DIRS"
+        private static readonly byte[] XdgStateHomeBytes  = { 0x1A, 0x06, 0x05, 0x1D, 0x11, 0x16, 0x03, 0x16, 0x07, 0x1D, 0x0A, 0x0D, 0x0F, 0x07 };          // "XDG_STATE_HOME"
+        private static readonly byte[] XdgDataDirsBytes   = { 0x1A, 0x06, 0x05, 0x1D, 0x06, 0x03, 0x16, 0x03, 0x1D, 0x06, 0x0B, 0x10, 0x11 };               // "XDG_DATA_DIRS"
         private static readonly byte[] HomeDriveBytes = { 0x0A, 0x0D, 0x0F, 0x07, 0x06, 0x10, 0x0B, 0x14, 0x07 }; // "HOMEDRIVE"
         private static readonly byte[] HomePathBytes = { 0x0A, 0x0D, 0x0F, 0x07, 0x12, 0x03, 0x16, 0x0A }; // "HOMEPATH"
         private static readonly byte[] UserProfileBytes = { 0x17, 0x11, 0x07, 0x10, 0x12, 0x10, 0x0D, 0x04, 0x0B, 0x0E, 0x07 }; // "USERPROFILE"
@@ -25,6 +26,8 @@ namespace Nanook.NKit.Configuration.Services
         private static readonly byte[] LibraryBytes = { 0x0E, 0x2B, 0x20, 0x30, 0x23, 0x30, 0x3B }; // "Library"
         private static readonly byte[] ApplicationSupportBytes = { 0x03, 0x32, 0x32, 0x2E, 0x2B, 0x21, 0x23, 0x36, 0x2B, 0x2D, 0x2C, 0x62, 0x11, 0x37, 0x32, 0x32, 0x2D, 0x30, 0x36 }; // "Application Support"
         private static readonly byte[] ConfigBytes = { 0x6C, 0x21, 0x2D, 0x2C, 0x24, 0x2B, 0x25 }; // ".config"
+        private static readonly byte[] LocalBytes  = { 0x6C, 0x2E, 0x2D, 0x21, 0x23, 0x2E };       // ".local"
+        private static readonly byte[] StateBytes  = { 0x31, 0x36, 0x23, 0x36, 0x27 };              // "state"
         private static readonly byte[] ApplicationDirectoryNameBytes = { 0x2C, 0x29, 0x2B, 0x36 }; // "nkit"
         private static readonly byte[] AppExtensionBytes = { 0x6C, 0x23, 0x32, 0x32 }; // ".app"
         private static readonly byte[] ContentsBytes = { 0x01, 0x2D, 0x2C, 0x36, 0x27, 0x2C, 0x36, 0x31 }; // "Contents"
@@ -45,6 +48,7 @@ namespace Nanook.NKit.Configuration.Services
             {
                 [EnvironmentVariableType.Home] = DecodeBytes(HomeBytes),
                 [EnvironmentVariableType.XdgConfigHome] = DecodeBytes(XdgConfigHomeBytes),
+                [EnvironmentVariableType.XdgStateHome] = DecodeBytes(XdgStateHomeBytes),
                 [EnvironmentVariableType.XdgDataDirs] = DecodeBytes(XdgDataDirsBytes),
                 [EnvironmentVariableType.HomeDrive] = DecodeBytes(HomeDriveBytes),
                 [EnvironmentVariableType.HomePath] = DecodeBytes(HomePathBytes),
@@ -57,6 +61,8 @@ namespace Nanook.NKit.Configuration.Services
                 [PathComponentType.Library] = DecodeBytes(LibraryBytes),
                 [PathComponentType.ApplicationSupport] = DecodeBytes(ApplicationSupportBytes),
                 [PathComponentType.Config] = DecodeBytes(ConfigBytes),
+                [PathComponentType.Local] = DecodeBytes(LocalBytes),
+                [PathComponentType.State] = DecodeBytes(StateBytes),
                 [PathComponentType.ApplicationDirectoryName] = DecodeBytes(ApplicationDirectoryNameBytes),
                 [PathComponentType.AppExtension] = DecodeBytes(AppExtensionBytes),
                 [PathComponentType.Contents] = DecodeBytes(ContentsBytes),

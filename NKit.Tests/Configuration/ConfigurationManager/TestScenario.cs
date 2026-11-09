@@ -145,7 +145,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
                 PlatformModeDetectionTests.Platform.Windows =>
                     "C:\\Users\\TestUser",  // Home directory
                 PlatformModeDetectionTests.Platform.Linux =>
-                    "/home/testuser",  // Home directory; ConfigurationSetup appends nkit/ → ~/nkit
+                    "/home/testuser/.local/state",  // XDG_STATE_HOME default; ConfigurationSetup appends nkit/ → ~/.local/state/nkit
                 PlatformModeDetectionTests.Platform.macOS =>
                     "/Users/testuser/Documents",  // Documents folder (macOS convention)
                 _ => throw new ArgumentException($"Unknown platform: {platform}")
