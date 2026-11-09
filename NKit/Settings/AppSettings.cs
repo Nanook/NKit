@@ -411,6 +411,29 @@ namespace Nanook.NKit
             return configManager.Context.UserDataDirectory;
         }
 
+        /// <summary>
+        /// Gets the base directory where user data (scans, logs, results, dedupe) is stored.
+        /// Portable mode: same as the config directory (exe directory).
+        /// System mode: UserDataDirectory/nkit — e.g. ~/nkit on Linux/Windows, ~/Documents/nkit on macOS.
+        /// </summary>
+        public static string GetUserDataDirectory()
+        {
+            using ConfigurationManager configManager = new ConfigurationManager();
+            ConfigurationContext ctx = configManager.Context;
+            if (ctx.IsPortableMode)
+                return ctx.UserDataDirectory;
+            return Path.Combine(ctx.UserDataDirectory, ConfigSettingsConstants.ApplicationDirectoryName);
+        }
+
+        /// <summary>
+        /// Returns true when running in portable mode (config next to the exe).
+        /// </summary>
+        public static bool IsPortableMode()
+        {
+            using ConfigurationManager configManager = new ConfigurationManager();
+            return configManager.Context.IsPortableMode;
+        }
+
         private void parseCommandLine(string[] commandLineArgs)
         {
             Dictionary<string, string> cmdLine = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);

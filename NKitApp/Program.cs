@@ -90,6 +90,16 @@ namespace Nanook.NKit.App
                 Console.WriteLine();
             }
 
+            // Always print config/data paths so users know where their files live.
+            {
+                string configDir = AppSettings.GetConfigDirectory();
+                string dataDir   = AppSettings.GetUserDataDirectory();
+                Console.WriteLine($"Config: {configDir}");
+                if (!string.Equals(configDir, dataDir, StringComparison.OrdinalIgnoreCase))
+                    Console.WriteLine($"Data:   {dataDir}");
+                Console.WriteLine();
+            }
+
             // New verb-based CLI front-end: parse argv, handle help/version, launch interactive when
             // there is no task and the terminal allows it, else translate to AppSettings overrides.
             // NOTE: the graceful Ctrl+C handler is registered AFTER this call — during the interactive
