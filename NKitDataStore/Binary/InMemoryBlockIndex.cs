@@ -166,6 +166,15 @@ namespace NKitDataStore.Binary
         public byte[] Serialize(int sectionSize = 65536) => BlockIndexSerializer.Serialize(this.GetEntries(), sectionSize);
 
         /// <summary>
+        /// Deserializes a Block_Index from a <see cref="LargeByteArray"/> (> 2 GiB capable).
+        /// </summary>
+        public static InMemoryBlockIndex Deserialize(LargeByteArray data)
+        {
+            BlockIndexEntry[] entries = Serialization.BlockIndexSerializer.Deserialize(data);
+            return new InMemoryBlockIndex(entries);
+        }
+
+        /// <summary>
         /// Deserializes a Block_Index from its binary representation.
         /// </summary>
         public static InMemoryBlockIndex Deserialize(ReadOnlySpan<byte> data)

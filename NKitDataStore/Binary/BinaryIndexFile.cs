@@ -396,30 +396,48 @@ namespace NKitDataStore.Binary
             if (_blockIndex != null)
                 return _blockIndex;
 
-            // Read the main Block_Index
-            byte[] mainData = new byte[_primaryHeader.BlockIndexSize];
+            InMemoryBlockIndex index;
+
+            // Block_Index sections larger than Int32.MaxValue cannot fit in a single byte[]
+            // (CLR array length is int-bounded at 2 GiB). Use LargeByteArray which backs
+            // the same logical buffer with 1 GiB chunks, allowing parallel decompression
+            // of individual sections just as the standard path does.
+            if (_primaryHeader.BlockIndexSize > int.MaxValue)
+            {
+                LargeByteArray largeData = new LargeByteArray(
+                    _primaryHeader.BlockIndexSize,
+                    _stream,
+                    _readLock,
+                    _baseOffset + _primaryHeader.BlockIndexOffset);
+                index = InMemoryBlockIndex.Deserialize(largeData);
+            }
+            else
+            {
+                // Read the main Block_Index
+                byte[] mainData = new byte[_primaryHeader.BlockIndexSize];
 
 #if NET6_0_OR_GREATER
-            // Position-independent read — thread-safe without locking
-            {
-                int totalRead = 0;
-                while (totalRead < mainData.Length)
+                // Position-independent read — thread-safe without locking
                 {
-                    int read = RandomAccess.Read(_stream.SafeFileHandle, mainData.AsSpan(totalRead), _baseOffset + _primaryHeader.BlockIndexOffset + totalRead);
-                    if (read == 0) throw new EndOfStreamException($"Unexpected end of stream reading block index. Expected {mainData.Length} bytes but only read {totalRead}.");
-                    totalRead += read;
+                    int totalRead = 0;
+                    while (totalRead < mainData.Length)
+                    {
+                        int read = RandomAccess.Read(_stream.SafeFileHandle, mainData.AsSpan(totalRead), _baseOffset + _primaryHeader.BlockIndexOffset + totalRead);
+                        if (read == 0) throw new EndOfStreamException($"Unexpected end of stream reading block index. Expected {mainData.Length} bytes but only read {totalRead}.");
+                        totalRead += read;
+                    }
                 }
-            }
 #else
-            lock (_readLock)
-            {
-                _stream.Position = _baseOffset + _primaryHeader.BlockIndexOffset;
-                ReadExactly(_stream, mainData, 0, (int)_primaryHeader.BlockIndexSize);
-            }
+                lock (_readLock)
+                {
+                    _stream.Position = _baseOffset + _primaryHeader.BlockIndexOffset;
+                    ReadExactly(_stream, mainData, 0, (int)_primaryHeader.BlockIndexSize);
+                }
 #endif
 
-            // Deserialize the main index into a flat sorted array (28 bytes/entry, no dict overhead)
-            InMemoryBlockIndex index = InMemoryBlockIndex.Deserialize(mainData);
+                // Deserialize the main index into a flat sorted array (28 bytes/entry, no dict overhead)
+                index = InMemoryBlockIndex.Deserialize(mainData);
+            }
 
             // If there are deltas, collect all entry arrays then batch-merge in one pass.
             // Batch merging produces a new sorted array (two-pointer merge with newest-wins
@@ -956,6 +974,8 @@ namespace NKitDataStore.Binary
             }
         }
 
+        /// <summary>
+        /// Builds a block index by reading the BlockLocations from each live image's
         /// <summary>
         /// Builds a block index by reading the BlockLocations from each live image's
         /// Image_BlockMap_Section. Memory-efficient alternative to LoadBlockIndex() when

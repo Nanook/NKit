@@ -332,5 +332,65 @@ namespace NKitDataStore.Binary.Serialization
                 entries.Add(entry);
             }
         }
+
+        // ── LargeByteArray overload ─────────────────────────────────────────────
+
+        /// <summary>
+        /// Deserializes a Block_Index from a <see cref="LargeByteArray"/> (chunked buffer that
+        /// can exceed 2 GiB). Semantically identical to <see cref="Deserialize(ReadOnlySpan{byte})"/>
+        /// but uses a <c>long</c> offset throughout so no single allocation exceeds one chunk.
+        /// </summary>
+        internal static BlockIndexEntry[] Deserialize(LargeByteArray data)
+        {
+            if (data.Length < 6)
+                throw new InvalidDataException("Block_Index data is too short to contain header.");
+
+            ushort version = BinaryPrimitives.ReadUInt16BigEndian(data.Slice(0, 2));
+            if (version > CurrentStructureVersion)
+                throw new NotSupportedException(
+                    $"Block_Index structure version {version} is not supported. Maximum supported version is {CurrentStructureVersion}.");
+
+            uint sectionCount = BinaryPrimitives.ReadUInt32BigEndian(data.Slice(2, 4));
+            if (sectionCount == 0)
+                return Array.Empty<BlockIndexEntry>();
+
+            List<BlockIndexEntry> allEntries = new List<BlockIndexEntry>(
+                (int)Math.Min((long)sectionCount * (65536 / EntrySize), int.MaxValue));
+            long offset = 6;
+
+            for (uint s = 0; s < sectionCount; s++)
+            {
+                if (offset + 8 > data.Length)
+                    throw new InvalidDataException(
+                        $"Block_Index section {s}: insufficient data for section header at offset {offset}.");
+
+                uint compressedSize   = BinaryPrimitives.ReadUInt32BigEndian(data.Slice(offset,     4));
+                uint uncompressedSize = BinaryPrimitives.ReadUInt32BigEndian(data.Slice(offset + 4, 4));
+                offset += 8;
+
+                if (offset + compressedSize > data.Length)
+                    throw new InvalidDataException(
+                        $"Block_Index section {s}: compressed data extends beyond buffer.");
+
+                byte[] compressedData = data.Slice(offset, (int)compressedSize).ToArray();
+                byte[] decompressed   = new byte[uncompressedSize];
+                int decompressedSize  = (int)uncompressedSize;
+
+                using (CompressionBlock decompressor = CompressionBlockFactory.Create(
+                    CompressionAlgorithm.ZStd,
+                    new CompressionOptions { BlockSize = (int)uncompressedSize }))
+                {
+                    decompressor.Decompress(compressedData, 0, (int)compressedSize,
+                        decompressed, 0, ref decompressedSize);
+                }
+
+                DeserializeEntries(decompressed.AsSpan(0, decompressedSize), allEntries);
+                offset += compressedSize;
+            }
+
+            BlockIndexEntry[] result = allEntries.ToArray();
+            Array.Sort(result);
+            return result;
+        }
     }
 }

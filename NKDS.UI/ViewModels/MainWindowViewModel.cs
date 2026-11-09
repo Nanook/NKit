@@ -618,6 +618,12 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
         // can affect sort order and may include deletions of duplicate rows not visible in the
         // current filter. PropertyChanged is raised during rename for immediate feedback; this
         // reconcile is the post-close cleanup that re-sorts and catches any remaining deltas.
+        //
+        // Skip reconcile when an operation is active: add/export etc. manage their own live
+        // updates via InsertImageAsync and deliberately avoid ReconcileAsync to prevent it
+        // from pruning in-progress rows that are not yet visible in the DataStore query.
+        if (_sharedState.IsOperationActive)
+            return;
         IEnumerable<string> setNames = this.ImageList.GetAllImages()
             .Select(r => r.SetName)
             .Where(s => !string.IsNullOrEmpty(s))
