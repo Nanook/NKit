@@ -486,9 +486,11 @@ namespace Nanook.NKit.Steps.Shared
 
                 // Handle Fill gaps — non-zero fill bytes cannot be reconstructed from scratch
                 // (OnGapFill always writes zeros), so store them verbatim as DataType.Other.
-                // Zero-fill gaps (FillByte=0x00) can be left to the default zero gap fill.
+                // Zero-fill gaps (FillByte=0x00) must also be stored because some systems
+                // (GC, Wii) override OnGapFill to generate junk rather than zeros — a zero-padded
+                // gap region would be reconstructed as junk without the stored data.
                 IEnumerable<ISectionData> gaps = item.Gap?.DataType == DataType.Fill ? new[] { item.Gap } : item.GapInfo?.Where(a => a.DataType == DataType.Fill) ?? Enumerable.Empty<ISectionData>();
-                foreach (ISectionData gap in gaps.Where(g => g.FillByte != 0))
+                foreach (ISectionData gap in gaps)
                     ranges.Add(new GapRange(section.ImageOffset + gap.Offset, gap.FsOffset, (int)gap.FsSize, DataType.Other, gap.FillByte));
             }
 
