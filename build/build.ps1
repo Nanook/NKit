@@ -49,7 +49,42 @@ Write-Host "Apps: $Apps"
 if ($Version) { Write-Host "Version: $Version" }
 Write-Host ""
 
-# --- Restore ---
+# --- Download GrindCore native libraries (mirrors the CI inject_grindcore step) ---
+# The .grindcore-native directory is gitignored; CI downloads it from the latest
+# GrindCore GitHub release. Do the same here so local builds always have the
+# correct static lib for the resolved GrindCore NuGet version.
+$GrindCoreNativeMarker = "$GrindCoreNativeDir/$Runtime/native"
+$NeedsDownload = $false
+if (-not (Test-Path "$GrindCoreNativeMarker/GrindCore.lib") -and -not (Test-Path "$GrindCoreNativeMarker/libGrindCore.a")) {
+    $NeedsDownload = $true
+    Write-Host "GrindCore native libs not found — downloading from latest GitHub release..." -ForegroundColor Yellow
+} else {
+    Write-Host "GrindCore native libs present at $GrindCoreNativeMarker."
+}
+
+if ($NeedsDownload) {
+    try {
+        $releaseApi = "https://api.github.com/repos/Nanook/GrindCore/releases/latest"
+        $headers = @{ "User-Agent" = "NKit-Build" }
+        $release = Invoke-RestMethod -Uri $releaseApi -Headers $headers -ErrorAction Stop
+        $asset = $release.assets | Where-Object { $_.name -like "*grindcore*.zip" } | Select-Object -First 1
+        if (-not $asset) {
+            throw "No grindcore.zip found in the latest GrindCore release."
+        }
+        $downloadUrl = $asset.browser_download_url
+        Write-Host "Resolved: $downloadUrl"
+        $zipPath = Join-Path $env:TEMP "grindcore-native.zip"
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -ErrorAction Stop
+        Write-Host "Downloaded. Extracting to $GrindCoreNativeDir/..."
+        Expand-Archive -Path $zipPath -DestinationPath $GrindCoreNativeDir -Force
+        Remove-Item $zipPath -ErrorAction SilentlyContinue
+        Write-Host "GrindCore native libs ready." -ForegroundColor Green
+    } catch {
+        Write-Host "WARNING: Could not download GrindCore native libs: $_" -ForegroundColor Yellow
+        Write-Host "Continuing — will fall back to dynamic linking if static lib is absent." -ForegroundColor Yellow
+    }
+}
+Write-Host ""
 Write-Host "--- Restoring dependencies ---" -ForegroundColor Yellow
 if ($BuildConsole) { dotnet restore $ConsoleProject --runtime $Runtime }
 if ($BuildGui)     { dotnet restore $GuiProject --runtime $Runtime }
@@ -156,6 +191,9 @@ if ($BuildGui -and (Test-Path "publish/gui/$Runtime")) {
     if (Test-Path "NKit/defaults")         { Copy-Item "NKit/defaults" "publish/gui/$Runtime/" -Recurse -Force }
     if (Test-Path "NKit.Ui/ConfigInfo.txt") { Copy-Item "NKit.Ui/ConfigInfo.txt" "publish/gui/$Runtime/" }
 }
+if ($BuildNkdsUi -and (Test-Path "publish/nkds-ui/$Runtime")) {
+    # fix files are copied by the CSPROJ CopyNKitDefaults target during publish
+}
 
 # --- Archive ---
 if (-not $NoArchive) {
@@ -220,9 +258,12 @@ if (-not $NoArchive) {
         $uiZip = Join-Path $OutDir "NKit_${Runtime}_UI_${ArchiveLabel}.zip"
         $guiDir = "publish/gui/$Runtime"
 
-        # Include nkds-ui in gui archive
+        # Include nkds-ui exe and its yaml (portable mode trigger) in gui archive
         if ($BuildNkdsUi -and (Test-Path "publish/nkds-ui/$Runtime/nkds-ui.exe")) {
             Copy-Item "publish/nkds-ui/$Runtime/nkds-ui.exe" "$guiDir/"
+            if (Test-Path "publish/nkds-ui/$Runtime/nkds-ui.yaml") {
+                Copy-Item "publish/nkds-ui/$Runtime/nkds-ui.yaml" "$guiDir/"
+            }
         }
 
         New-PasswordZip -SourceDir $guiDir -ZipPath $uiZip -Password "nkit"
