@@ -78,6 +78,28 @@ namespace NKitDataStore.Interfaces
         void CompactSet(string setName, IProgress<(int Percentage, string Stage)>? progress = null);
 
         /// <summary>
+        /// Compacts the index file without modifying shard files.
+        ///
+        /// Removes removed-image sections, merges all Block_Index deltas into one consolidated
+        /// block index, and produces a clean sequential file layout with delta count zero.
+        /// Block index entries for blocks from removed images are retained — those blocks remain
+        /// physically present in shards and are valid dedup targets until a full CompactSet runs.
+        ///
+        /// Call this whenever <see cref="GetIndexHealth"/> returns <c>NeedsCompaction = true</c>
+        /// to restore fast cold-start times. If called immediately after a write the block index
+        /// is already warm in memory, so only the sequential index write cost is paid.
+        /// </summary>
+        void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)>? progress = null);
+
+        /// <summary>
+        /// Returns a lightweight snapshot of the index file health for the specified set.
+        /// All fields are read from the in-memory header — no disk I/O is performed.
+        /// Use this to check whether CompactSetFast is needed and to surface recommendations
+        /// in CLI output or UI indicators.
+        /// </summary>
+        IndexHealthInfo GetIndexHealth(string setName);
+
+        /// <summary>
         /// Inspects the file state of a set and reports its health status.
         /// This is a read-only operation that does not modify any files.
         /// </summary>

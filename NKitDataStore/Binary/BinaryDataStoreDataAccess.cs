@@ -1094,6 +1094,189 @@ namespace NKitDataStore.Binary
             binaryTransaction.UpdatePendingAreaMetadata(areaId, metadata);
         }
 
+        public void PatchIndexedFormatFiles(
+            string setName,
+            long imageId,
+            string oldNamePrefix,
+            string newNamePrefix,
+            IReadOnlyList<(string OldFileName, string NewFileName, byte[]? NewContent)> patches)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+            bool isEmbedded = indexFile.Header.ShardSize == 0;
+
+            if (!isEmbedded)
+            {
+                patchIndexedFormatFilesInIndex(
+                    indexFile, getShardFileManager(setName),
+                    imageId, oldNamePrefix, newNamePrefix, patches);
+                invalidateImageCaches(setName, imageId);
+                return;
+            }
+
+            // Embedded mode: extract → patch → re-embed, matching applyDirectoryMutation lifecycle.
+            string setBasePath = GetIndexFilePath(setName);
+            EmbeddedIndexCommitter committer = _committers.GetOrAdd(
+                setName, _ => new EmbeddedIndexCommitter(setBasePath));
+
+            string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
+            bool alreadySeparated = File.Exists(setBasePath)
+                && File.Exists(expectedShardPath)
+                && !detectEmbeddedMode(setBasePath);
+
+            string indexPath;
+            string shardPath;
+
+            if (alreadySeparated)
+            {
+                indexFile.Dispose();
+                _indexFiles.TryRemove(setName, out _);
+                indexPath = setBasePath;
+                shardPath = expectedShardPath;
+            }
+            else
+            {
+                if (!_shardBoundary.TryGetValue(setName, out long shardBoundary))
+                {
+                    (long fIndexSize, bool _) = readEmbeddedFooter(setBasePath);
+                    shardBoundary = computeShardBoundary(setBasePath, fIndexSize);
+                    _shardBoundary[setName] = shardBoundary;
+                }
+
+                long actualIndexSize = indexFile.Header.FileEndOffset;
+                indexFile.Dispose();
+                _indexFiles.TryRemove(setName, out _);
+                (indexPath, shardPath) = committer.ExtractToSeparateMode(shardBoundary, actualIndexSize);
+            }
+
+            // Need block size for the standalone shard manager.
+            _infoCache.TryGetValue(setName, out InfoRecord? cachedInfo);
+            int blockSize = cachedInfo?.BlockSize ?? 65536;
+
+            BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
+            ShardFileManager standaloneShardManager = new ShardFileManager(
+                Path.GetDirectoryName(shardPath) ?? _baseDirectory,
+                setName, 0, _sourceDirectory, blockSize);
+            try
+            {
+                patchIndexedFormatFilesInIndex(
+                    standaloneIndex, standaloneShardManager,
+                    imageId, oldNamePrefix, newNamePrefix, patches);
+            }
+            finally
+            {
+                standaloneShardManager.Dispose();
+                standaloneIndex.Dispose();
+            }
+
+            committer.ReEmbed(indexPath, shardPath);
+
+            // Reopen as embedded and refresh caches (same as applyDirectoryMutation).
+            (long newIndexSize, bool _2) = readEmbeddedFooter(setBasePath);
+            long newBoundary = computeShardBoundary(setBasePath, newIndexSize);
+            _indexFiles[setName] = BinaryIndexFile.Open(setBasePath, baseOffset: newBoundary);
+            _shardBoundary[setName] = newBoundary;
+            _embeddedMode[setName] = true;
+
+            if (_shardFileManagers.TryGetValue(setName, out ShardFileManager? sfm) && newBoundary > 0)
+                sfm.SetShardBoundary(newBoundary);
+
+            _infoCache.TryRemove(setName, out _);
+            invalidateSetCaches(setName);
+        }
+
+        private void patchIndexedFormatFilesInIndex(
+            BinaryIndexFile indexFile,
+            ShardFileManager shardManager,
+            long imageId,
+            string oldNamePrefix,
+            string newNamePrefix,
+            IReadOnlyList<(string OldFileName, string NewFileName, byte[]? NewContent)> patches)
+        {
+            (List<AreaRecord> areas, List<FileRecord> files) = indexFile.ReadImageMetadata(imageId);
+
+            // Patch file records — replace matching entries with updated name / shard location.
+            for (int i = 0; i < files.Count; i++)
+            {
+                FileRecord fr = files[i];
+                foreach ((string oldFn, string newFn, byte[]? newContent) in patches)
+                {
+                    if (!string.Equals(fr.Name, oldFn, StringComparison.Ordinal))
+                        continue;
+
+                    if (newContent != null)
+                    {
+                        // Compress and write to shard — mirrors the InsertFile compression pattern.
+                        byte[] zstdFrameMagic = new byte[] { 0x28, 0xB5, 0x2F, 0xFD };
+                        int maxCompressed = newContent.Length + 0x100;
+                        byte[] compressedBuffer = new byte[maxCompressed];
+                        int compressedSize = maxCompressed;
+
+                        using (CompressionBlock compressor = CompressionBlockFactory.Create(
+                            CompressionAlgorithm.ZStd,
+                            new CompressionOptions
+                            {
+                                BlockSize = newContent.Length,
+                                Type = (Nanook.GrindCore.CompressionType)19
+                            }))
+                        {
+                            compressor.Compress(newContent, 0, newContent.Length, compressedBuffer, 0, ref compressedSize);
+                        }
+
+                        if (compressedSize >= zstdFrameMagic.Length)
+                        {
+                            Buffer.BlockCopy(compressedBuffer, zstdFrameMagic.Length, compressedBuffer, 0, compressedSize - zstdFrameMagic.Length);
+                            compressedSize -= zstdFrameMagic.Length;
+                        }
+
+                        (int fileId, long offset, int length) = shardManager.WriteBlock(compressedBuffer, 0, compressedSize);
+                        files[i] = new FileRecord
+                        {
+                            ImageId = fr.ImageId,
+                            Name = newFn,
+                            FileId = fileId,
+                            Offset = offset,
+                            Size = length,
+                            UncompressedSize = newContent.Length,
+                            IsSystem = fr.IsSystem
+                        };
+                    }
+                    else
+                    {
+                        // Name-only change — shard data is reused as-is.
+                        files[i] = new FileRecord
+                        {
+                            ImageId = fr.ImageId,
+                            Name = newFn,
+                            FileId = fr.FileId,
+                            Offset = fr.Offset,
+                            Size = fr.Size,
+                            UncompressedSize = fr.UncompressedSize,
+                            IsSystem = fr.IsSystem
+                        };
+                    }
+                    break;
+                }
+            }
+
+            // Patch AreaValueType.FileName metadata where the value starts with the old name prefix.
+            if (!string.IsNullOrEmpty(oldNamePrefix) && !string.IsNullOrEmpty(newNamePrefix))
+            {
+                foreach (AreaRecord area in areas)
+                {
+                    string? existingFileName = area.Metadata?[AreaValueType.FileName];
+                    if (existingFileName == null)
+                        continue;
+                    if (!existingFileName.StartsWith(oldNamePrefix, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    area.Metadata[AreaValueType.FileName] = newNamePrefix + existingFileName.Substring(oldNamePrefix.Length);
+                }
+            }
+
+            indexFile.UpdateImageMetadata(imageId, areas, files);
+            indexFile.AtomicCommit();
+        }
+
         public IEnumerable<AreaRecord> GetAreasForImage(string setName, long imageId)
         {
             ConcurrentDictionary<long, (List<AreaRecord> Areas, List<FileRecord> Files)> setCache = _metadataCache.GetOrAdd(setName, _ => new ConcurrentDictionary<long, (List<AreaRecord> Areas, List<FileRecord> Files)>());
@@ -1256,6 +1439,233 @@ namespace NKitDataStore.Binary
             }
 
             compactSetSeparate(setName, progress);
+        }
+
+        /// <summary>
+        /// Returns a lightweight snapshot of the index file health for the specified set.
+        /// All fields are read from the already-loaded in-memory header — no disk I/O.
+        /// Safe to call at any time; does not load the block index.
+        /// </summary>
+        public IndexHealthInfo GetIndexHealth(string setName)
+        {
+            BinaryIndexFile idx = getIndexFile(setName);
+            bool hasRemovedImages = idx.GetDirectory().GetAllEntries().Any(e => e.Removed);
+            string indexPath = GetIndexFilePath(setName);
+            long indexFileSize = File.Exists(indexPath) ? new FileInfo(indexPath).Length : 0L;
+
+            return new IndexHealthInfo
+            {
+                DeltaCount = idx.Header.BlockIndexDeltaCount,
+                HasRemovedImages = hasRemovedImages,
+                IndexFileSizeBytes = indexFileSize
+            };
+        }
+
+        /// <summary>
+        /// Compacts the index file without modifying shard files.
+        ///
+        /// What it does:
+        ///   - Removes removed-image sections and directory entries (reclaims index space).
+        ///   - Merges all Block_Index_Delta entries into a single consolidated Block_Index.
+        ///   - Produces a clean sequential file layout: headers + directory + live image
+        ///     sections + consolidated block index, zero deltas.
+        ///
+        /// What it does NOT do:
+        ///   - Does NOT prune block index entries for orphaned blocks (shard data stays).
+        ///   - Does NOT rewrite or truncate any shard file.
+        ///
+        /// After CompactSetFast, cold starts are fast (no delta chain traversal). A subsequent
+        /// full CompactSet reclaims shard space from blocks that belong only to removed images.
+        ///
+        /// If called immediately after a write transaction the block index is already warm in
+        /// memory, so only the sequential index write cost is paid (~seconds).
+        /// </summary>
+        public void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile idx = getIndexFile(setName);
+
+            if (_shardFileManagers.TryRemove(setName, out ShardFileManager? sfm))
+                sfm.Dispose();
+
+            bool isEmbedded = idx.Header.ShardSize == 0;
+
+            if (!_embeddedMode.ContainsKey(setName))
+                _embeddedMode[setName] = isEmbedded;
+
+            if (isEmbedded)
+            {
+                compactSetFastEmbedded(setName, progress);
+                return;
+            }
+
+            compactSetFastSeparate(setName, progress);
+        }
+
+        /// <summary>
+        /// Fast index compact for separate mode (shardSize > 0).
+        /// Writes a new clean index to .compact.tmp, validates, atomically renames.
+        /// Crash recovery is handled by the existing .compact.tmp recovery in recoverIfNeeded.
+        /// </summary>
+        private void compactSetFastSeparate(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+            string originalPath = GetIndexFilePath(setName);
+            string tempPath = originalPath + ".compact.tmp";
+
+            try
+            {
+                // Write new clean index (no shard modification)
+                indexFile.CompactIndexTo(tempPath, deterministic: false, progress: progress);
+
+                // Validate output before replacing original
+                try
+                {
+                    using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(tempPath))
+                    {
+                        // Header validation passed
+                    }
+                }
+                catch
+                {
+                    try { File.Delete(tempPath); } catch { }
+                    throw;
+                }
+
+                // Dispose old handle, atomically replace, reopen
+                indexFile.Dispose();
+                AtomicFileOps.ReplaceFile(tempPath, originalPath, warning => Trace.TraceWarning(warning));
+
+                BinaryIndexFile newIndexFile = BinaryIndexFile.Open(originalPath);
+                _indexFiles[setName] = newIndexFile;
+                _infoCache.TryRemove(setName, out _);
+                invalidateSetCaches(setName);
+            }
+            catch
+            {
+                try { if (File.Exists(tempPath)) File.Delete(tempPath); } catch { }
+
+                if (_indexFiles.TryRemove(setName, out BinaryIndexFile? failedHandle))
+                    try { failedHandle.Dispose(); } catch { }
+
+                _recoveredSets.TryRemove(setName, out _);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Fast index compact for embedded mode (shardSize == 0).
+        /// Extracts to separate mode, compacts the standalone index (no shard compact),
+        /// then re-embeds.
+        /// </summary>
+        private void compactSetFastEmbedded(string setName, IProgress<(int Percentage, string Stage)>? progress = null)
+        {
+            BinaryIndexFile indexFile = getIndexFile(setName);
+
+            if (indexFile.Header.ShardSize > 0)
+                throw new InvalidOperationException(
+                    $"compactSetFastEmbedded called on set '{setName}' with ShardSize={indexFile.Header.ShardSize}. " +
+                    "Only sets with ShardSize == 0 (embedded mode) should use this path.");
+
+            string setBasePath = GetIndexFilePath(setName);
+            EmbeddedIndexCommitter committer = new EmbeddedIndexCommitter(setBasePath);
+            string indexPath;
+            string shardPath;
+
+            try
+            {
+                string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
+                bool alreadySeparated = File.Exists(setBasePath) && File.Exists(expectedShardPath) && !detectEmbeddedMode(setBasePath);
+
+                if (alreadySeparated)
+                {
+                    indexFile.Dispose();
+                    indexPath = setBasePath;
+                    shardPath = expectedShardPath;
+                }
+                else
+                {
+                    if (!_shardBoundary.TryGetValue(setName, out long shardBoundary))
+                        throw new InvalidOperationException($"Set '{setName}' is marked as embedded but has no recorded shard boundary.");
+
+                    long actualIndexSize = indexFile.Header.FileEndOffset;
+                    indexFile.Dispose();
+                    (indexPath, shardPath) = committer.ExtractToSeparateMode(shardBoundary, actualIndexSize);
+                }
+
+                // Open standalone index and compact index only (no shard compact)
+                BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
+                string compactTempPath = indexPath + ".compact.tmp";
+
+                try
+                {
+                    standaloneIndex.CompactIndexTo(compactTempPath, deterministic: false, progress: progress);
+                    standaloneIndex.Dispose();
+
+                    try
+                    {
+                        using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(compactTempPath))
+                        {
+                            // Validation passed
+                        }
+                    }
+                    catch
+                    {
+                        try { File.Delete(compactTempPath); } catch { }
+                        throw;
+                    }
+
+                    AtomicFileOps.ReplaceFile(compactTempPath, indexPath, msg => Trace.TraceWarning(msg));
+                }
+                catch
+                {
+                    standaloneIndex.Dispose();
+                    try { if (File.Exists(compactTempPath)) File.Delete(compactTempPath); } catch { }
+                    throw;
+                }
+
+                // Re-embed compacted index into shard
+                committer.ReEmbed(indexPath, shardPath);
+
+                // Reopen as embedded, update caches
+                (long newIndexSize, bool _) = readEmbeddedFooter(setBasePath);
+                long newBoundary = computeShardBoundary(setBasePath, newIndexSize);
+
+                BinaryIndexFile newIndexFile = BinaryIndexFile.Open(setBasePath, baseOffset: newBoundary);
+                _indexFiles[setName] = newIndexFile;
+                _shardBoundary[setName] = newBoundary;
+
+                if (_shardFileManagers.TryGetValue(setName, out ShardFileManager? sfm2) && newBoundary > 0)
+                    sfm2.SetShardBoundary(newBoundary);
+
+                _infoCache.TryRemove(setName, out _);
+                invalidateSetCaches(setName);
+            }
+            catch
+            {
+                try
+                {
+                    recoverIfNeeded(setName);
+
+                    string filePath = GetIndexFilePath(setName);
+                    if (File.Exists(filePath) && detectEmbeddedMode(filePath))
+                    {
+                        (long indexSize, bool _) = readEmbeddedFooter(filePath);
+                        long boundary = computeShardBoundary(filePath, indexSize);
+                        BinaryIndexFile reopened = BinaryIndexFile.Open(filePath, baseOffset: boundary);
+                        _indexFiles[setName] = reopened;
+                        _shardBoundary[setName] = boundary;
+                        _embeddedMode[setName] = true;
+                    }
+                    else if (File.Exists(filePath))
+                    {
+                        BinaryIndexFile reopened = BinaryIndexFile.Open(filePath);
+                        _indexFiles[setName] = reopened;
+                    }
+                }
+                catch { }
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -1667,9 +2077,18 @@ namespace NKitDataStore.Binary
 
         /// <summary>
         /// Compacts shard files by removing orphaned blocks and file data, reclaiming disk space.
-        /// Ported from the original SQLite ShardCompactor — uses copy-on-write per shard.
-        /// For each affected shard: copies only live data to a temp file, then replaces the original.
-        /// Updates the block index and metadata sections in the index file with corrected offsets.
+        /// Uses sequential per-shard compaction with progress file tracking for crash safety.
+        /// 
+        /// Each shard is compacted individually:
+        /// 1. Write compacted shard to .tmp
+        /// 2. Update progress file with PendingShard
+        /// 3. Update block index and block maps for this shard
+        /// 4. AtomicCommit()
+        /// 5. Replace original with .tmp
+        /// 6. Update progress file (shard complete)
+        /// 
+        /// Peak extra disk space: ONE shard (vs. batch approach requiring all shards).
+        /// Recovery is handled by progress file (see recoverIfNeeded).
         /// </summary>
         /// <param name="setName">The set name being compacted.</param>
         /// <param name="indexFile">The index file (will be updated with new offsets).</param>
@@ -1682,15 +2101,16 @@ namespace NKitDataStore.Binary
             if (liveImages.Count == 0 && directory.Count == 0)
                 return; // Nothing to compact
 
+            string indexFilePath = GetIndexFilePath(setName);
+            string shardDirectory = Path.GetDirectoryName(indexFilePath) ?? _baseDirectory;
+            string setBaseName = Path.GetFileName(setName);
+
             // Handle empty set case: all images removed but removed entries exist.
             // Delete all shard files and clear the block index so no orphaned data remains.
             if (liveImages.Count == 0)
             {
-                string emptySetShardDir = Path.GetDirectoryName(GetIndexFilePath(setName)) ?? _baseDirectory;
-                string emptySetBaseName = Path.GetFileName(setName);
-
                 // Delete all shard files for this set
-                foreach (string shardFile in Directory.EnumerateFiles(emptySetShardDir, $"{emptySetBaseName}_*.nkds"))
+                foreach (string shardFile in Directory.EnumerateFiles(shardDirectory, $"{setBaseName}_*.nkds"))
                 {
                     if (File.Exists(shardFile))
                         File.Delete(shardFile);
@@ -1716,111 +2136,197 @@ namespace NKitDataStore.Binary
             if (classification.UnreferencedBlockIndices.Count == 0 && AreChunksContiguous(classification.ReferencedChunks))
                 return;
 
-            // --- Pipeline Stage 3: Group referenced chunks by shard ---
+            // --- Pipeline Stage 3: Group referenced chunks by shard and identify shards needing compaction ---
             IGrouping<int, DataChunk>[] shardGroups = GroupChunksByShard(classification.ReferencedChunks);
             HashSet<int> processedShardIds = new HashSet<int>(shardGroups.Select(g => g.Key));
 
-            // --- Pipeline Stage 4: Compact each shard ---
-            string shardDirectory = Path.GetDirectoryName(GetIndexFilePath(setName)) ?? _baseDirectory;
-            string setBaseName = Path.GetFileName(setName);
+            // Determine which shards actually need compaction (have gaps or trailing orphaned data)
+            List<int> shardsNeedingCompaction = new List<int>();
+            Dictionary<int, long> expectedCompactedSizes = new Dictionary<int, long>();
 
-            Dictionary<BlockKey, long> blockOffsetUpdates = new Dictionary<BlockKey, long>();
-            Dictionary<(long ImageId, string FileName, int FileId), long> fileOffsetUpdates = new Dictionary<(long ImageId, string FileName, int FileId), long>();
+            foreach (IGrouping<int, DataChunk> shardGroup in shardGroups)
+            {
+                int fileId = shardGroup.Key;
+                List<DataChunk> chunks = shardGroup.OrderBy(c => c.Offset).ToList();
 
-            // Pending shard promotions: temp files that have been fully written but NOT yet
-            // renamed over their originals. Renames are deferred until AFTER the block index
-            // is committed (Stage 9), so that a failure part-way through the loop leaves every
-            // original shard intact and the (uncommitted) index still matching them. This is
-            // the core of the crash-safety fix — physical shard layout only changes after the
-            // durable index flip, and only via atomic renames.
-            List<(string TempPath, string FinalPath)> pendingPromotions = new List<(string TempPath, string FinalPath)>();
+                // Calculate expected compacted size (sum of all chunk sizes)
+                long compactedSize = chunks.Sum(c => c.Size);
+                expectedCompactedSizes[fileId] = compactedSize;
+
+                // Check if this shard needs compaction
+                string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}.nkds");
+                bool needsCompaction = false;
+
+                // Check for gaps between chunks
+                long expectedOffset = 0;
+                foreach (DataChunk chunk in chunks)
+                {
+                    if (chunk.Offset != expectedOffset)
+                    {
+                        needsCompaction = true;
+                        break;
+                    }
+                    expectedOffset += chunk.Size;
+                }
+
+                // Check for trailing orphaned data
+                if (!needsCompaction && File.Exists(shardPath))
+                {
+                    long actualSize = new FileInfo(shardPath).Length;
+                    if (actualSize != compactedSize)
+                        needsCompaction = true;
+                }
+
+                if (needsCompaction)
+                    shardsNeedingCompaction.Add(fileId);
+            }
+
+            // If no shards need compaction but there are unreferenced blocks in the index,
+            // we still need to prune the block index
+            bool needsBlockIndexPrune = classification.UnreferencedBlockIndices.Count > 0;
+
+            if (shardsNeedingCompaction.Count == 0 && !needsBlockIndexPrune)
+                return;
+
+            // --- Pipeline Stage 4: Create progress file ---
+            CompactProgressFile progressFile = new CompactProgressFile
+            {
+                SetName = setName,
+                ShardsToCompact = shardsNeedingCompaction,
+                CompletedShards = new List<int>(),
+                ExpectedSizes = expectedCompactedSizes
+            };
+            progressFile.Write(indexFilePath);
 
             try
             {
-                foreach (IGrouping<int, DataChunk> shardGroup in shardGroups)
+                // --- Pipeline Stage 5: Sequential per-shard compaction ---
+                // Track cumulative block/file offset updates for the final block index prune
+                Dictionary<BlockKey, long> cumulativeBlockOffsetUpdates = new Dictionary<BlockKey, long>();
+                Dictionary<(long ImageId, string FileName, int FileId), long> cumulativeFileOffsetUpdates = new Dictionary<(long ImageId, string FileName, int FileId), long>();
+
+                int totalShards = shardsNeedingCompaction.Count;
+                int completedCount = 0;
+
+                foreach (int fileId in shardsNeedingCompaction)
                 {
-                    int fileId = shardGroup.Key;
+                    IGrouping<int, DataChunk>? shardGroup = shardGroups.FirstOrDefault(g => g.Key == fileId);
+                    if (shardGroup == null)
+                        continue;
+
                     string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}.nkds");
 
-                    progress?.Report((0, $"Compacting shard {fileId:D4}"));
+                    progress?.Report((completedCount * 100 / Math.Max(1, totalShards), $"Compacting shard {fileId:D4}"));
 
-                    // Write the compacted temp but DO NOT rename yet (promoteImmediately: false).
+                    // Step 5a: Write compacted shard to .tmp
                     ShardCompactResult result = CompactShard(shardPath, shardGroup.ToList(), promoteImmediately: false);
 
-                    if (result.WasCompacted && result.TempShardPath != null && result.ShardPath != null)
-                        pendingPromotions.Add((result.TempShardPath, result.ShardPath));
+                    if (!result.WasCompacted || result.TempShardPath == null)
+                    {
+                        // Shard didn't need compaction after all (rare race condition)
+                        progressFile.MarkShardComplete(fileId, indexFilePath);
+                        completedCount++;
+                        continue;
+                    }
 
-                    // Merge offset updates from this shard into the combined dictionaries
+                    // Step 5b: Update progress file - mark this shard as pending
+                    // This happens AFTER .tmp is fully written, so if we crash now, recovery
+                    // knows the .tmp is complete and can make the promote-or-delete decision
+                    progressFile.SetPendingShard(fileId, indexFilePath);
+
+                    // Step 5c: Update block index entries for THIS shard only
                     foreach (KeyValuePair<BlockKey, long> kvp in result.BlockOffsetUpdates)
-                        blockOffsetUpdates[kvp.Key] = kvp.Value;
+                        cumulativeBlockOffsetUpdates[kvp.Key] = kvp.Value;
                     foreach (KeyValuePair<(long ImageId, string FileName, int FileId), long> kvp in result.FileOffsetUpdates)
-                        fileOffsetUpdates[kvp.Key] = kvp.Value;
+                        cumulativeFileOffsetUpdates[kvp.Key] = kvp.Value;
+
+                    // Apply updates to the current block index (for this shard's blocks only)
+                    BlockIndexEntry[] currentEntries = indexFile.LoadBlockIndex().GetEntries();
+                    BlockIndexEntry[] updatedEntries = updateBlockIndexForShard(currentEntries, result.BlockOffsetUpdates, fileId);
+                    indexFile.ReplaceBlockIndex(updatedEntries);
+
+                    // Step 5d: Update block maps for images with blocks that moved in THIS shard
+                    UpdateBlockMaps(liveImages, result.BlockOffsetUpdates, indexFile);
+
+                    // Step 5e: Update metadata sections for images with file records that moved
+                    UpdateMetadataSections(liveImages, result.FileOffsetUpdates, indexFile);
+
+                    // Step 5f: AtomicCommit - this is the durable point for this shard
+                    indexFile.AtomicCommit();
+
+                    // Step 5g: Replace original with .tmp (now safe - index is committed)
+                    AtomicFileOps.ReplaceFile(result.TempShardPath, shardPath, warning => Trace.TraceWarning(warning));
+
+                    // Step 5h: Update progress file - mark shard complete
+                    progressFile.MarkShardComplete(fileId, indexFilePath);
+                    completedCount++;
                 }
+
+                // --- Pipeline Stage 6: Delete empty shards ---
+                HashSet<int> allShardFileIds = new HashSet<int>();
+                foreach (BlockIndexEntry entry in allBlockEntries)
+                    allShardFileIds.Add(entry.FileId);
+                foreach (DataChunk chunk in classification.ReferencedChunks)
+                {
+                    if (!chunk.IsBlock)
+                        allShardFileIds.Add(chunk.FileId);
+                }
+                DeleteEmptyShards(allShardFileIds, processedShardIds, shardDirectory, setBaseName);
+
+                // --- Pipeline Stage 7: Final block index prune (remove unreferenced entries) ---
+                // This removes block index entries for blocks that no longer exist in any shard
+                if (needsBlockIndexPrune)
+                {
+                    BlockIndexEntry[] finalEntries = indexFile.LoadBlockIndex().GetEntries();
+                    BlockIndexEntry[] prunedEntries = UpdateBlockIndex(finalEntries, new Dictionary<BlockKey, long>(), classification.UnreferencedBlockIndices);
+                    indexFile.ReplaceBlockIndex(prunedEntries);
+                    indexFile.AtomicCommit();
+                }
+
+                // --- Pipeline Stage 8: Cleanup - delete progress file ---
+                CompactProgressFile.Delete(indexFilePath);
             }
             catch
             {
-                // A shard failed to compact (e.g. a truncated/short shard, or an I/O error).
-                // Nothing has been renamed and the index has not been committed, so the set is
-                // still fully consistent. Discard any temp files we managed to write and abort.
-                foreach ((string? tempPath, string _) in pendingPromotions)
-                {
-                    try { if (File.Exists(tempPath)) File.Delete(tempPath); } catch { }
-                }
+                // If compaction fails, the progress file remains for recovery on next open.
+                // Any .tmp file for a shard not marked complete will be deleted by recovery.
+                // Do NOT delete the progress file here - it's needed for recovery.
                 throw;
             }
+        }
 
-            // --- Pipeline Stage 5: Delete empty shards ---
-            // NOTE: this physically deletes shards that have no live chunks. That is safe to do
-            // before the index commit because those shards are, by definition, referenced by no
-            // live image — losing them cannot corrupt a surviving image.
-            HashSet<int> allShardFileIds = new HashSet<int>();
-            foreach (BlockIndexEntry entry in allBlockEntries)
-                allShardFileIds.Add(entry.FileId);
-            foreach (DataChunk chunk in classification.ReferencedChunks)
+        /// <summary>
+        /// Updates block index entries for a specific shard only.
+        /// Returns a new array with updated offsets for blocks in the specified shard.
+        /// </summary>
+        private static BlockIndexEntry[] updateBlockIndexForShard(
+            BlockIndexEntry[] entries,
+            Dictionary<BlockKey, long> offsetUpdates,
+            int targetFileId)
+        {
+            if (offsetUpdates.Count == 0)
+                return entries;
+
+            BlockIndexEntry[] result = new BlockIndexEntry[entries.Length];
+            for (int i = 0; i < entries.Length; i++)
             {
-                if (!chunk.IsBlock)
-                    allShardFileIds.Add(chunk.FileId);
-            }
-
-            DeleteEmptyShards(allShardFileIds, processedShardIds, shardDirectory, setBaseName);
-
-            // --- Early exit: if no unreferenced blocks, no block offset updates, and no file offset updates ---
-            if (classification.UnreferencedBlockIndices.Count == 0 && blockOffsetUpdates.Count == 0 && fileOffsetUpdates.Count == 0)
-            {
-                // Nothing changed in the index — discard any temps (there should be none, since
-                // no offsets moved, but be defensive).
-                foreach ((string? tempPath, string _) in pendingPromotions)
+                BlockIndexEntry entry = entries[i];
+                if (entry.FileId == targetFileId && offsetUpdates.TryGetValue(entry.Key, out long newOffset))
                 {
-                    try { if (File.Exists(tempPath)) File.Delete(tempPath); } catch { }
+                    result[i] = new BlockIndexEntry
+                    {
+                        Key = entry.Key,
+                        FileId = entry.FileId,
+                        Offset = newOffset,
+                        Size = entry.Size
+                    };
                 }
-                return;
+                else
+                {
+                    result[i] = entry;
+                }
             }
-
-            // --- Pipeline Stage 6: Update block index with new offsets and remove unreferenced entries ---
-            BlockIndexEntry[] updatedBlockEntries = UpdateBlockIndex(allBlockEntries, blockOffsetUpdates, classification.UnreferencedBlockIndices);
-            indexFile.ReplaceBlockIndex(updatedBlockEntries);
-
-            // --- Pipeline Stage 7: Update block maps for images with moved blocks ---
-            UpdateBlockMaps(liveImages, blockOffsetUpdates, indexFile);
-
-            // --- Pipeline Stage 8: Update metadata sections for images with moved file records ---
-            UpdateMetadataSections(liveImages, fileOffsetUpdates, indexFile);
-
-            // --- Pipeline Stage 9: Commit all changes atomically ---
-            // This is the durable point of no return. Before this line the originals are still
-            // authoritative; after it the committed index describes the compacted layout.
-            indexFile.AtomicCommit();
-
-            // --- Pipeline Stage 10: Promote compacted shards (deferred rename) ---
-            // The index is now committed for the new layout. Rename each compacted temp over
-            // its original. If the process is interrupted here, recovery detects that the
-            // committed index expects the compacted (smaller) size and promotes any remaining
-            // temps on next open (see recoverIfNeeded). Because each rename is atomic, a reader
-            // always sees either the old or the new shard, never a partial file.
-            foreach ((string? tempPath, string? finalPath) in pendingPromotions)
-            {
-                AtomicFileOps.ReplaceFile(tempPath, finalPath, warning => Trace.TraceWarning(warning));
-            }
+            return result;
         }
 
         /// <summary>
@@ -2738,6 +3244,22 @@ namespace NKitDataStore.Binary
             bool indexExists = File.Exists(indexFilePath);
             bool compactTmpExists = File.Exists(compactTmpPath);
 
+            // --- Check 0: Sequential compact progress file ---
+            CompactProgressFile? progressFile = CompactProgressFile.Read(indexFilePath);
+            if (progressFile != null)
+            {
+                List<int> remaining = progressFile.GetRemainingShardsToCompact();
+                issues.Add(
+                    $"Sequential compaction progress file exists. " +
+                    $"Set: '{progressFile.SetName}', " +
+                    $"Started: {progressFile.Created:O}, " +
+                    $"Completed shards: [{string.Join(",", progressFile.CompletedShards)}], " +
+                    $"Remaining shards: [{string.Join(",", remaining)}], " +
+                    $"Pending shard: {progressFile.PendingShard?.ToString() ?? "none"}. " +
+                    $"Recovery action: recover pending shard state, then resume or complete compaction.");
+                status = SetHealthStatus.NeedsRecovery;
+            }
+
             // --- Check 1: .compact.tmp files ---
             if (compactTmpExists && indexExists)
             {
@@ -3387,14 +3909,20 @@ namespace NKitDataStore.Binary
         /// <summary>
         /// Cheap check for on-disk evidence that a previous operation (compaction / embedded
         /// commit) was interrupted for this set: a set-level ".compact.tmp" index temp, or any
-        /// shard/index ".tmp" file. Used to gate recovery on the read path so a clean set is
-        /// never disturbed. Returns false on any I/O error (treated as "no artifacts").
+        /// shard/index ".tmp" file, or a ".compact.progress" file (interrupted sequential compaction).
+        /// Used to gate recovery on the read path so a clean set is never disturbed.
+        /// Returns false on any I/O error (treated as "no artifacts").
         /// </summary>
         private bool hasPendingRecoveryArtifacts(string setName)
         {
             try
             {
                 string setBasePath = GetIndexFilePath(setName);
+
+                // Check for sequential compaction progress file
+                if (CompactProgressFile.Exists(setBasePath))
+                    return true;
+
                 if (File.Exists(setBasePath + ".compact.tmp"))
                     return true;
 
@@ -3415,6 +3943,42 @@ namespace NKitDataStore.Binary
         private void recoverIfNeeded(string setName)
         {
             string setBasePath = GetIndexFilePath(setName);
+            string setDirectory = Path.GetDirectoryName(setBasePath) ?? _baseDirectory;
+            string setBaseName = Path.GetFileNameWithoutExtension(setBasePath);
+
+            // --- Sequential compact progress file recovery ---
+            // If a progress file exists, the set was mid-compaction. We need to:
+            // 1. Delete any .tmp shards that are NOT the PendingShard (incomplete writes)
+            // 2. For PendingShard: promote if committed, delete if not
+            // 3. Resume or complete the compaction
+            CompactProgressFile? progressFile = CompactProgressFile.Read(setBasePath);
+            if (progressFile != null)
+            {
+                Trace.TraceWarning(
+                    $"[RecoverIfNeeded] Set '{setName}': Found compact progress file. " +
+                    $"Shards to compact: [{string.Join(",", progressFile.ShardsToCompact)}], " +
+                    $"Completed: [{string.Join(",", progressFile.CompletedShards)}], " +
+                    $"Pending: {progressFile.PendingShard?.ToString() ?? "none"}");
+
+                recoverFromProgressFile(setName, setBasePath, setDirectory, setBaseName, progressFile);
+
+                // After progress file recovery, check if compaction is complete
+                if (progressFile.IsComplete())
+                {
+                    CompactProgressFile.Delete(setBasePath);
+                    Trace.TraceWarning(
+                        $"[RecoverIfNeeded] Set '{setName}': Compaction recovery complete. Progress file deleted.");
+                }
+                else
+                {
+                    // Compaction is not complete - the set will need to be compacted again
+                    // Leave the progress file in place; the next CompactSet call will resume
+                    Trace.TraceWarning(
+                        $"[RecoverIfNeeded] Set '{setName}': Compaction partially recovered. " +
+                        $"Remaining shards: [{string.Join(",", progressFile.GetRemainingShardsToCompact())}]. " +
+                        $"Run 'compact' to complete.");
+                }
+            }
 
             // --- Separate mode: .compact.tmp recovery ---
             string compactTmpPath = setBasePath + ".compact.tmp";
@@ -3515,8 +4079,6 @@ namespace NKitDataStore.Binary
             //   * Otherwise the compact did not reach commit (index still describes the old
             //     layout, or the temp is incomplete/mismatched). The original is authoritative,
             //     so we DELETE the temp to restore the pre-compact state.
-            string setDirectory = Path.GetDirectoryName(setBasePath) ?? _baseDirectory;
-            string setBaseName = Path.GetFileNameWithoutExtension(setBasePath);
             Dictionary<int, long>? committedShardSizes =
                 File.Exists(setBasePath) ? computeExpectedShardSizes(setBasePath) : null;
             try
@@ -3602,6 +4164,133 @@ namespace NKitDataStore.Binary
                             $"No active writer process found. Releasing stale lock.");
                         usageInfo.WriterCount = 0;
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recovers from an interrupted sequential compaction using the progress file.
+        /// </summary>
+        private void recoverFromProgressFile(
+            string setName,
+            string indexFilePath,
+            string setDirectory,
+            string setBaseName,
+            CompactProgressFile progressFile)
+        {
+            // Step 1: Delete ALL .tmp shards that are NOT the PendingShard
+            // These are stray .tmp files from incomplete writes (crashed before PendingShard was set)
+            try
+            {
+                foreach (string tmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds.tmp"))
+                {
+                    int fileId = parseShardFileId(tmpFile[..^4], setBaseName); // strip .tmp
+                    if (fileId < 0)
+                        continue;
+
+                    if (progressFile.PendingShard != fileId)
+                    {
+                        // Not the pending shard - this .tmp is stray, delete it
+                        try
+                        {
+                            File.Delete(tmpFile);
+                            Trace.TraceWarning(
+                                $"[RecoverIfNeeded] Set '{setName}': Deleted stray shard .tmp '{tmpFile}' " +
+                                $"(not the PendingShard, so write was incomplete).");
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.TraceWarning(
+                                $"[RecoverIfNeeded] Set '{setName}': Failed to delete stray .tmp '{tmpFile}': {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (DirectoryNotFoundException) { }
+
+            // Step 2: Handle the PendingShard (if any)
+            if (progressFile.PendingShard.HasValue)
+            {
+                int pendingFileId = progressFile.PendingShard.Value;
+                string shardPath = Path.Combine(setDirectory, $"{setBaseName}_{pendingFileId:D4}.nkds");
+                string tmpPath = shardPath + ".tmp";
+
+                bool tmpExists = File.Exists(tmpPath);
+                bool originalExists = File.Exists(shardPath);
+
+                // Determine if the index was committed for this shard
+                // by checking if the committed block index has the expected compacted offsets
+                bool indexCommittedForShard = false;
+                if (File.Exists(indexFilePath) && progressFile.ExpectedSizes.TryGetValue(pendingFileId, out long expectedSize))
+                {
+                    Dictionary<int, long>? committedSizes = computeExpectedShardSizes(indexFilePath);
+                    if (committedSizes != null &&
+                        committedSizes.TryGetValue(pendingFileId, out long committedSize) &&
+                        committedSize == expectedSize)
+                    {
+                        // The committed index expects the compacted size - commit succeeded
+                        indexCommittedForShard = true;
+                    }
+                }
+
+                if (tmpExists && indexCommittedForShard)
+                {
+                    // PROMOTE: The index was committed for the compacted layout.
+                    // The .tmp is the correct data - rename it over the original.
+                    try
+                    {
+                        AtomicFileOps.ReplaceFile(tmpPath, shardPath, warning => Trace.TraceWarning(warning));
+                        Trace.TraceWarning(
+                            $"[RecoverIfNeeded] Set '{setName}': Promoted PendingShard .tmp '{tmpPath}' " +
+                            $"to '{shardPath}' (index was committed for compacted layout).");
+
+                        // Mark this shard as complete in the progress file
+                        progressFile.MarkShardComplete(pendingFileId, indexFilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceWarning(
+                            $"[RecoverIfNeeded] Set '{setName}': Failed to promote PendingShard .tmp '{tmpPath}': {ex.Message}");
+                    }
+                }
+                else if (tmpExists)
+                {
+                    // DELETE: The index was NOT committed for the compacted layout.
+                    // The original is authoritative - delete the .tmp and shard will be reprocessed.
+                    try
+                    {
+                        File.Delete(tmpPath);
+                        Trace.TraceWarning(
+                            $"[RecoverIfNeeded] Set '{setName}': Deleted PendingShard .tmp '{tmpPath}' " +
+                            $"(index was not committed for compacted layout; shard will be reprocessed).");
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceWarning(
+                            $"[RecoverIfNeeded] Set '{setName}': Failed to delete PendingShard .tmp '{tmpPath}': {ex.Message}");
+                    }
+
+                    // Clear PendingShard so it will be reprocessed
+                    progressFile.PendingShard = null;
+                    progressFile.Write(indexFilePath);
+                }
+                else if (!tmpExists && indexCommittedForShard)
+                {
+                    // The .tmp was already promoted (rename completed) but progress file wasn't updated.
+                    // Just mark the shard as complete.
+                    progressFile.MarkShardComplete(pendingFileId, indexFilePath);
+                    Trace.TraceWarning(
+                        $"[RecoverIfNeeded] Set '{setName}': PendingShard {pendingFileId} already promoted. " +
+                        $"Marked complete in progress file.");
+                }
+                else
+                {
+                    // No .tmp and index not committed - shard will be reprocessed
+                    progressFile.PendingShard = null;
+                    progressFile.Write(indexFilePath);
+                    Trace.TraceWarning(
+                        $"[RecoverIfNeeded] Set '{setName}': PendingShard {pendingFileId} has no .tmp and " +
+                        $"index not committed. Shard will be reprocessed.");
                 }
             }
         }

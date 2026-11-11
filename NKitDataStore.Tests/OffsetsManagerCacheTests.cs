@@ -118,6 +118,8 @@ namespace NKitDataStore.Tests
             public void DeleteImage(GlobalImageKey key) => throw new NotImplementedException();
             public void RestoreImage(GlobalImageKey key) => throw new NotImplementedException();
             public void CompactSet(string setName, IProgress<(int Percentage, string Stage)> progress = null) => throw new NotImplementedException();
+            public void CompactSetFast(string setName, IProgress<(int Percentage, string Stage)> progress = null) => throw new NotImplementedException();
+            public IndexHealthInfo GetIndexHealth(string setName) => throw new NotImplementedException();
             public RecoveryState CheckSetHealth(string setName) => throw new NotImplementedException();
             public void RollbackImage(GlobalImageKey key, IProgress<(int Percentage, string Stage)> progress = null) => throw new NotImplementedException();
             public SetInfo CreateSet(string setName, long shardSize = 50L * 1024 * 1024 * 1024, int blockSize = 0) => throw new NotImplementedException();
