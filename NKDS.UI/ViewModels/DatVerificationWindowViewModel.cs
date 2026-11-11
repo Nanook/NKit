@@ -205,7 +205,10 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
         LoadCommand = ReactiveCommand.Create(ExecuteLoad, canLoad);
         LoadCommand.DisposeWith(_disposables);
 
-        IObservable<bool> canRename = this.WhenAnyValue(x => x.HasBadlyNamed);
+        IObservable<bool> canRename = this.WhenAnyValue(x => x.HasBadlyNamed)
+            .CombineLatest(
+                _mainWindowViewModel.Toolbar.WhenAnyValue(x => x.IsOperationActive),
+                (hasBadlyNamed, opActive) => hasBadlyNamed && !opActive);
         RenameCommand = ReactiveCommand.Create(ExecuteRename, canRename);
         RenameCommand.DisposeWith(_disposables);
 
@@ -430,7 +433,11 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
                 {
                     ImageRowViewModel? row = allImageRows.FirstOrDefault(r => r.Id == renamed.Id && r.SetName == result.SetName);
                     if (row != null)
+                    {
                         row.Image.Name = renamed.Name;
+                        // Raise PropertyChanged so the DataGrid binding refreshes immediately
+                        ((ReactiveObject)row).RaisePropertyChanged(nameof(ImageRowViewModel.Name));
+                    }
                 }
             }
             catch (Exception ex)
@@ -530,16 +537,20 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
                 .Where(row => string.Equals(row.SetName, activeSetName, StringComparison.Ordinal));
         }
 
-        List<ImageInfo> images = scopedRows.Select(row => new ImageInfo
-        {
-            Id = row.Id,
-            Name = row.Name,
-            // Stored image names have no file extension — use the full name as the stem so that
-            // matching against dat entry names (also extension-free) works correctly.
-            NameStem = row.Name,
-            Crc32 = row.Crc32,
-            SetName = row.SetName
-        }).ToList();
+        List<ImageInfo> images = scopedRows
+            // Exclude AlreadyExists rows — they have zero CRC and are display-only
+            // placeholders in the main window; they don't represent committed images.
+            .Where(row => row.ProcessingStatus != ImageProcessingStatus.AlreadyExists)
+            .Select(row => new ImageInfo
+            {
+                Id = row.Id,
+                Name = row.Name,
+                // Stored image names have no file extension — use the full name as the stem so that
+                // matching against dat entry names (also extension-free) works correctly.
+                NameStem = row.Name,
+                Crc32 = row.Crc32,
+                SetName = row.SetName
+            }).ToList();
 
         // Run verification
         _allResults = _datVerificationService.Verify(_loadedDatEntries, images);

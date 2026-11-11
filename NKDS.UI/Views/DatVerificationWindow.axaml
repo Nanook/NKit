@@ -216,7 +216,7 @@
                                     Width="*"
                                     x:DataType="models:DatResultModel"/>
                 <DataGridTextColumn Header="CRC32"
-                                    Binding="{Binding Crc32, StringFormat='{}{0:X8}'}"
+                                    Binding="{Binding Crc32Display}"
                                     Width="100"
                                     x:DataType="models:DatResultModel"/>
             </DataGrid.Columns>
