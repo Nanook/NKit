@@ -631,8 +631,13 @@ namespace Nanook.NKit
             if (name == null)
                 return null;
 
-            // Pre-substitute colon with dash for readability ("Title: Subtitle" → "Title- Subtitle")
-            // before the general invalid-char sweep, which would otherwise collapse it to a space.
+            // Pre-substitute colon with dash for readability before the general invalid-char sweep.
+            // Any colon that has at least one adjacent space is replaced with " - ", collapsing
+            // all surrounding whitespace so double-spaces never appear:
+            //   "one : two"  → "one - two"
+            //   "one: two"   → "one - two"
+            //   "one:two"    → "one-two"   (bare colon — handled by the Replace below)
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+:\s*|\s*:\s+", " - ");
             name = name.Replace(":", "-");
 
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));

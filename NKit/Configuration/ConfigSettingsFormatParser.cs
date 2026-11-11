@@ -466,6 +466,8 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatWua => ParseWuaFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatDecIso => new SimpleFormatConfiguration { FormatType = formatType },
+                // "apptmd" is a CLI alias for "app" — normalise it so downstream code sees FormatApp
+                "apptmd" => new SimpleFormatConfiguration { FormatType = ConfigSettingsConstants.FormatApp },
                 _ => throw new ArgumentException($"Unknown or unsupported format '{formatType}'")
             };
         }

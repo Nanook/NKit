@@ -158,6 +158,54 @@ namespace Nanook.NKit.Configuration.Services
         /// </summary>
         public string GetXdgConfigHome() => getEnvironmentVariable(EnvironmentVariableType.XdgConfigHome);
 
+        /// <summary>
+        /// Gets the XDG state home directory for Linux
+        /// ($XDG_STATE_HOME, default ~/.local/state)
+        /// </summary>
+        public string GetXdgStateHome() => getEnvironmentVariable(EnvironmentVariableType.XdgStateHome);
+
+        /// <summary>
+        /// Returns the ordered list of system-wide data directories to search for NKit data files
+        /// on non-Windows platforms.
+        ///
+        /// On Linux: the FHS-relative path (binary's parent + share/nkit) plus each directory in
+        /// $XDG_DATA_DIRS (default /usr/local/share:/usr/share) with nkit appended.
+        ///
+        /// On macOS: the FHS-relative path only (covers Homebrew on both Intel and Apple Silicon).
+        ///
+        /// These paths are checked by ConfigurationSetup when searching for the defaults/nkit.yaml
+        /// template and defaults/fix/*.yaml recovery files on system/shared installs where the
+        /// binary lives in a read-only prefix (e.g. /usr/bin, /opt/homebrew/bin).
+        /// </summary>
+        public string[] GetSystemDataSearchPaths(PlatformType platform, string executableDirectory)
+        {
+            if (platform == PlatformType.Windows)
+                return System.Array.Empty<string>();
+
+            string appDirName = getPathComponent(PathComponentType.ApplicationDirectoryName);
+            System.Collections.Generic.List<string> paths = new System.Collections.Generic.List<string>();
+
+            // FHS: binary at <prefix>/bin/ → data at <prefix>/share/nkit/
+            // Covers /usr/bin → /usr/share/nkit, /opt/homebrew/bin → /opt/homebrew/share/nkit, etc.
+            string parentDir = _fileSystem.GetParentDirectory(executableDirectory);
+            if (!string.IsNullOrEmpty(parentDir))
+                paths.Add(_fileSystem.CombinePath(parentDir, "share", appDirName));
+
+            // Linux: also walk $XDG_DATA_DIRS for non-FHS install locations.
+            if (platform == PlatformType.Linux)
+            {
+                string xdgDataDirs = getEnvironmentVariable(EnvironmentVariableType.XdgDataDirs);
+                string[] dirs = string.IsNullOrEmpty(xdgDataDirs)
+                    ? new[] { "/usr/local/share", "/usr/share" }
+                    : xdgDataDirs.Split(':');
+                foreach (string dir in dirs)
+                    if (!string.IsNullOrEmpty(dir))
+                        paths.Add(_fileSystem.CombinePath(dir.TrimEnd('/'), appDirName));
+            }
+
+            return paths.ToArray();
+        }
+
         // ======= End Environment Variable Access =======
 
         // ======= System Directory Resolution =======
@@ -216,6 +264,26 @@ namespace Nanook.NKit.Configuration.Services
 
             string appDirName = getPathComponent(PathComponentType.ApplicationDirectoryName);
             return _fileSystem.CombinePath(baseConfigDir, appDirName);
+        }
+
+        /// <summary>
+        /// Gets Linux user state directory (~/.local/state/nkit or $XDG_STATE_HOME/nkit).
+        /// Used for operational output data: logs, scans, results.
+        /// Returns the BASE directory (without the nkit/ suffix) so the caller can append it.
+        /// </summary>
+        public string GetSystemUserStateDirectory(PlatformType platform)
+        {
+            if (platform != PlatformType.Linux)
+                return GetUserHomeDirectory();
+
+            string xdgStateHome = GetXdgStateHome();
+            if (!string.IsNullOrEmpty(xdgStateHome))
+                return xdgStateHome;
+
+            return _fileSystem.CombinePath(
+                GetUserHomeDirectory(),
+                getPathComponent(PathComponentType.Local),
+                getPathComponent(PathComponentType.State));
         }
 
         // ======= End System Directory Resolution =======

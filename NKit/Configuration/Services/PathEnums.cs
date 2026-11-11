@@ -7,6 +7,8 @@ namespace Nanook.NKit.Configuration.Services
     {
         Home,
         XdgConfigHome,
+        XdgStateHome,
+        XdgDataDirs,
         HomeDrive,
         HomePath,
         UserProfile
@@ -20,6 +22,8 @@ namespace Nanook.NKit.Configuration.Services
         Library,
         ApplicationSupport,
         Config,
+        Local,
+        State,
         ApplicationDirectoryName,
         AppExtension,
         Contents,

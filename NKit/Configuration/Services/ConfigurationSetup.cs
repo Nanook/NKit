@@ -29,8 +29,7 @@ namespace Nanook.NKit.Configuration.Services
             {
                 ConfigSettingsConstants.DirectoryNameDats,
                 ConfigSettingsConstants.DirectoryNameKeys,
-                ConfigSettingsConstants.DirectoryNameFix,
-                ConfigSettingsConstants.DirectoryNameScans
+                ConfigSettingsConstants.DirectoryNameFix
             };
 
             // All directory names are lowercase — $system$ is lowercased during path expansion
@@ -162,6 +161,24 @@ namespace Nanook.NKit.Configuration.Services
 
             try { candidatePaths.Add(fileSystem.CombinePath(Directory.GetCurrentDirectory(), ConfigSettingsConstants.DirectoryNameDefaults, context.ConfigFileName)); } catch { }
 
+            // On non-Windows system installs (Linux, macOS), also search FHS-relative and XDG
+            // data directories so package-manager installs find the defaults template.
+            // These paths are computed by PathResolutionService and passed in via ConfigurationContext.
+            // Check both <dataDir>/defaults/<config> (repo/zip layout) and <dataDir>/<config>
+            // directly (some package managers install the template at the data dir root).
+            if (context.DataSearchPaths != null)
+            {
+                foreach (string dataDir in context.DataSearchPaths)
+                {
+                    if (!string.IsNullOrEmpty(dataDir))
+                    {
+                        candidatePaths.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameDefaults, context.ConfigFileName));
+                        candidatePaths.Add(fileSystem.CombinePath(dataDir, context.ConfigFileName));
+                    }
+                }
+            }
+
+
             foreach (string sourcePath in candidatePaths)
             {
                 try
@@ -246,6 +263,20 @@ namespace Nanook.NKit.Configuration.Services
                     candidates.Add(fileSystem.CombinePath(Directory.GetCurrentDirectory(), ConfigSettingsConstants.DirectoryNameFix));
                 }
                 catch { }
+
+                // On non-Windows system installs, also search FHS-relative and XDG data directories.
+                if (context.DataSearchPaths != null)
+                {
+                    foreach (string dataDir in context.DataSearchPaths)
+                    {
+                        if (!string.IsNullOrEmpty(dataDir))
+                        {
+                            candidates.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameDefaults));
+                            candidates.Add(fileSystem.CombinePath(dataDir, ConfigSettingsConstants.DirectoryNameFix));
+                        }
+                    }
+                }
+
 
                 int copied = 0;
                 HashSet<string> seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

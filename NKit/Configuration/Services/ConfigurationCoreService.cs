@@ -131,19 +131,17 @@ namespace Nanook.NKit.Configuration.Services
             string configFileName = GetConfigFileName(platformService);
             string configPath = fileSystem.CombinePath(portableConfigDirectory, configFileName);
 
-            // Check criteria for portable mode
+            // Check if a config file already exists locally (the portable-mode indicator)
             bool hasLocalConfig = fileSystem.FileExists(configPath);
-            bool canWriteLocally = isDirectoryWritable(portableConfigDirectory, fileSystem);
 
-            // Special logic for bundles (any platform)
+            // Special logic for bundles (any platform): require BOTH config file AND writable directory
             if (platformContext.IsBundle)
-                // For bundles, require BOTH config file AND writable directory
-                return hasLocalConfig && canWriteLocally;
+                return hasLocalConfig && isDirectoryWritable(portableConfigDirectory, fileSystem);
 
-            // **CORE FIX**: Only use portable mode when config file explicitly exists
-            // This ensures UI defaults to system mode and creates config in $configPath$
+            // **CORE FIX**: Only use portable mode when config file explicitly exists.
+            // This ensures UI defaults to system mode and creates config in the system config directory.
             // Previously: return hasLocalConfig || canWriteLocally
-            // Now: Only portable if config file exists
+            // Now: only portable if config file exists
             return hasLocalConfig;
         }
 

@@ -21,9 +21,14 @@
 
 # All directories for config values can be relative or absolute. The following Keywords are supported:
 #     $appPath$       - path of the launched exe
-#     $configPath$    - config directory (portable mode: exe directory, user mode: user config directory)
+#     $configPath$    - config directory (portable mode: exe directory, system mode: user config directory)
+#                       e.g. portable: /opt/nkit  |  linux: ~/.config/nkit  |  macOS: ~/Documents/nkit
 #     $userPath$      - user data directory for logs, scans, results
-#                       (portable mode: exe directory, user mode: user home directory)
+#                       (portable mode: exe directory, system mode: user state/home directory)
+#                       e.g. portable: /opt/nkit  |  linux: ~/.local/state  |  macOS: ~/Documents
+#                       Note: scan-out / log / results-out below use $userPath$/nkit/ which resolves
+#                       to ~/.local/state/nkit/ on Linux, ~/Documents/nkit on macOS
+#                       — keeping large output data separate from config files
 #     $task$          - task being performed
 #     $system$        - system being processed
 #     $date$          - Current date as yyyymmdd
@@ -132,8 +137,8 @@ log: $userPath$/nkit/logs/$date$_log.txt
 results: y
 
 # Directory to save summary files.  CLI: --results-out / -ro.  Legacy: resultsOut
-# Default: $userPath$/nkit/logs/$system$_$task$_results.txt
-results-out: $userPath$/nkit/logs/$system$_$task$_results.txt
+# Default: $userPath$/nkit/logs/results/$system$_$task$_results.txt
+results-out: $userPath$/nkit/logs/results/$system$_$task$_results.txt
 
 # Dedupe configuration - format: <setName>:<shardSize>:<blockSize>:<auxMode>.  CLI: --dedupe / -dd
 # All parts are optional. Examples:
@@ -212,7 +217,11 @@ sys:
     dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted
     mask: mi:*                   #select all files - mask mode
     #mask: ri:^(.*)$             #select all files - regex mode
-    format: wux
+    format: wux/wua:4            #lossless WUX / lossy ZArchive (parallelism:4)
+    #format: wux/app             #lossless WUX / lossy NUS CDN AppTmd (.app+.tmd+.tik+.cert)
+    #format: wux/loadiine        #lossless WUX / lossy Loadiine folder (decrypted game files)
+    #format: iso/wua:4           #lossless WUD image / lossy ZArchive
+    #format: app/wua:4           #lossy AppTmd or disc images / lossy ZArchive from folder sources
   ps1:
     base-in: 
     dat: $configPath$/dats/$system$/*.zip//*.dat     #remove *.zip// if dat is extracted

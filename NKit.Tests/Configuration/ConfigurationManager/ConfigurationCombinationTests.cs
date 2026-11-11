@@ -126,7 +126,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
         private static string getSystemUserDirectory(PlatformType platform) => platform switch
         {
             PlatformType.Windows => "C:\\Users\\TestUser",  // Expanded path to match what the real implementation produces
-            PlatformType.Linux => "/home/testuser",
+            PlatformType.Linux => "/home/testuser/.local/state",  // XDG_STATE_HOME default; ConfigurationSetup appends nkit/ → ~/.local/state/nkit
             PlatformType.OSX => "/Users/testuser/Documents",
             _ => "/test/user"
         };

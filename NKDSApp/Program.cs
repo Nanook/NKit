@@ -28,6 +28,17 @@ namespace Nanook.NKit.Vfs
                 Console.WriteLine();
             }
 
+            // Print app header then config/data paths.
+            Console.WriteLine($"NKDS v{Nanook.NKit.AppSettings.GetVersion()}");
+            {
+                string configDir = Nanook.NKit.AppSettings.GetConfigDirectory();
+                string dataDir   = Nanook.NKit.AppSettings.GetUserDataDirectory();
+                Console.WriteLine($"Config: {configDir}");
+                if (!string.Equals(configDir, dataDir, StringComparison.OrdinalIgnoreCase))
+                    Console.WriteLine($"Data:   {dataDir}");
+            }
+            Console.WriteLine();
+
             // Interactive mode rules (mirrors nkit's CliFrontEnd logic):
             //
             //   1. No arguments at all in an interactive terminal → enter interactive (no seed).

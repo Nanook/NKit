@@ -49,12 +49,20 @@ namespace Nanook.NKit.Configuration.Services
             PathResolutionService pathResolution = new PathResolutionService(platformService, fileSystem);
 
             string configDirectory = pathResolution.GetSystemConfigDirectory(platformContext.Platform);
-            // User data directory should be the user's home directory for all platforms
-            string userDataDirectory = pathResolution.GetUserHomeDirectory();
 
-            // For macOS bundles, store user data next to the bundle (same as config) so UI settings live alongside the .app
-            // if (platformContext.Platform == PlatformType.MacOS && platformContext.IsBundle)
-            //    userDataDirectory = configDirectory;
+            // User data (scans, logs, results, dedupe) lives in $XDG_STATE_HOME/nkit/ on Linux
+            // (~/.local/state/nkit/ by default), ~/Documents/nkit on macOS, and
+            // C:\Users\..\nkit on Windows. Config stays in its platform config directory.
+            // XDG_STATE_HOME is the right home for operational output data (logs, scans, results)
+            // that persists between runs but isn't precious user content like saves or datasets.
+            string userDataDirectory = pathResolution.GetSystemUserStateDirectory(platformContext.Platform);
+
+            // For non-Windows system installs, supply the FHS-relative and XDG data dirs so
+            // ConfigurationSetup can find the defaults template and fix files when the binary
+            // lives in a read-only prefix (e.g. /usr/bin, /opt/homebrew/bin).
+            string[] dataSearchPaths = pathResolution.GetSystemDataSearchPaths(
+                platformContext.Platform, platformContext.ExecutableDirectory);
+
             string configFileName = _coreService.GetConfigFileName(platformService);
 
             return new ConfigurationContext(
@@ -65,7 +73,8 @@ namespace Nanook.NKit.Configuration.Services
                 isMacOSBundle: platformContext.IsBundle,
                 configSource: ConfigSource.None, // Will be determined later
                 configFile: null, // Will be determined later
-                configFileName: configFileName);
+                configFileName: configFileName,
+                dataSearchPaths: dataSearchPaths);
         }
 
         private static string getPortableConfigDirectory(PlatformContext platformContext,

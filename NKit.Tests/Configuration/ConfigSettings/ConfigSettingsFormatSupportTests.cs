@@ -83,7 +83,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
         }
 
         [Theory]
-        [InlineData(SystemType.WiiU, new[] { "app", "tmd", "iso", "wux", "loadiine", "wua" }, false)]
+        [InlineData(SystemType.WiiU, new[] { "app", "iso", "wux", "loadiine", "wua" }, false)]
         public void WiiU_System_SupportsCorrectFormats(SystemType system, string[] expectedFormats, bool supportsDualFormat)
         {
             // Act
@@ -481,7 +481,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             // Assert
             string[] expectedFormats = new[]
             {
-                "app", "tmd", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "nkitiso", "rvz", "wbfs", "wua", "wux", "xiso", "zso"
+                "app", "ciso", "cso", "cso2", "cue", "deciso", "gdi", "iso", "loadiine", "nkitiso", "rvz", "wbfs", "wua", "wux", "xiso", "zso"
             };
 
             Assert.Equal(expectedFormats.Length, allFormats.Count);

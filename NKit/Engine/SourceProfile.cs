@@ -118,7 +118,7 @@ namespace Nanook.NKit
                             config = (fmt[0] == "iso" || isLossy) ? fmt[0] : $"{fmt[0]}[nkit]"; // #6
                             break;
                         case SystemType.WiiU:
-                            config = fmt[0] == "app" ? "apptmd" : fmt[0];
+                            config = (fmt[0] == "app" || fmt[0] == "tmd") ? "apptmd" : fmt[0];
                             break;
                         case SystemType.Dreamcast:
                             config = isGdRom ? "GdRom" + fmt[0] : fmt[0];

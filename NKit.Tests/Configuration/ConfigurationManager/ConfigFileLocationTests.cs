@@ -251,7 +251,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
             Assert.Contains(ConfigSettingsConstants.ApplicationDirectoryName, info.ConfigDirectory);
         }
 
-        [Fact(DisplayName = "Linux system mode uses correct config directory")]
+        [Fact(DisplayName = "Linux system mode uses ~/.config/nkit as the config directory")]
         public void Linux_SystemMode_UsesCorrectConfigDirectory()
         {
             // Arrange
@@ -269,9 +269,9 @@ namespace NKit.Tests.Configuration.ConfigurationManager
             using ConfigManager configManager = new ConfigManager(mockPlatform, mockFileSystem);
             ConfigurationInfo info = configManager.GetConfigurationInfo();
 
-            // Assert - Should use ~/.config/nkit
-            Assert.Contains(".config", info.ConfigDirectory);
-            Assert.Contains(ConfigSettingsConstants.ApplicationDirectoryName, info.ConfigDirectory);
+            // Assert - must be exactly ~/.config/nkit (not just contain those substrings)
+            Assert.False(info.IsPortableMode, "Linux with no local config should be system mode");
+            Assert.Equal(scenario.ExpectedConfigDirectory, info.ConfigDirectory);
         }
 
         [Fact(DisplayName = "macOS system mode uses correct config directory")]
