@@ -44,13 +44,13 @@ public class DatCommandHandler : ICommandHandler
                         ctx.DataStoreService,
                         _mainWindowViewModel);
 
-                    _showDatVerificationWindow.Handle(_datVerificationWindowVm).Subscribe();
+                    _ = _showDatVerificationWindow.Handle(_datVerificationWindowVm);
                     ctx.SharedState.IsDatWindowOpen = true;
                 }
                 else
                 {
                     // Window already open: raise interaction again to bring to focus
-                    _showDatVerificationWindow.Handle(_datVerificationWindowVm).Subscribe();
+                    _ = _showDatVerificationWindow.Handle(_datVerificationWindowVm);
                 }
 
                 observer.OnNext(RxVoid.Default);

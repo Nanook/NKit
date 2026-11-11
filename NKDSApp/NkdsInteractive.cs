@@ -38,7 +38,7 @@ namespace Nanook.NKit.Vfs
             ("mount",   "Mount a datastore or set as a virtual filesystem"),
             ("remove",  "Mark images as removed"),
             ("restore", "Restore images previously removed"),
-            ("compact", "Permanently delete marked images and unused blocks"),
+            ("compact", "Rebuild index (fast, default). Optionally --full to reclaim shard space"),
             ("rollback","Rollback a set to a specific image"),
             ("ogmr",    "Batch import routed by an OGMR YAML"),
         };
@@ -95,7 +95,7 @@ namespace Nanook.NKit.Vfs
                 case "mount": buildMount(argv); break;
                 case "remove":
                 case "restore": buildIdsCommand(argv); break;
-                case "compact": buildDatastoreOnly(argv); break;
+                case "compact": buildCompact(argv); break;
                 case "rollback": buildRollback(argv); break;
                 case "ogmr": buildOgmr(argv); break;
             }
@@ -212,6 +212,13 @@ namespace Nanook.NKit.Vfs
 
         private void buildDatastoreOnly(List<string> a)
             => datastore(a, "DataStore .nkds set path");
+
+        private void buildCompact(List<string> a)
+        {
+            datastore(a, "DataStore .nkds set path");
+            if (_p.Confirm("Reclaim shard disk space? (irreversible — runs full compact instead of fast compact)", false))
+                a.Add("--full");
+        }
 
         private void buildRollback(List<string> a)
         {

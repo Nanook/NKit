@@ -103,7 +103,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     public Interaction<CreateSetDialogViewModel, bool> ShowCreateSetDialog { get; } = new();
     public Interaction<AddImagesDialogViewModel, bool> ShowAddImagesDialog { get; } = new();
     public Interaction<ExportDialogViewModel, bool> ShowExportDialog { get; } = new();
-    public Interaction<CompactDialogViewModel, bool> ShowCompactDialog { get; } = new();
+    public Interaction<CompactDialogViewModel, CompactDialogResult> ShowCompactDialog { get; } = new();
     public Interaction<RollbackDialogViewModel, bool> ShowRollbackDialog { get; } = new();
     public Interaction<MountDialogViewModel, bool> ShowMountDialog { get; } = new();
     public Interaction<Add1GmrDialogViewModel, bool> ShowAdd1GmrDialog { get; } = new();
@@ -493,7 +493,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
             .DisposeWith(_disposables);
 
         Toolbar.SettingsCommand
-            .Subscribe(_ => ShowSettingsDialog.Handle(RxVoid.Default).Subscribe())
+            .Subscribe(unused => _ = ShowSettingsDialog.Handle(RxVoid.Default))
             .DisposeWith(_disposables);
     }
 
@@ -613,6 +613,24 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     {
         IsDatWindowOpen = false;
         _datHandler.OnDatWindowClosed(_sharedState);
+
+        // Reconcile all currently loaded sets: the dat window may have renamed images, which
+        // can affect sort order and may include deletions of duplicate rows not visible in the
+        // current filter. PropertyChanged is raised during rename for immediate feedback; this
+        // reconcile is the post-close cleanup that re-sorts and catches any remaining deltas.
+        //
+        // Skip reconcile when an operation is active: add/export etc. manage their own live
+        // updates via InsertImageAsync and deliberately avoid ReconcileAsync to prevent it
+        // from pruning in-progress rows that are not yet visible in the DataStore query.
+        if (_sharedState.IsOperationActive)
+            return;
+        IEnumerable<string> setNames = this.ImageList.GetAllImages()
+            .Select(r => r.SetName)
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Distinct(StringComparer.Ordinal);
+
+        foreach (string setName in setNames)
+            _ = this._syncService.ReconcileAsync(setName);
     }
 
     // ─── Session Event Handlers ─────────────────────────────────────────────────

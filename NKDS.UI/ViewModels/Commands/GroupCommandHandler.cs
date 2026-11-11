@@ -38,13 +38,13 @@ public class GroupCommandHandler : ICommandHandler
                         _thresholdGroupingService,
                         () => ctx.ImageList.FilteredImages.Select(r => r.Image).ToList());
 
-                    ctx.ShowGroupingWindow.Handle(_groupingWindowVm).Subscribe();
+                    _ = ctx.ShowGroupingWindow.Handle(_groupingWindowVm);
                     ctx.SharedState.IsGroupWindowOpen = true;
                 }
                 else
                 {
                     // Window already open: raise interaction again to bring to focus
-                    ctx.ShowGroupingWindow.Handle(_groupingWindowVm).Subscribe();
+                    _ = ctx.ShowGroupingWindow.Handle(_groupingWindowVm);
                 }
 
                 observer.OnNext(RxVoid.Default);

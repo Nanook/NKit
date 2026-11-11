@@ -2210,7 +2210,88 @@ public sealed class NkdsOperations : INkdsOperations
         }, cancellationToken);
     }
 
-    // --- Direct directory export ---
+    public Task<OperationResult> CompactFastAsync(string dataStorePath, string setName,
+        IProgress<OperationProgress> progress = null, CancellationToken cancellationToken = default)
+    {
+        return Task.Run(() =>
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            List<OperationErrorEntry> errors = new List<OperationErrorEntry>();
+
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                progress?.Report(new OperationProgress
+                {
+                    Percentage = 0,
+                    CurrentItem = setName,
+                    ItemsProcessed = 0,
+                    TotalItems = 1,
+                    Elapsed = sw.Elapsed
+                });
+
+                using DataStore dataStore = new DataStore(dataStorePath);
+                dataStore.CompactSetFast(setName, new Progress<(int Percentage, string Stage)>(p =>
+                {
+                    progress?.Report(new OperationProgress
+                    {
+                        Percentage = p.Percentage,
+                        CurrentItem = $"{setName} - [{p.Stage}]",
+                        ItemsProcessed = 0,
+                        TotalItems = 1,
+                        Elapsed = sw.Elapsed
+                    });
+                }));
+
+                progress?.Report(new OperationProgress
+                {
+                    Percentage = 100,
+                    CurrentItem = setName,
+                    ItemsProcessed = 1,
+                    TotalItems = 1,
+                    Elapsed = sw.Elapsed
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                return new OperationResult
+                {
+                    Success = false,
+                    WasCancelled = true,
+                    Errors = errors,
+                    ItemsProcessed = 0,
+                    ItemsFailed = 0,
+                    Duration = sw.Elapsed
+                };
+            }
+            catch (Exception ex)
+            {
+                errors.Add(new OperationErrorEntry
+                {
+                    ItemName = setName,
+                    Reason = ex.Message
+                });
+            }
+
+            return new OperationResult
+            {
+                Success = errors.Count == 0,
+                Errors = errors,
+                ItemsProcessed = errors.Count == 0 ? 1 : 0,
+                ItemsFailed = errors.Count,
+                Duration = sw.Elapsed
+            };
+        }, cancellationToken);
+    }
+
+    public IndexHealthInfo GetIndexHealth(string dataStorePath, string setName)
+    {
+        using DataStore dataStore = new DataStore(dataStorePath);
+        return dataStore.GetIndexHealth(setName);
+    }
+
+
 
     /// <summary>
     /// Reads filesystem data for an image using NkFs-first fallback.

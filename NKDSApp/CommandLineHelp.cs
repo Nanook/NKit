@@ -194,7 +194,7 @@ namespace Nanook.NKit.Vfs
               ogmr     Batch import images routed by regex masks from an OGMR YAML file.
               remove   (rm) Mark images as removed within a set.
               restore  (rst) Restore images previously marked as removed.
-              compact  (cp) Permanently delete marked images and unused blocks.
+              compact  (cp) Rebuild index (default). Use --full to reclaim shard space.
               export   (copy, convert) Export images from a set through the NKit pipeline.
               verify   (vfy) Verify images through the NKit pipeline.
               create   (newset) Create a new set in a datastore.
@@ -425,18 +425,25 @@ namespace Nanook.NKit.Vfs
 
         private static string getCompactHelp() =>
             $$"""
-            nkds compact - Permanently delete marked images and unused blocks.
+            nkds compact - Rebuild the index (default) or reclaim shard space with --full.
 
             Usage:
               nkds compact --datastore <path.nkds>
-              nkds compact help
+              nkds compact --datastore <path.nkds> --full
+
+            Default (fast): merges all Block_Index deltas, removes dead sections. Shard files
+              are never touched. Safe to run anytime. Restores fast cold-start times.
+
+            With --full: rewrites shard files, permanently reclaims space from removed images.
 
             Options:
               --datastore, -ds <path>   `.nkds` set path
+              --full                    Full compact: reclaim shard space (irreversible)
               --help, -h, -?            Show help
 
-            Example:
+            Examples:
               nkds compact --datastore {{ExampleIndexFilePath}}
+              nkds compact --datastore {{ExampleIndexFilePath}} --full
             """;
 
         private static string getVerifyHelp() =>

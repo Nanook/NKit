@@ -171,7 +171,7 @@ public class CommandHandlerExceptionPropertyTests
             ActiveOperations: activeOperations,
             ShowAddImagesDialog: new Interaction<AddImagesDialogViewModel, bool>(),
             ShowExportDialog: new Interaction<ExportDialogViewModel, bool>(),
-            ShowCompactDialog: new Interaction<CompactDialogViewModel, bool>(),
+            ShowCompactDialog: new Interaction<CompactDialogViewModel, CompactDialogResult>(),
             ShowRollbackDialog: new Interaction<RollbackDialogViewModel, bool>(),
             ShowMountDialog: new Interaction<MountDialogViewModel, bool>(),
             ShowAdd1GmrDialog: new Interaction<Add1GmrDialogViewModel, bool>(),

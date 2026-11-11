@@ -212,7 +212,7 @@ public class MainWindowViewModelPostRefactorTests : IDisposable
     public void ShowCompactDialog_Interaction_Exists()
     {
         Assert.NotNull(_vm.ShowCompactDialog);
-        Assert.IsType<Interaction<CompactDialogViewModel, bool>>(_vm.ShowCompactDialog);
+        Assert.IsType<Interaction<CompactDialogViewModel, CompactDialogResult>>(_vm.ShowCompactDialog);
     }
 
     [Fact]
