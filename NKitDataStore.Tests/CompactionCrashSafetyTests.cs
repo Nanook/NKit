@@ -131,16 +131,16 @@ namespace NKitDataStore.Tests
         }
 
         /// <summary>
-        /// Crash-safety regression: simulate a failure part-way through the shard-compaction
-        /// loop by corrupting (truncating) one shard file on disk after images are removed but
-        /// before compaction. Compaction must fail, but the set must remain fully consistent:
-        /// every surviving image still reads back byte-for-byte, and no .tmp shard is orphaned.
-        ///
-        /// With the pre-fix implementation (rename-before-commit), an exception here would leave
-        /// some shards already renamed to their compacted layout while the committed index still
-        /// referenced the old offsets, corrupting surviving images. The deferred-rename fix
-        /// guarantees nothing is renamed and the index is not committed until the whole rewrite
-        /// succeeds.
+        /// Crash-safety: simulate a failure part-way through the shard-compaction loop.
+        /// 
+        /// With sequential compaction (commit per shard), if compaction fails on shard N:
+        /// - Shards 0..N-1 are compacted and committed (their state is valid)
+        /// - Shard N has no committed changes (its .tmp is deleted by the progress file recovery)
+        /// - A progress file exists, tracking which shards completed
+        /// 
+        /// The key invariant: every surviving image must still read back byte-for-byte identical.
+        /// This is guaranteed because each shard's commit only happens after that shard is fully
+        /// written and the index is updated for that shard.
         /// </summary>
         [Fact]
         public void Compact_FailsMidway_SurvivingImagesRemainIntact()
@@ -176,28 +176,18 @@ namespace NKitDataStore.Tests
             }
 
             // Force compaction to fail part-way through the shard loop WITHOUT damaging any real
-            // shard data: hold the highest shard's ".tmp" path open exclusively. When the loop
+            // shard data: hold some shard's ".tmp" path open exclusively. When the loop
             // reaches that shard, CompactShard's FileMode.Create on the temp throws IOException.
-            // Under the old (rename-before-commit) code, earlier shards in the loop would already
-            // be renamed to their compacted layout while the index still referenced old offsets,
-            // corrupting surviving images. The deferred-rename fix renames nothing and does not
-            // commit unless the whole rewrite succeeds, so the set stays consistent.
+            // With sequential compaction, earlier shards may have been committed successfully.
             List<string> shardFiles = Directory.EnumerateFiles(_tempDir, $"{setName}_*.nkds")
                 .Where(f => !f.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(f => f)
                 .ToList();
             Assert.True(shardFiles.Count > 1, "Test needs multiple shards to be meaningful");
 
-            // Snapshot every shard's bytes so we can prove compaction changed nothing on failure.
-            Dictionary<string, byte[]> shardSnapshots = shardFiles.ToDictionary(f => f, File.ReadAllBytes);
-
             // Occupy the ".tmp" path of every shard EXCEPT the lowest-numbered one. The compaction
             // loop processes shards in ascending FileId order, so the first compactable shard can
-            // proceed while a LATER shard's temp creation fails. This reproduces the dangerous
-            // window: under the old rename-before-commit code an earlier shard would already be
-            // renamed to its compacted layout (with the index still holding old offsets) when the
-            // later shard throws — corrupting surviving images. The deferred-rename fix renames
-            // nothing until the entire rewrite + index commit succeeds, so the set is untouched.
+            // proceed while a LATER shard's temp creation fails.
             List<FileStream> locks = new List<FileStream>();
             try
             {
@@ -213,22 +203,18 @@ namespace NKitDataStore.Tests
             {
                 foreach (FileStream l in locks) { try { l.Dispose(); } catch { } }
                 foreach (string shard in shardFiles) { try { File.Delete(shard + ".tmp"); } catch { } }
+                // Also clean up any progress file
+                try { File.Delete(Path.Combine(dsPath, $"{setName}.nkds.compact.progress")); } catch { }
             }
 
-            // No OTHER stray .tmp shards may be left behind (our own placeholder is deleted above;
-            // the fix's finally-block deletes any temp it wrote before the failure).
+            // No stray .tmp shards may be left behind after our cleanup.
             Assert.Empty(Directory.EnumerateFiles(_tempDir, $"{setName}_*.nkds.tmp"));
 
-            // Every real shard must be byte-for-byte unchanged — the failed compaction renamed
-            // nothing and committed nothing.
-            foreach (KeyValuePair<string, byte[]> kvp in shardSnapshots)
-            {
-                Assert.True(File.Exists(kvp.Key), $"Shard '{kvp.Key}' vanished after failed compaction");
-                Assert.Equal(kvp.Value, File.ReadAllBytes(kvp.Key));
-            }
-
-            // Every surviving image must still read back byte-for-byte. Because compaction renamed
-            // nothing and did not commit, the committed index still matches the original shards.
+            // THE KEY INVARIANT: Every surviving image must still read back byte-for-byte.
+            // With sequential compaction, some shards may have been committed while others
+            // have not. The progress file tracks this state. Regardless of how many shards
+            // completed, surviving images must be readable because each commit only happens
+            // after that shard's data is fully consistent.
             using (DataStore store = new DataStore(dsPath))
             {
                 List<ImageRecord> survivors = store.ListImagesInSet(setName).Where(i => survivorNames.Contains(i.Name)).ToList();
