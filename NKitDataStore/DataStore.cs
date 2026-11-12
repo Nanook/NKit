@@ -48,6 +48,52 @@ namespace NKitDataStore
         /// </summary>
         public const string FileSystemNkfsName = "filesystem.nkfs";
 
+        // ======= WiiU TMD Naming Constants =======
+
+        /// <summary>
+        /// The prefix used for TMD index names in disambiguated image names (e.g., "tmd.0", "tmd.1").
+        /// </summary>
+        internal const string TmdIndexPrefix = "tmd.";
+
+        /// <summary>
+        /// File extension for WiiU app files.
+        /// </summary>
+        public const string ExtensionApp = ".app";
+
+        /// <summary>
+        /// File extension for CUE sheet index files.
+        /// </summary>
+        public const string ExtensionCue = ".cue";
+
+        /// <summary>
+        /// File extension for GDI (Dreamcast) index files.
+        /// </summary>
+        public const string ExtensionGdi = ".gdi";
+
+        // ======= File Extension Constants =======
+
+        /// <summary>
+        /// Temporary file extension suffix used during atomic file operations.
+        /// </summary>
+        public const string ExtensionTmp = ".tmp";
+
+        /// <summary>
+        /// Temporary file extension for index compaction operations.
+        /// </summary>
+        public const string ExtensionCompactTmp = ".compact.tmp";
+
+        /// <summary>
+        /// File extension for sequential compaction progress tracking files.
+        /// </summary>
+        public const string ExtensionCompactProgress = ".compact.progress";
+
+        // ======= Display String Constants =======
+
+        /// <summary>
+        /// Display string shown when a CRC is pending (image not yet committed).
+        /// </summary>
+        public const string DisplayPendingCrc = "Pending";
+
         /// <summary>
         /// Default maximum stored (compressed) size in KiB for eager filesystem loading.
         /// Matches the default block size (64 KiB), so filesystem data that fits in a
@@ -382,7 +428,7 @@ namespace NKitDataStore
         private void patchCueGdiAfterRename(
             string setName, long imageId, ImageFormat format, string oldName, string newName)
         {
-            string indexExt = format == ImageFormat.Cue ? ".cue" : ".gdi";
+            string indexExt = format == ImageFormat.Cue ? ExtensionCue : ExtensionGdi;
             List<(string OldFileName, string NewFileName, byte[]? NewContent)> patches =
                 new List<(string, string, byte[]?)>();
 
@@ -1336,7 +1382,7 @@ namespace NKitDataStore
             // Extract content between brackets: should be "tmd.{digits}"
             string content = imageName.Substring(bracketStart + 2, imageName.Length - bracketStart - 3);
 
-            if (!content.StartsWith("tmd.", StringComparison.Ordinal))
+            if (!content.StartsWith(TmdIndexPrefix, StringComparison.Ordinal))
                 return null;
 
             string digits = content.Substring(4);
@@ -1398,7 +1444,7 @@ namespace NKitDataStore
             // Extract content between brackets: e.g., "tmd.0"
             string content = imageName.Substring(bracketStart + 2, imageName.Length - bracketStart - 3);
 
-            if (!content.StartsWith("tmd.", StringComparison.Ordinal))
+            if (!content.StartsWith(TmdIndexPrefix, StringComparison.Ordinal))
                 return null;
 
             string digits = content.Substring(4);

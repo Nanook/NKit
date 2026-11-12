@@ -93,8 +93,8 @@ namespace Nanook.NKit.Vfs
                                     displayName = ar.Metadata.GetString(NKitDataStore.AreaValueType.App);
                                     if (string.IsNullOrEmpty(displayName))
                                         continue;
-                                    if (!displayName.EndsWith(".app", StringComparison.OrdinalIgnoreCase) && !displayName.Contains('.'))
-                                        displayName = displayName + ".app";
+                                    if (!displayName.EndsWith(DataStore.ExtensionApp, StringComparison.OrdinalIgnoreCase) && !displayName.Contains('.'))
+                                        displayName = displayName + DataStore.ExtensionApp;
                                 }
 
                                 ulong xx = ar.XxHash64;

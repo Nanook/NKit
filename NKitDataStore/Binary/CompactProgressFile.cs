@@ -51,7 +51,7 @@ namespace NKitDataStore.Binary
         /// </summary>
         public static string GetPath(string indexFilePath)
         {
-            return indexFilePath + ".compact.progress";
+            return indexFilePath + DataStore.ExtensionCompactProgress;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace NKitDataStore.Binary
             string content = serialize();
 
             // Write to temp then rename for atomicity
-            string tempPath = path + ".tmp";
+            string tempPath = path + DataStore.ExtensionTmp;
             try
             {
                 File.WriteAllText(tempPath, content, Encoding.UTF8);

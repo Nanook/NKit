@@ -659,7 +659,7 @@ namespace NKitDataStore.Binary
                 string setDirectory = Path.GetDirectoryName(indexFilePath) ?? _baseDirectory;
                 string setBaseName = Path.GetFileNameWithoutExtension(setName);
 
-                foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds"))
+                foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}"))
                 {
                     if (File.Exists(shardFile))
                     {
@@ -1013,7 +1013,7 @@ namespace NKitDataStore.Binary
             // Step 2d: Compact the index to remove dead space (ReplaceBlockIndex appends,
             // leaving old data in the file). This ensures the re-embedded file shrinks.
             progress?.Report((60, "Compacting index"));
-            string compactTmpPath = indexPath + ".compact.tmp";
+            string compactTmpPath = indexPath + DataStore.ExtensionCompactTmp;
             standaloneIndex.CompactTo(compactTmpPath, deterministic: false, progress: null);
             standaloneIndex.Dispose();
             File.Delete(indexPath);
@@ -1510,7 +1510,7 @@ namespace NKitDataStore.Binary
         {
             BinaryIndexFile indexFile = getIndexFile(setName);
             string originalPath = GetIndexFilePath(setName);
-            string tempPath = originalPath + ".compact.tmp";
+            string tempPath = originalPath + DataStore.ExtensionCompactTmp;
 
             try
             {
@@ -1594,7 +1594,7 @@ namespace NKitDataStore.Binary
 
                 // Open standalone index and compact index only (no shard compact)
                 BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
-                string compactTempPath = indexPath + ".compact.tmp";
+                string compactTempPath = indexPath + DataStore.ExtensionCompactTmp;
 
                 try
                 {
@@ -1676,7 +1676,7 @@ namespace NKitDataStore.Binary
         {
             BinaryIndexFile indexFile = getIndexFile(setName);
             string originalPath = GetIndexFilePath(setName);
-            string tempPath = originalPath + ".compact.tmp";
+            string tempPath = originalPath + DataStore.ExtensionCompactTmp;
 
             try
             {
@@ -2154,7 +2154,7 @@ namespace NKitDataStore.Binary
                 expectedCompactedSizes[fileId] = compactedSize;
 
                 // Check if this shard needs compaction
-                string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}.nkds");
+                string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}{DataStore.DatabaseFileExtension}");
                 bool needsCompaction = false;
 
                 // Check for gaps between chunks
@@ -2214,7 +2214,7 @@ namespace NKitDataStore.Binary
                     if (shardGroup == null)
                         continue;
 
-                    string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}.nkds");
+                    string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}{DataStore.DatabaseFileExtension}");
 
                     progress?.Report((completedCount * 100 / Math.Max(1, totalShards), $"Compacting shard {fileId:D4}"));
 
@@ -2459,7 +2459,7 @@ namespace NKitDataStore.Binary
             // and flushed to disk here, but whether it is renamed over the original NOW or
             // LATER depends on promoteImmediately (see the parameter docs). The write itself
             // is wrapped so that a write/read failure never orphans a partial temp file.
-            string tmpShardPath = shardPath + ".tmp";
+            string tmpShardPath = shardPath + DataStore.ExtensionTmp;
             byte[] ioBuffer = new byte[1024 * 1024];
             bool written = false;
 
@@ -2564,7 +2564,7 @@ namespace NKitDataStore.Binary
             {
                 if (processedShardIds.Contains(fileId))
                     continue;
-                string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}.nkds");
+                string shardPath = Path.Combine(shardDirectory, $"{setBaseName}_{fileId:D4}{DataStore.DatabaseFileExtension}");
                 if (File.Exists(shardPath))
                     File.Delete(shardPath);
             }
@@ -3240,7 +3240,7 @@ namespace NKitDataStore.Binary
             SetHealthStatus status = SetHealthStatus.Clean;
 
             string indexFilePath = GetIndexFilePath(setName);
-            string compactTmpPath = indexFilePath + ".compact.tmp";
+            string compactTmpPath = indexFilePath + DataStore.ExtensionCompactTmp;
             bool indexExists = File.Exists(indexFilePath);
             bool compactTmpExists = File.Exists(compactTmpPath);
 
@@ -3299,7 +3299,7 @@ namespace NKitDataStore.Binary
 
                 try
                 {
-                    foreach (string _ in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds"))
+                    foreach (string _ in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}"))
                     {
                         anyShardExists = true;
                         break;
@@ -3328,9 +3328,9 @@ namespace NKitDataStore.Binary
 
                 try
                 {
-                    foreach (string shardTmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds.tmp"))
+                    foreach (string shardTmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}{DataStore.ExtensionTmp}"))
                     {
-                        string originalShardPath = shardTmpFile.Substring(0, shardTmpFile.Length - 4); // Remove .tmp suffix
+                        string originalShardPath = shardTmpFile.Substring(0, shardTmpFile.Length - DataStore.ExtensionTmp.Length); // Remove .tmp suffix
                         if (File.Exists(originalShardPath))
                         {
                             issues.Add($"Shard .tmp file exists alongside original: '{shardTmpFile}'. Recovery action: delete .tmp file.");
@@ -3649,10 +3649,10 @@ namespace NKitDataStore.Binary
 
                 try
                 {
-                    foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds"))
+                    foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}"))
                     {
                         // Skip .tmp files (already handled in Check 2)
-                        if (shardFile.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase))
+                        if (shardFile.EndsWith(DataStore.ExtensionTmp, StringComparison.OrdinalIgnoreCase))
                             continue;
 
                         // Parse the file ID from the shard file name (e.g., "test_0001.nkds" → fileId=1)
@@ -3805,7 +3805,7 @@ namespace NKitDataStore.Binary
         /// Gets the file path for the binary index file for a given set name.
         /// Convention: {baseDirectory}/{setName}.nkds
         /// </summary>
-        internal string GetIndexFilePath(string setName) => Path.Combine(_baseDirectory, $"{setName}.nkds");
+        internal string GetIndexFilePath(string setName) => Path.Combine(_baseDirectory, $"{setName}{DataStore.DatabaseFileExtension}");
 
         /// <summary>
         /// Detects whether a file is in embedded mode by checking the last 4 bytes for FooterMagic.
@@ -3932,7 +3932,7 @@ namespace NKitDataStore.Binary
                     return false;
 
                 // Any "<set>_*.nkds.tmp" (shard temp) or "<set>.nkds.tmp" (embedded index temp).
-                return Directory.EnumerateFiles(setDirectory, $"{setBaseName}*.tmp").Any();
+                return Directory.EnumerateFiles(setDirectory, $"{setBaseName}*{DataStore.ExtensionTmp}").Any();
             }
             catch
             {
@@ -4083,10 +4083,10 @@ namespace NKitDataStore.Binary
                 File.Exists(setBasePath) ? computeExpectedShardSizes(setBasePath) : null;
             try
             {
-                foreach (string tmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds.tmp"))
+                foreach (string tmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}{DataStore.ExtensionTmp}"))
                 {
                     // The original shard path is the .tmp path without the trailing ".tmp"
-                    string originalShardPath = tmpFile[..^4]; // strip ".tmp"
+                    string originalShardPath = tmpFile[..^DataStore.ExtensionTmp.Length]; // strip ".tmp"
 
                     int fileId = parseShardFileId(originalShardPath, setBaseName);
                     long tmpSize = -1;
@@ -4182,9 +4182,9 @@ namespace NKitDataStore.Binary
             // These are stray .tmp files from incomplete writes (crashed before PendingShard was set)
             try
             {
-                foreach (string tmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds.tmp"))
+                foreach (string tmpFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}{DataStore.ExtensionTmp}"))
                 {
-                    int fileId = parseShardFileId(tmpFile[..^4], setBaseName); // strip .tmp
+                    int fileId = parseShardFileId(tmpFile[..^DataStore.ExtensionTmp.Length], setBaseName); // strip .tmp
                     if (fileId < 0)
                         continue;
 
@@ -4213,7 +4213,7 @@ namespace NKitDataStore.Binary
             {
                 int pendingFileId = progressFile.PendingShard.Value;
                 string shardPath = Path.Combine(setDirectory, $"{setBaseName}_{pendingFileId:D4}.nkds");
-                string tmpPath = shardPath + ".tmp";
+                string tmpPath = shardPath + DataStore.ExtensionTmp;
 
                 bool tmpExists = File.Exists(tmpPath);
                 bool originalExists = File.Exists(shardPath);
@@ -4378,10 +4378,10 @@ namespace NKitDataStore.Binary
                 // Enumerate actual shard files on disk
                 try
                 {
-                    foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*.nkds"))
+                    foreach (string shardFile in Directory.EnumerateFiles(setDirectory, $"{setBaseName}_*{DataStore.DatabaseFileExtension}"))
                     {
                         // Skip .tmp files (already handled above)
-                        if (shardFile.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase))
+                        if (shardFile.EndsWith(DataStore.ExtensionTmp, StringComparison.OrdinalIgnoreCase))
                             continue;
 
                         int fileId = parseShardFileId(shardFile, setBaseName);

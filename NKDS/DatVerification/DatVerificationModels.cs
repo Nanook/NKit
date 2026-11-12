@@ -43,7 +43,7 @@ public sealed class DatResultModel
     public uint Crc32 { get; init; }
 
     /// <summary>CRC32 formatted for display. "Pending" when zero (image not yet committed).</summary>
-    public string Crc32Display => Crc32 == 0 ? "Pending" : Crc32.ToString("X8");
+    public string Crc32Display => Crc32 == 0 ? NKitDataStore.DataStore.DisplayPendingCrc : Crc32.ToString("X8");
 
     /// <summary>The image ID (for rename operations). Null for Missing entries.</summary>
     public long? ImageId { get; init; }
