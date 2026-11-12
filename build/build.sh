@@ -117,9 +117,7 @@ done
 # Inject GrindCore static library
 inject_grindcore() {
     local static_lib_name
-    if [[ "$PUBLISH_RID" == linux-arm64 ]]; then
-        static_lib_name="libGrindCore.a"
-    elif [[ "$PUBLISH_RID" == linux-* ]]; then
+    if [[ "$PUBLISH_RID" == linux-* ]]; then
         static_lib_name="libGrindCore.a"
     elif [[ "$PUBLISH_RID" == osx-* ]]; then
         static_lib_name="libGrindCore.a"
@@ -146,13 +144,29 @@ inject_grindcore() {
         return 0
     fi
 
+    # Derive GrindCore version from csproj to avoid hardcoded version drift
+    local grindcore_version=""
+    for proj in "NKitApp/NKitApp.csproj" "NKDSApp/NKDSApp.csproj" "NKitDataStore/NKitDataStore.csproj" "NKit/NKit.csproj"; do
+        if [ -f "$proj" ]; then
+            grindcore_version=$(grep -oP 'PackageReference\s+Include="GrindCore"\s+Version="\K[^"]+' "$proj" 2>/dev/null | head -1)
+            if [ -n "$grindcore_version" ]; then
+                break
+            fi
+        fi
+    done
+
+    if [ -z "$grindcore_version" ]; then
+        echo "WARNING: could not determine GrindCore version from csproj; skipping static-lib injection."
+        return 0
+    fi
+
     local nuget_packages="${NUGET_PACKAGES:-.nuget/packages}"
-    local dest_dir="$nuget_packages/grindcore/0.9.0/runtimes/$PUBLISH_RID/native"
+    local dest_dir="$nuget_packages/grindcore/$grindcore_version/runtimes/$PUBLISH_RID/native"
     if [ ! -d "$dest_dir" ]; then
         mkdir -p "$dest_dir"
     fi
 
-    echo "Injecting GrindCore static library: $source_file -> $dest_dir/$static_lib_name"
+    echo "Injecting GrindCore static library (v$grindcore_version): $source_file -> $dest_dir/$static_lib_name"
     cp "$source_file" "$dest_dir/$static_lib_name"
 }
 inject_grindcore
