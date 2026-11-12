@@ -148,7 +148,8 @@ inject_grindcore() {
     local grindcore_version=""
     for proj in "NKitApp/NKitApp.csproj" "NKDSApp/NKDSApp.csproj" "NKitDataStore/NKitDataStore.csproj" "NKit/NKit.csproj"; do
         if [ -f "$proj" ]; then
-            grindcore_version=$(grep -oP 'PackageReference\s+Include="GrindCore"\s+Version="\K[^"]+' "$proj" 2>/dev/null | head -1)
+            # Use sed for portability (grep -P not available on macOS)
+            grindcore_version=$(grep 'PackageReference.*Include="GrindCore"' "$proj" 2>/dev/null | sed -n 's/.*Version="\([^"]*\)".*/\1/p' | head -1)
             if [ -n "$grindcore_version" ]; then
                 break
             fi
