@@ -21,7 +21,7 @@ public class AddDirCommandHandler : ICommandHandler
             if (sessions.Count == 0 || ctx.Toolbar.SelectedSetName == null) return RxVoid.Default;
 
             // 2. Show folder picker
-            string selectedPath = await ctx.ShowFolderPicker.Handle(RxVoid.Default);
+            string? selectedPath = await ctx.ShowFolderPicker.Handle(RxVoid.Default);
             if (string.IsNullOrEmpty(selectedPath)) return RxVoid.Default;
 
             // 3. Determine target set (skip "All")

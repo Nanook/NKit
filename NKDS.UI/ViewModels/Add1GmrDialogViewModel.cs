@@ -342,7 +342,7 @@ public class Add1GmrDialogViewModel : ViewModelBase
 
     private async Task ExecuteBrowseYamlAsync()
     {
-        string path = await ShowYamlPicker.Handle(RxVoid.Default);
+        string? path = await ShowYamlPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             OgmrYamlPath = path;
     }
@@ -386,7 +386,7 @@ public class Add1GmrDialogViewModel : ViewModelBase
 
     private async Task ExecuteBrowseOutputFolderAsync()
     {
-        string folder = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? folder = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(folder))
             OutputFolder = folder;
     }

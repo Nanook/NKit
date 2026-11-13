@@ -287,7 +287,7 @@ public class CreateSetDialogViewModel : ViewModelBase
             ? _folderPath
             : null;
 
-        string selectedPath = await ShowFolderPicker.Handle(suggestedPath);
+        string? selectedPath = await ShowFolderPicker.Handle(suggestedPath);
 
         if (!string.IsNullOrEmpty(selectedPath))
         {

@@ -53,7 +53,7 @@ namespace NKitDataStore.Binary
             // Release the previous chunk if we've moved forward — sequential access pattern
             // means we will never need it again.
             if (_lastChunkIdx >= 0 && chunkIdx > _lastChunkIdx)
-                _chunks[_lastChunkIdx] = null; // eligible for GC
+                _chunks[_lastChunkIdx] = null!; // eligible for GC
 
             _lastChunkIdx = chunkIdx;
 

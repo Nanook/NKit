@@ -243,7 +243,7 @@ public sealed class CommandLineProcessor
             }
 
             // Show file picker to select the target .nkds set
-            string setPath = await viewModel.ShowFilePicker.Handle(RxVoid.Default);
+            string? setPath = await viewModel.ShowFilePicker.Handle(RxVoid.Default);
             if (string.IsNullOrEmpty(setPath)) return;
 
             // Open the selected set
@@ -293,7 +293,7 @@ public sealed class CommandLineProcessor
             }
 
             // Show file picker to select the target .nkds set
-            string setPath = await viewModel.ShowFilePicker.Handle(RxVoid.Default);
+            string? setPath = await viewModel.ShowFilePicker.Handle(RxVoid.Default);
             if (string.IsNullOrEmpty(setPath)) return;
 
             // Open the selected set
@@ -341,7 +341,7 @@ public sealed class CommandLineProcessor
             }
 
             // Show folder picker to choose where to create the set
-            string folderPath = await viewModel.ShowFolderPicker.Handle(RxVoid.Default);
+            string? folderPath = await viewModel.ShowFolderPicker.Handle(RxVoid.Default);
             if (string.IsNullOrEmpty(folderPath)) return;
 
             // Show Create Set dialog
@@ -407,7 +407,7 @@ public sealed class CommandLineProcessor
             }
 
             // Show folder picker to choose where to create the set
-            string folderPath = await viewModel.ShowFolderPicker.Handle(RxVoid.Default);
+            string? folderPath = await viewModel.ShowFolderPicker.Handle(RxVoid.Default);
             if (string.IsNullOrEmpty(folderPath)) return;
 
             // Show Create Set dialog

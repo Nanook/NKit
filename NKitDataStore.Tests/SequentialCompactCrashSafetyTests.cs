@@ -533,7 +533,7 @@ namespace NKitDataStore.Tests
             Assert.True(CompactProgressFile.Exists(indexPath));
 
             // Verify the progress file state is unchanged (ready to retry)
-            CompactProgressFile? recovered = CompactProgressFile.Read(indexPath);
+            CompactProgressFile recovered = CompactProgressFile.Read(indexPath);
             Assert.NotNull(recovered);
             Assert.Equal(new List<int> { 0, 1 }, recovered!.ShardsToCompact);
             Assert.Empty(recovered.CompletedShards);

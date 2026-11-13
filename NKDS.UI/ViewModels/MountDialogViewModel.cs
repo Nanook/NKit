@@ -314,7 +314,7 @@ public class MountDialogViewModel : ViewModelBase
 
     private async Task BrowseForMountPointAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
         {
             MountPoint = path;

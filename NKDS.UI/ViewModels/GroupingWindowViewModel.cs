@@ -542,7 +542,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowSaveFileDialog.Handle("yaml");
+        string? filePath = await ShowSaveFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try
@@ -578,7 +578,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowSaveFileDialog.Handle("yaml");
+        string? filePath = await ShowSaveFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try
@@ -607,7 +607,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowOpenFileDialog.Handle("yaml");
+        string? filePath = await ShowOpenFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try

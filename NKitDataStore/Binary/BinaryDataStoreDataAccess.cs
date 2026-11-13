@@ -1269,7 +1269,7 @@ namespace NKitDataStore.Binary
                     if (!existingFileName.StartsWith(oldNamePrefix, StringComparison.OrdinalIgnoreCase))
                         continue;
 
-                    area.Metadata[AreaValueType.FileName] = newNamePrefix + existingFileName.Substring(oldNamePrefix.Length);
+                    area.Metadata![AreaValueType.FileName] = newNamePrefix + existingFileName.Substring(oldNamePrefix.Length);
                 }
             }
 

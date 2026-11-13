@@ -1,22 +1,15 @@
-## NKit v3.2.0
-
-### New Features
-
-- **GameCube nkit.iso conversion** — full lossless GameCube NKit ISO support. Converts any GameCube source to `.nkit.iso` with byte-identical output matching NKit v1. Handles relocated DOLs, zero-size FST files, and custom disc layouts. The canonical format name is `nkitiso`; the `.nkit.iso` file extension alias continues to be accepted
-- **WiiU dual-format config** — WiiU image format and index format can now be configured independently. Set `image=wux` and `index=app`/`wua`/`loadiine` in any combination rather than being forced to a single format pair
-- **ZArchive parallel compression** — WUA output now uses thread-local ZStd compressor contexts, enabling parallel per-block compression and significantly reducing conversion time on multi-core systems
+## NKit v3.2.2
 
 ### Bug Fixes
 
-- **Wii NKit ISO restore** — corrected two distinct categories of decode bug affecting a range of Wii images. Four NKit v1 protocol bugs affecting data-partition junk context, FST file sizes for junk-encoded entries, and gap source-cursor synchronisation. A separate wiped-partition decode bug where partitions with a null game ID were decoded with the wrong NKit source layout, corrupting all subsequent data; this affected Wii system and install disc types that use the null-ID partition encoding
-- **ISO9660 DataStore round-trip** — fixed two round-trip failures for ISO9660 discs containing gap content before the FileSystem section, affecting PS2, PSP, and other CD/DVD-based systems
-- **PS3 Extract: file size overflow** — `Buffer.TestRangeBounds` overflow caused inflated file sizes to be reported during PS3 disc extraction
-- **UDF file size** — `ExtentLength` could exceed `InformationLength` on some UDF volumes, producing oversized reads
-- **WUX memory usage** — fixed unbounded `ImageBlockReader` cache growth during WUX-to-WUA conversion
-- **Thread-pool starvation and deadlocks** — eliminated thread-pool starvation under sustained load; fixed `BlockingThreadQueue` deadlock; fixed spurious debugger exceptions on task cancellation
-- **Memory and handle leaks** — fixed thread, file-handle, and memory leaks at end-of-image-processing and on error paths; temp directory is now cleaned up on error for index-format output
-- **Name sanitization** — `CleanseFileName` now substitutes `:` with `-` before the general invalid-character sweep, so dat descriptions such as `Title: Subtitle` produce the more readable `Title- Subtitle`. NKDS name sanitization now delegates to this shared method
-- **VFS name safety** — fixed name disambiguation dot-splitting and VFS mount name character validation
+- **CHD damaged hunk crash** — NKit no longer crashes when processing a CHD file containing a damaged or unreadable hunk. The affected hunk is flagged and processing continues where possible
+- **RVZ conversion thread leak** — `CircularSequenceQueue` threads were never disposed after RVZ conversion completed, causing thread accumulation when processing large batches. At ~17 leaked threads per image, a batch of 1,000 would exhaust the thread pool. Fixed by disposing the queue on completion
+- **NKDS CD sector typing — Mode 1 areas** — `SectorPaddingPacker` unconditionally typed sectors by their own mode byte. Some discs (e.g. Sega CD coverdiscs such as Silpheed, Datel GC discs) have trailing unstructured data where byte `0x0F` happens to be `0x02` by coincidence — not a real Mode 2 sector. These were misclassified as Mode 2, causing bytes `0x810–0x817` to be omitted from the stored stride and pack payload, returning as zeros on export. Mode 1 areas now force all sectors to Mode 1 regardless of mode byte
+- **NKDS Wii formatter null dereference** — wrong operator precedence in the Other-area item selection predicate could dereference a null `Gap` reference. No current input triggered it, but items rebuilt from a scan file would crash on import
+- **NKDS expand — CSO-stored images** — PS2 DVD ISOs are stored as CSO (the system default format). The `Expand-Image` task routing only matched `Config: iso/`, so CSO-stored images hit `NotSet-NotSupported` on export. The routing now also matches `cso`, `cso2`, and `zso`
+- **NKDS expand — non-standard CUE+BIN discs** — Datel/Action Replay PS2 discs and similar that declare one CUE track but contain additional data beyond the last declared track boundary crashed with `IndexOutOfRangeException` during export. Data beyond the last declared track is now preserved losslessly in the last track's output file
+- **NKDS exit codes** — `nkds add` and `nkds export` returned exit 0 and printed "Imported/Exported N of N" even when the operation failed with `VerifyFailed`. The error counter now correctly detects both `ErrorMsg` and `VerifyResult` failure states, matching the exit code behaviour of `nkds verify` and the NKit CLI
+- **NKDS stats — image count always zero** — `nkds stats` / `nkds sets` always showed `Images: 0` and `Total Size: 0 B` regardless of set contents. `DescribeSets()` was calling `GetSetInfo(..., false)` which skips the image directory scan; changed to `true`. The image records were always intact — this was a display-only defect
 
 All binaries are self-contained AOT-compiled native executables. No .NET runtime required.
 

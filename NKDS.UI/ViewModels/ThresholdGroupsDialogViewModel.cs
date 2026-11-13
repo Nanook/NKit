@@ -164,7 +164,7 @@ public class ThresholdGroupsDialogViewModel : ViewModelBase
     /// </summary>
     private async Task ExportGroupsAsync()
     {
-        string filePath = await ShowSaveFileDialog.Handle(".yaml");
+        string? filePath = await ShowSaveFileDialog.Handle(".yaml");
         if (filePath == null) return;
 
         try
@@ -183,7 +183,7 @@ public class ThresholdGroupsDialogViewModel : ViewModelBase
     /// </summary>
     private async Task ExportPairsAsync()
     {
-        string filePath = await ShowSaveFileDialog.Handle(".yaml");
+        string? filePath = await ShowSaveFileDialog.Handle(".yaml");
         if (filePath == null) return;
 
         try
@@ -209,7 +209,7 @@ public class ThresholdGroupsDialogViewModel : ViewModelBase
     /// </summary>
     private async Task ImportPairsAsync()
     {
-        string filePath = await ShowOpenFileDialog.Handle(".yaml");
+        string? filePath = await ShowOpenFileDialog.Handle(".yaml");
         if (filePath == null) return;
 
         try

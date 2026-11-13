@@ -250,7 +250,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
     /// </summary>
     private async Task ExecuteBrowseAsync()
     {
-        string path = await ShowFilePicker.Handle(RxVoid.Default);
+        string? path = await ShowFilePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             DatPathText = path;
     }
