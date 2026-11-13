@@ -27,6 +27,7 @@ namespace Nanook.NKit
         //private int _shift;
         //private int _align;
         private bool _multiTrackSplit;
+        private bool _pastLastTrack; // set once we exhaust all declared track boundaries
 
         internal override bool ContractReqPatch => false;
         internal override bool ContractReqChk => false;
@@ -173,22 +174,34 @@ namespace Nanook.NKit
         private void writeData(byte[] buff, int offset, int sz)
         {
             int files = this.OutStream.ChecksummedFiles.Count;
+            if (files >= _tracks.Length)
+                return; // all declared tracks written, discard any trailing section
             SourceFileTrack t = _tracks[files];
             int total = 0;
 
             while (total != sz)
             {
-                if (_split && t.Size == base.OutStream.Position)
+                if (!_pastLastTrack && _split && t.Size == base.OutStream.Position)
                 {
-                    bool cached = false;
-
-                    t = _tracks[files + 1];
-                    this.OutStream.NewPart(Path.GetFileNameWithoutExtension(t.FileName), Path.GetExtension(t.FileName), true);
-                    if (cached)
-                        return; //don't write next track
+                    if (files + 1 >= _tracks.Length)
+                    {
+                        // No next track: extra data beyond the last declared track (e.g. Datel
+                        // discs that place filler or a hidden track after the TOC entry). Write
+                        // it into the last track's output file rather than dropping it, so the
+                        // round-trip is lossless.
+                        _pastLastTrack = true;
+                    }
+                    else
+                    {
+                        bool cached = false;
+                        t = _tracks[files + 1];
+                        this.OutStream.NewPart(Path.GetFileNameWithoutExtension(t.FileName), Path.GetExtension(t.FileName), true);
+                        if (cached)
+                            return; //don't write next track
+                    }
                 }
 
-                int write = !_split ? sz : (int)Math.Min(sz - total, t.Size - base.OutStream.Position);
+                int write = (!_split || _pastLastTrack) ? sz - total : (int)Math.Min(sz - total, t.Size - base.OutStream.Position);
                 base.OutStream.Write(buff, offset + total, write); //decrypted if no encryption
                 total += write;
             }
