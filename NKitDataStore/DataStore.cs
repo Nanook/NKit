@@ -853,7 +853,7 @@ namespace NKitDataStore
             IEnumerable<string> setNames = ListSetNames();
             foreach (string setName in setNames)
             {
-                SetInfo? info = GetSetInfo(setName, false);
+                SetInfo? info = GetSetInfo(setName, true);
                 if (info != null)
                     yield return info;
             }
