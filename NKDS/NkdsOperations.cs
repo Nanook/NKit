@@ -537,12 +537,12 @@ public sealed class NkdsOperations : INkdsOperations
                                 });
                             }
                         }
-                        else if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        else if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             errors.Add(new OperationErrorEntry
                             {
                                 ItemName = itemName,
-                                Reason = result.ErrorMsg
+                                Reason = !string.IsNullOrWhiteSpace(result.ErrorMsg) ? result.ErrorMsg : $"Verification failed: {result.VerifyResult}"
                             });
 
                             // Task 11.1: Fire callbacks so UI can show Failed status
@@ -1040,13 +1040,13 @@ public sealed class NkdsOperations : INkdsOperations
                                 Reason = alreadyExists ? "Already exists in set" : "Skipped"
                             });
                         }
-                        else if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        else if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             // Pipeline reported an error — transition to Failed
                             errors.Add(new OperationErrorEntry
                             {
                                 ItemName = itemName,
-                                Reason = result.ErrorMsg
+                                Reason = !string.IsNullOrWhiteSpace(result.ErrorMsg) ? result.ErrorMsg : $"Verification failed: {result.VerifyResult}"
                             });
 
                             onImageOutput?.Invoke(setName, currentImageId, $"[Error] {result.ErrorMsg}");
@@ -1649,12 +1649,12 @@ public sealed class NkdsOperations : INkdsOperations
 
                             NKitTaskResults result = processor.Process(cancellationToken);
 
-                            if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                            if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                             {
                                 errors.Add(new OperationErrorEntry
                                 {
                                     ItemName = itemName,
-                                    Reason = result.ErrorMsg
+                                    Reason = !string.IsNullOrWhiteSpace(result.ErrorMsg) ? result.ErrorMsg : $"Verification failed: {result.VerifyResult}"
                                 });
                             }
                             else

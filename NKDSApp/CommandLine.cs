@@ -277,7 +277,7 @@ namespace Nanook.NKit.Vfs
                     {
                         NKitProcessor processor = new NKitProcessor(settings, file, (message, level) => Console.Write(message));
                         NKitTaskResults result = processor.Process(cancel.Token);
-                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             errors++;
                             Console.WriteLine(result.ErrorMsg);
@@ -403,7 +403,7 @@ namespace Nanook.NKit.Vfs
                         NKitProcessor processor = new NKitProcessor(perFileSettings, file, (message, level) => Console.Write(message));
                         NKitTaskResults result = processor.Process(cancel.Token);
 
-                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             failed++;
                             Console.WriteLine(result.ErrorMsg);
@@ -1146,7 +1146,7 @@ namespace Nanook.NKit.Vfs
         public static void ExecuteExport(NkdsCommandRequest request)
         {
             executeMaskedTask(createExportAppSettings(request),
-                result => !string.IsNullOrWhiteSpace(result.ErrorMsg),
+                result => !string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error,
                 "export",
                 "Exported");
         }
