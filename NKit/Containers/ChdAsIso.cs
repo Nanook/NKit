@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace Nanook.NKit.Container
 {
@@ -58,6 +59,7 @@ namespace Nanook.NKit.Container
 
         private long _verifyPos;
         private bool _verifyMode; //process in raw mode as stored
+        private volatile int _failedHunkIndex; //track first decompression failure (-1 = no failure)
         public ContainerType Format => _format;
         public bool Seekable => _stream.CanSeek;
 
@@ -77,6 +79,7 @@ namespace Nanook.NKit.Container
         public ChdAsIso(string name, bool canUseCustomChkSum)
         {
             _verifyPos = 0;
+            _failedHunkIndex = -1;
             _canUseCustomChkSum = canUseCustomChkSum;
             _nulls = new byte[0x1000];
             _name = name;
@@ -287,9 +290,21 @@ namespace Nanook.NKit.Container
                             case ChdCompressionType.COMPRESSION_TYPE_1:
                             case ChdCompressionType.COMPRESSION_TYPE_2:
                             case ChdCompressionType.COMPRESSION_TYPE_3:
-
-                                //_compressionType[(int)type]  - debug to see compressiontype  -  Use full BlockSize size even for last block that may be shorter
-                                ChdError ret = _decompress[(int)type](blockData.Buff, blockData.BuffSize, blockData.Result, _blockReader.BlockSize /*blockData.Info.FullSize*/, _codec[threadIdx]);
+                                try
+                                {
+                                    //_compressionType[(int)type]  - debug to see compressiontype  -  Use full BlockSize size even for last block that may be shorter
+                                    ChdError ret = _decompress[(int)type](blockData.Buff, blockData.BuffSize, blockData.Result, _blockReader.BlockSize /*blockData.Info.FullSize*/, _codec[threadIdx]);
+                                    if (ret != ChdError.CHDERR_NONE)
+                                    {
+                                        // Record first failure (thread-safe via Interlocked)
+                                        Interlocked.CompareExchange(ref _failedHunkIndex, blockData.Info.Index, -1);
+                                    }
+                                }
+                                catch
+                                {
+                                    // Decompressor threw (e.g. damaged FLAC/LZMA data)
+                                    Interlocked.CompareExchange(ref _failedHunkIndex, blockData.Info.Index, -1);
+                                }
                                 break;
 
                             case ChdCompressionType.COMPRESSION_MINI: //RLE
@@ -305,6 +320,14 @@ namespace Nanook.NKit.Container
                         }
                     }
                 }, out firstGroup);
+
+            // Check for decompression failures after block reader completes
+            int failedHunk = _failedHunkIndex;
+            if (failedHunk >= 0)
+            {
+                _failedHunkIndex = -1; // Reset for next read attempt
+                throw new HandledException($"CHD is damaged - decompression failed at hunk {failedHunk}");
+            }
 
 
             int vfyOff = offset;
