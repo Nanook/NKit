@@ -342,7 +342,7 @@ namespace Nanook.NKit.Steps.Shared
             {
                 IImageWriter writer = getWriterForSection(section);
                 DataType dt = _discJunkNulls != 0 && section.ImageOffset > _discJunkNulls ? DataType.NJunk : DataType.Fill;
-                foreach (ISectionItem item in section.Items.Where(i => (i.Gap != null && i.Gap.DataType != dt) || i.Gap.FillByte != 0))
+                foreach (ISectionItem item in section.Items.Where(i => i.Gap != null && (i.Gap.DataType != dt || i.Gap.FillByte != 0)))
                 {
                     IEnumerable<ISectionData> gaps = (item.GapInfo?.Count ?? 0) == 0 ? new[] { item.Gap } : item.GapInfo.Where(a => a.DataType != dt || a.FillByte != 0);
                     foreach (ISectionData gap in gaps)

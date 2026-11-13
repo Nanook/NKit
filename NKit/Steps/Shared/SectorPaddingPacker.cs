@@ -42,7 +42,7 @@ namespace Nanook.NKit
         /// discs, 0x18 for Mode2 discs). When &gt; 0x10, bytes [0x10-0x17] are not part of the stored
         /// user data and must be persisted via <see cref="SectorFlags.Subheader"/> even for genuine
         /// Mode1 sectors (mode byte 0x01) so they survive the DataStore round-trip.</param>
-        public static SectorFlags[] Analyse(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = 0x10)
+        public static SectorFlags[] Analyse(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = -1)
         {
             if (sectionData == null || sectionData.Length == 0 || sectorCount <= 0)
                 return null;
@@ -63,7 +63,14 @@ namespace Nanook.NKit
                 bool isMode2Form1 = false;
                 bool isMode2Form2 = false;
 
-                if (modeByte == 0x02)
+                // In a Mode 1 area (blockFsOffset == 0x10) every sector is treated as Mode 1
+                // regardless of its mode byte. Some discs (e.g. Sega CD coverdiscs) have trailing
+                // unstructured data where byte 0x0F happens to be 0x02 — not a real Mode 2 sector.
+                // If we mistype it as Mode 2, bytes 0x810–0x817 fall into neither the Mode 1 stored
+                // stride (0x10–0x80F) nor any pack payload, and come back as zeros on export.
+                // blockFsOffset == -1 (unknown/not passed) keeps the original mode-byte typing.
+                bool asMode2 = modeByte == 0x02 && blockFsOffset != 0x10;
+                if (asMode2)
                 {
                     byte subMode = sectionData[sectorOffset + 0x12];
                     isMode2Form2 = (subMode & 0x20) != 0;
@@ -337,7 +344,7 @@ namespace Nanook.NKit
         /// <param name="sectorCount">Number of sectors in the section.</param>
         /// <param name="startLba">The starting LBA for the first sector (from PhysicalOffset).</param>
         /// <returns>The packed byte array (version + header + flags + payload), or null if input is invalid.</returns>
-        public static byte[] Pack(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = 0x10)
+        public static byte[] Pack(byte[] sectionData, int sectorCount, long startLba, int blockFsOffset = -1)
         {
             SectorFlags[] flags = Analyse(sectionData, sectorCount, startLba, blockFsOffset);
             if (flags == null)
