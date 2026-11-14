@@ -10,7 +10,7 @@
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<ApplicationIcon>Assets\NkdsIcon.ico</ApplicationIcon>
+		<ApplicationIcon>Assets\NKDS.ico</ApplicationIcon>
 		<!-- Default runtime identifier when not specified (ensures NKDS library gets WINDOWS define) -->
 		<RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == '' ">win-x64</RuntimeIdentifier>
 		<RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>

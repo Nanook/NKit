@@ -9,7 +9,7 @@
 		Width="1200" MinWidth="1200" MinHeight="720"
         x:Class="NKit.Ui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/NKitLogo.ico"
+        Icon="/Assets/NKit.png"
 		WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
         Title="">
@@ -55,7 +55,7 @@
 		        PointerPressed="titleBar_PointerPressed"
 		        IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"
 		        ZIndex="-1"/>
-		<Svg Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Path="avares://nkit-ui/Assets/NKitLogo.svg" Margin="5,10,0,0" ToolTip.Tip="{Binding NKitVersion}"/>
+		<Svg Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Path="avares://nkit-ui/Assets/NKit.svg" Margin="5,10,0,0" ToolTip.Tip="{Binding NKitVersion}"/>
 		<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,0,5,0">
 			<ListBox
 				Name="lboxTasks"

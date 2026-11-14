@@ -5,7 +5,7 @@
         x:Class="NkdsUi.Views.Dialogs.Add1GmrDialog"
         x:DataType="vm:Add1GmrDialogViewModel"
         Title="Add 1GMR"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Width="700" Height="650"
         MinWidth="600" MinHeight="500"
         WindowStartupLocation="CenterOwner"

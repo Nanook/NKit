@@ -4,7 +4,7 @@
         x:Class="NkdsUi.Views.Dialogs.CompactDialog"
         x:DataType="vm:CompactDialogViewModel"
         Title="Compact Sets"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Width="440" Height="400"
         CanResize="False"
         WindowStartupLocation="CenterOwner">

@@ -11,7 +11,7 @@
         MinWidth="580" MinHeight="240"
         CanResize="False"
         WindowStartupLocation="CenterOwner"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Title="Export Images">
 
     <Design.DataContext>

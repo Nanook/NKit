@@ -5,7 +5,7 @@
         x:Class="NkdsUi.Views.Dialogs.CreateSetDialog"
         x:DataType="vm:CreateSetDialogViewModel"
         Title="Create Set"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Width="550" MinWidth="550" SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         CanResize="True">

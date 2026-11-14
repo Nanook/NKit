@@ -4,7 +4,7 @@
         xmlns:converters="using:NkdsUi.Converters"
         x:Class="NkdsUi.Views.StatsGraphsDialog"
         x:DataType="vm:StatsGraphsViewModel"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Title="Storage Analysis"
         Width="500" Height="540"
         WindowStartupLocation="CenterOwner">

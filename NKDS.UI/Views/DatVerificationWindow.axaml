@@ -11,7 +11,7 @@
         Width="900" Height="600"
         MinWidth="700" MinHeight="450"
         CanResize="True"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         WindowStartupLocation="CenterScreen"
         Title="Dat Verification">
 
