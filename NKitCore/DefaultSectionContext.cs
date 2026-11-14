@@ -85,6 +85,30 @@ namespace NKitCore
             _areaStates.GetOrAdd(area.Index, _ => new AreaState());
         }
 
+        /// <summary>
+        /// Returns a one-line diagnostic string describing current area outstanding-section counts.
+        /// Used by the pipeline hang watchdog to identify which area is blocked.
+        /// Format: "Area[0]=0 Area[1]=3 Area[2]=0" — a non-zero entry is the stuck area.
+        /// </summary>
+        public string GetAreaDiagnostics()
+        {
+            try
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                foreach (System.Collections.Generic.KeyValuePair<int, AreaState> kvp in _areaStates)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    sb.Append($"Area[{kvp.Key}]={Volatile.Read(ref kvp.Value.Outstanding)} TcsDone={kvp.Value.Tcs?.Task.IsCompleted}");
+                }
+                return sb.Length > 0 ? sb.ToString() : "(no areas registered)";
+            }
+            catch
+            {
+                return "(error reading area states)";
+            }
+        }
+
         public Task WaitForAreaCompletionAsync(int areaIndex, CancellationToken ct)
         {
             if (ct.IsCancellationRequested) return Task.FromCanceled(ct);

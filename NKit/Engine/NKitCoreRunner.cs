@@ -150,11 +150,23 @@ namespace Nanook.NKit.Engine.Core
                 // GetConsumingEnumerable() throws OperationCanceledException internally when
                 // CompleteAdding() unblocks a waiting thread - use TryTake + ManualResetEventSlim
                 // to wake immediately when a section arrives, with no exceptions or busy-spinning.
+                // Watchdog: if the consumer has been idle (no sections yielded) for more than
+                // 60 seconds while the run task is still active, the pipeline is likely hung.
+                // Log diagnostics so the next occurrence gives us a stack-free clue:
+                //   - run.Status tells us if ProcessAsync is still running or silently dead
+                //   - completed.Count tells us if the collection is empty (pipeline stuck upstream)
+                //     or full (writer blocked on completed.Add with wrong CT)
+                //   - area diagnostics show which area is waiting with Outstanding > 0
+                System.Diagnostics.Stopwatch noYieldSw = System.Diagnostics.Stopwatch.StartNew();
+                bool hangLogged = false;
+
                 while (!completed.IsCompleted)
                 {
                     C2Section sec;
                     if (completed.TryTake(out sec))
                     {
+                        noYieldSw.Restart();
+                        hangLogged = false;
                         yield return sec.Processor;
                     }
                     else
@@ -163,9 +175,34 @@ namespace Nanook.NKit.Engine.Core
                         // Check again after reset to avoid a race where an item arrived between
                         // the failed TryTake and the Reset.
                         if (!completed.TryTake(out sec))
+                        {
                             completedReady.Wait(5); // wake immediately when Set(); 5ms backstop
+
+                            // Watchdog: fire once after 60s of no-yield idle
+                            if (!hangLogged && noYieldSw.Elapsed.TotalSeconds > 60)
+                            {
+                                hangLogged = true;
+                                logPipelineHang(run, completed, context, _stepContext, noYieldSw.Elapsed);
+
+                                // Force-unblock the hung pipeline so the UI gets an error instead
+                                // of an indefinite hang. Throwing here causes the iterator's finally
+                                // to run, which calls context.Dispose(). That force-completes all
+                                // pending area TCS instances, unblocking WaitForAreaCompletionAsync
+                                // in the producer task. The producer exits, ProcessAsync returns, and
+                                // the run Task completes. The exception propagates to
+                                // NKitProcessor.process() which calls ProcessResultsAsExceptioned()
+                                // - the DataStore transaction is rolled back cleanly.
+                                throw new TimeoutException(
+                                    $"NKit pipeline hang: no sections yielded for {(int)noYieldSw.Elapsed.TotalSeconds}s. " +
+                                    $"Diagnostics: {System.IO.Path.Combine(System.IO.Path.GetTempPath(), "nkds-pipeline-hang.txt")}");
+                            }
+                        }
                         else
+                        {
+                            noYieldSw.Restart();
+                            hangLogged = false;
                             yield return sec.Processor;
+                        }
                     }
                 }
                 C2Section tail;
@@ -189,6 +226,62 @@ namespace Nanook.NKit.Engine.Core
                 try { completed.Dispose(); } catch { }
                 try { completedReady.Dispose(); } catch { }
             }
+        }
+
+        private static void logPipelineHang(
+            System.Threading.Tasks.Task run,
+            System.Collections.Concurrent.BlockingCollection<C2Section> completed,
+            C2SectionContext context,
+            NKitStepContext stepContext,
+            TimeSpan idleDuration)
+        {
+            try
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                sb.AppendLine($"=== PIPELINE HANG DETECTED {timestamp}: no sections yielded for {(int)idleDuration.TotalSeconds}s ===");
+
+                // Image identity
+                sb.AppendLine($"  Image:            {stepContext?.SourceFile?.Name ?? "(unknown)"}");
+                sb.AppendLine($"  Task:             {stepContext?.TaskType}");
+
+                // Run task state - the most useful clue:
+                //   Running/WaitingForActivation = ProcessAsync is live but hung somewhere inside
+                //   Faulted = internal exception killed it but CompleteAdding() was never called
+                //   RanToCompletion = should never happen (CompleteAdding would have been called)
+                sb.AppendLine($"  run.Status:       {run.Status}");
+                sb.AppendLine($"  run.IsFaulted:    {run.IsFaulted}");
+                if (run.IsFaulted && run.Exception != null)
+                {
+                    System.Exception inner = run.Exception.InnerException ?? run.Exception;
+                    sb.AppendLine($"  run.Exception:    {inner.GetType().Name}: {inner.Message}");
+                }
+
+                // completed collection state:
+                //   Count ~= 0  -> pipeline stopped producing (likely stuck in WaitForAreaCompletionAsync)
+                //   Count >= BoundedCapacity -> writer blocked on completed.Add (CT threading issue)
+                sb.AppendLine($"  completed.Count:  {completed.Count} / {completed.BoundedCapacity}");
+                sb.AppendLine($"  completed.Done:   {completed.IsCompleted}");
+
+                // Area states - Outstanding > 0 = producer waiting on that area's TCS
+                string areaDiag = context?.GetAreaDiagnostics() ?? "(no context)";
+                sb.AppendLine($"  Areas:            {areaDiag}");
+
+                string message = sb.ToString().TrimEnd();
+
+                // Write to NKit log (visible in UI if it hasn't frozen)
+                stepContext?.Log?.Error(() => message);
+
+                // Always write to a file in %TEMP% - persists even if the UI is killed.
+                // Appends so multiple occurrences accumulate in one file.
+                try
+                {
+                    string hangFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "nkds-pipeline-hang.txt");
+                    System.IO.File.AppendAllText(hangFile, message + Environment.NewLine + Environment.NewLine);
+                }
+                catch { /* temp write failure must not interfere with the pipeline */ }
+            }
+            catch { /* watchdog must never crash the pipeline */ }
         }
 
         // Convert the engine snapshot into the public EngineStats DTO and raise it to the host UI.
