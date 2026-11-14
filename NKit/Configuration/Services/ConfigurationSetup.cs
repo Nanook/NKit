@@ -293,7 +293,11 @@ namespace Nanook.NKit.Configuration.Services
                         if (!fileSystem.DirectoryExists(candidate))
                             continue;
 
-                        List<string> files = fileSystem.GetFiles(candidate, "*", SearchOption.AllDirectories)?.ToList() ?? new List<string>();
+                        // Only copy yaml config files. The candidate directory (defaults/ or fix/)
+                        // sits next to the executable, which also contains native libs (.so, .dylib,
+                        // .dll). Using "*" would copy those into ~/.config/nkit on first system-mode
+                        // run — they serve no purpose there and waste space.
+                        List<string> files = fileSystem.GetFiles(candidate, "*.yaml", SearchOption.AllDirectories)?.ToList() ?? new List<string>();
 
                         foreach (string src in files)
                         {
