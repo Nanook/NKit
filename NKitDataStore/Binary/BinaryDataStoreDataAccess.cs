@@ -3140,7 +3140,8 @@ namespace NKitDataStore.Binary
         }
 
         public void InsertBlockWithCompression(string setName, IDataStoreTransaction transaction, BlockKey key,
-            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism)
+            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism,
+            CancellationToken cancellationToken = default)
         {
             BinaryTransaction binaryTransaction = (BinaryTransaction)transaction;
 
@@ -3209,7 +3210,8 @@ namespace NKitDataStore.Binary
                     };
                     binaryTransaction.AddPendingBlock(entry);
                     binaryTransaction.BlockIndex.AddEntry(entry);
-                }
+                },
+                cancellationToken: cancellationToken
             );
         }
 
