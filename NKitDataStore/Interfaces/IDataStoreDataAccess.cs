@@ -276,7 +276,8 @@ namespace NKitDataStore.Interfaces
         /// <param name="compressor">The compressor to use if the block doesn't exist.</param>
         /// <param name="compressionParallelism">The level of parallelism for compression,controls number of threads.</param>
         void InsertBlockWithCompression(string setName, IDataStoreTransaction transaction, BlockKey key,
-            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism);
+            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Waits for any background compression tasks for the specified set to complete.

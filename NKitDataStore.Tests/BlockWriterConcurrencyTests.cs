@@ -152,29 +152,21 @@ namespace NKitDataStore.Tests
         // ---- [BUG CONDITION] Semaphore wait has no CancellationToken ----------------
 
         /// <summary>
-        /// [BUG CONDITION] Demonstrates that InsertBlockWithCompression hangs indefinitely
-        /// when all compression slots are occupied and the pipeline CancellationToken is
-        /// cancelled BEFORE the caller can acquire a slot.
+        /// Verifies that InsertBlockWithCompression respects cancellation while waiting for
+        /// a compression slot. When all slots are occupied and the CT is cancelled, the caller
+        /// must return promptly (OperationCanceledException) rather than blocking indefinitely.
         ///
-        /// Root cause:
-        ///   BlockWriter.cs ~line 200: _bufferSemaphore.Wait() — no CancellationToken,
-        ///   no timeout.  This runs on the StreamBlockCore writer task thread.  When the
-        ///   NKit pipeline's CancellationToken fires (timeout, user cancel, error on another
-        ///   image), the writer cannot be interrupted.  ProcessAsync never returns.
-        ///   NKitCoreRunner.Run()'s run.GetAwaiter().GetResult() blocks indefinitely.
-        ///   The verify step never starts.
+        /// Root cause of the original hang: _bufferSemaphore.Wait() had no CancellationToken.
+        /// When the pipeline cancelled mid-batch, the writer task blocked here forever, which
+        /// caused run.GetAwaiter().GetResult() in NKitCoreRunner.Run() to never return and
+        /// the verify step never started.
         ///
-        /// Expected WITH BUG:   test fails — insertTask does not complete within 500ms of
-        ///                      cancellation (it only unblocks when a slot is eventually freed).
-        /// Expected AFTER FIX:  test passes — insertTask respects cancellation and returns
-        ///                      quickly (OperationCanceledException or immediate return).
-        ///
-        /// Fix:
-        ///   Add a CancellationToken parameter to InsertBlockWithCompression and replace
-        ///   _bufferSemaphore.Wait() with _bufferSemaphore.Wait(cancellationToken).
+        /// Fix applied: added CancellationToken parameter to InsertBlockWithCompression and
+        /// passed it to _bufferSemaphore.Wait(cancellationToken). EndWork() is called in the
+        /// catch block to keep WaitAll()/Shutdown() correct when cancellation fires.
         /// </summary>
         [Fact]
-        public void InsertBlock_SlotsFullThenCancel_CallerNotHungAfterCancellation()
+        public void InsertBlock_SlotsFullThenCancel_CallerReturnsPromptlyOnCancellation()
         {
             int parallelism = 2;
             int blockSize = 1024;
@@ -220,20 +212,21 @@ namespace NKitDataStore.Tests
 
                 insertTask = Task.Run(() =>
                 {
-                    // Note: InsertBlockWithCompression currently has no CancellationToken
-                    // parameter. After the fix, the CT should be threaded through here.
+                    // Now that InsertBlockWithCompression has a CancellationToken parameter,
+                    // the already-cancelled token is passed through to _bufferSemaphore.Wait(ct).
                     writer.InsertBlockWithCompression(
                         "test", KeyFor(extra), extra, 0, blockSize,
                         existsFunc: (_, __) => false,
                         acquireShardWrite: (_, __) => new EmptyDisposable(),
                         compressFunc: PassThroughCompress(0),
-                        writeFunc: (_, __, ___, ____, _____) => { });
+                        writeFunc: (_, __, ___, ____, _____) => { },
+                        cancellationToken: cts.Token);
                 });
 
                 // With a correct implementation, the cancelled CT causes InsertBlockWithCompression
-                // to return immediately (< 100ms). Without the fix, it blocks until releaseGate
-                // is signalled, taking >> 500ms.
-                bool completedQuickly = insertTask.Wait(500);
+                // to throw OperationCanceledException immediately. Task.Wait(500) would rethrow it
+                // as AggregateException, so use Task.WhenAny to check completion without throwing.
+                bool completedQuickly = Task.WhenAny(insertTask, Task.Delay(500)).GetAwaiter().GetResult() == insertTask;
 
                 sw.Stop();
                 Trace.TraceInformation($"insertTask completed: {completedQuickly}, elapsed: {sw.ElapsedMilliseconds}ms");
@@ -241,23 +234,21 @@ namespace NKitDataStore.Tests
                 // Release the gate so the blocked compression tasks can drain and
                 // BlockWriter.Dispose() doesn't hang during test cleanup.
                 releaseGate.Set();
-                insertTask.Wait(10_000);
+                try { insertTask.Wait(10_000); } catch { } // OperationCanceledException expected
 
                 // The key assertion: the call with a cancelled token must return
                 // well within the gated-compression window (which is >> 500ms).
                 Assert.True(completedQuickly,
-                    $"BUG: InsertBlockWithCompression did not return within 500ms after " +
+                    $"InsertBlockWithCompression did not return within 500ms after " +
                     $"CancellationToken was cancelled (elapsed: {sw.ElapsedMilliseconds}ms). " +
-                    "The _bufferSemaphore.Wait() on ~BlockWriter.cs:200 has no CancellationToken " +
-                    "so pipeline cancellation cannot interrupt it. " +
-                    "Fix: add CancellationToken to InsertBlockWithCompression and pass it to " +
-                    "_bufferSemaphore.Wait(cancellationToken).");
+                    "Expected _bufferSemaphore.Wait(cancellationToken) to throw OperationCanceledException " +
+                    "quickly. If this fails, the CT is not being passed to the semaphore wait.");
             }
             finally
             {
                 // Always release the gate so compression tasks can complete and Dispose() returns.
                 releaseGate.Set();
-                insertTask?.Wait(10_000);
+                try { insertTask?.Wait(10_000); } catch { } // OperationCanceledException expected
                 writer?.Shutdown(10_000);
                 writer?.Dispose();
             }

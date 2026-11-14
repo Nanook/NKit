@@ -135,7 +135,8 @@ namespace NKitDataStore
             Func<string, (ulong xxHash, uint crc), IDisposable> acquireShardWrite,
             Func<byte[], int, int, byte[], (int length, byte compressionType)> compressFunc,
             Action<string, (ulong xxHash, uint crc), byte[], int, byte> writeFunc,
-            Func<string, (ulong xxHash, uint crc), int?>? getShardId = null)
+            Func<string, (ulong xxHash, uint crc), int?>? getShardId = null,
+            CancellationToken cancellationToken = default)
         {
             if (_isShuttingDown)
                 return;
@@ -198,7 +199,19 @@ namespace NKitDataStore
             // Wait for a compression slot on the CALLER thread. This provides backpressure:
             // the caller naturally throttles to compression throughput, keeping ThreadPool queue depth
             // bounded at compressionParallelism rather than growing without limit.
-            _bufferSemaphore.Wait();
+            // The CancellationToken allows the pipeline to interrupt this wait when it is cancelled
+            // rather than blocking indefinitely (the original hang path).
+            try
+            {
+                _bufferSemaphore.Wait(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // Pipeline cancelled while waiting for a slot. BeginWork() already incremented the
+                // counter so we must decrement it here to keep WaitAll()/Shutdown() correct.
+                EndWork();
+                throw;
+            }
 
             // Slot acquired - grab pre-allocated buffers (always available: 1:1 with slots)
             if (!_srcBufferPool.TryTake(out byte[]? srcBuf) || !_dstBufferPool.TryTake(out byte[]? dstBuf))
