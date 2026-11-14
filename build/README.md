@@ -7,20 +7,21 @@ entry point that produces all release archives in `<repo-root>/build-output/`
 ## How it fits together
 
 ```
-build/build-all.ps1          ← run this
+build/build-all.ps1          ← run this locally
     │
-    ├── Windows ── build/build.ps1 -Runtime win-x64
-    │                   (same script the CI uses; runs natively on Windows)
+    ├── Windows ── build\build.ps1 -Runtime win-x64
+    │                   Same script CI uses; produces password-protected archives
+    │                   in build-output/ directly via 7-Zip.
     │
-    └── Linux ──── build/wsl-docker-build.sh
-                       └── build/build-linux-x64.sh
-                               └── Docker container running build/container-build.sh
-                                       (builds on native ext4; same dotnet publish flags
-                                        as build/build.sh, with GrindCore static-link)
+    └── Linux ──── build/build-wsl.sh --runtime linux-x64
+                       Thin wrapper: starts native WSL dockerd, copies only the
+                       source files needed to native ext4 inside the container
+                       (avoids WSL 9p NuGet failures), then runs the same
+                       build/build.sh --legacy-container that CI uses.
 ```
 
-Both paths produce identical archive layouts — CLI zip (nkit+nkds+config) and UI
-zip (nkit-ui+nkds-ui+config) — and both land in `build-output/`.
+Both paths produce identical archive layouts — CLI zip (nkit + nkds + config)
+and UI zip (nkit-ui + nkds-ui + config) — and both land in `build-output/`.
 
 ## Quick start
 
@@ -30,13 +31,13 @@ From Windows PowerShell:
 pwsh -File build\build-all.ps1 -Version 3.0.0-alpha.3
 ```
 
-Output in `<repo-root>/build-output/` (gitignored, next to `build/`):
+Output in `<repo-root>/build-output/` (gitignored):
 
 ```
-NKit_win-x64_CLI_3.0.0-alpha.3.zip    # nkit.exe  + nkds.exe   + config
-NKit_win-x64_UI_3.0.0-alpha.3.zip     # nkit-ui.exe + nkds-ui.exe + config
-NKit_linux-x64_CLI_3.0.0-alpha.3.zip  # nkit     + nkds       + config
-NKit_linux-x64_UI_3.0.0-alpha.3.zip   # nkit-ui  + nkds-ui    + libSkiaSharp.so + libHarfBuzzSharp.so + config
+NKit_win-x64_CLI_3.0.0-alpha.3.zip         # nkit.exe  + nkds.exe   + config
+NKit_win-x64_UI_3.0.0-alpha.3.zip          # nkit-ui.exe + nkds-ui.exe + config
+NKit_linux-legacy-x64_CLI_3.0.0-alpha.3.zip # nkit     + nkds       + config
+NKit_linux-legacy-x64_UI_3.0.0-alpha.3.zip  # nkit-ui  + nkds-ui    + libSkiaSharp.so + libHarfBuzzSharp.so + config
 ```
 
 Skip one platform if needed:
@@ -50,29 +51,27 @@ pwsh -File build\build-all.ps1 -Version 3.0.0-alpha.3 -SkipWindows  # Linux only
 
 Building from the `/mnt/d` 9p mount (WSL's view of `D:\`) fails with
 `NETSDK1064: Package GrindCore not found` on multi-project self-contained RID
-publish — even with a clean cache. This is a known limitation of the WSL 9p
-filesystem. CI works because it checks out onto native ext4.
+publish. `build-wsl.sh` works around this by:
 
-The Docker container copies the source tree to native ext4 inside the container
-and builds there. The NuGet cache lives in a persistent Docker volume (`nkit_ngc`)
-so subsequent builds are fast.
+1. Running the build inside a Docker container (Ubuntu 18.04 / glibc 2.27).
+2. Copying only the needed source files from `/mnt/d` to native ext4 at `/build`
+   inside the container before running `build.sh --legacy-container`.
+3. Using a persistent Docker volume (`nkit_ngc`) for the NuGet package cache so
+   subsequent builds restore quickly without re-downloading.
 
-Additionally:
-- **Docker Desktop drops dot-folders** (`.nuget`) on `/mnt` bind mounts — use the
-  native WSL `dockerd`, not Docker Desktop. `wsl-docker-build.sh` handles this.
-- **GrindCore is AOT-static-linked** via a `LinkerArg` in the csproj. The static
-  `.a` is injected from `.grindcore-native/` into the container NuGet cache before
-  publishing, mirroring the CI `inject_grindcore` step.
+The `build.sh --legacy-container` call inside the container is the same call
+that `build/build-legacy.sh` makes on GitHub Actions, so local and CI builds
+share the same build logic.
 
-## Options for the Linux build (env vars passed to wsl-docker-build.sh)
+## Options for the Linux build (args to build-wsl.sh)
 
-| Var | Default | Meaning |
+| Arg | Default | Meaning |
 |-----|---------|---------|
-| `VERSION` | *(none)* | Version stamp, e.g. `3.0.0-alpha.3` |
-| `RUNTIME` | `linux-x64` | Target RID |
-| `CONFIG` | `Release` | Build configuration |
-| `GC_ZIP_URL` | *(auto)* | Explicit `grindcore.zip` URL to skip the GitHub API lookup |
-| `IMAGE` | `nkit-legacy-x64-builder:latest` | Docker builder image tag |
+| `--runtime` | `linux-x64` | Target RID (`linux-x64` or `linux-arm64`) |
+| `--apps` | `console,gui,nkds,nkds-ui` | Comma-separated apps to build |
+| `--config` | `Release` | Build configuration |
+| `--version` | *(none)* | Version stamp, e.g. `3.0.0-alpha.3` |
+| `--gc-zip-url` | *(auto)* | Explicit `grindcore.zip` URL to skip the GitHub API lookup |
 
 ## Runtime notes
 
