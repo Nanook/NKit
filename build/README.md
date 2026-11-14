@@ -23,6 +23,19 @@ build/build-all.ps1          ← run this locally
 Both paths produce identical archive layouts - CLI zip (nkit + nkds + config)
 and UI zip (nkit-ui + nkds-ui + config) - and both land in `build-output/`.
 
+## Prerequisites
+
+### Windows builds
+- [.NET 10 SDK](https://dotnet.microsoft.com/download) (`winget install Microsoft.DotNet.SDK.10`)
+- [7-Zip](https://www.7-zip.org/) — required for the password-protected local archives (`winget install 7zip.7zip`)
+
+### Linux builds (from Windows)
+- **WSL 2** with Ubuntu 22.04 (`wsl --install -d Ubuntu-22.04`)
+- **Native Docker inside WSL** — docker-ce, NOT Docker Desktop. Docker Desktop drops dot-folders (`.nuget`, `.git`) on 9p bind mounts. Install docker-ce inside Ubuntu:
+  ```bash
+  sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli
+  ```
+
 ## Quick start
 
 From Windows PowerShell:
