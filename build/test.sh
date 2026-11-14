@@ -43,7 +43,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# --- Docker setup (mirrors wsl-docker-build.sh) ---
+# --- Docker setup (same approach as build-wsl.sh) ---
 export DOCKER_HOST="${DOCKER_HOST:-unix:///var/run/docker.sock}"
 IMAGE="nkit-legacy-x64-builder:latest"
 DOCKERFILE="$SCRIPT_DIR/docker/Dockerfile.legacy-x64"
