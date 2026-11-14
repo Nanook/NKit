@@ -258,11 +258,9 @@ add_config_files() {
         fi
     fi
 
-    # GUI: nkit-ui.yaml + defaults directory
+    # GUI: defaults directory and ConfigInfo.txt
+    # nkit-ui.yaml is included via NKit.UI.csproj CopyToPublishDirectory — no manual copy needed.
     if [[ "$BUILD_GUI" == true ]] && [ -d "publish/gui/$rid" ]; then
-        if [ -f "NKit.UI/nkit-ui.yaml" ]; then
-            cp "NKit.UI/nkit-ui.yaml" "publish/gui/$rid/"
-        fi
         if [ -d "NKit/defaults" ]; then
             cp -r "NKit/defaults" "publish/gui/$rid/"
         fi

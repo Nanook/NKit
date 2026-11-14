@@ -36,7 +36,7 @@ $BuildNkdsUi  = $AppList -contains "nkds-ui"
 
 # Project paths
 $ConsoleProject = "NKitApp/NKitApp.csproj"
-$GuiProject     = "NKit.Ui/NKit.Ui.csproj"
+$GuiProject     = "NKit.UI/NKit.UI.csproj"
 $NkdsProject    = "NKDSApp/NKDSApp.csproj"
 $NkdsUiProject  = "NKDS.UI/NKDS.UI.csproj"
 
@@ -187,9 +187,9 @@ if ($BuildNkds -and (Test-Path "publish/nkds/$Runtime")) {
     if (Test-Path "NKitApp/ConfigInfo.txt") { Copy-Item "NKitApp/ConfigInfo.txt" "publish/nkds/$Runtime/" }
 }
 if ($BuildGui -and (Test-Path "publish/gui/$Runtime")) {
-    if (Test-Path "NKit.Ui/nkit-ui.yaml") { Copy-Item "NKit.Ui/nkit-ui.yaml" "publish/gui/$Runtime/" }
+    # nkit-ui.yaml is included via NKit.UI.csproj CopyToPublishDirectory — no manual copy needed.
     if (Test-Path "NKit/defaults")         { Copy-Item "NKit/defaults" "publish/gui/$Runtime/" -Recurse -Force }
-    if (Test-Path "NKit.Ui/ConfigInfo.txt") { Copy-Item "NKit.Ui/ConfigInfo.txt" "publish/gui/$Runtime/" }
+    if (Test-Path "NKit.UI/ConfigInfo.txt") { Copy-Item "NKit.UI/ConfigInfo.txt" "publish/gui/$Runtime/" }
 }
 if ($BuildNkdsUi -and (Test-Path "publish/nkds-ui/$Runtime")) {
     # fix files are copied by the CSPROJ CopyNKitDefaults target during publish
