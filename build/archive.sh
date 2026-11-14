@@ -51,11 +51,14 @@ create_archives() {
         echo "Creating: $ui_zip"
 
         if [[ "$runtime" == osx-* ]]; then
-            # macOS: archive the .app bundles using ditto for proper resource fork handling
+            # macOS: archive the .app bundles using ditto for proper resource fork handling.
+            # Do NOT use --keepParent here: source is the bundle parent directory (contains
+            # NKit.app, NKDS.app, sign scripts, yaml), so we want its *contents* at the zip
+            # root — not the osx-x64/ folder itself as an extra wrapping level.
             local bundle_dir="publish/bundle/$runtime"
             if [ -d "$bundle_dir" ]; then
                 if command -v ditto >/dev/null 2>&1; then
-                    ditto -c -k --keepParent "$bundle_dir" "$REPO_ROOT/$ui_zip"
+                    ditto -c -k "$bundle_dir" "$REPO_ROOT/$ui_zip"
                 else
                     (cd "$bundle_dir" && zip -r "$REPO_ROOT/$ui_zip" .)
                 fi

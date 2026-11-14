@@ -96,16 +96,16 @@ create_nkds_ui_macos_bundle() {
     local runtime="$1"
 
     if [ ! -f "publish/nkds-ui/$runtime/nkds-ui" ]; then
-        echo "NKDS.UI app not found, skipping NkdsUi macOS bundle"
+        echo "NKDS.UI app not found, skipping NKDS macOS bundle"
         return 0
     fi
 
-    local app_path="publish/bundle/$runtime/NkdsUi.app"
+    local app_path="publish/bundle/$runtime/NKDS.app"
     local contents="$app_path/Contents"
     local macos="$contents/MacOS"
     local resources="$contents/Resources"
 
-    echo "Creating NkdsUi.app bundle..."
+    echo "Creating NKDS.app bundle..."
     mkdir -p "$macos" "$resources"
 
     # Copy executable
@@ -147,9 +147,9 @@ create_nkds_ui_macos_bundle() {
   <key>CFBundleIdentifier</key>
   <string>com.nanook.nkds-ui</string>
   <key>CFBundleName</key>
-  <string>NkdsUi</string>
+  <string>NKDS</string>
   <key>CFBundleDisplayName</key>
-  <string>NKDS UI</string>
+  <string>NKDS</string>
   <key>CFBundleExecutable</key>
   <string>nkds-ui</string>
   <key>CFBundleShortVersionString</key>
@@ -162,16 +162,23 @@ create_nkds_ui_macos_bundle() {
 </plist>
 PLIST
 
-    # Create ad-hoc signing helper
+    # Place config NEXT TO the .app bundle (portable mode trigger)
     local bundle_parent="publish/bundle/$runtime"
-    cat > "$bundle_parent/RunMeToSignNkdsUi.command" << 'SIGN'
+    if [ -f "publish/nkds-ui/$runtime/nkds-ui.yaml" ]; then
+        cp "publish/nkds-ui/$runtime/nkds-ui.yaml" "$bundle_parent/"
+    elif [ -f "NKDS.UI/nkds-ui.yaml" ]; then
+        cp "NKDS.UI/nkds-ui.yaml" "$bundle_parent/"
+    fi
+
+    # Create ad-hoc signing helper
+    cat > "$bundle_parent/RunMeToSignNKDS.command" << 'SIGN'
 #!/bin/bash
 cd "$(dirname "$0")"
-codesign --force --deep --sign - NkdsUi.app
-echo "NkdsUi.app signed (ad-hoc). Press any key to close."
+codesign --force --deep --sign - NKDS.app
+echo "NKDS.app signed (ad-hoc). Press any key to close."
 read -n 1
 SIGN
-    chmod +x "$bundle_parent/RunMeToSignNkdsUi.command"
+    chmod +x "$bundle_parent/RunMeToSignNKDS.command"
 
     echo "Created: $app_path"
 }
