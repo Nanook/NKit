@@ -13,7 +13,7 @@ namespace Nanook.NKit.Nintendo.WiiU
     /// Layout:
     ///   0x00           FST header (0x20 bytes)
     ///   0x20           Content table records (N × 0x20 bytes)
-    ///   (N+1)*0x20     File/directory entries (16 bytes each — WiiU extends Wii/GC 12-byte format)
+    ///   (N+1)*0x20     File/directory entries (16 bytes each - WiiU extends Wii/GC 12-byte format)
     ///   After entries  Name string table (null-terminated Shift-JIS)
     ///
     /// Each file entry carries a <c>sectionNo</c> (uint16 at entry+0x0E) that identifies
@@ -21,7 +21,7 @@ namespace Nanook.NKit.Nintendo.WiiU
     /// content inherit that content's index; mixed-content directories use the index of their
     /// first child.
     ///
-    /// The binary is not encrypted here — call
+    /// The binary is not encrypted here - call
     /// <see cref="WiiUSecurity.EncryptFst"/> with the title key before writing to disk.
     /// </summary>
     internal sealed class WiiUFstBuilder
@@ -136,20 +136,20 @@ namespace Nanook.NKit.Nintendo.WiiU
             byte[] _w2 = new byte[2];
 
             // FST header record (0x00..0x1F)
-            _w4.WriteUInt32B(0, WiiUConsts.FstMagic); ms.Write(_w4, 0, 4);      // 'FST\0' magic — required by Image.cs reader
+            _w4.WriteUInt32B(0, WiiUConsts.FstMagic); ms.Write(_w4, 0, 4);      // 'FST\0' magic - required by Image.cs reader
             _w4.WriteUInt32B(0, (uint)multiplier); ms.Write(_w4, 0, 4);          // multiplier
             _w4.WriteUInt32B(0, (uint)n); ms.Write(_w4, 0, 4);                   // content count
             ms.WriteByte(0);                                                      // hashDisabled = 0 (hashes enabled)
             ms.Write(new byte[0x13], 0, 0x13);                                   // padding to 0x20
 
             // Content records (one per content, sorted by index)
-            // rawSz = ceil(encryptedSize / (multiplier * blockSize)) — multiplier=32 is standard for WiiU
+            // rawSz = ceil(encryptedSize / (multiplier * blockSize)) - multiplier=32 is standard for WiiU
             // The console uses rawSz * multiplier * blockSize as the content's footprint.
             // rawOff = 0 for all CDN contents (sequential layout).
             int effectiveBlock = multiplier * WiiUConsts.DefaultSectorSize;
             foreach (ContentEntry ce in _contents.OrderBy(c => c.Index))
             {
-                // Content[0] is the FST itself — its rawSz in the FST content table is always 0
+                // Content[0] is the FST itself - its rawSz in the FST content table is always 0
                 // (the console reads the FST size from the TMD, not from this self-referential record).
                 // All other contents use ceil(encryptedSize / effectiveBlock).
                 uint rawSz = (ce.Index == 0) ? 0u
@@ -166,7 +166,7 @@ namespace Nanook.NKit.Nintendo.WiiU
 
             // ── 4. File/directory entries (16 bytes each, WiiU format) ─────────────────
             // Expand each 12-byte Wii entry to 16 bytes and patch in sectionNo.
-            // Entry[0] is always the root directory — write it directly (sectionNo=0, permission=0)
+            // Entry[0] is always the root directory - write it directly (sectionNo=0, permission=0)
             // and start path tracking from entry[1] so the root's name offset (which aliases
             // the first real name in the table) is never mistaken for a real directory name.
             var entryPath = new Stack<(string path, int endIdx)>();
@@ -255,7 +255,7 @@ namespace Nanook.NKit.Nintendo.WiiU
         private int getFirstContentInDir(string dirPath, Dictionary<string, int> sectionMap)
         {
             string prefix = dirPath.Length == 0 ? "" : dirPath + "/";
-            // Use the highest content index in the directory — this matches real WiiU disc FSTs
+            // Use the highest content index in the directory - this matches real WiiU disc FSTs
             // where the primary executable (RPX, content[8]) determines the code/ directory section.
             int best = -1;
             foreach (var kv in sectionMap)

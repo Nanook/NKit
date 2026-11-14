@@ -18,7 +18,7 @@ namespace NKitDataStore.Tests;
 /// **Validates: Requirements 3.4**
 ///
 /// The Avalonia TabControl preserves the visual tree of non-selected tabs by default
-/// (no virtualization). Switching tabs is a no-op at the ViewModel level — the
+/// (no virtualization). Switching tabs is a no-op at the ViewModel level - the
 /// ImageListViewModel properties remain bound and unchanged regardless of which tab is visible.
 /// </summary>
 public class TabSwitchStatePreservationPropertyTests : IDisposable

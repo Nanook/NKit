@@ -10,7 +10,7 @@ namespace NKitDataStore.Tests
     ///
     /// The MountRegistry.LoadFsYaml() method checks item.FileSystemYamlLoaded before
     /// performing any database read. When the flag is true, it calls
-    /// model.TouchFsYamlCache(item.ImageRecord.Id) and returns immediately — no ReadFile()
+    /// model.TouchFsYamlCache(item.ImageRecord.Id) and returns immediately - no ReadFile()
     /// calls are made. This test replicates the exact early-return logic from
     /// MountRegistry.LoadFsYaml() and verifies the invariant holds across arbitrary inputs.
     /// </summary>
@@ -37,7 +37,7 @@ namespace NKitDataStore.Tests
             public byte[] ReadFile(GlobalImageKey key, string name)
             {
                 ReadFileCallCount++;
-                // Return dummy data — this should never be reached when FileSystemYamlLoaded is true
+                // Return dummy data - this should never be reached when FileSystemYamlLoaded is true
                 return new byte[] { 0x01 };
             }
         }
@@ -64,7 +64,7 @@ namespace NKitDataStore.Tests
 
             public void TrackFsYamlLoaded(long imageId)
             {
-                // No-op for this test — we only care about the loaded-flag skip path
+                // No-op for this test - we only care about the loaded-flag skip path
             }
         }
 
@@ -80,7 +80,7 @@ namespace NKitDataStore.Tests
             // --- Exact replica of MountRegistry.LoadFsYaml() early-return logic ---
             if (item == null || item.FileSystemYamlLoaded)
             {
-                // Already loaded — just touch the LRU cache to keep it fresh
+                // Already loaded - just touch the LRU cache to keep it fresh
                 if (item?.FileSystemYamlLoaded == true && item.ImageRecord != null)
                     cache.TouchFsYamlCache(item.ImageRecord.Id);
                 return;
@@ -121,7 +121,7 @@ namespace NKitDataStore.Tests
 
                     if (fsYamlData != null)
                     {
-                        item.FileSystemYaml = fsYamlData; // Simplified — real code parses FsYaml
+                        item.FileSystemYaml = fsYamlData; // Simplified - real code parses FsYaml
                     }
                 }
                 catch
@@ -208,7 +208,7 @@ namespace NKitDataStore.Tests
             CountingDataStoreMock dataStore = new CountingDataStoreMock();
             CountingCacheMock cache = new CountingCacheMock();
 
-            // Act — pass null item
+            // Act - pass null item
             loadFsYaml(null, dataStore, cache);
 
             // PROPERTY: No ReadFile calls were made
@@ -247,14 +247,14 @@ namespace NKitDataStore.Tests
                     Name = $"Image_{imageId.Get}.iso",
                     SetName = setName
                 },
-                FileSystemYamlLoaded = false,  // NOT loaded — should trigger reads
+                FileSystemYamlLoaded = false,  // NOT loaded - should trigger reads
                 FileSystemYaml = null
             };
 
             // Act
             loadFsYaml(item, dataStore, cache);
 
-            // PROPERTY: ReadFile WAS called (at least once — the first call returns data,
+            // PROPERTY: ReadFile WAS called (at least once - the first call returns data,
             // so only one call is made since the first ReadFile returns non-null)
             if (dataStore.ReadFileCallCount < 1)
                 return false;

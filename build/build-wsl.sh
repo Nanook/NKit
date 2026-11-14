@@ -5,8 +5,8 @@ set -euo pipefail
 # NKit local Linux build via WSL + Docker.
 #
 # Handles the two things that differ between local WSL and GitHub CI:
-#   1. Docker startup — CI runners have dockerd ready; WSL may need it started.
-#   2. Native ext4 copy — the repo lives on a Windows 9p mount (/mnt/d/...).
+#   1. Docker startup - CI runners have dockerd ready; WSL may need it started.
+#   2. Native ext4 copy - the repo lives on a Windows 9p mount (/mnt/d/...).
 #      NuGet restore fails on 9p ("NETSDK1064: Package GrindCore not found").
 #      The container copies the source tree to native ext4 at /build first.
 #
@@ -62,7 +62,7 @@ unset DOCKER_CONTEXT 2>/dev/null || true
 docker_up() { docker info >/dev/null 2>&1; }
 
 if ! docker_up; then
-    echo "Native dockerd not responding — starting..."
+    echo "Native dockerd not responding - starting..."
     if command -v service >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
         sudo service docker start || true
     fi
@@ -120,21 +120,21 @@ docker volume create nkit_ngc >/dev/null
 mkdir -p "$OUT_HOST"
 
 # --- 5. Build inside container -----------------------------------------------
-# Source is on a 9p WSL mount (/mnt/d/...) — NuGet restore fails there.
+# Source is on a 9p WSL mount (/mnt/d/...) - NuGet restore fails there.
 # We copy only what the build needs to native ext4 at /build, skipping the
 # large directories that would make the 9p transfer impractical:
-#   .nuget/        — 6+ GB NuGet cache, replaced by the /ngc volume
-#   bin/ obj/      — stale Windows build artefacts
-#   build-output/  — output destination, not a source
-#   .vs/           — Visual Studio metadata
-#   publish/       — previous publish outputs
+#   .nuget/        - 6+ GB NuGet cache, replaced by the /ngc volume
+#   bin/ obj/      - stale Windows build artefacts
+#   build-output/  - output destination, not a source
+#   .vs/           - Visual Studio metadata
+#   publish/       - previous publish outputs
 # GrindCore is copied only for the target runtime (not all 8 platform variants).
 # After the copy, build.sh --legacy-container runs exactly as on GitHub Actions.
 echo "--- Running build inside container ---"
 echo ""
 
 # Build the inner container script as a variable (single-quoted heredoc so the
-# outer shell does not expand $BUILD_* — those are env vars passed via -e and
+# outer shell does not expand $BUILD_* - those are env vars passed via -e and
 # expanded by the container's bash at runtime).
 INNER_SCRIPT=$(cat << 'INNER'
 set -euo pipefail

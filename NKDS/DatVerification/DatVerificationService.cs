@@ -39,7 +39,7 @@ public sealed class DatVerificationService : IDatVerificationService
                 return new DatEntryInfo
                 {
                     Name = name,
-                    // Dat entry names are plain game titles — they contain dots as part of the name
+                    // Dat entry names are plain game titles - they contain dots as part of the name
                     // (e.g. "Super Mario Bros. Wii") and have no file extension. Using
                     // Path.GetFileNameWithoutExtension would incorrectly truncate at the last dot.
                     NameStem = name,
@@ -139,7 +139,7 @@ public sealed class DatVerificationService : IDatVerificationService
         foreach ((uint crc, List<ImageInfo> imageGroup) in imagesByCrc)
         {
             if (!crcToDatEntries.TryGetValue(crc, out List<DatEntryInfo> matchingDatEntries))
-                continue; // No CRC match — will be handled below
+                continue; // No CRC match - will be handled below
 
             // For each dat entry that matches this CRC, apply tie-breaking
             foreach (DatEntryInfo datEntry in matchingDatEntries)
@@ -200,7 +200,7 @@ public sealed class DatVerificationService : IDatVerificationService
             if (classifiedImages.Contains(image.Id))
                 continue;
 
-            // No CRC match — check name match
+            // No CRC match - check name match
             if (nameStemToDatEntry.TryGetValue(image.NameStem, out DatEntryInfo nameMatchedEntry))
             {
                 // No CRC match + name match → WrongCrc

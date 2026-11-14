@@ -26,7 +26,7 @@ namespace NKitStream
         private long _firstBlockOffset; // absolute stream offset of _blocks[0]
 
         private long _position;   // current read cursor (absolute)
-        private long _floor;      // earliest retained offset — Seek/Rewind below this throws
+        private long _floor;      // earliest retained offset - Seek/Rewind below this throws
         private long _buffered;   // one past the highest byte fetched from source
         private bool _buffering;  // true while between BeginBuffering/EndBuffering
         private bool _sourceExhausted;
@@ -65,7 +65,7 @@ namespace NKitStream
 
         /// <summary>
         /// Read the next bytes from the underlying sequential source.
-        /// Implementations must not seek — the base class calls this strictly in order.
+        /// Implementations must not seek - the base class calls this strictly in order.
         /// Return 0 to signal end of source data.
         /// </summary>
         protected abstract ValueTask<int> ReadSourceAsync(Memory<byte> buffer, CancellationToken ct);
@@ -427,7 +427,7 @@ namespace NKitStream
                 byte[] data = ArrayPool<byte>.Shared.Rent(_blockSize);
                 _blocks.Add(new Block(newBlockStart, data));
 
-                // Recalculate index — needed when _blocks was empty.
+                // Recalculate index - needed when _blocks was empty.
                 index = blockIndexFor(blockStart);
             }
 

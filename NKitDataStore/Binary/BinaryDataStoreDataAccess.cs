@@ -303,7 +303,7 @@ namespace NKitDataStore.Binary
 
             if (alreadySeparate)
             {
-                // Already in separate mode — no extraction needed
+                // Already in separate mode - no extraction needed
                 indexPath = setBasePath;
                 shardPath = expectedShardPath;
             }
@@ -325,7 +325,7 @@ namespace NKitDataStore.Binary
                 shardSize: 0,
                 _sourceDirectory,
                 info.BlockSize);
-            // No shard boundary during writes — blocks are appended freely to the plain shard
+            // No shard boundary during writes - blocks are appended freely to the plain shard
             _shardFileManagers[setName] = separateShardManager;
 
             // Step 5: Load block index for deduplication
@@ -359,7 +359,7 @@ namespace NKitDataStore.Binary
             }
             catch
             {
-                // Don't rethrow — the commit succeeded, the data is safe in separate mode
+                // Don't rethrow - the commit succeeded, the data is safe in separate mode
                 // Re-embed will be retried on next write
                 return;
             }
@@ -741,7 +741,7 @@ namespace NKitDataStore.Binary
             }
             catch
             {
-                // Best-effort — rollback info is optional
+                // Best-effort - rollback info is optional
             }
         }
 
@@ -799,7 +799,7 @@ namespace NKitDataStore.Binary
         {
             // Determine if this set is in embedded mode using the authoritative header check.
             // This mirrors the pattern used in CompactSet and BeginTransaction.
-            // The header's ShardSize field is the definitive source — the _embeddedMode cache may be stale.
+            // The header's ShardSize field is the definitive source - the _embeddedMode cache may be stale.
             string setBasePath = GetIndexFilePath(setName);
             string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
 
@@ -872,7 +872,7 @@ namespace NKitDataStore.Binary
             foreach (long id in entriesToRemove)
                 directory.RemoveEntry(id);
 
-            // Step 3: Prune the block index — remove entries pointing into truncated region.
+            // Step 3: Prune the block index - remove entries pointing into truncated region.
             progress?.Report((60, "Pruning block index"));
             InMemoryBlockIndex blockIndex = indexFile.LoadBlockIndex();
             BlockIndexEntry[] allEntries = blockIndex.GetEntries();
@@ -986,7 +986,7 @@ namespace NKitDataStore.Binary
             foreach (long id in entriesToRemove)
                 directory.RemoveEntry(id);
 
-            // Step 2b: Prune block index — remove entries pointing beyond the rollback offset
+            // Step 2b: Prune block index - remove entries pointing beyond the rollback offset
             progress?.Report((40, "Pruning block index"));
             InMemoryBlockIndex blockIndex = standaloneIndex.LoadBlockIndex();
             BlockIndexEntry[] allEntries = blockIndex.GetEntries();
@@ -1194,7 +1194,7 @@ namespace NKitDataStore.Binary
         {
             (List<AreaRecord> areas, List<FileRecord> files) = indexFile.ReadImageMetadata(imageId);
 
-            // Patch file records — replace matching entries with updated name / shard location.
+            // Patch file records - replace matching entries with updated name / shard location.
             for (int i = 0; i < files.Count; i++)
             {
                 FileRecord fr = files[i];
@@ -1205,7 +1205,7 @@ namespace NKitDataStore.Binary
 
                     if (newContent != null)
                     {
-                        // Compress and write to shard — mirrors the InsertFile compression pattern.
+                        // Compress and write to shard - mirrors the InsertFile compression pattern.
                         byte[] zstdFrameMagic = new byte[] { 0x28, 0xB5, 0x2F, 0xFD };
                         int maxCompressed = newContent.Length + 0x100;
                         byte[] compressedBuffer = new byte[maxCompressed];
@@ -1242,7 +1242,7 @@ namespace NKitDataStore.Binary
                     }
                     else
                     {
-                        // Name-only change — shard data is reused as-is.
+                        // Name-only change - shard data is reused as-is.
                         files[i] = new FileRecord
                         {
                             ImageId = fr.ImageId,
@@ -1318,7 +1318,7 @@ namespace NKitDataStore.Binary
         /// mutation MUST NOT be applied in place: the embedded file ends with a 12-byte footer,
         /// and appending a new directory + rewriting the headers over an embedded file both
         /// over-counts <c>FileEndOffset</c> by the footer size and leaves the file no longer
-        /// ending in the footer magic — which makes the set fail to reopen ("both primary and
+        /// ending in the footer magic - which makes the set fail to reopen ("both primary and
         /// secondary headers failed validation"). Instead we follow the documented
         /// extract → mutate → re-embed cycle used by <see cref="compactSetEmbedded"/>, so the
         /// embedded file is only ever produced by a rename of a fully-formed shard.
@@ -1332,7 +1332,7 @@ namespace NKitDataStore.Binary
 
             if (!isEmbedded)
             {
-                // Separate mode — safe to mutate in place.
+                // Separate mode - safe to mutate in place.
                 ImageDirectory directory = indexFile.GetDirectory();
                 mutate(directory);
                 indexFile.UpdateDirectory(directory);
@@ -1340,7 +1340,7 @@ namespace NKitDataStore.Binary
                 return;
             }
 
-            // Embedded mode — extract, mutate the standalone index, re-embed.
+            // Embedded mode - extract, mutate the standalone index, re-embed.
             string setBasePath = GetIndexFilePath(setName);
             EmbeddedIndexCommitter committer = _committers.GetOrAdd(setName, _ => new EmbeddedIndexCommitter(setBasePath));
 
@@ -1418,7 +1418,7 @@ namespace NKitDataStore.Binary
 
             // Authoritative check: use the header's ShardSize field to determine the true mode.
             // This mirrors the pattern used in BeginTransaction (idx.Header.ShardSize == 0).
-            // The header is the definitive source — the _embeddedMode cache may be stale.
+            // The header is the definitive source - the _embeddedMode cache may be stale.
             bool isEmbedded = idx.Header.ShardSize == 0;
 
             // Correct the _embeddedMode cache if it disagrees with the authoritative header value.
@@ -1443,7 +1443,7 @@ namespace NKitDataStore.Binary
 
         /// <summary>
         /// Returns a lightweight snapshot of the index file health for the specified set.
-        /// All fields are read from the already-loaded in-memory header — no disk I/O.
+        /// All fields are read from the already-loaded in-memory header - no disk I/O.
         /// Safe to call at any time; does not load the block index.
         /// </summary>
         public IndexHealthInfo GetIndexHealth(string setName)
@@ -1680,7 +1680,7 @@ namespace NKitDataStore.Binary
 
             try
             {
-                // Step 1: Compact shard files — remove orphaned blocks/files and reclaim space.
+                // Step 1: Compact shard files - remove orphaned blocks/files and reclaim space.
                 // This updates the block index and metadata sections in the current index file.
                 compactShards(setName, indexFile, progress);
 
@@ -1696,12 +1696,12 @@ namespace NKitDataStore.Binary
                 {
                     using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(tempPath))
                     {
-                        // Header validation passed — file is valid
+                        // Header validation passed - file is valid
                     }
                 }
                 catch
                 {
-                    // Compacted output is corrupt — delete temp file and preserve original
+                    // Compacted output is corrupt - delete temp file and preserve original
                     try { File.Delete(tempPath); } catch { }
                     throw;
                 }
@@ -1730,10 +1730,10 @@ namespace NKitDataStore.Binary
 
                 // Drop any cached handle for this set and clear the recovery guard so the next
                 // access re-runs crash recovery against authoritative disk state. Recovery then:
-                //   * If the failure happened BEFORE the index commit — deletes leftover shard
+                //   * If the failure happened BEFORE the index commit - deletes leftover shard
                 //     temps; the un-compacted originals remain authoritative.
                 //   * If the failure happened AFTER the index commit but before the deferred shard
-                //     renames finished (Stage 10) — PROMOTES the leftover compacted shard temps.
+                //     renames finished (Stage 10) - PROMOTES the leftover compacted shard temps.
                 // Either way the set is left internally consistent and surviving images are intact.
                 if (_indexFiles.TryRemove(setName, out BinaryIndexFile? failedHandle))
                 {
@@ -1782,14 +1782,14 @@ namespace NKitDataStore.Binary
             try
             {
                 // Check if the file is already in separated mode (from a previous failed compact).
-                // If so, skip extraction — the index and shard files already exist separately.
+                // If so, skip extraction - the index and shard files already exist separately.
                 string expectedShardPath = EmbeddedIndexCommitter.GetShardPath(setBasePath);
                 bool alreadySeparated = File.Exists(setBasePath) && File.Exists(expectedShardPath) && !detectEmbeddedMode(setBasePath);
 
                 if (alreadySeparated)
                 {
                     if (CompactDebugLogging)
-                        File.AppendAllText(logPath!, $"{DateTime.Now:O} [CompactEmbedded] Set '{setName}' already in separated mode — skipping extraction\n");
+                        File.AppendAllText(logPath!, $"{DateTime.Now:O} [CompactEmbedded] Set '{setName}' already in separated mode - skipping extraction\n");
                     indexFile.Dispose();
                     indexPath = setBasePath;
                     shardPath = expectedShardPath;
@@ -1815,7 +1815,7 @@ namespace NKitDataStore.Binary
                 // Step 2: Open the standalone index file (baseOffset=0, it's a plain index now).
                 BinaryIndexFile standaloneIndex = BinaryIndexFile.Open(indexPath);
 
-                // Step 2b: Compact shard file — remove orphaned blocks/files and reclaim space.
+                // Step 2b: Compact shard file - remove orphaned blocks/files and reclaim space.
                 // This updates the block index and metadata sections in the standalone index.
                 try
                 {
@@ -1846,17 +1846,17 @@ namespace NKitDataStore.Binary
                     {
                         using (BinaryIndexFile validationHandle = BinaryIndexFile.Open(compactTempPath))
                         {
-                            // Header validation passed — file is valid
+                            // Header validation passed - file is valid
                         }
                     }
                     catch
                     {
-                        // Compacted output is corrupt — delete temp file and preserve original
+                        // Compacted output is corrupt - delete temp file and preserve original
                         try { File.Delete(compactTempPath); } catch { }
                         throw;
                     }
 
-                    // Step 4: Atomic rename — replace the standalone index with the compacted version.
+                    // Step 4: Atomic rename - replace the standalone index with the compacted version.
                     AtomicFileOps.ReplaceFile(compactTempPath, indexPath, msg => Trace.TraceWarning(msg));
                     if (CompactDebugLogging)
                         File.AppendAllText(logPath!, $"{DateTime.Now:O} [CompactEmbedded] Renamed to indexPath: {new FileInfo(indexPath).Length} bytes\n");
@@ -1876,7 +1876,7 @@ namespace NKitDataStore.Binary
                 if (CompactDebugLogging)
                     File.AppendAllText(logPath!, $"{DateTime.Now:O} [CompactEmbedded] After ReEmbed: embedded={new FileInfo(setBasePath).Length} bytes\n");
 
-                // Step 6: Reopen as embedded file — read footer, compute new boundary, update caches.
+                // Step 6: Reopen as embedded file - read footer, compute new boundary, update caches.
                 (long newIndexSize, bool _) = readEmbeddedFooter(setBasePath);
                 long newBoundary = computeShardBoundary(setBasePath, newIndexSize);
 
@@ -2395,7 +2395,7 @@ namespace NKitDataStore.Binary
         {
             if (liveChunks.Count == 0)
             {
-                // No live chunks — the shard is entirely dead data.
+                // No live chunks - the shard is entirely dead data.
                 // Return WasCompacted = false; the caller (DeleteEmptyShards) handles deletion.
                 int emptyFileId = 0;
                 // Try to parse the file ID from the shard path for the result
@@ -2438,7 +2438,7 @@ namespace NKitDataStore.Binary
             }
             else if (sortedChunks.Count > 0)
             {
-                // Shard file missing — cannot compact, return no-op
+                // Shard file missing - cannot compact, return no-op
                 return new ShardCompactResult
                 {
                     FileId = fileId,
@@ -2828,7 +2828,7 @@ namespace NKitDataStore.Binary
                         return (CompressionType.None, data);
                     }
 
-                    // Cold start: block index not yet loaded — load it now.
+                    // Cold start: block index not yet loaded - load it now.
                     // This only happens on direct GetBlockData calls without an ImageReader
                     // (e.g. test scenarios, aux block lookups). Normal read paths go through
                     // the per-image BlockLocations cache above.
@@ -2894,7 +2894,7 @@ namespace NKitDataStore.Binary
             }
             catch
             {
-                // On failure, all entries remain (0,0,0) — caller falls back to per-block reads
+                // On failure, all entries remain (0,0,0) - caller falls back to per-block reads
             }
             return result;
         }
@@ -2978,12 +2978,12 @@ namespace NKitDataStore.Binary
             // Check deduplication: does this block already exist in the index?
             if (binaryTransaction.BlockIndex.TryGetBlock(key, out int existingFileId, out long existingOffset, out int existingSize))
             {
-                // Block already exists — just record the existing location in pending block locations
+                // Block already exists - just record the existing location in pending block locations
                 binaryTransaction.AddPendingBlockLocation(key, existingFileId, existingOffset, existingSize);
                 return;
             }
 
-            // Block is new — write to shard via ShardFileManager
+            // Block is new - write to shard via ShardFileManager
             ShardFileManager shardManager = getShardFileManager(setName);
             (int fileId, long offset, int length) = shardManager.WriteBlock(data, 0, data.Length);
 
@@ -3144,10 +3144,10 @@ namespace NKitDataStore.Binary
         {
             BinaryTransaction binaryTransaction = (BinaryTransaction)transaction;
 
-            // Check deduplication first — skip compression entirely if block exists
+            // Check deduplication first - skip compression entirely if block exists
             if (binaryTransaction.BlockIndex.TryGetBlock(key, out int existingFileId, out long existingOffset, out int existingSize))
             {
-                // Block already exists — just record the existing location
+                // Block already exists - just record the existing location
                 binaryTransaction.AddPendingBlockLocation(key, existingFileId, existingOffset, existingSize);
                 return;
             }
@@ -3278,7 +3278,7 @@ namespace NKitDataStore.Binary
                 }
                 else
                 {
-                    // .compact.tmp fails validation and no original — unrecoverable
+                    // .compact.tmp fails validation and no original - unrecoverable
                     issues.Add($".compact.tmp file exists but fails header validation, and original index is missing: '{compactTmpPath}'. State is unrecoverable.");
                     return new RecoveryState
                     {
@@ -3291,7 +3291,7 @@ namespace NKitDataStore.Binary
             }
             else if (!indexExists && !compactTmpExists)
             {
-                // No index file and no .compact.tmp — check if this is an embedded set or truly missing
+                // No index file and no .compact.tmp - check if this is an embedded set or truly missing
                 // For embedded mode, the index is inside the shard file, so check for shard files
                 string setDirectory = Path.GetDirectoryName(indexFilePath) ?? _baseDirectory;
                 string setBaseName = Path.GetFileNameWithoutExtension(setName);
@@ -3309,7 +3309,7 @@ namespace NKitDataStore.Binary
 
                 if (!anyShardExists)
                 {
-                    // No index, no compact.tmp, no shards — unrecoverable (or set doesn't exist)
+                    // No index, no compact.tmp, no shards - unrecoverable (or set doesn't exist)
                     issues.Add($"No index file and no .compact.tmp file found for set '{setName}'. State is unrecoverable.");
                     return new RecoveryState
                     {
@@ -3360,7 +3360,7 @@ namespace NKitDataStore.Binary
                 }
                 else if (indexTmpExists && !indexExists)
                 {
-                    // Index .tmp exists but main file is gone — unusual state
+                    // Index .tmp exists but main file is gone - unusual state
                     issues.Add($"Embedded extraction intermediate: index .tmp file exists but main file is missing: '{committer.IndexTmpPath}'.");
                     status = SetHealthStatus.NeedsRecovery;
                 }
@@ -3375,7 +3375,7 @@ namespace NKitDataStore.Binary
                 // Check for mid-write separate mode state (both embedded path and shard path exist, not in embedded mode)
                 if (indexExists && shardExists && !detectEmbeddedMode(indexFilePath))
                 {
-                    // This is a valid mid-write state for embedded mode sets — the set was extracted to separate mode
+                    // This is a valid mid-write state for embedded mode sets - the set was extracted to separate mode
                     // Only flag if the index header indicates embedded mode (shardSize == 0)
                     if (tryReadShardSizeFromHeader(indexFilePath, baseOffset: 0, out long shardSize) && shardSize == 0)
                     {
@@ -3436,7 +3436,7 @@ namespace NKitDataStore.Binary
                 catch
                 {
                     // If we can't load the block index, skip orphaned tail detection
-                    // This is not an unrecoverable state — the index may still be usable
+                    // This is not an unrecoverable state - the index may still be usable
                 }
             }
 
@@ -3617,7 +3617,7 @@ namespace NKitDataStore.Binary
                 }
                 else
                 {
-                    // Open temporarily — BinaryIndexFile.Open uses ReadWrite access but we won't write.
+                    // Open temporarily - BinaryIndexFile.Open uses ReadWrite access but we won't write.
                     // The health check is read-only in behavior (no modifications).
                     long baseOffset = 0;
                     if (detectEmbeddedMode(indexFilePath))
@@ -3678,7 +3678,7 @@ namespace NKitDataStore.Binary
                         }
                         else
                         {
-                            // Shard exists but no blocks reference it — entirely orphaned
+                            // Shard exists but no blocks reference it - entirely orphaned
                             if (actualSize > 0)
                             {
                                 issues.Add($"Shard file '{shardFile}' exists with {actualSize} bytes but no blocks reference it. Recovery action: delete shard file.");
@@ -3988,7 +3988,7 @@ namespace NKitDataStore.Binary
             if (indexExists && compactTmpExists)
             {
                 // Both original and .compact.tmp exist: the compact did not complete.
-                // The original is authoritative — delete the incomplete .compact.tmp.
+                // The original is authoritative - delete the incomplete .compact.tmp.
                 Trace.TraceWarning(
                     $"[RecoverIfNeeded] Set '{setName}': .compact.tmp exists alongside original index. " +
                     $"Deleting incomplete .compact.tmp: {compactTmpPath}");
@@ -4026,7 +4026,7 @@ namespace NKitDataStore.Binary
                 {
                     using (BinaryIndexFile.Open(setBasePath))
                     {
-                        // Header validation passed — file is usable
+                        // Header validation passed - file is usable
                         Trace.TraceWarning(
                             $"[RecoverIfNeeded] Set '{setName}': Successfully recovered index from .compact.tmp. " +
                             $"Header validation passed.");
@@ -4034,7 +4034,7 @@ namespace NKitDataStore.Binary
                 }
                 catch (Exception ex)
                 {
-                    // Validation failed — the .compact.tmp was corrupt. Set is unrecoverable.
+                    // Validation failed - the .compact.tmp was corrupt. Set is unrecoverable.
                     Trace.TraceWarning(
                         $"[RecoverIfNeeded] Set '{setName}': Recovered .compact.tmp failed header validation: {ex.Message}. " +
                         $"Set is unrecoverable.");
@@ -4050,19 +4050,19 @@ namespace NKitDataStore.Binary
             switch (result)
             {
                 case EmbeddedRecoveryResult.AlreadyEmbedded:
-                    // Normal embedded file, no recovery needed — proceed with embedded mode open
+                    // Normal embedded file, no recovery needed - proceed with embedded mode open
                     break;
 
                 case EmbeddedRecoveryResult.RecoveredToEmbedded:
-                    // Successfully recovered to embedded mode — proceed with embedded mode open
+                    // Successfully recovered to embedded mode - proceed with embedded mode open
                     break;
 
                 case EmbeddedRecoveryResult.InSeparateMode:
-                    // Both files exist (mid-write state) — treat as separate-mode set, continue normally
+                    // Both files exist (mid-write state) - treat as separate-mode set, continue normally
                     break;
 
                 case EmbeddedRecoveryResult.NoFileFound:
-                    // No set files found — proceed to create new file
+                    // No set files found - proceed to create new file
                     break;
             }
 
@@ -4120,7 +4120,7 @@ namespace NKitDataStore.Binary
                     }
                     else
                     {
-                        // DELETE: compact did not reach commit — the original is authoritative.
+                        // DELETE: compact did not reach commit - the original is authoritative.
                         try
                         {
                             if (File.Exists(tmpFile))
@@ -4137,7 +4137,7 @@ namespace NKitDataStore.Binary
                     }
                 }
             }
-            catch (DirectoryNotFoundException) { /* Set directory doesn't exist yet — nothing to recover */ }
+            catch (DirectoryNotFoundException) { /* Set directory doesn't exist yet - nothing to recover */ }
 
             // --- Orphaned tail data detection and truncation ---
             // After dual-header recovery (which happens inside BinaryIndexFile.Open), compute
@@ -4392,7 +4392,7 @@ namespace NKitDataStore.Binary
 
                         if (expectedShardSizes.TryGetValue(fileId, out long expectedSize))
                         {
-                            // Shard has referenced blocks — truncate if larger than expected
+                            // Shard has referenced blocks - truncate if larger than expected
                             if (actualSize > expectedSize)
                             {
                                 Trace.TraceWarning(
@@ -4415,7 +4415,7 @@ namespace NKitDataStore.Binary
                         }
                         else
                         {
-                            // Shard has no referenced blocks but exists with data — delete it
+                            // Shard has no referenced blocks but exists with data - delete it
                             if (actualSize > 0)
                             {
                                 Trace.TraceWarning(
@@ -4434,12 +4434,12 @@ namespace NKitDataStore.Binary
                         }
                     }
                 }
-                catch (DirectoryNotFoundException) { /* Set directory doesn't exist — nothing to truncate */ }
+                catch (DirectoryNotFoundException) { /* Set directory doesn't exist - nothing to truncate */ }
             }
             catch (Exception ex)
             {
                 // If we can't open the index or load the block index, skip orphaned tail detection.
-                // The index may be corrupt or the file may not be accessible — this is not fatal,
+                // The index may be corrupt or the file may not be accessible - this is not fatal,
                 // the set will fail to open later with a more specific error.
                 Trace.TraceWarning(
                     $"[RecoverIfNeeded] Set '{setName}': Failed to perform orphaned tail detection: {ex.Message}");
@@ -4458,12 +4458,12 @@ namespace NKitDataStore.Binary
         /// <exception cref="InvalidOperationException">Thrown if the set does not exist.</exception>
         private BinaryIndexFile getIndexFile(string setName)
         {
-            // Ensure crash recovery has run for this set before first access IF — and only if —
+            // Ensure crash recovery has run for this set before first access IF - and only if -
             // there is on-disk evidence of an interrupted operation (leftover ".tmp"/".compact.tmp"
             // files). Previously recovery ran only via openOrCreateSet (the create/write path);
             // read-only access (list/mount/verify) after a crash bypassed it, leaving a
             // post-commit/pre-rename compaction inconsistency unrepaired. We gate on temp-file
-            // presence so a CLEAN set is never touched here — running recovery (which can truncate
+            // presence so a CLEAN set is never touched here - running recovery (which can truncate
             // orphaned tail data) unconditionally on every open is both wasteful and unsafe while
             // a set is otherwise healthy or mid-operation.
             if (_recoveredSets.TryAdd(setName, 0) && hasPendingRecoveryArtifacts(setName))
@@ -4500,7 +4500,7 @@ namespace NKitDataStore.Binary
                         _shardBoundary[setName] = boundary;
                         return BinaryIndexFile.Open(filePath, baseOffset: boundary);
                     }
-                    // Not in embedded mode — explicitly set _embeddedMode to false
+                    // Not in embedded mode - explicitly set _embeddedMode to false
                     // to prevent stale 'true' values from persisting after a set is
                     // confirmed to be in separate mode.
                     _embeddedMode[setName] = false;

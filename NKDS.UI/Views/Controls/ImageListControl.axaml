@@ -223,7 +223,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="90" Tag="ReducedBy">
                     <DataGridTemplateColumn.Header>
-                        <TextBlock Text="Ratio" ToolTip.Tip="This image's share of storage — unique blocks + shared blocks divided among all images using them"/>
+                        <TextBlock Text="Ratio" ToolTip.Tip="This image's share of storage - unique blocks + shared blocks divided among all images using them"/>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="vm:ImageRowViewModel">

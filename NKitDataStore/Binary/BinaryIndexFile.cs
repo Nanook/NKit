@@ -206,7 +206,7 @@ namespace NKitDataStore.Binary
                 }
                 catch (InvalidDataException)
                 {
-                    // Primary header checksum failed — try secondary
+                    // Primary header checksum failed - try secondary
                 }
 
                 // If primary failed, try secondary header (at baseOffset + HeaderSize)
@@ -309,7 +309,7 @@ namespace NKitDataStore.Binary
             byte[] sectionBytes = new byte[entry.MetadataSectionCompressedSize];
 
 #if NET6_0_OR_GREATER
-            // Position-independent read — thread-safe without locking
+            // Position-independent read - thread-safe without locking
             int totalRead = 0;
             while (totalRead < sectionBytes.Length)
             {
@@ -345,7 +345,7 @@ namespace NKitDataStore.Binary
             byte[] sectionBytes = new byte[entry.BlockMapSectionCompressedSize];
 
 #if NET6_0_OR_GREATER
-            // Position-independent read — thread-safe without locking
+            // Position-independent read - thread-safe without locking
             int totalRead = 0;
             while (totalRead < sectionBytes.Length)
             {
@@ -368,7 +368,7 @@ namespace NKitDataStore.Binary
 
         /// <summary>
         /// Loads the main Block_Index and all Block_Index_Deltas, merging them into a single InMemoryBlockIndex.
-        /// Caches the result — subsequent calls return the cached instance.
+        /// Caches the result - subsequent calls return the cached instance.
         /// <summary>
         /// Tries to look up a block in the already-cached block index without triggering a load.
         /// Returns false if the block index hasn't been loaded yet (no I/O performed).
@@ -387,7 +387,7 @@ namespace NKitDataStore.Binary
 
         /// <summary>
         /// Loads the main Block_Index and all Block_Index_Deltas, merging them into a single InMemoryBlockIndex.
-        /// Caches the result — subsequent calls return the cached instance.
+        /// Caches the result - subsequent calls return the cached instance.
         /// </summary>
         /// <returns>The merged InMemoryBlockIndex.</returns>
         public InMemoryBlockIndex LoadBlockIndex()
@@ -417,7 +417,7 @@ namespace NKitDataStore.Binary
                 byte[] mainData = new byte[_primaryHeader.BlockIndexSize];
 
 #if NET6_0_OR_GREATER
-                // Position-independent read — thread-safe without locking
+                // Position-independent read - thread-safe without locking
                 {
                     int totalRead = 0;
                     while (totalRead < mainData.Length)
@@ -541,7 +541,7 @@ namespace NKitDataStore.Binary
                         }
                     }
 
-                    // Collect this delta run (newest first — chain head = newest)
+                    // Collect this delta run (newest first - chain head = newest)
                     deltaRuns.Add(entries);
 
                     // Follow the linked list to the next (older) delta
@@ -550,7 +550,7 @@ namespace NKitDataStore.Binary
 
                 // Batch-merge all delta runs into the sorted array.
                 // Two-pointer merge: newest run wins on key conflict.
-                // Produces a new contiguous sorted BlockIndexEntry[] — no ConcurrentDictionary overhead.
+                // Produces a new contiguous sorted BlockIndexEntry[] - no ConcurrentDictionary overhead.
                 index = index.WithMergedDeltas(deltaRuns);
             }
 
@@ -683,12 +683,12 @@ namespace NKitDataStore.Binary
             // Seek to file end
             _stream.Position = _stream.Length;
 
-            // Write Image_Metadata_Section — record offset relative to index start
+            // Write Image_Metadata_Section - record offset relative to index start
             long metadataOffset = _stream.Position - _baseOffset;
             _stream.Write(metadata, 0, metadata.Length);
             int metadataSize = metadata.Length;
 
-            // Write Image_BlockMap_Section — record offset relative to index start
+            // Write Image_BlockMap_Section - record offset relative to index start
             long blockMapOffset = _stream.Position - _baseOffset;
             _stream.Write(blockMap, 0, blockMap.Length);
             int blockMapSize = blockMap.Length;
@@ -979,7 +979,7 @@ namespace NKitDataStore.Binary
         /// <summary>
         /// Builds a block index by reading the BlockLocations from each live image's
         /// Image_BlockMap_Section. Memory-efficient alternative to LoadBlockIndex() when
-        /// the delta chain is very large — avoids O(N_deltas × entries_per_delta) peak RAM.
+        /// the delta chain is very large - avoids O(N_deltas × entries_per_delta) peak RAM.
         ///
         /// Uses a flat List rather than a Dictionary to minimise per-entry overhead:
         /// shared blocks appear once per image then are deduplicated in a single sort pass,
@@ -1069,7 +1069,7 @@ namespace NKitDataStore.Binary
             // referenced by live images. This is memory-efficient: avoids loading the full
             // delta chain (which can require many GB of RAM for delta-heavy containers).
             // Since we only iterate live images, orphaned blocks from removed images are
-            // naturally excluded — identical to what LoadBlockIndex() + pruning would produce.
+            // naturally excluded - identical to what LoadBlockIndex() + pruning would produce.
             BlockIndexEntry[] compactedEntries = buildBlockIndexFromImages(imagesToCopy);
 
             progress?.Report((42, "Building block index"));
@@ -1150,11 +1150,11 @@ namespace NKitDataStore.Binary
                 byte[] blockMapBytes = new byte[sourceEntry.BlockMapSectionCompressedSize];
                 ReadExactly(_stream, blockMapBytes, 0, sourceEntry.BlockMapSectionCompressedSize);
 
-                // Write metadata section to new file — record offset
+                // Write metadata section to new file - record offset
                 long newMetadataOffset = newStream.Position;
                 newStream.Write(metadataBytes, 0, metadataBytes.Length);
 
-                // Write block map section to new file — record offset
+                // Write block map section to new file - record offset
                 long newBlockMapOffset = newStream.Position;
                 newStream.Write(blockMapBytes, 0, blockMapBytes.Length);
 
@@ -1171,7 +1171,7 @@ namespace NKitDataStore.Binary
                 progress?.Report((42 + (imagesCopied * 28 / totalImages), "Copying image sections"));
             }
 
-            // Step 7: Write block index directly to output stream (70-95% — zstd compression)
+            // Step 7: Write block index directly to output stream (70-95% - zstd compression)
             progress?.Report((70, "Compressing block index"));
             long blockIndexOffset = newStream.Position;
             IProgress<int>? serializerProgress = progress != null
@@ -1333,7 +1333,7 @@ namespace NKitDataStore.Binary
         ///
         /// Differences from <see cref="CompactTo"/>:
         /// - Skips the live-block-key gathering pass (no per-image BlockMap scan).
-        /// - Retains ALL block index entries — including entries for blocks from removed images.
+        /// - Retains ALL block index entries - including entries for blocks from removed images.
         ///   Those blocks remain physically present in shards and are still valid dedup targets.
         ///   A subsequent full <see cref="CompactTo"/> (with shard rewrite) removes them later.
         /// - Removed images are excluded from the directory and their sections are dropped.
@@ -1367,7 +1367,7 @@ namespace NKitDataStore.Binary
             // Difference from warm-index path: orphaned block index entries (blocks whose only
             // referencing image has been soft-deleted) are not retained after this compact.
             // Those blocks remain physically in the shards until a full CompactSet removes them.
-            // This is acceptable — a subsequent full compact cleans them up.
+            // This is acceptable - a subsequent full compact cleans them up.
             BlockIndexEntry[] allEntries = buildBlockIndexFromImages(imagesToCopy);
 
             progress?.Report((20, "Building block index"));
@@ -1456,7 +1456,7 @@ namespace NKitDataStore.Binary
 
             progress?.Report((65, "Compressing block index"));
 
-            // Step 6: Write the full (un-pruned) block index — no deltas in output
+            // Step 6: Write the full (un-pruned) block index - no deltas in output
             long blockIndexOffset = newStream.Position;
             IProgress<int>? serializerProgress = progress != null
                 ? new Progress<int>(pct => progress.Report((65 + (pct * 25 / 100), "Compressing block index")))
@@ -1481,7 +1481,7 @@ namespace NKitDataStore.Binary
             byte[] compressedDir = ImageDirectorySerializer.CompressDirectory(directoryBytes);
             int imageDirectoryUncompressedSize = directoryBytes.Length;
 
-            // Stable capacity guard (same as CompactTo — prevents oscillation on re-compact)
+            // Stable capacity guard (same as CompactTo - prevents oscillation on re-compact)
             int stableCapacity = Math.Max(compressedDir.Length, estimateCompressedDir.Length) + DefaultDirectoryRegionCapacity;
             if (stableCapacity != newDirectoryRegionCapacity)
             {
@@ -1564,7 +1564,7 @@ namespace NKitDataStore.Binary
                 newStream.Write(zeroPad, 0, zeroPad.Length);
             }
 
-            // Step 8: Write final headers — BlockIndexDeltaCount = 0, no deltas in output
+            // Step 8: Write final headers - BlockIndexDeltaCount = 0, no deltas in output
             FileHeader newHeader = new FileHeader
             {
                 Magic = FileHeader.MagicBytes,

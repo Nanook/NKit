@@ -59,7 +59,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
 
         /// <summary>
         /// When the running executable is "nkds", the resolved config file name should still
-        /// be "nkit.yaml" — because nkds shares the nkit pipeline configuration.
+        /// be "nkit.yaml" - because nkds shares the nkit pipeline configuration.
         ///
         /// Current behaviour (BUG-1): returns "nkds.yaml".
         /// Expected behaviour: "nkit.yaml".
@@ -74,7 +74,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
                 @"c:\tools\nkit");
             MockFileSystemService fs = new MockFileSystemService();
 
-            // No local config of any name — just exercising the file-name resolution.
+            // No local config of any name - just exercising the file-name resolution.
             fs.SetupSystemMode(@"c:\tools\nkit", "nkds.yaml");
             fs.SetupSystemMode(@"c:\tools\nkit", "nkit.yaml");
 
@@ -87,7 +87,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
 
         /// <summary>
         /// When "nkit.yaml" exists next to the nkds executable, the app should detect portable
-        /// mode and use that local config — the same as nkit does.
+        /// mode and use that local config - the same as nkit does.
         ///
         /// Current behaviour (BUG-2): nkds looks for "nkds.yaml", finds nothing, falls into
         /// system mode. The user's local nkit.yaml is ignored.

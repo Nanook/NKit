@@ -9,7 +9,7 @@ namespace Nanook.NKit.App.Cli
     /// (from <see cref="CliOption.ConfigKey"/>); system-scoped values use the existing
     /// <c>&lt;system&gt;:&lt;param&gt;</c> override form the config layer already understands.
     /// <para>
-    /// The engine and config precedence are unchanged — this is purely a front-end translation.
+    /// The engine and config precedence are unchanged - this is purely a front-end translation.
     /// </para>
     /// </summary>
     public static class AppSettingsBridge
@@ -33,7 +33,7 @@ namespace Nanook.NKit.App.Cli
             {
                 CliOption opt = v.Option;
 
-                // 'config' is not a config key — it selects the config file itself.
+                // 'config' is not a config key - it selects the config file itself.
                 if (string.Equals(opt.Canonical, "config", StringComparison.OrdinalIgnoreCase))
                 {
                     configFile = v.Value;
@@ -105,7 +105,7 @@ namespace Nanook.NKit.App.Cli
                 return "fri:.*";
             int c = value.IndexOf(':');
             if (c < 0)
-                return "f" + value; // malformed — prepend
+                return "f" + value; // malformed - prepend
             string flags = value.Substring(0, c);
             string rest = value.Substring(c);
             if (flags.IndexOf('f') < 0)

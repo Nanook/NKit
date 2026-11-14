@@ -2,7 +2,7 @@ namespace Nanook.NKit.Vfs
 {
     /// <summary>
     /// Wraps an NkFsEntry directory as an IFsFolder for VFS navigation.
-    /// Children are enumerated lazily via NkFs.GetChildren() — no tree materialization.
+    /// Children are enumerated lazily via NkFs.GetChildren() - no tree materialization.
     /// </summary>
     internal class NkFsFolderItem : IFsFolder
     {

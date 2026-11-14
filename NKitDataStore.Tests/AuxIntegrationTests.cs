@@ -145,7 +145,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Writes game blocks to primary and update blocks to aux for the same image,
         /// then uses CreateBlockProvider to get an AuxBlockProvider and verifies that
-        /// all blocks are served correctly — game blocks from primary, update blocks
+        /// all blocks are served correctly - game blocks from primary, update blocks
         /// from aux.
         /// </summary>
         [Fact]
@@ -320,7 +320,7 @@ namespace NKitDataStore.Tests
                 // The aux block may or may not be null depending on whether the same
                 // data happened to also be in primary. For blocks that were ONLY in aux,
                 // they should return null. We verify the provider doesn't throw.
-                // The key point is graceful degradation — no exceptions.
+                // The key point is graceful degradation - no exceptions.
             }
         }
 
@@ -368,7 +368,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Adds two images that share the same update partition data to the aux set.
-        /// Verifies that the aux store deduplicates the shared blocks — the unique
+        /// Verifies that the aux store deduplicates the shared blocks - the unique
         /// block count should be less than the total block references.
         /// </summary>
         [Fact]
@@ -409,7 +409,7 @@ namespace NKitDataStore.Tests
             List<ImageRecord> auxImages = store.ListImagesInSet("wii.aux");
             Assert.Equal(2, auxImages.Count);
 
-            // Assert: deduplication — get stats and verify unique blocks < total references
+            // Assert: deduplication - get stats and verify unique blocks < total references
             DataStoreStatistics stats = store.GetSetStatistics("wii.aux");
             Assert.NotNull(stats);
 
@@ -426,7 +426,7 @@ namespace NKitDataStore.Tests
                 List<OffsetRecord> offsets = reader.GetOffsets().Where(o => o.HasBlocks).ToList();
                 Assert.NotEmpty(offsets);
 
-                // First offset should contain the shared block — verify it's readable
+                // First offset should contain the shared block - verify it's readable
                 BlockKey firstKey = offsets[0].GetBlockAt(0);
                 BlockRecord block = reader.GetBlock(firstKey);
                 Assert.NotNull(block);
@@ -534,10 +534,10 @@ namespace NKitDataStore.Tests
             }
             TestDataStoreHelper.WaitForSetIdle(store, "wii.aux");
 
-            // Act — aux sets are excluded from DescribeSetsWithImages since they are internal
+            // Act - aux sets are excluded from DescribeSetsWithImages since they are internal
             List<(SetInfo Info, List<ImageRecord> Images, Dictionary<long, byte[]> FileSystemYamlData)> setsWithImages = store.DescribeSetsWithImages(filterSetName: "wii.aux").ToList();
 
-            // Assert — aux set should NOT appear (it's filtered out by ListSetNames)
+            // Assert - aux set should NOT appear (it's filtered out by ListSetNames)
             Assert.Empty(setsWithImages);
         }
     }

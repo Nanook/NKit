@@ -92,11 +92,11 @@ public class NonSortKeyUpdatePropertyTests
         int targetIndex = targetIndexSeed.Get % collection.Count;
         ImageRowViewModel targetRow = collection[targetIndex];
 
-        // Update a non-sort-key property (Name) — this does NOT affect sort order
+        // Update a non-sort-key property (Name) - this does NOT affect sort order
         // Since Name is a passthrough to ImageRecord, we modify the underlying record
         targetRow.Image.Name = $"updated_name_{newNameSeed.Get}";
 
-        // The row should remain at the same index — no Reposition needed
+        // The row should remain at the same index - no Reposition needed
         // Property: the row is still at the same index
         return ReferenceEquals(collection[targetIndex], targetRow);
     }
@@ -137,10 +137,10 @@ public class NonSortKeyUpdatePropertyTests
         int targetIndex = targetIndexSeed.Get % collection.Count;
         ImageRowViewModel targetRow = collection[targetIndex];
 
-        // Update a non-sort-key property (Size) — this does NOT affect sort order
+        // Update a non-sort-key property (Size) - this does NOT affect sort order
         targetRow.Image.Size = (long)(newSizeSeed.Get % 50000) + 1;
 
-        // The row should remain at the same index — no Reposition needed
+        // The row should remain at the same index - no Reposition needed
         // Property: the row is still at the same index
         return ReferenceEquals(collection[targetIndex], targetRow);
     }
@@ -148,7 +148,7 @@ public class NonSortKeyUpdatePropertyTests
     /// <summary>
     /// **Validates: Requirements 3.3**
     ///
-    /// Property 5: Non-Sort-Key Update Preserves Position — collection order unchanged.
+    /// Property 5: Non-Sort-Key Update Preserves Position - collection order unchanged.
     /// For any pre-sorted collection and any non-sort-key property update,
     /// the entire collection order SHALL remain unchanged.
     /// </summary>

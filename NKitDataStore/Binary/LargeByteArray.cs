@@ -12,7 +12,7 @@ namespace NKitDataStore.Binary
     /// <c>BlockIndexSerializer.Deserialize</c> only one 1 GiB chunk is live in memory at a
     /// time, minimising peak allocation.
     ///
-    /// Cross-chunk <see cref="Slice"/> calls (rare — only for section headers that straddle a
+    /// Cross-chunk <see cref="Slice"/> calls (rare - only for section headers that straddle a
     /// chunk boundary) copy to a small temporary array.
     /// </summary>
     internal sealed class LargeByteArray
@@ -50,7 +50,7 @@ namespace NKitDataStore.Binary
 
         private byte[] loadChunk(int chunkIdx)
         {
-            // Release the previous chunk if we've moved forward — sequential access pattern
+            // Release the previous chunk if we've moved forward - sequential access pattern
             // means we will never need it again.
             if (_lastChunkIdx >= 0 && chunkIdx > _lastChunkIdx)
                 _chunks[_lastChunkIdx] = null!; // eligible for GC

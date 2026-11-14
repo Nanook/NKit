@@ -177,11 +177,11 @@ namespace NKitDataStore
 
                         if (node.Value.IsReady && !node.Value.IsFailed)
                         {
-                            // Ready and not failed — return immediately
+                            // Ready and not failed - return immediately
                             return node.Value;
                         }
 
-                        // Entry exists but is not ready — we need to wait outside the lock
+                        // Entry exists but is not ready - we need to wait outside the lock
                         existingEntry = node.Value;
                     }
                 }
@@ -197,7 +197,7 @@ namespace NKitDataStore
                         return existingEntry;
                     }
 
-                    // Timed out or failed — remove from cache and retry
+                    // Timed out or failed - remove from cache and retry
                     lock (_lock)
                     {
                         if (_map.TryGetValue(key, out LinkedListNode<BufferCacheEntry>? staleNode) && staleNode != null
@@ -210,7 +210,7 @@ namespace NKitDataStore
                     continue; // retry
                 }
 
-                // Cache miss — create new entry under lock
+                // Cache miss - create new entry under lock
                 lock (_lock)
                 {
                     // Double-check: another thread may have inserted while we were outside the lock
@@ -227,7 +227,7 @@ namespace NKitDataStore
                             return raceNode.Value;
                         }
 
-                        // Not ready — loop back to wait
+                        // Not ready - loop back to wait
                         continue;
                     }
 
@@ -255,7 +255,7 @@ namespace NKitDataStore
                 }
             }
 
-            // Exhausted retries — fall through with one final attempt (no retry protection)
+            // Exhausted retries - fall through with one final attempt (no retry protection)
             lock (_lock)
             {
                 BufferCacheEntry entry = createFactory();

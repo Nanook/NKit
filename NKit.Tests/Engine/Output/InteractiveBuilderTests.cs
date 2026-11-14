@@ -70,7 +70,7 @@ namespace NKit.Tests.Engine.Output
             ScriptedPrompter p = new ScriptedPrompter()
                 .QueueSelect("verify")
                 .TextFor("Input", "game.iso")
-                // no "Output directory" prompt for verify — if one were issued it'd return null anyway
+                // no "Output directory" prompt for verify - if one were issued it'd return null anyway
                 .SelectFor(">> Run")
                 .ConfirmFor("Run this now", true);
 
@@ -80,7 +80,7 @@ namespace NKit.Tests.Engine.Output
             Assert.NotNull(argv);
             ParsedCommand c = CliParser.Parse(argv);
             Assert.Equal("verify", c.Verb.Name);
-            Assert.Null(c.Get("output"));   // never set — verify has no output dir
+            Assert.Null(c.Get("output"));   // never set - verify has no output dir
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace NKit.Tests.Engine.Output
                     .TextFor("Input", "game.iso")
                     .TextFor("Output directory", "D:\\o")
                     // choose Wii so the format row re-seeds from wii config, then change it via the
-                    // guided flow (Wii has a single format only — no indexed part).
+                    // guided flow (Wii has a single format only - no indexed part).
                     .SelectFor("system", "system")
                     .SelectFor("Wii")
                     .SelectFor("format", "format")
@@ -243,7 +243,7 @@ namespace NKit.Tests.Engine.Output
         [Fact]
         public void Convert_Saturn_GuidedDualFormat_ComposesSingleAndCue()
         {
-            // The dual iso-family/cue form is NOT PS2-specific — it applies to every ISO9660/CD
+            // The dual iso-family/cue form is NOT PS2-specific - it applies to every ISO9660/CD
             // system that supports both a single and an indexed format. Saturn is one such system;
             // the guided flow should offer a single format AND the cue indexed part, joined by '/'.
             ScriptedPrompter p = new ScriptedPrompter()
@@ -276,7 +276,7 @@ namespace NKit.Tests.Engine.Output
         public void Convert_NoSystem_FormatUsesFreeText()
         {
             // With no system chosen (auto-detect), the format is entered as free text so it can span
-            // multiple detected systems — the guided per-system picker does NOT engage.
+            // multiple detected systems - the guided per-system picker does NOT engage.
             ScriptedPrompter p = new ScriptedPrompter()
                 .QueueSelect("convert")
                 .TextFor("Input", "game.iso")
@@ -299,7 +299,7 @@ namespace NKit.Tests.Engine.Output
         public void Convert_GameCube_HidesKeysRow()
         {
             // 'keys' only applies to WiiU/PS3/XBox/XBox360. With GameCube chosen it must be hidden,
-            // so a SelectFor("keys") can never match — the run still completes via >> Run.
+            // so a SelectFor("keys") can never match - the run still completes via >> Run.
             ScriptedPrompter p = new ScriptedPrompter()
                 .QueueSelect("convert")
                 .TextFor("Input", "game.iso")

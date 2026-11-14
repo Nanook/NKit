@@ -14,11 +14,11 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
     ///
     /// USAGE
     /// ──────
-    /// 1. Run NKit with task=extract — it writes 100% of disc files to a directory:
+    /// 1. Run NKit with task=extract - it writes 100% of disc files to a directory:
     ///      [extractDir]/DATA/sys/   ← boot.bin, bi2.bin, apploader.img, main.dol
     ///      [extractDir]/DATA/files/ ← all game files
     /// 2. Capture ImageHeader and DATA partition header via processor.OnSection.
-    /// 3. Call Build(imageHeader, partitionHeader, extractDir) — reads from disk, builds disc.
+    /// 3. Call Build(imageHeader, partitionHeader, extractDir) - reads from disk, builds disc.
     ///
     /// The Extract task uses SkipToImageOffsetSet internally to reach every FST entry,
     /// giving 100% file coverage without any NKit injection.
@@ -74,7 +74,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
         /// </param>
         /// <param name="partitionHeader">
         ///   Raw DATA partition header bytes captured from processor.OnSection when
-        ///   block.Type == AreaType.PartitionHeader (use the last captured value —
+        ///   block.Type == AreaType.PartitionHeader (use the last captured value -
         ///   DATA partition always follows UPDATE in standard Wii disc layout).
         /// </param>
         /// <param name="extractedDir">

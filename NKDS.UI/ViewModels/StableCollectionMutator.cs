@@ -145,7 +145,7 @@ public class StableCollectionMutator
         {
             if (existingRowsByKey.TryGetValue(kvp.Key, out (ImageRowViewModel Row, int Index) existing))
             {
-                // This row exists in both sets — check if data changed
+                // This row exists in both sets - check if data changed
                 if (HasDataChanged(existing.Row.Image, kvp.Value))
                 {
                     UpdateRowInPlace(existing.Row, kvp.Value);

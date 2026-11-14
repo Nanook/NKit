@@ -1,20 +1,20 @@
 # NKitDataStore
 
-A deduplication archiver for disc images — content-addressed block storage that scales from small per-game collections to multi-TiB (and beyond) preservation libraries. Designed with sequential I/O patterns that perform well over both local and network storage (SMB/NFS).
+A deduplication archiver for disc images - content-addressed block storage that scales from small per-game collections to multi-TiB (and beyond) preservation libraries. Designed with sequential I/O patterns that perform well over both local and network storage (SMB/NFS).
 
 ## Key Benefits
 
-- **~80% space savings** — Automatic deduplication and Zstd compression dramatically reduce storage for disc image collections where games share common data
-- **Mountable VFS** — Images can be mounted as virtual filesystems via FUSE, no extraction required
-- **Content-aware** — Native understanding of Wii, GameCube, and Wii U disc structures including strided sector layouts
-- **Crash-safe** — Dual-header atomic commit with copy-on-write ensures data integrity even during power loss
+- **~80% space savings** - Automatic deduplication and Zstd compression dramatically reduce storage for disc image collections where games share common data
+- **Mountable VFS** - Images can be mounted as virtual filesystems via FUSE, no extraction required
+- **Content-aware** - Native understanding of Wii, GameCube, and Wii U disc structures including strided sector layouts
+- **Crash-safe** - Dual-header atomic commit with copy-on-write ensures data integrity even during power loss
 
 ## Core Concepts
 
 | Concept | Description |
 |---------|-------------|
 | **DataStore** | A directory containing one or more sets. Created by pointing `new DataStore(path)` at a directory. |
-| **Set** | A `.nkds` index file and its associated shard files, forming a logical container for images. Each set has its own block size and shard configuration. Sets can contain images from any system mixed together — there is no requirement to separate by platform. |
+| **Set** | A `.nkds` index file and its associated shard files, forming a logical container for images. Each set has its own block size and shard configuration. Sets can contain images from any system mixed together - there is no requirement to separate by platform. |
 | **Image** | A single logical file stored in a set (disc image, folder archive, etc.). Images are composed of areas, which reference blocks. |
 | **Block** | A fixed-size (default 64 KiB) chunk of data, content-addressed by XXHash64 + CRC32. Identical blocks across images are stored once. |
 | **Shard** | A numbered file (`{setName}_NNNN.nkds`) containing compressed block payloads. New shards are created when the current one reaches the configured size limit. |
@@ -24,18 +24,18 @@ A deduplication archiver for disc images — content-addressed block storage tha
 
 ## Features
 
-- **Content-addressed block storage** — Data is split into fixed-size blocks identified by XXHash64 + CRC32 keys
-- **Automatic deduplication** — Identical blocks across images are stored once
-- **Zstd compression** — All metadata and blocks are compressed (level 19 for index data)
-- **Append-only writes** — Crash-safe design with dual headers and atomic commit
-- **Two storage modes** — Separate mode (multi-file with configurable shard sizes) or embedded mode (single-file)
-- **Two-part image sections** — Lightweight metadata (for listings) separate from heavy block maps (for reads)
-- **VFS mounting** — Images can be mounted as virtual filesystems via FUSE
-- **Soft-delete and restore** — Images can be removed and recovered without rewriting the file
-- **Compaction** — Crash-safe space reclamation from deleted images with block index pruning and shard defragmentation
-- **Deterministic compaction** — Optional mode producing byte-identical output for equivalent inputs
-- **Auxiliary (aux) stores** — Companion stores providing fallback block data for images with missing blocks
-- **Sequential I/O** — All read operations use sequential access patterns, no random seeks within image data
+- **Content-addressed block storage** - Data is split into fixed-size blocks identified by XXHash64 + CRC32 keys
+- **Automatic deduplication** - Identical blocks across images are stored once
+- **Zstd compression** - All metadata and blocks are compressed (level 19 for index data)
+- **Append-only writes** - Crash-safe design with dual headers and atomic commit
+- **Two storage modes** - Separate mode (multi-file with configurable shard sizes) or embedded mode (single-file)
+- **Two-part image sections** - Lightweight metadata (for listings) separate from heavy block maps (for reads)
+- **VFS mounting** - Images can be mounted as virtual filesystems via FUSE
+- **Soft-delete and restore** - Images can be removed and recovered without rewriting the file
+- **Compaction** - Crash-safe space reclamation from deleted images with block index pruning and shard defragmentation
+- **Deterministic compaction** - Optional mode producing byte-identical output for equivalent inputs
+- **Auxiliary (aux) stores** - Companion stores providing fallback block data for images with missing blocks
+- **Sequential I/O** - All read operations use sequential access patterns, no random seeks within image data
 
 ## Storage Modes
 
@@ -51,7 +51,7 @@ wii_0001.nkds     ← Shard 1 (overflow)
 
 ### Embedded Mode (shardSize = 0)
 
-Everything lives in a single `.nkds` file — block data at the front, binary index appended at the end, with a 12-byte footer. Best suited for smaller sets (e.g., per-game 1GMR collections) where single-file simplicity is preferred. Requires extraction during writes and compaction, so not ideal for very large sets.
+Everything lives in a single `.nkds` file - block data at the front, binary index appended at the end, with a 12-byte footer. Best suited for smaller sets (e.g., per-game 1GMR collections) where single-file simplicity is preferred. Requires extraction during writes and compaction, so not ideal for very large sets.
 
 ```
 test.nkds
@@ -96,12 +96,12 @@ These values are stored in the binary index file header and are immutable after 
 
 The concurrency model is designed around per-set isolation with lock-free reads:
 
-- **Multiple concurrent readers** — Any number of readers can access a set simultaneously. Readers use `ConcurrentDictionary`-based caches for metadata and block maps, requiring no exclusive locks.
-- **Single writer per set** — Only one writer may be registered at a time per set, enforced by `RegisterWriter` with a per-set `SetUsageInfo` lock. Attempting to register a second writer throws `InvalidOperationException`.
-- **Concurrent read + write** — Readers see the last committed state while a writer appends new data. The dual-header atomic commit makes new data visible to subsequent readers only after a successful commit.
-- **Per-set write locks** — A `SemaphoreSlim` per set serializes write operations (compaction, transactions) to prevent concurrent structural modifications.
-- **Directory access** — The in-memory image directory is replaced atomically (reference swap) on commit. Existing readers continue using their snapshot safely.
-- **Per-set isolation** — Each set has independent index files, shard managers, and caches. Operations on one set do not block operations on another.
+- **Multiple concurrent readers** - Any number of readers can access a set simultaneously. Readers use `ConcurrentDictionary`-based caches for metadata and block maps, requiring no exclusive locks.
+- **Single writer per set** - Only one writer may be registered at a time per set, enforced by `RegisterWriter` with a per-set `SetUsageInfo` lock. Attempting to register a second writer throws `InvalidOperationException`.
+- **Concurrent read + write** - Readers see the last committed state while a writer appends new data. The dual-header atomic commit makes new data visible to subsequent readers only after a successful commit.
+- **Per-set write locks** - A `SemaphoreSlim` per set serializes write operations (compaction, transactions) to prevent concurrent structural modifications.
+- **Directory access** - The in-memory image directory is replaced atomically (reference swap) on commit. Existing readers continue using their snapshot safely.
+- **Per-set isolation** - Each set has independent index files, shard managers, and caches. Operations on one set do not block operations on another.
 
 ## Quick Start
 
@@ -139,7 +139,7 @@ using IImageWriter writer = dataStore.AddImage("wii", "MyGame.iso", system: "Wii
 writer.WriteArea(offset: 0, size: imageSize, crc32: crc, xxhash64: hash);
 // ... write blocks and offsets ...
 
-writer.Commit(); // Atomic commit — all or nothing
+writer.Commit(); // Atomic commit - all or nothing
 ```
 
 ### Open an Image (Read)
@@ -178,7 +178,7 @@ ImageRecord renamed = dataStore.RenameImage(key, "New Name.iso");
 ### Rollback
 
 ```csharp
-// Roll back to image 5 — all images with ID > 5 are marked as removed
+// Roll back to image 5 - all images with ID > 5 are marked as removed
 var key = new GlobalImageKey("wii", imageId: 5);
 dataStore.RollbackImage(key);
 ```
@@ -191,10 +191,10 @@ dataStore.CompactSet("wii");
 
 // With progress reporting
 dataStore.CompactSet("wii", progress: new Progress<(int Percentage, string Stage)>(p =>
-    Console.WriteLine($"{p.Percentage}% — {p.Stage}")));
+    Console.WriteLine($"{p.Percentage}% - {p.Stage}")));
 ```
 
-Compaction is crash-safe — an interrupted compact can be recovered on the next open. See [docs/COMPACTION.md](docs/COMPACTION.md) for full details.
+Compaction is crash-safe - an interrupted compact can be recovered on the next open. See [docs/COMPACTION.md](docs/COMPACTION.md) for full details.
 
 ### Get Statistics
 
@@ -256,7 +256,7 @@ When reading an image, the `AuxBlockProvider` automatically discovers the aux st
 
 ## 1GMR (1 Game, Many ROMs)
 
-1GMR is a workflow for organizing large collections into per-game sets. The name stands for "1 Game, Many ROMs" — the idea is that a single game title often has many regional variants, revisions, and demo versions. Rather than storing all images in one massive set, 1GMR routes each file into a dedicated per-game set based on regex pattern matching.
+1GMR is a workflow for organizing large collections into per-game sets. The name stands for "1 Game, Many ROMs" - the idea is that a single game title often has many regional variants, revisions, and demo versions. Rather than storing all images in one massive set, 1GMR routes each file into a dedicated per-game set based on regex pattern matching.
 
 A YAML file defines the routing rules:
 
@@ -270,21 +270,21 @@ games:
       - '^Legend of Zelda.*Twilight(?= \(|\.iso|$)'
 ```
 
-Each game gets its own `.nkds` set. This pairs naturally with embedded mode (`shardSize = 0`) — each game becomes a single self-contained file that's easy to copy, back up, or share. Regional variants of the same game typically share significant block content, so deduplication within each per-game set is highly effective.
+Each game gets its own `.nkds` set. This pairs naturally with embedded mode (`shardSize = 0`) - each game becomes a single self-contained file that's easy to copy, back up, or share. Regional variants of the same game typically share significant block content, so deduplication within each per-game set is highly effective.
 
 Use the `nkds 1gmr` command (CLI) or the **Add 1GMR** toolbar button (UI) to run a batch import. See the [CLI User Guide](docs/UserGuide-CLI.md#1gmr) for full details.
 
 ## Dat Verification
 
-Dat files are XML catalogs of expected ROMs published by preservation groups like Redump and No-Intro. They define the canonical set of known good dumps for a system — each entry specifies a filename and CRC/hash that a correct dump should have.
+Dat files are XML catalogs of expected ROMs published by preservation groups like Redump and No-Intro. They define the canonical set of known good dumps for a system - each entry specifies a filename and CRC/hash that a correct dump should have.
 
 NKit DataStore can verify your collection against a dat file to answer: which images do I have, which am I missing, and which have problems? The verification classifies each entry as:
 
-- **Correct** — Image matches by name and CRC
-- **Missing** — Dat entry has no matching image in the set
-- **Badly Named** — Image matches by CRC but has the wrong filename (can be auto-renamed)
-- **Wrong CRC** — Image matches by name but has a different CRC
-- **Unmatched** — Image exists in the set but has no corresponding dat entry
+- **Correct** - Image matches by name and CRC
+- **Missing** - Dat entry has no matching image in the set
+- **Badly Named** - Image matches by CRC but has the wrong filename (can be auto-renamed)
+- **Wrong CRC** - Image matches by name but has a different CRC
+- **Unmatched** - Image exists in the set but has no corresponding dat entry
 
 Use the **Dat** toolbar button in the UI to load a dat file and verify interactively, with options to filter by category and auto-rename badly-named images. See the [UI User Guide](docs/UserGuide-UI.md#dat-verification) for details.
 
@@ -296,7 +296,7 @@ Use the **Dat** toolbar button in the UI to load a dat file and verify interacti
 
 ## Dependencies
 
-- **[GrindCore](https://www.nuget.org/packages/GrindCore) 0.7.1** — Provides XXHash64, CRC32, and Zstd compression/decompression
+- **[GrindCore](https://www.nuget.org/packages/GrindCore) 0.7.1** - Provides XXHash64, CRC32, and Zstd compression/decompression
 
 ## Documentation
 

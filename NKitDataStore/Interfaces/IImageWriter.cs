@@ -140,7 +140,7 @@ namespace NKitDataStore.Interfaces
 
         /// <summary>
         /// True when the last FinalizeImage detected that an identical image (same name + CRC32 +
-        /// XXHash64) already exists in the set and therefore did NOT finalize — the pending image
+        /// XXHash64) already exists in the set and therefore did NOT finalize - the pending image
         /// will be rolled back on Dispose. Lets callers distinguish a duplicate (already stored)
         /// from a genuine failure so they can report it appropriately instead of appearing stuck.
         /// </summary>

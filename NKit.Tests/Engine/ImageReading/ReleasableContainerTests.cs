@@ -30,7 +30,7 @@ namespace NKit.Tests.Engine.ImageReading
             return d;
         }
 
-        // Forward-only source (CanSeek=false) modelling an archive entry — its BufferStream caches.
+        // Forward-only source (CanSeek=false) modelling an archive entry - its BufferStream caches.
         private sealed class ForwardOnlyStream : Stream
         {
             private readonly byte[] _data;
@@ -62,7 +62,7 @@ namespace NKit.Tests.Engine.ImageReading
         private static DefaultAsIso makeContainer(out BufferStream layerA)
         {
             layerA = new BufferStream(new ForwardOnlyStream(numberData()));
-            // .iso id — DefaultAsIso maps a non-.SFB id to ContainerType.Iso.
+            // .iso id - DefaultAsIso maps a non-.SFB id to ContainerType.Iso.
             DefaultAsIso iso = new DefaultAsIso(new byte[0x400], IndexFileType.None);
             iso.Construct(layerA, true);
             return iso;

@@ -313,7 +313,7 @@ namespace Nanook.NKit.Vfs
 
         public static void ExecuteOgmr(NkdsCommandRequest request)
         {
-            // 1. Parse YAML — validates structure and compiles all regexes upfront
+            // 1. Parse YAML - validates structure and compiles all regexes upfront
             List<GameEntry> games;
             try
             {
@@ -791,7 +791,7 @@ namespace Nanook.NKit.Vfs
 
             if (triggered == 0)
             {
-                // User pressed Enter — initiate unmount
+                // User pressed Enter - initiate unmount
                 Console.WriteLine("Unmounting...");
                 orchestrator.Unmount(request.MountPoint);
 

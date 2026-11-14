@@ -42,14 +42,14 @@ namespace Nanook.NKit.App.Cli
             {
                 Console.Error.WriteLine("Error: " + ex.Message);
                 Console.WriteLine();
-                // HelpRenderer returns Spectre markup (already newline-terminated) — print with Markup.
+                // HelpRenderer returns Spectre markup (already newline-terminated) - print with Markup.
                 Spectre.Console.AnsiConsole.Markup(ex.Verb != null ? HelpRenderer.Verb(ex.Verb, version) : HelpRenderer.General(version));
                 return CliResult.Exit(2);
             }
 
             if (cmd.ShowVersion)
             {
-                // App name green, version yellow — matching the help header.
+                // App name green, version yellow - matching the help header.
                 Spectre.Console.AnsiConsole.MarkupLine($"[green]NKit[/] [yellow]v{Spectre.Console.Markup.Escape(version)}[/]");
                 return CliResult.Exit(0);
             }
@@ -68,10 +68,10 @@ namespace Nanook.NKit.App.Cli
             //   2. Positional-only inputs with no verb (drag-drop: `nkit file.iso`): launch
             //      interactive with the dropped path(s) pre-seeded so the user picks a task/options.
             //      If a verb IS present (e.g. `nkit convert file.iso`), the user has specified the
-            //      task explicitly — run directly with the positional treated as the input.
+            //      task explicitly - run directly with the positional treated as the input.
             //
             //   3. No CLI params at all (no verb, no options, no inputs): launch interactive UNLESS the
-            //      config alone can drive a direct run — i.e. it supplies BOTH a task and an input.
+            //      config alone can drive a direct run - i.e. it supplies BOTH a task and an input.
             //      A config missing either one goes interactive (the config task pre-selects the verb).
             //
             //   4. Anything else (an explicit --input, a verb, or other options present) runs directly;
@@ -89,7 +89,7 @@ namespace Nanook.NKit.App.Cli
 
             bool configCanRunDirect = config.HasTask() && config.HasInput();
 
-            // Rule 2 only fires when there is NO verb — a positional alongside a verb (e.g.
+            // Rule 2 only fires when there is NO verb - a positional alongside a verb (e.g.
             // `nkit convert file.iso`) is a fully specified command and must run directly.
             bool isDragDropWithoutVerb = hasPositionalInput && cmd.Verb == null;
 

@@ -231,7 +231,7 @@
                                 <!-- Group header: number, image count, overall % -->
                                 <TextBlock FontWeight="Medium">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}: {1} images — Min: {2:F0}% | Max: {3:F0}% | Avg: {4:F0}%">
+                                        <MultiBinding StringFormat="{}{0}: {1} images - Min: {2:F0}% | Max: {3:F0}% | Avg: {4:F0}%">
                                             <Binding Path="GroupName"/>
                                             <Binding Path="Group.Images.Count"/>
                                             <Binding Path="Group.Summary.MinMatchPercentage"/>

@@ -16,7 +16,7 @@ namespace NKit.Tests.Engine.Output
     ///
     /// These tests encode the EXPECTED (correct) behavior and run against a model of the
     /// ACTUAL extraction code. After the active-overlaps fix is applied, the model reflects
-    /// the fixed behavior (ProcessOverlaps) and these tests PASS — confirming the fix works.
+    /// the fixed behavior (ProcessOverlaps) and these tests PASS - confirming the fix works.
     ///
     /// The model validates that overlapping files receive their complete data via streaming:
     /// - Same-offset files receive full data via position-based activation
@@ -71,7 +71,7 @@ namespace NKit.Tests.Engine.Output
             /// <summary>Secondary overlapping files in FidelityFileList or _candidates.</summary>
             public List<OverlapFile> SecondaryFiles { get; set; } = new();
 
-            /// <summary>Section chunk size — how many bytes arrive per section item.</summary>
+            /// <summary>Section chunk size - how many bytes arrive per section item.</summary>
             public long SectionChunkSize { get; set; }
 
             /// <summary>The step type being modeled.</summary>
@@ -169,7 +169,7 @@ namespace NKit.Tests.Engine.Output
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 2.1, 2.2**
         ///
-        /// Test (ExtractIsoStep): Two files share offset 0x1000 — primary 4 MB, secondary 2 MB.
+        /// Test (ExtractIsoStep): Two files share offset 0x1000 - primary 4 MB, secondary 2 MB.
         /// Section chunk is 1 MB. Secondary needs multi-chunk streaming.
         /// Verify secondary receives full 2 MB of correct data.
         ///
@@ -193,7 +193,7 @@ namespace NKit.Tests.Engine.Output
                     {
                         Name = "secondary.m2ts",
                         FsOffset = 0x1000,           // Same offset as primary
-                        FsSize = 2 * 1024 * 1024    // 2 MB — needs 2 chunks
+                        FsSize = 2 * 1024 * 1024    // 2 MB - needs 2 chunks
                     }
                 }
             };
@@ -211,7 +211,7 @@ namespace NKit.Tests.Engine.Output
         /// <summary>
         /// **Validates: Requirements 1.3, 2.3**
         ///
-        /// Test (ExtractIsoStep): Range-overlap — File A at [0x1000, 0x1000+4MB),
+        /// Test (ExtractIsoStep): Range-overlap - File A at [0x1000, 0x1000+4MB),
         /// File B at [0x2000, 0x2000+2MB). B starts 0x1000 bytes into A.
         /// Verify B receives 2 MB of correct data starting from offset 0x2000.
         ///
@@ -252,7 +252,7 @@ namespace NKit.Tests.Engine.Output
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 2.1, 2.2**
         ///
-        /// Test (ExtractWiiGcStep): Two files share offset — primary 2 MB, secondary 1.5 MB,
+        /// Test (ExtractWiiGcStep): Two files share offset - primary 2 MB, secondary 1.5 MB,
         /// section chunk 512 KB. Verify secondary receives full 1.5 MB across 3 chunks.
         ///
         /// Bug: ExtractWiiGcStep only processes shared candidates when si.File.OffsetInItem == 0
@@ -276,7 +276,7 @@ namespace NKit.Tests.Engine.Output
                     {
                         Name = "secondary.bin",
                         FsOffset = 0x1000,              // Same offset as primary
-                        FsSize = (long)(1.5 * 1024 * 1024)  // 1.5 MB — needs 3 chunks
+                        FsSize = (long)(1.5 * 1024 * 1024)  // 1.5 MB - needs 3 chunks
                     }
                 }
             };
@@ -293,7 +293,7 @@ namespace NKit.Tests.Engine.Output
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 2.1, 2.2**
         ///
-        /// Test (ExtractXBoxStep): Same pattern as WiiGc — multi-chunk shared-offset file.
+        /// Test (ExtractXBoxStep): Same pattern as WiiGc - multi-chunk shared-offset file.
         /// Primary 2 MB, secondary 1.5 MB, section chunk 512 KB.
         /// This test MUST FAIL on unfixed code.
         /// </summary>
@@ -313,7 +313,7 @@ namespace NKit.Tests.Engine.Output
                     {
                         Name = "secondary.bin",
                         FsOffset = 0x1000,              // Same offset as primary
-                        FsSize = (long)(1.5 * 1024 * 1024)  // 1.5 MB — needs 3 chunks
+                        FsSize = (long)(1.5 * 1024 * 1024)  // 1.5 MB - needs 3 chunks
                     }
                 }
             };

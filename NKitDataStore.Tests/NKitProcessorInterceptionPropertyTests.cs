@@ -9,7 +9,7 @@ namespace NKitDataStore.Tests
     /// (Property 2: Synthetic Source Interception).
     ///
     /// NKitProcessor requires a fully initialized TaskContext with AppSettings,
-    /// Steps, logging, and datastore configuration — making direct instantiation
+    /// Steps, logging, and datastore configuration - making direct instantiation
     /// impractical for property-based testing. Instead, these tests validate the
     /// ROUTING DECISION MODEL that mirrors the interception logic at the top of
     /// NKitProcessor.Process():

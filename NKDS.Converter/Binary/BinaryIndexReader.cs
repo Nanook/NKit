@@ -122,7 +122,7 @@ namespace NKDS.Converter.Binary
             EmbeddedFooter? footer = EmbeddedFooter.Deserialize(footerBytes);
             if (footer == null)
             {
-                // No valid footer magic — check if the file starts with NKDS magic directly
+                // No valid footer magic - check if the file starts with NKDS magic directly
                 return 0;
             }
 

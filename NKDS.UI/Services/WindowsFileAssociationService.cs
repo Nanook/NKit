@@ -101,7 +101,7 @@ public class WindowsFileAssociationService : IFileAssociationService
                     string? existingValue = existingCommandKey.GetValue(null) as string;
                     if (string.Equals(existingValue, commandValue, StringComparison.OrdinalIgnoreCase))
                     {
-                        // Already registered with the same command — no-op
+                        // Already registered with the same command - no-op
                         return Task.FromResult(new AssociationOperationResult { Success = true });
                     }
                 }
@@ -114,7 +114,7 @@ public class WindowsFileAssociationService : IFileAssociationService
             }
             else if (entry.Category == AssociationCategory.FileContextMenu)
             {
-                // File context menu entries live under NkdsFile ProgID — ensure .nkds maps to it
+                // File context menu entries live under NkdsFile ProgID - ensure .nkds maps to it
                 EnsureNkdsExtensionKey();
                 RegisterShellEntry(fullKeyPath, label, commandValue);
             }

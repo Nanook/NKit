@@ -14,10 +14,10 @@ namespace NKit.Tests.Engine.Output
     ///
     /// These tests capture the CURRENT behavior of the extraction loop logic
     /// for non-buggy inputs (files with unique FsOffset values) BEFORE any fix is applied.
-    /// They MUST PASS on the unfixed code — if they don't pass, the test is wrong.
+    /// They MUST PASS on the unfixed code - if they don't pass, the test is wrong.
     /// After the fix, these tests confirm no regressions for the preserved behavior.
     ///
-    /// Property 2: Preservation — Unique-Offset File Extraction Unchanged
+    /// Property 2: Preservation - Unique-Offset File Extraction Unchanged
     ///
     /// For any section items where no other candidate shares the same FsOffset as si.FsFile,
     /// the extraction output SHALL be byte-identical to the unfixed code's behavior.
@@ -147,7 +147,7 @@ namespace NKit.Tests.Engine.Output
 
                             string imagePath = System.IO.Path.Combine(path, si.FsFile.Name);
 
-                            // writeFs logic — mirrors ExtractXBoxStep.writeFs exactly
+                            // writeFs logic - mirrors ExtractXBoxStep.writeFs exactly
                             long splitFullSize = si.FsFile.SplitParts?.Size ?? si.FsFile.FsSize;
                             bool isSplit = splitFullSize != si.FsFile.FsSize;
                             bool newFile = si.OffsetInItem == 0;
@@ -301,7 +301,7 @@ namespace NKit.Tests.Engine.Output
         /// Property 2b: Split file reassembly for files with unique offsets produces correct concatenated output.
         ///
         /// For all split files with unique offsets, reassembly produces the same
-        /// result as the unfixed code — multiple WriteFs calls tracking position via _splitProgress.
+        /// result as the unfixed code - multiple WriteFs calls tracking position via _splitProgress.
         /// Each split part is a separate IFsFile with its own FsOffset, sharing a common SplitParts.Size.
         ///
         /// **Validates: Requirements 3.3**

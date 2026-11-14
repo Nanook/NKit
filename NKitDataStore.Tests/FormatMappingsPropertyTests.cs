@@ -121,7 +121,7 @@ public class FormatMappingsPropertyTests
         string normalizedSystem = system.ToLowerInvariant();
         string normalizedFormat = sourceFormat.ToLowerInvariant();
 
-        // Skip defined pairs — we only test the fallback for unknown pairs
+        // Skip defined pairs - we only test the fallback for unknown pairs
         if (IsDefinedPair(normalizedSystem, normalizedFormat))
             return true; // vacuously true for known pairs
 
@@ -171,7 +171,7 @@ public class FormatMappingsPropertyTests
     /// <summary>
     /// **Validates: Requirements 3.5**
     ///
-    /// Property 2: Case-insensitivity — for any casing of a known system name,
+    /// Property 2: Case-insensitivity - for any casing of a known system name,
     /// the result is identical to the canonical (lowercase) lookup.
     /// </summary>
     [Theory]

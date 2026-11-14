@@ -6,7 +6,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
     // area, so the WiiGc.Image reads boot.bin + the whole FST region up front and feeds it here in
     // one or more blocks; this reader drives the existing FileSystemInfo.SetFsInfo accumulation
     // until the file system is fully parsed. Because the Image supplies the complete FST region,
-    // this reader never reports Pending regions — it is Complete as soon as SetFsInfo signals the
+    // this reader never reports Pending regions - it is Complete as soon as SetFsInfo signals the
     // FST has been fully read.
     //
     // The parse logic itself remains in FileSystemInfo (SetFsInfo/process/setFileSystem); this

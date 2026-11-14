@@ -9,7 +9,7 @@ namespace NkdsUi.ViewModels;
 
 /// <summary>
 /// ViewModel for the Settings dialog. Manages association entries, state queries,
-/// and the window decorations toggle. Uses OK/Cancel semantics — changes are only
+/// and the window decorations toggle. Uses OK/Cancel semantics - changes are only
 /// persisted when the user clicks OK.
 /// </summary>
 public class SettingsDialogViewModel : ViewModelBase, IDisposable
@@ -286,7 +286,7 @@ public class SettingsDialogViewModel : ViewModelBase, IDisposable
     }
 
     private async Task CancelAsync() =>
-        // Discard all changes — nothing is persisted
+        // Discard all changes - nothing is persisted
         await CloseDialog.Handle(RxVoid.Default);
 
     private async Task ApplyAssociationChangesAsync()

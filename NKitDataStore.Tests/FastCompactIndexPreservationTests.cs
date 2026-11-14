@@ -10,7 +10,7 @@ namespace NKitDataStore.Tests
     /// Preservation property tests for CompactSetFast (index-only compact).
     ///
     /// Key invariants under test:
-    ///   1. Shard files are never modified — byte-for-byte identical before and after.
+    ///   1. Shard files are never modified - byte-for-byte identical before and after.
     ///   2. All live images read back correctly after fast compact.
     ///   3. Removed images are absent from the directory after fast compact.
     ///   4. Delta count is zero after fast compact (all deltas merged).
@@ -237,7 +237,7 @@ namespace NKitDataStore.Tests
             using (DataStore store = new DataStore(testDir))
             {
                 store.CreateSet(setName, shardSize: 50L * 1024 * 1024 * 1024, blockSize: 65536);
-                // Add several images — each creates one delta
+                // Add several images - each creates one delta
                 for (int i = 0; i < 5; i++)
                     writeImage(store, setName, $"img{i}.iso", makePayload(i + 2000, 65536));
             }
@@ -284,7 +284,7 @@ namespace NKitDataStore.Tests
             using (DataStore store = new DataStore(testDir))
                 store.CompactSetFast(setName);
 
-            // Add image 2 with same shared block — should dedup (no new shard bytes for sharedBlock)
+            // Add image 2 with same shared block - should dedup (no new shard bytes for sharedBlock)
             string[] shardsBefore = getShardFiles(testDir, setName);
             long shardSizeBefore = shardsBefore.Sum(f => new FileInfo(f).Length);
 
@@ -380,7 +380,7 @@ namespace NKitDataStore.Tests
 
             const string setName = "ReadOnlyShardTest";
 
-            // Separate mode (explicit shard size) — shards live in _NNNN.nkds files
+            // Separate mode (explicit shard size) - shards live in _NNNN.nkds files
             using (DataStore store = new DataStore(testDir))
             {
                 store.CreateSet(setName, shardSize: 50L * 1024 * 1024 * 1024, blockSize: 65536);
@@ -420,7 +420,7 @@ namespace NKitDataStore.Tests
                     }
                 }
 
-                // Shards must be byte-for-byte identical — nothing was written to them
+                // Shards must be byte-for-byte identical - nothing was written to them
                 foreach (KeyValuePair<string, byte[]> kvp in shardSnapshots)
                 {
                     byte[] after = File.ReadAllBytes(kvp.Key);

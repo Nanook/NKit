@@ -99,7 +99,7 @@ namespace Nanook.NKit
             new[] { @"Dedupe-Image             (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:N, vfy:DataStore,          ichk:Y, ochk:N, write:N, del:Y)", "Dedupe",          "wii/gamecube", "image",       "",                                "n",   "y/datLookup",   "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Dedupe-Image             (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Dedupe",          "wii/gamecube", "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated rows — a decoded NKitAsIso source has
+            //     patch (nkit.iso/gcz): no dedicated rows - a decoded NKitAsIso source has
             //     _info.IsNkit=false so ReqPatch is never y; it takes the single-step Dedupe-Image
             //     rows above. (The Expand-Image-Patch pre-pass was for legacy raw NKit, which no
             //     longer reaches the Image un-decoded.)
@@ -130,7 +130,7 @@ namespace Nanook.NKit
             // FIX EXTRACT                                                                                        Task,              System,         SrcType,       Config,                            Ptch,  PrmV,            Chk,   Scan,  Dats,  DatItem
             //   wii gamecube
             new[] { @"FixExtract-WiiGc         (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "FixExtract",      "wii/gamecube", "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated row - decoded NKitAsIso is ReqPatch=n and
             //     takes the single-step FixExtract-WiiGc row above (no Expand-Image-Patch pre-pass).
             //   ps3
             new[] { @"FixExtract-Ps3           (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "FixExtract",      "ps3",          "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
@@ -141,13 +141,13 @@ namespace Nanook.NKit
             // EXTRACT                                                                                            Task,              System,         SrcType,       Config,                            Ptch,  PrmV,            Chk,   Scan,  Dats,  DatItem
             //   wii gamecube
             new[] { @"Extract-WiiGc            (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wii/gamecube", "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated row - decoded NKitAsIso is ReqPatch=n and
             //     takes the single-step Extract-WiiGc row above (no Expand-Image-Patch pre-pass).
             //   wiiu - wua/loadiine folder sources: direct passthrough (AreaType.Other sections)
             new[] { @"Extract-Wua-Loadiine     (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wiiu",         "folderformat", "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   wiiu
             new[] { @"Extract-WiiU             (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "wiiu",         _ImgIdx,        "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //   xbox — single-step: archived XBox streams from the archive (BufferStream), so
+            //   xbox - single-step: archived XBox streams from the archive (BufferStream), so
             //   Extract-XBox walks the file system in one pass (no Expand-XBox pre-pass).
             new[] { @"Extract-XBox             (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Extract",         "xbox/xbox360", "image",       "",                                "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             //   everything else
@@ -171,7 +171,7 @@ namespace Nanook.NKit
                       Verify-Image             (scan:Y, vfy:datLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Fix",             "wii",          "image",       "iso/",                            "n",   "y/datLookup",   "y/n", "y/n", "y",   "y/n" },
             new[] { @"Fix-WiiGc                (scan:N, vfy:datLookup,          ichk:N, ochk:N, write:Y, del:N)", "Fix",             "wii",          "image",       "iso/",                            "n",   "y/datLookup",   "y/n", "y/n", "y",   "y/n" },
             new[] { @"Fix-WiiGc                (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Fix",             "wii",          "image",       "iso/",                            "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     wii patch (nkit.iso/gcz): no dedicated rows and NO Expand pre-pass — WiiFixAsIso
+            //     wii patch (nkit.iso/gcz): no dedicated rows and NO Expand pre-pass - WiiFixAsIso
             //     wraps the (decoded or raw) nkit and the Fix step reads the corrected image
             //     directly, so it is ReqPatch=n and takes the single-step Fix-WiiGc / two-step
             //     Fix-WiiGc -> Verify-Image rows above. The two steps appear ONLY when a verify is
@@ -195,9 +195,9 @@ namespace Nanook.NKit
             new[] { @"Convert-WiiGc-Lossless   (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:N, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "wii/gamecube", "image",       "rvz[nkit]/wbfs[nkit]/ciso[nkit]", "n",   "datLookup",     "y/n", "y/n", "y",   "y/n" },
             new[] { @"Convert-WiiGc-Lossless   (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)", "Convert",         "wii/gamecube", "image",       "rvz[nkit]/wbfs[nkit]/ciso[nkit]", "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated rows — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated rows - decoded NKitAsIso is ReqPatch=n and
             //     converts single-step (Convert-WiiGc-Lossless -> Verify-Image) via the rows above.
-            //   gamecube nkit.iso output — gamecube only, always lossless
+            //   gamecube nkit.iso output - gamecube only, always lossless
             new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:N, vfy:InScanCompare,      ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "gamecube",     "image",       "nkitiso[nkit]",                   "n",   "y",             "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Convert-Gc-NKitIso       (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:Y, del:N)
@@ -209,7 +209,7 @@ namespace Nanook.NKit
             new[] { @"Convert-WiiGc-Lossy      (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)
                       Verify-Image             (scan:Y, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:Y)", "Convert",         "wii/gamecube", "image",       "wbfs/ciso",                       "n",   "y/datLookup",   "y/n", "y/n", "y",   "y/n" },
             new[] { @"Convert-WiiGc-Lossy      (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         "wii/gamecube", "image",       "wbfs/ciso",                       "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz) - lossy: no dedicated rows — decoded NKitAsIso is ReqPatch=n
+            //     patch (nkit.iso/gcz) - lossy: no dedicated rows - decoded NKitAsIso is ReqPatch=n
             //     and converts single-step (Convert-WiiGc-Lossy -> Verify-Image) via the rows above.
             //   wiiu - image
             new[] { @"Convert-WiiU-Wux         (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)
@@ -263,7 +263,7 @@ namespace Nanook.NKit
             new[] { @"Convert-Image            (scan:Y, vfy:DatLookup,          ichk:Y, ochk:N, write:Y, del:Y)", "Convert",         _AllSystems,    "image",       "iso/",                            "n",   "y",             "n",   "n",   "y",   "n"   },
             new[] { @"Convert-Image            (scan:Y, vfy:DatLookup,          ichk:Y, ochk:N, write:Y, del:Y)", "Convert",         _AllSystems,    "image",       "iso/",                            "n",   "datLookup",     "y/n", "y/n", "y",   "y/n" },
             new[] { @"Convert-Image            (scan:Y, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Convert",         _AllSystems,    "image",       "iso/",                            "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated rows — a decoded NKitAsIso source is
+            //     patch (nkit.iso/gcz): no dedicated rows - a decoded NKitAsIso source is
             //     ReqPatch=n and converts to iso single-step via the Convert-Image rows above.
             //   not supported
             new[] { @"NotSet-NotSupported      (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:N, del:N)", "Convert",         _AllSystems,    _ImgIdx,        "*",                               "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
@@ -367,9 +367,9 @@ namespace Nanook.NKit
                       Scan-Image               (scan:Y, vfy:DatLookup,          ichk:Y, ochk:N, write:N, del:N)", "Scan",            "dreamcast",    "folderindex", "chdgdromcue",                     "y/n", "datLookup",     "y/n", "y/n", "y",   "y/n" },
             new[] { @"Convert-GdRom-CueGdi     (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)
                       Scan-Image               (scan:Y, vfy:NoVerify,           ichk:Y, ochk:N, write:N, del:N)", "Scan",            "dreamcast",    "folderindex", "chdgdromcue",                     "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated row - decoded NKitAsIso is ReqPatch=n and
             //     scans single-step via the generic Scan-Image rows below.
-            //   xbox archive: no dedicated rows — archived XBox streams from the archive (via
+            //   xbox archive: no dedicated rows - archived XBox streams from the archive (via
             //   DefaultAsIso + BufferStream) and takes the generic single-step Scan-Image rows
             //   below. The old Expand-XBox pre-pass is gone (CalculateConfig no longer emits 'arc').
             //   generic folderimage and image
@@ -392,7 +392,7 @@ namespace Nanook.NKit
             new[] { @"Verify-IsoGdChd          (scan:N, vfy:DatLookup,          ichk:N, ochk:Y, write:N, del:N)", "Verify",          "dreamcast",    "folderindex", "chdgdromnone",                    "y/n", "y",             "n",   "n",   "y",   "n"   },
             new[] { @"Verify-IsoGdChd          (scan:N, vfy:DatLookup,          ichk:N, ochk:Y, write:N, del:N)", "Verify",          "dreamcast",    "folderindex", "chdgdromnone",                    "y/n", "datLookup",     "y/n", "y/n", "y",   "y/n" },
             new[] { @"Verify-IsoGdChd          (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:N, del:N)", "Verify",          "dreamcast",    "folderindex", "chdgdromnone",                    "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated row - decoded NKitAsIso is ReqPatch=n and
             //     verifies single-step via the generic Verify-Image rows below.
             //   generic folderimage and image
             new[] { @"Verify-Image             (scan:Y, vfy:InChecksums,        ichk:Y, ochk:N, write:N, del:N)", "Verify",          _AllSystems,    _ImgIdx,        "none",                           "y/n", "y/n",           "y",   "y/n", "y/n", "y/n" },
@@ -412,9 +412,9 @@ namespace Nanook.NKit
             new[] { @"NotSet-NotSupported       (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:N, del:N)", "Wipe",            "wiiu",         "folderformat", "*",                              "y/n", "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Wipe-WiiU                (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Wipe",            "wiiu",         "image",       "*",                               "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
             new[] { @"Wipe-WiiU-AppTmd         (scan:N, vfy:NoVerify,           ichk:N, ochk:N, write:Y, del:N)", "Wipe",            "wiiu",         "folderindex", "*",                               "n",   "n/y/datLookup", "y/n", "y/n", "y/n", "y/n" },
-            //     patch (nkit.iso/gcz): no dedicated row — decoded NKitAsIso is ReqPatch=n and
+            //     patch (nkit.iso/gcz): no dedicated row - decoded NKitAsIso is ReqPatch=n and
             //     wipes single-step via the Wipe-WiiGc row above.
-            //   xbox archive: no dedicated row — archived XBox streams from the archive
+            //   xbox archive: no dedicated row - archived XBox streams from the archive
             //   (BufferStream), so Wipe-Iso operates in one pass (no Expand-XBox pre-pass). It
             //   takes the generic image Wipe-Iso row below.
             //   generic folderimage and image
@@ -492,7 +492,7 @@ namespace Nanook.NKit
         internal void CreateSteps(IStepsImageInfo imageInfo)
         {
             DatItem datMatch = this.DatManager?.FindByName(this.Steps[0].SourceFile.Name);
-            // Synthetic folder sources (LoadiineFolder) have no ImageFiles — skip scan lookup
+            // Synthetic folder sources (LoadiineFolder) have no ImageFiles - skip scan lookup
             Scan inScan = (this.Steps[0].SourceFile.IsSyntheticFolder || (this.Steps[0].SourceFile.ImageFiles?.Length ?? 0) == 0)
                 ? null
                 : this.AppSettings[this.SystemType]?.Lookup.GetNKitScan(this.Steps[0].SourceFile.ImageFiles[0].FileName);
@@ -566,7 +566,7 @@ namespace Nanook.NKit
                     }
 
                     // #4 (was a post-lookup override): the checksum DIRECTION is a pure consequence of
-                    // the verify method, not an authored value — derive it so no row can disagree.
+                    // the verify method, not an authored value - derive it so no row can disagree.
                     applyVerifyChecksumDirection(info);
 
                     addTask(info, resolveStepConfig(info, taskConfig));
@@ -577,7 +577,7 @@ namespace Nanook.NKit
             }
         }
 
-        // #3 — resolve the EFFECTIVE verify method from the table's method + the source fact, at the
+        // #3 - resolve the EFFECTIVE verify method from the table's method + the source fact, at the
         // decision point (was a post-lookup mutation). A DataStore source reuses the table's InChecksums
         // rows but must verify against the stored DataStore values instead. Every other method passes
         // through unchanged. Pairs with applyVerifyChecksumDirection (which derives ochk/ichk from the
@@ -585,7 +585,7 @@ namespace Nanook.NKit
         internal static VerifyMethod resolveVerifyMethod(VerifyMethod tableMethod, bool isDataStore)
             => tableMethod == VerifyMethod.InChecksums && isDataStore ? VerifyMethod.DataStore : tableMethod;
 
-        // #4 — derive the checksum direction from the verify method (was a look-up-then-override).
+        // #4 - derive the checksum direction from the verify method (was a look-up-then-override).
         // A DataStore verify compares the produced OUTPUT against the stored values, so it calculates
         // output checksums (ochk) rather than input checksums (ichk). Deriving this means the table
         // never has to author (and never can contradict) the direction.
@@ -598,7 +598,7 @@ namespace Nanook.NKit
             }
         }
 
-        // #5 — the per-step-kind config token (was an inline "iso" hack). Named so the branch reads as
+        // #5 - the per-step-kind config token (was an inline "iso" hack). Named so the branch reads as
         // intent: an Expand/Wipe/Fix that outputs an Image but whose configured expand format is a
         // folder-index format (cue) must fall back to iso for the image write.
         private string resolveStepConfig(StepInfo info, string taskConfig)
@@ -621,7 +621,7 @@ namespace Nanook.NKit
         }
 
         // Config is calculated from image information to allow the step-table lookup. The per-system
-        // switch (workarounds #6-#10) now lives in SourceProfile.CalculateConfig — this thin shim
+        // switch (workarounds #6-#10) now lives in SourceProfile.CalculateConfig - this thin shim
         // computes the folder-index fact from local state and delegates, so the test harness (which
         // supplies its own pre-selected configString) exercises the exact same logic.
         internal string CalculateConfig(string configString, bool isGdRom)
@@ -652,7 +652,7 @@ namespace Nanook.NKit
 #endif
             this.Log.Trace(() => $"Found: {Regex.Replace(s.Replace("\r\n", "#"), "  ", "")} :: Task: {this.TaskType.ToString().ToLower()}, System: {this.SystemType.ToString().ToLower()}, SrcType: {srcType.ToLower()}, OutFormat: {config.ToLower()}, ReqPatch: {(imageInfo.ReqPatch ? "y" : "n")}, PrmV: {this.Settings.V.ToString().ToLower()}, SrcCrcHash: {(imageInfo.Checksums.Count != 0 ? "y" : "n")}, InNKitScan: {(inScan != null ? "y" : "n")}, Dats: {(this.DatManager.ItemsCount() != 0 ? "y" : "n")}, DatItem: {(datMatch != null ? "y" : "n")}");
 
-            // Detail (NKitLog): "why did this task pick these steps" — the step chain chosen plus the
+            // Detail (NKitLog): "why did this task pick these steps" - the step chain chosen plus the
             // discriminators that selected it. Promoted from the legacy Debug line above (which the
             // Log adapter mirrors at Trace) to Detail on the [Task] scope, so it shows at the file's
             // default Detail level and is attributable to the task-selection stage.

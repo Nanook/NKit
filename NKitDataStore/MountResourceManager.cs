@@ -44,7 +44,7 @@ namespace NKitDataStore
 
                 if (entry.Reader == null)
                 {
-                    // Cache miss — create a new reader
+                    // Cache miss - create a new reader
                     entry.Reader = _dataStore.OpenImageReader(new GlobalImageKey(setName, imageId));
                 }
 
@@ -83,7 +83,7 @@ namespace NKitDataStore
 
                 if (entry.RefCount == 0 && !_isShutdown)
                 {
-                    // Start TTL timer — dispose reader after TTL if not re-acquired
+                    // Start TTL timer - dispose reader after TTL if not re-acquired
                     entry.TtlTimer = new Timer(
                         _ => onTtlExpired(key),
                         null,
@@ -108,7 +108,7 @@ namespace NKitDataStore
 
                 if (entry.Cache == null)
                 {
-                    // Cache miss — create a new ImageBufferCache
+                    // Cache miss - create a new ImageBufferCache
                     entry.Cache = new ImageBufferCache(imageId, bufferSize, maxCachedBuffers);
                 }
 
@@ -139,7 +139,7 @@ namespace NKitDataStore
 
                 if (entry.RefCount == 0 && !_isShutdown)
                 {
-                    // Start TTL timer — dispose cache after TTL if not re-acquired
+                    // Start TTL timer - dispose cache after TTL if not re-acquired
                     entry.TtlTimer = new Timer(
                         _ => onBufferCacheTtlExpired(imageId),
                         null,
@@ -164,7 +164,7 @@ namespace NKitDataStore
 
                 if (entry.Result == null)
                 {
-                    // Cache miss — build the OffsetsManager
+                    // Cache miss - build the OffsetsManager
                     IImageReader reader = AcquireReader(setName, imageId);
                     try
                     {
@@ -209,7 +209,7 @@ namespace NKitDataStore
 
                 if (entry.RefCount == 0 && !_isShutdown)
                 {
-                    // Start TTL timer — remove entry after TTL if not re-acquired
+                    // Start TTL timer - remove entry after TTL if not re-acquired
                     entry.TtlTimer = new Timer(
                         _ => onOffsetsManagerTtlExpired(key),
                         null,
@@ -357,7 +357,7 @@ namespace NKitDataStore
 
         /// <summary>
         /// Synchronously forces TTL expiry for the offsets manager entry with the given key.
-        /// Intended for unit tests only — avoids relying on wall-clock timer scheduling.
+        /// Intended for unit tests only - avoids relying on wall-clock timer scheduling.
         /// </summary>
         internal void ForceOffsetsManagerExpiry(string key) => onOffsetsManagerTtlExpired(key);
 

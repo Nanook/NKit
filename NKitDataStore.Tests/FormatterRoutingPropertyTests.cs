@@ -12,7 +12,7 @@ namespace NKitDataStore.Tests
     /// **Validates: Requirements 3.1, 3.3, 3.4**
     ///
     /// For any non-header section processed by a formatter with aux enabled,
-    /// the block data is written to exactly one of {primary, aux} — never both
+    /// the block data is written to exactly one of {primary, aux} - never both
     /// and never neither. Image headers are the sole exception: they are written
     /// to both stores so each has a valid image record.
     /// </summary>
@@ -431,7 +431,7 @@ namespace NKitDataStore.Tests
         ///
         /// For any section S, calling GetWriterForSection(S) multiple times with
         /// the same input produces the same routing decision. The decision depends
-        /// only on the section's area type, partition type, and image offset — not
+        /// only on the section's area type, partition type, and image offset - not
         /// on any mutable state or call order.
         /// </summary>
         [Property(MaxTest = 200)]
@@ -516,7 +516,7 @@ namespace NKitDataStore.Tests
         ///
         /// For any section S, calling GetWriterForSection(S) multiple times with
         /// the same input produces the same routing decision. The decision depends
-        /// only on the section's area type, partition type, and partition index —
+        /// only on the section's area type, partition type, and partition index -
         /// not on any mutable state or call order.
         /// </summary>
         [Property(MaxTest = 200)]
@@ -681,7 +681,7 @@ namespace NKitDataStore.Tests
         /// Property 2 (supplementary): Non-update sections route exclusively to primary.
         ///
         /// For any non-header section that does NOT belong to an update partition,
-        /// the formatter routes it to the primary writer — never to aux.
+        /// the formatter routes it to the primary writer - never to aux.
         /// </summary>
         [Property(MaxTest = 200)]
         public bool NonUpdateSections_RouteExclusivelyToPrimary(

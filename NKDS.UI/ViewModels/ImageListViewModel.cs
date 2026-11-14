@@ -313,7 +313,7 @@ public class ImageListViewModel : ViewModelBase, IDisposable
         {
             foreach (ImageRecord image in session.Images)
             {
-                // TmdAppFolder images are internal aggregation containers — the children
+                // TmdAppFolder images are internal aggregation containers - the children
                 // (individual [tmd.X] App images) are shown instead.
                 if (image.Format == ImageFormat.TmdAppFolder)
                     continue;
@@ -333,7 +333,7 @@ public class ImageListViewModel : ViewModelBase, IDisposable
 
         // Preserve rows with meaningful UI state that aren't in the current sessions.
         // This handles the case where a session is temporarily closed (e.g., for exclusive
-        // file access during Add) — we don't want to lose VerifyResult, ProcessingStatus,
+        // file access during Add) - we don't want to lose VerifyResult, ProcessingStatus,
         // or stats that were set by previous operations or live insertion.
         foreach (KeyValuePair<(string SetName, long ImageId), ImageRowViewModel> kvp in _allImages)
         {
@@ -788,7 +788,7 @@ public class ImageListViewModel : ViewModelBase, IDisposable
             _batchCoalescer.EndBatch();
         }
 
-        // Restore selection for surviving rows (safely — don't crash if collection changed)
+        // Restore selection for surviving rows (safely - don't crash if collection changed)
         try
         {
             List<ImageRowViewModel> survivingSelection = SelectedImages
@@ -881,7 +881,7 @@ public class ImageListViewModel : ViewModelBase, IDisposable
         _suppressApplyFilters = false;
         // Update available systems from current _allImages (rows were inserted in-place during operation)
         UpdateAvailableSystems();
-        // Do NOT call ApplyFilters() here — it would re-sort pre-populated rows.
+        // Do NOT call ApplyFilters() here - it would re-sort pre-populated rows.
         // The rows are already in FilteredImages in scan order from InsertRowsBatch.
     }
 
@@ -927,7 +927,7 @@ public class ImageListViewModel : ViewModelBase, IDisposable
 
                 if (preserveInsertionOrder)
                 {
-                    // Append at end regardless of sort — used during pre-population
+                    // Append at end regardless of sort - used during pre-population
                     // to maintain scan order for sequential processing.
                     _filteredImages.Add(row);
                 }

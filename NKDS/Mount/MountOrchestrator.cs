@@ -222,7 +222,7 @@ public sealed class MountOrchestrator : IDisposable
 
     // Wait (bounded) for a mount's host thread to finish its blocking Run loop after it has been
     // signalled to unmount. This guarantees the platform filesystem layer has released the DataStore
-    // before the caller disposes it. Never joins the current thread (defensive — the host always
+    // before the caller disposes it. Never joins the current thread (defensive - the host always
     // runs on its own background thread) and never throws.
     private static void joinHostThread(MountEntry entry)
     {

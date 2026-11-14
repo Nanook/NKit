@@ -427,7 +427,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Validates: Requirement 1.5
-        /// Folder images use BlockType.File — verified by confirming the format
+        /// Folder images use BlockType.File - verified by confirming the format
         /// constraint: all entries are flat file entries with sequential offsets,
         /// no stride, no area metadata.
         /// </summary>

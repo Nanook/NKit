@@ -19,7 +19,7 @@ namespace Nanook.NKit.App.Cli
     }
 
     /// <summary>
-    /// Immutable result of parsing argv. Pure data — no console, no engine. A null <see cref="Verb"/>
+    /// Immutable result of parsing argv. Pure data - no console, no engine. A null <see cref="Verb"/>
     /// means no task was resolved (a candidate for interactive mode).
     /// </summary>
     public sealed class ParsedCommand

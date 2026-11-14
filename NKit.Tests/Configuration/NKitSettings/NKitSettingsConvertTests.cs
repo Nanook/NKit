@@ -674,7 +674,7 @@ namespace NKit.Tests.Configuration.NKitSettings
         [InlineData(SystemType.XBox, "cso2:7:8kb:2", "cso2", "", "", "7", "8kb", "2", false, "", "", "")]
         [InlineData(SystemType.XBox, "zso:10:4kb:1", "zso", "", "", "10", "4kb", "1", false, "", "", "")]
 
-        // WiiU format combinations (dual-format system — indexed side defaults to "wua")
+        // WiiU format combinations (dual-format system - indexed side defaults to "wua")
         [InlineData(SystemType.WiiU, "app", "app", "wua", "", "", "", "", false, "", "", "")]
         [InlineData(SystemType.WiiU, "iso", "iso", "wua", "", "", "", "", false, "", "", "")]
         [InlineData(SystemType.WiiU, "wux", "wux", "wua", "", "", "", "", false, "", "", "")]

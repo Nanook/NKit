@@ -212,7 +212,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
         RenameCommand = ReactiveCommand.Create(ExecuteRename, canRename);
         RenameCommand.DisposeWith(_disposables);
 
-        // Subscribe to filter toggle changes — reapply filters and sort when any toggle changes
+        // Subscribe to filter toggle changes - reapply filters and sort when any toggle changes
         this.WhenAnyValue(
                 x => x.ShowCorrect,
                 x => x.ShowMissing,
@@ -224,7 +224,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
             .Subscribe(_ => ApplyFiltersAndSort())
             .DisposeWith(_disposables);
 
-        // Subscribe to sort state changes — reapply sort when column or direction changes
+        // Subscribe to sort state changes - reapply sort when column or direction changes
         this.WhenAnyValue(
                 x => x.SortColumn,
                 x => x.SortDirection)
@@ -233,7 +233,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
             .Subscribe(_ => ApplyFiltersAndSort())
             .DisposeWith(_disposables);
 
-        // Subscribe to Active_Set changes — re-run verification when the selected set changes
+        // Subscribe to Active_Set changes - re-run verification when the selected set changes
         _mainWindowViewModel.Toolbar.WhenAnyValue(x => x.SelectedSetName)
             .Skip(1) // Skip the initial value emission
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -336,7 +336,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
         // Titles already renamed this pass (set + new base). A WiiU multi-TMD title produces several
         // BadlyNamed results (one per [tmd.N] child); the FIRST renames the whole title group via
         // RenameImageTitle, so siblings must be skipped here (and reclassified below) rather than
-        // re-renamed — which would otherwise trip the conflict check against the just-added base name.
+        // re-renamed - which would otherwise trip the conflict check against the just-added base name.
         HashSet<(string Set, string Base)> renamedTitles = new HashSet<(string, string)>();
 
         for (int i = 0; i < _allResults.Count; i++)
@@ -345,15 +345,15 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
             if (result.Status != DatVerificationStatus.BadlyNamed || !result.ImageId.HasValue || result.SetName == null)
                 continue;
 
-            // Target name is the dat entry name directly — dat names are plain game titles with
+            // Target name is the dat entry name directly - dat names are plain game titles with
             // no file extensions, and stored image names also have no extension, so no stripping needed.
             // Using Path.GetFileNameWithoutExtension would incorrectly truncate at dots in the title
             // (e.g. "Super Mario Bros. Wii" → "Super Mario Bros", "(v1.06B)" → "(v1").
             string targetName = result.DatEntryName ?? "";
-            string datEntryStem = targetName; // same thing — kept for clarity in the title-group logic
+            string datEntryStem = targetName; // same thing - kept for clarity in the title-group logic
 
             // If this result is a sibling child of a title already renamed this pass, don't rename
-            // again — just reclassify it (its record was already renamed by RenameImageTitle).
+            // again - just reclassify it (its record was already renamed by RenameImageTitle).
             if (renamedTitles.Contains((result.SetName, datEntryStem)))
             {
                 renamedIndices[i] = targetName;
@@ -363,7 +363,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
             // Check for conflict: target name already exists as another image.
             // If the conflicting entry has the SAME CRC as the badly-named image it is a redundant
             // duplicate (add → rename → re-add scenario). Delete the duplicate by ID rather than
-            // failing — the correctly-named entry already exists, so the duplicate is just noise.
+            // failing - the correctly-named entry already exists, so the duplicate is just noise.
             if (existingNames.Contains(targetName) &&
                 !string.Equals(targetName, result.ImageName, StringComparison.OrdinalIgnoreCase))
             {
@@ -426,7 +426,7 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
                 renamedIndices[i] = targetName;
 
                 // Refresh the ImageRowViewModel(s) from the store for EVERY record the title rename
-                // touched (umbrella + all [tmd.N] children), not just this one — otherwise siblings
+                // touched (umbrella + all [tmd.N] children), not just this one - otherwise siblings
                 // keep their stale names in the UI and would be re-processed as still-badly-named.
                 foreach (ImageRecord renamed in session.DataStore.ListImagesInSet(result.SetName)
                              .Where(r => string.Equals(NKitDataStore.DataStore.ExtractBaseName(r.Name) ?? r.Name, targetBase, StringComparison.OrdinalIgnoreCase)))
@@ -527,25 +527,25 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
         IEnumerable<ImageRowViewModel> scopedRows;
         if (activeSetName == null || string.Equals(activeSetName, "All", StringComparison.OrdinalIgnoreCase))
         {
-            // "All" — include all images
+            // "All" - include all images
             scopedRows = allImageRows;
         }
         else
         {
-            // Specific set — include only images from the active set
+            // Specific set - include only images from the active set
             scopedRows = allImageRows
                 .Where(row => string.Equals(row.SetName, activeSetName, StringComparison.Ordinal));
         }
 
         List<ImageInfo> images = scopedRows
-            // Exclude AlreadyExists rows — they have zero CRC and are display-only
+            // Exclude AlreadyExists rows - they have zero CRC and are display-only
             // placeholders in the main window; they don't represent committed images.
             .Where(row => row.ProcessingStatus != ImageProcessingStatus.AlreadyExists)
             .Select(row => new ImageInfo
             {
                 Id = row.Id,
                 Name = row.Name,
-                // Stored image names have no file extension — use the full name as the stem so that
+                // Stored image names have no file extension - use the full name as the stem so that
                 // matching against dat entry names (also extension-free) works correctly.
                 NameStem = row.Name,
                 Crc32 = row.Crc32,
@@ -596,11 +596,11 @@ public sealed class DatVerificationWindowViewModel : ViewModelBase, IDisposable
     /// <summary>
     /// Applies the current filter toggles and sort state to _allResults,
     /// producing the FilteredResults list. Summary totals are NOT recomputed
-    /// here — they remain invariant to filter changes.
+    /// here - they remain invariant to filter changes.
     /// </summary>
     internal void ApplyFiltersAndSort()
     {
-        // Phase 1: Filter — include results whose status matches any enabled filter toggle
+        // Phase 1: Filter - include results whose status matches any enabled filter toggle
         IEnumerable<DatResultModel> filtered = _allResults.Where(r => r.Status switch
         {
             DatVerificationStatus.Correct => _showCorrect,

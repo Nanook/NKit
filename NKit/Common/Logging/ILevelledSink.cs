@@ -4,7 +4,7 @@ namespace Nanook.NKit
     /// Optional sink capability: declares the most-verbose <see cref="LogLevel"/> the sink wants.
     /// The <see cref="ILogBus"/> uses this to compute an <b>effective level</b> across all sinks so
     /// the hot-path <see cref="ILogScope.IsEnabled(LogLevel)"/> gate reflects the most verbose
-    /// consumer — detail wanted only by a file sink is neither computed-and-discarded nor silently
+    /// consumer - detail wanted only by a file sink is neither computed-and-discarded nor silently
     /// dropped.
     /// <para>
     /// A sink that does not implement this is treated as wanting whatever the bus minimum allows

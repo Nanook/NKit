@@ -32,7 +32,7 @@ namespace Nanook.NKit.Configuration.Services
                 ConfigSettingsConstants.DirectoryNameFix
             };
 
-            // All directory names are lowercase — $system$ is lowercased during path expansion
+            // All directory names are lowercase - $system$ is lowercased during path expansion
             // so keys/wiiu, dats/ps3 etc. are consistent on all platforms including Linux.
             string[] datsSubdirs = { "cdi", "default", "dreamcast", "gamecube", "pcengine", "ps1", "ps2", "ps3", "psp", "saturn", "segacd", "wii", "wiiu", "xbox", "xbox360" };
             foreach (string subdir in datsSubdirs)
@@ -296,7 +296,7 @@ namespace Nanook.NKit.Configuration.Services
                         // Only copy yaml config files. The candidate directory (defaults/ or fix/)
                         // sits next to the executable, which also contains native libs (.so, .dylib,
                         // .dll). Using "*" would copy those into ~/.config/nkit on first system-mode
-                        // run — they serve no purpose there and waste space.
+                        // run - they serve no purpose there and waste space.
                         List<string> files = fileSystem.GetFiles(candidate, "*.yaml", SearchOption.AllDirectories)?.ToList() ?? new List<string>();
 
                         foreach (string src in files)

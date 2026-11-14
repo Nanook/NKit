@@ -149,7 +149,7 @@ namespace NKitDataStore.Tests
                 // .compact.tmp must be gone after the first set access
                 Assert.False(File.Exists(tmpPath), ".compact.tmp was not cleaned up by recovery");
 
-                // Original index must be intact — all images readable
+                // Original index must be intact - all images readable
                 Assert.Equal(3, images.Count);
                 foreach (ImageRecord img in images)
                 {

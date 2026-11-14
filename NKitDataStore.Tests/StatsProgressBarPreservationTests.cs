@@ -16,7 +16,7 @@ namespace NKitDataStore.Tests;
 ///
 /// **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
 ///
-/// Property 2: Preservation — Existing Operations and Graphs Path Unchanged
+/// Property 2: Preservation - Existing Operations and Graphs Path Unchanged
 ///
 /// These tests capture the EXISTING behavior on UNFIXED code and must PASS.
 /// They verify that:
@@ -52,7 +52,7 @@ public class StatsProgressBarPreservationTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 3.1**
     ///
-    /// Property 2a: Preservation — For all Graphs button clicks where CanCalculate is true,
+    /// Property 2a: Preservation - For all Graphs button clicks where CanCalculate is true,
     /// ExecuteGraphsAsync creates an OperationProgressViewModel, adds it to ActiveOperations,
     /// calculates stats via CalculateStatsWithProgressAsync, and the progress VM is removed
     /// after completion.
@@ -120,7 +120,7 @@ public class StatsProgressBarPreservationTests : IDisposable
                 await statsCalc.CalculateStatsWithProgressAsync(progressVm);
             });
 
-            // Wait with short timeout — stats service completes synchronously,
+            // Wait with short timeout - stats service completes synchronously,
             // but ComputeSelectedSummaryAsync hangs on Dispatcher.UIThread in test env
             bool completed = task.Wait(TimeSpan.FromSeconds(1));
 
@@ -141,7 +141,7 @@ public class StatsProgressBarPreservationTests : IDisposable
         }
         catch (AggregateException)
         {
-            // May throw if dispatcher is not available — still check if stats ran
+            // May throw if dispatcher is not available - still check if stats ran
             statsWereCalculated = stubStatsService.WasInvoked;
             progressForwarded = progressVm.ItemsProcessed > 0 || progressVm.TotalItems > 0;
         }
@@ -182,7 +182,7 @@ public class StatsProgressBarPreservationTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 3.2**
     ///
-    /// Property 2b: Preservation — For all cancellation requests during stats calculation,
+    /// Property 2b: Preservation - For all cancellation requests during stats calculation,
     /// calculation stops and partial stats are retained.
     ///
     /// Observation: On unfixed code, CancelStatsCommand cancels the internal _cts,
@@ -250,7 +250,7 @@ public class StatsProgressBarPreservationTests : IDisposable
             // that's still valid preservation behavior
             _output.WriteLine(
                 $"INFO: Calculation completed before cancel could be issued ({imageCount} images). " +
-                $"This is valid — synchronous execution completed too fast to cancel.");
+                $"This is valid - synchronous execution completed too fast to cancel.");
             passed = true;
         }
         else
@@ -282,7 +282,7 @@ public class StatsProgressBarPreservationTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 3.4**
     ///
-    /// Property 2c: Preservation — For all successful stats completions,
+    /// Property 2c: Preservation - For all successful stats completions,
     /// HasComputedStats is set to true.
     ///
     /// Observation: On unfixed code, after ExecuteCalculateStatsAsync completes
@@ -324,11 +324,11 @@ public class StatsProgressBarPreservationTests : IDisposable
             await statsCalc.CalculateStatsCommand.Execute();
         });
 
-        // Wait with short timeout — stats service completes synchronously,
+        // Wait with short timeout - stats service completes synchronously,
         // but ComputeSelectedSummaryAsync hangs on Dispatcher.UIThread in test env
         bool completed = calculationTask.Wait(TimeSpan.FromSeconds(1));
 
-        // Check HasComputedStats — it should be set to true after successful completion
+        // Check HasComputedStats - it should be set to true after successful completion
         // even if ComputeSelectedSummaryAsync hangs (HasComputedStats is set AFTER it)
         // If the task didn't complete (dispatcher hang), HasComputedStats won't be set yet.
         // In that case, we check if the stats service was invoked (proving the calculation ran).
@@ -389,7 +389,7 @@ public class StatsProgressBarPreservationTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 3.3**
     ///
-    /// Property 2d: Preservation — For all other operations running concurrently,
+    /// Property 2d: Preservation - For all other operations running concurrently,
     /// their progress bars remain independent and unaffected by stats calculation.
     ///
     /// Observation: On unfixed code, other operations (Add, Export, Verify, Compact)
@@ -450,7 +450,7 @@ public class StatsProgressBarPreservationTests : IDisposable
             await statsCalc.CalculateStatsCommand.Execute();
         });
 
-        // Wait briefly — stats service completes synchronously, the hang is only
+        // Wait briefly - stats service completes synchronously, the hang is only
         // in ComputeSelectedSummaryAsync (Dispatcher.UIThread). We just need the
         // stats computation to finish to verify other VMs are unaffected.
         calculationTask.Wait(TimeSpan.FromSeconds(1));
@@ -504,7 +504,7 @@ public class StatsProgressBarPreservationTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 3.5**
     ///
-    /// Property 2e: Preservation — When no sessions are open, CanCalculate remains false.
+    /// Property 2e: Preservation - When no sessions are open, CanCalculate remains false.
     ///
     /// Observation: On unfixed code, CanCalculate is driven by the Sessions observable
     /// combined with IsCalculating. When sessions.Count == 0, CanCalculate is false

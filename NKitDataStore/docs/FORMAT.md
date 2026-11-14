@@ -1,17 +1,17 @@
 # NKit DataStore Format Specification
 
-This document describes the binary storage format used by NKit DataStore — how data is structured on disk, how operations modify that structure, and how crash safety is maintained. It bridges the [README](../README.md)'s conceptual overview and the low-level technical references linked at the end.
+This document describes the binary storage format used by NKit DataStore - how data is structured on disk, how operations modify that structure, and how crash safety is maintained. It bridges the [README](../README.md)'s conceptual overview and the low-level technical references linked at the end.
 
 ## Overview
 
-NKit DataStore uses a custom binary format to store content-addressed block data with deduplication. It works like an archiver — images go in, are deduplicated and compressed, and can be extracted or mounted on demand. The format scales from small per-game collections (embedded mode) to multi-TiB preservation libraries (separate mode with sharded storage).
+NKit DataStore uses a custom binary format to store content-addressed block data with deduplication. It works like an archiver - images go in, are deduplicated and compressed, and can be extracted or mounted on demand. The format scales from small per-game collections (embedded mode) to multi-TiB preservation libraries (separate mode with sharded storage).
 
 Each **set** consists of:
 
 - A **binary index file** (`.nkds`) containing headers, image metadata, block maps, a block index, and an image directory
 - One or more **shard files** (`_NNNN.nkds`) containing compressed block payloads
 
-The index file is the control plane — it knows where everything is. The shard files are the data plane — they hold the actual bytes.
+The index file is the control plane - it knows where everything is. The shard files are the data plane - they hold the actual bytes.
 
 Two storage modes exist:
 
@@ -34,11 +34,11 @@ After compaction, the index file has a clean sequential layout:
 ├─────────────────────────────────────────────────────────────┤
 │ Directory Region (reserved space, default 4096 bytes)       │ offset 0x200
 ├─────────────────────────────────────────────────────────────┤
-│ Image 1 — Metadata Section (zstd compressed)                │
-│ Image 1 — BlockMap Section (zstd compressed)                │
+│ Image 1 - Metadata Section (zstd compressed)                │
+│ Image 1 - BlockMap Section (zstd compressed)                │
 ├─────────────────────────────────────────────────────────────┤
-│ Image 2 — Metadata Section (zstd compressed)                │
-│ Image 2 — BlockMap Section (zstd compressed)                │
+│ Image 2 - Metadata Section (zstd compressed)                │
+│ Image 2 - BlockMap Section (zstd compressed)                │
 ├─────────────────────────────────────────────────────────────┤
 │ ...                                                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -63,17 +63,17 @@ After add/remove operations, new data is appended beyond the original end. Super
 ├─────────────────────────────────────────────────────────────┤
 │ [Original image sections...]                                │
 │ [Original Block Index]                                      │
-│ [Superseded Image Directory v1 — dead space]                │
+│ [Superseded Image Directory v1 - dead space]                │
 ├─────────────────────────────────────────────────────────────┤
 │ ─── Append 1 ───                                            │
-│ Image N — Metadata Section                                  │
-│ Image N — BlockMap Section                                  │
+│ Image N - Metadata Section                                  │
+│ Image N - BlockMap Section                                  │
 │ Block Index Delta 1 (new blocks only)                       │
-│ [Superseded Image Directory v2 — dead space]                │
+│ [Superseded Image Directory v2 - dead space]                │
 ├─────────────────────────────────────────────────────────────┤
 │ ─── Append 2 ───                                            │
-│ Image N+1 — Metadata Section                                │
-│ Image N+1 — BlockMap Section                                │
+│ Image N+1 - Metadata Section                                │
+│ Image N+1 - BlockMap Section                                │
 │ Block Index Delta 2 (new blocks only)                       │
 │ Image Directory v3 (current)                                │ ← Header points here
 └─────────────────────────────────────────────────────────────┘
@@ -104,7 +104,7 @@ The file maintains two identical-format headers for crash safety (the dual-heade
 | `0x4C` | 4 | int32 | ImageCount | Total image count (including removed) |
 | `0x50` | 4 | int32 | DirectoryRegionCapacity | Reserved directory region size in bytes |
 | `0x54` | 8 | uint64 | HeaderChecksum | XXHash64 of bytes `0x00`–`0x53` |
-| `0x5C` | 164 | — | _reserved_ | Zero-filled, reserved for future use |
+| `0x5C` | 164 | - | _reserved_ | Zero-filled, reserved for future use |
 
 **Primary Header** is at offset `0x000`. **Secondary Header** is at offset `0x100`.
 
@@ -135,8 +135,8 @@ Each image stored in a set has two sections in the index file. They are stored a
 
 ### Two-Part Design Rationale
 
-- **Metadata Section** — Lightweight information for VFS directory listings (area definitions, file records). Decompressed for directory browsing without touching block data.
-- **BlockMap Section** — Heavier offset/block mapping data needed only when serving actual file content. Only decompressed on data reads.
+- **Metadata Section** - Lightweight information for VFS directory listings (area definitions, file records). Decompressed for directory browsing without touching block data.
+- **BlockMap Section** - Heavier offset/block mapping data needed only when serving actual file content. Only decompressed on data reads.
 
 This separation means mounting a set and browsing its filesystem only decompresses the small metadata sections (~1–5 KiB each), while the larger block map sections (~50–500 KiB each) remain compressed until content is actually read.
 
@@ -145,8 +145,8 @@ This separation means mounting a set and browsing its filesystem only decompress
 Stored as a zstd-compressed payload (level 19). Contains:
 
 - **Structure version** (uint16)
-- **Area records** — Define logical regions within the image (offset, size, stride parameters, checksums, metadata blobs)
-- **File records** — Auxiliary files stored alongside block data in shards (name, shard location, sizes)
+- **Area records** - Define logical regions within the image (offset, size, stride parameters, checksums, metadata blobs)
+- **File records** - Auxiliary files stored alongside block data in shards (name, shard location, sizes)
 
 Areas describe the content-aware structure of the image (e.g., Wii disc partitions, GC filesystem regions). Each area carries stride parameters that define how blocks map to logical offsets within that area.
 
@@ -155,14 +155,14 @@ Areas describe the content-aware structure of the image (e.g., Wii disc partitio
 Stored as a zstd-compressed payload (level 19). Contains:
 
 - **Structure version** (uint16)
-- **Block locations** — Unique block entries with their shard file positions (XXHash64 + CRC32 key, fileId, offset, compressed size)
-- **Offset records** — Logical offset mappings that reference block locations by index (offset, size, block type, block indices)
+- **Block locations** - Unique block entries with their shard file positions (XXHash64 + CRC32 key, fileId, offset, compressed size)
+- **Offset records** - Logical offset mappings that reference block locations by index (offset, size, block type, block indices)
 
 The offset records define how to reconstruct any byte range of the image by looking up the appropriate blocks from shard files.
 
 ## Block Index
 
-The Block Index is a sorted array of all known blocks across the entire set. It serves exclusively the write path — enabling O(log n) binary search for deduplication during image addition. Readers never load the block index.
+The Block Index is a sorted array of all known blocks across the entire set. It serves exclusively the write path - enabling O(log n) binary search for deduplication during image addition. Readers never load the block index.
 
 ### Main Block Index
 
@@ -229,17 +229,17 @@ The directory is zstd-compressed when stored. It may reside in the reserved dire
 
 Each entry contains:
 
-- **ImageId** — Unique identifier
-- **Name** — UTF-8 encoded image name
-- **Size** — Image size in bytes
-- **Checksums** — CRC32 and XXHash64 of the full image
-- **System** — Optional system identifier string (e.g., "Wii", "GC")
-- **Format** — Image format enum value
-- **Rollback info** — Shard file ID and offset for rollback data (-1 if none)
-- **Removed flag** — Soft-delete marker (1 = removed, 0 = active)
-- **Section pointers** — File offsets and compressed sizes for both the metadata and block map sections
+- **ImageId** - Unique identifier
+- **Name** - UTF-8 encoded image name
+- **Size** - Image size in bytes
+- **Checksums** - CRC32 and XXHash64 of the full image
+- **System** - Optional system identifier string (e.g., "Wii", "GC")
+- **Format** - Image format enum value
+- **Rollback info** - Shard file ID and offset for rollback data (-1 if none)
+- **Removed flag** - Soft-delete marker (1 = removed, 0 = active)
+- **Section pointers** - File offsets and compressed sizes for both the metadata and block map sections
 
-The directory is replaced atomically via reference swap when updated — existing readers holding the old reference continue safely.
+The directory is replaced atomically via reference swap when updated - existing readers holding the old reference continue safely.
 
 ## Shard File Structure
 
@@ -294,12 +294,12 @@ Block data occupies the front of the file, and the binary index is appended at t
 └─────────────────────────────────────────────────────────────┘
 ```
 
-The **Shard Boundary** = `file_size - 12 - IndexSize` — where block data ends and the index begins.
+The **Shard Boundary** = `file_size - 12 - IndexSize` - where block data ends and the index begins.
 
 ### Embedded Mode Considerations
 
 - The index region uses a `baseOffset` equal to the shard boundary, so all internal offsets are relative to the start of the index region
-- When images are removed, the index grows (new directory appended) but the footer's `IndexSize` is **not** updated — it becomes stale
+- When images are removed, the index grows (new directory appended) but the footer's `IndexSize` is **not** updated - it becomes stale
 - The header's `FileEndOffset` is the authoritative index size, not the footer
 - Compaction temporarily extracts to separate mode, compacts, then re-embeds (see [Operations](#operations))
 
@@ -308,7 +308,7 @@ The **Shard Boundary** = `file_size - 12 - IndexSize` — where block data ends 
 ### Add Image
 
 1. Blocks are compressed and appended to the current shard file
-2. For each block, the in-memory block index is checked for deduplication — existing blocks are skipped
+2. For each block, the in-memory block index is checked for deduplication - existing blocks are skipped
 3. Image metadata section and block map section are serialized and appended to the index file
 4. A Block Index Delta is appended (containing only newly-written blocks)
 5. An updated Image Directory is written
@@ -323,7 +323,7 @@ The **Shard Boundary** = `file_size - 12 - IndexSize` — where block data ends 
 3. Block map section is decompressed for content reads
 4. Blocks are read from shard files by (fileId, offset, size)
 
-**Structural effect:** None — reads are non-mutating.
+**Structural effect:** None - reads are non-mutating.
 
 ### Remove Image
 
@@ -339,7 +339,7 @@ The **Shard Boundary** = `file_size - 12 - IndexSize` — where block data ends 
 2. An updated Image Directory is appended
 3. AtomicCommit makes the restoration visible
 
-**Structural effect:** Same as Remove — one directory append.
+**Structural effect:** Same as Remove - one directory append.
 
 ### Rollback
 
@@ -347,14 +347,14 @@ The **Shard Boundary** = `file_size - 12 - IndexSize` — where block data ends 
 2. An updated Image Directory is appended
 3. AtomicCommit makes the rollback visible
 
-**Structural effect:** Same as Remove/Restore — one directory append.
+**Structural effect:** Same as Remove/Restore - one directory append.
 
 ### Compact
 
 Compaction reclaims all dead space accumulated from appends and removals:
 
-1. **Shard compaction** — Orphaned blocks (referenced only by removed images) are identified and removed from shard files using copy-on-write (write to `.tmp`, then atomic replace)
-2. **Index compaction** — The index file is rewritten from scratch:
+1. **Shard compaction** - Orphaned blocks (referenced only by removed images) are identified and removed from shard files using copy-on-write (write to `.tmp`, then atomic replace)
+2. **Index compaction** - The index file is rewritten from scratch:
    - Removed images' sections are excluded
    - All Block Index Deltas are merged into a single main Block Index
    - Block index entries not referenced by any remaining image are pruned
@@ -381,10 +381,10 @@ The core crash safety mechanism. During AtomicCommit:
 
 | Primary Header | Secondary Header | Action |
 |----------------|------------------|--------|
-| Valid | Valid (agrees) | Normal — use Primary |
+| Valid | Valid (agrees) | Normal - use Primary |
 | Valid | Valid (disagrees) | Use Primary (written last, authoritative) |
-| Invalid/corrupt | Valid | Use Secondary — crash between steps 2 and 3 |
-| Invalid/corrupt | Invalid/corrupt | **Unrecoverable** — file is corrupt |
+| Invalid/corrupt | Valid | Use Secondary - crash between steps 2 and 3 |
+| Invalid/corrupt | Invalid/corrupt | **Unrecoverable** - file is corrupt |
 
 This guarantees that at least one valid header exists after any single crash during commit, because the headers are written sequentially with flushes between them.
 
@@ -439,7 +439,7 @@ An **aux store** is a companion set that provides fallback block data for images
 
 This enables scenarios where a set contains metadata and block maps for images whose actual block data lives in a shared pool (the aux store), avoiding duplication across multiple sets that share common content.
 
-Aux stores use the same binary format — they are regular sets that happen to be referenced as block providers by other sets.
+Aux stores use the same binary format - they are regular sets that happen to be referenced as block providers by other sets.
 
 ## NkFs Filesystem Format
 
@@ -447,10 +447,10 @@ NKit DataStore uses the **NkFs** binary format to represent filesystem trees com
 
 Key characteristics:
 
-- **12-byte fixed entries** — Constant-time O(1) index-based lookup
-- **Flat navigation** — Directory listing and path resolution operate directly on the entry table using parent/next-entry indices (no in-memory tree built)
-- **Big-endian encoding** — Matches GameCube/Wii FST convention
-- **String table with deduplication** — Directory names are deduplicated; file entries carry variable-width prefix bytes encoding size, checksums, and image index
+- **12-byte fixed entries** - Constant-time O(1) index-based lookup
+- **Flat navigation** - Directory listing and path resolution operate directly on the entry table using parent/next-entry indices (no in-memory tree built)
+- **Big-endian encoding** - Matches GameCube/Wii FST convention
+- **String table with deduplication** - Directory names are deduplicated; file entries carry variable-width prefix bytes encoding size, checksums, and image index
 
 The format consists of a 12-byte header (magic `0x4E4B4653` "NKFS", version, entry count), followed by the entry table (N × 12 bytes), followed by a variable-length string table.
 
@@ -460,16 +460,16 @@ See [NkFsFormat.md](../NkFsFormat.md) for the complete binary specification.
 
 ### Checksums
 
-- **Header integrity** — XXHash64 of bytes `0x00`–`0x53` stored at offset `0x54`
-- **Block identification** — Each block is identified by a composite key of `(XXHash64, CRC32)` computed over the uncompressed block data
-- **Image integrity** — Each image carries a CRC32 and XXHash64 of its full uncompressed content
+- **Header integrity** - XXHash64 of bytes `0x00`–`0x53` stored at offset `0x54`
+- **Block identification** - Each block is identified by a composite key of `(XXHash64, CRC32)` computed over the uncompressed block data
+- **Image integrity** - Each image carries a CRC32 and XXHash64 of its full uncompressed content
 
 ### Compression
 
-- **Algorithm** — Zstd (Zstandard) throughout
-- **Index data** — Level 19 for metadata sections, block map sections, block index sections, and image directory
-- **Block payloads** — Compressed before writing to shard files (level may vary)
-- **Sectioned compression** — The Block Index uses independently-decompressible sections (default 64 KiB uncompressed each) for parallel loading
+- **Algorithm** - Zstd (Zstandard) throughout
+- **Index data** - Level 19 for metadata sections, block map sections, block index sections, and image directory
+- **Block payloads** - Compressed before writing to shard files (level may vary)
+- **Sectioned compression** - The Block Index uses independently-decompressible sections (default 64 KiB uncompressed each) for parallel loading
 
 ### Per-Structure Versioning
 
@@ -488,6 +488,6 @@ Compaction uplifts all structures to the latest version.
 
 ## Further Reading
 
-- [COMPACTION.md](COMPACTION.md) — Detailed compaction algorithm and embedded mode lifecycle
-- [RECOVERY.md](RECOVERY.md) — Complete failure scenario catalog and recovery state machine
-- [NkFsFormat.md](NkFsFormat.md) — NkFs binary filesystem format specification
+- [COMPACTION.md](COMPACTION.md) - Detailed compaction algorithm and embedded mode lifecycle
+- [RECOVERY.md](RECOVERY.md) - Complete failure scenario catalog and recovery state machine
+- [NkFsFormat.md](NkFsFormat.md) - NkFs binary filesystem format specification

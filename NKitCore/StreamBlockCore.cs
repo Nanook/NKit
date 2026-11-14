@@ -26,7 +26,7 @@ namespace NKitCore
     /// Why this avoids the ordered-Out head-of-line problem:
     ///  - The section the writer needs next (<c>_nextToComplete</c>) is ALWAYS already created and
     ///    somewhere in the pipeline (a worker has it or will). No admission/backlog gate can block
-    ///    it, because admission only holds back NEW (higher-sequence) sections — never the head.
+    ///    it, because admission only holds back NEW (higher-sequence) sections - never the head.
     ///  - Exactly one writer runs at a time (a single gate lock guards the claim), and the "publish
     ///    ready + claim/relinquish writer" decision is atomic under that lock, so there is no window
     ///    where a section is ready but nobody writes it, and none where two workers write at once.
@@ -63,7 +63,7 @@ namespace NKitCore
         // Dynamic admission: the producer is admitted while the number of LIVE sections
         // (in-channel + processing + ready) stays within currentWorkers + 1. Because the window
         // tracks the live worker count, the reorder set (ReadyHeld) is bounded by the worker count
-        // AT ALL SCALES — add/remove a worker and the memory window moves with it.
+        // AT ALL SCALES - add/remove a worker and the memory window moves with it.
         private long _liveSections;
 
         // The proc-bound scale-down floor (= legacy StartWorkers). While proc is the bottleneck the
@@ -93,7 +93,7 @@ namespace NKitCore
             // number of workers, NOT a separate backlog. Each worker holds at most one finished
             // section while it waits for its turn; once all admission slots are held the producer
             // stalls, so no worker can race ahead piling completed sections into _ready. Hence
-            // ReadyHeld never exceeds the worker count — there is no "backlog". Never deadlocks: the
+            // ReadyHeld never exceeds the worker count - there is no "backlog". Never deadlocks: the
             // head section is always already admitted (created before the higher-sequence sections
             // that fill the slots), so it is always either in a worker or already in _ready.
             int workerCeiling = Math.Max(1, _autoscale.MaxWorkers) + 1; // +1 = writer headroom (see workers)
@@ -119,7 +119,7 @@ namespace NKitCore
             // Dynamic admission gate. The producer may create a new section only while the number of
             // LIVE sections (created but not yet emitted) is below currentWorkers + 1. Because the
             // limit follows the live worker count, the reorder window (ReadyHeld) shrinks/grows with
-            // the pool — so autoscaling never lets memory balloon. A refreshable TCS wakes the
+            // the pool - so autoscaling never lets memory balloon. A refreshable TCS wakes the
             // producer when a section is emitted (a slot frees) or the worker count grows.
             Interlocked.Exchange(ref _liveSections, 0);
             object admitLock = new object();
@@ -158,7 +158,7 @@ namespace NKitCore
 
                     // Blocked. Latch WHY: if the window is full but few sections are stuck waiting for
                     // their Out turn (ReadyHeld small), then every worker is genuinely busy processing
-                    // and another worker would have work — proc saturation. If instead ReadyHeld is
+                    // and another worker would have work - proc saturation. If instead ReadyHeld is
                     // large (processed sections piling up because the ordered Out stage is slow), more
                     // workers cannot help, so we do NOT latch. This is the noise-free scale-up cue.
                     long readyHeld = Interlocked.Read(ref _readyHeld);
@@ -295,13 +295,13 @@ namespace NKitCore
             // Workers are spawned on demand and self-exit when asked. A worker only ever exits
             // BETWEEN sections, holding nothing (the drain-in-order model means an idle worker has no
             // section pinned), so removing one can never lose a section or stall the ordered writer.
-            // This makes scale-down trivial and safe — no cancellation, no orphaned work.
+            // This makes scale-down trivial and safe - no cancellation, no orphaned work.
             ConcurrentDictionary<int, Task> workerTasks = new ConcurrentDictionary<int, Task>();
             int workerIdSeq = 0;
             // Shrink coordination. All worker-count changes go through _scaleLock so the floor
             // (max(1, MinWorkers)) is enforced race-free: a worker can only exit if doing so keeps
             // _currentWorkers at or above the floor, and the decrement happens atomically with the
-            // decision. _pendingStops caps outstanding "please exit" requests at one at a time — the
+            // decision. _pendingStops caps outstanding "please exit" requests at one at a time - the
             // autoscaler issues one and waits to see it take effect before issuing another, so it can
             // never pile up tokens and undershoot to zero.
             object scaleLock = new object();
@@ -420,8 +420,8 @@ namespace NKitCore
             //
             // Add ONE worker at a time (so marginal utility is measurable per step). After each add,
             // wait ScaleEvaluationMs then judge: if the producer is STILL proc-saturated, demand is
-            // provably unmet — keep going. Otherwise, if throughput didn't rise by ThroughputImprovementRatio,
-            // the added worker didn't help (serial pre/Out or I/O bound) — engage a brake and stop adding.
+            // provably unmet - keep going. Otherwise, if throughput didn't rise by ThroughputImprovementRatio,
+            // the added worker didn't help (serial pre/Out or I/O bound) - engage a brake and stop adding.
             // Scale DOWN when live-section pressure falls below LowWater. This settles at ~4 on the
             // write-bound Wii convert (matching legacy parallelism 4) and climbs high on a CPU-bound scan.
             CancellationTokenSource autoscaleCts = CancellationTokenSource.CreateLinkedTokenSource(token);
@@ -453,17 +453,17 @@ namespace NKitCore
                 double throughputBeforeLastScaleUp = 0.0;
                 DateTime lastScaleUpTime = DateTime.MinValue;
                 bool awaitingScaleUpEvaluation = false;
-                bool scaleUpDisallowed = false; // brake: added worker didn't help — stop climbing
+                bool scaleUpDisallowed = false; // brake: added worker didn't help - stop climbing
                 DateTime brakeEngagedTime = DateTime.MinValue;
                 DateTime lastScale = DateTime.UtcNow - TimeSpan.FromMilliseconds(_autoscale.CooldownMs);
 
                 // Effective "did the last worker help?" threshold. This is what actually caps the climb
-                // (there is no target worker count — MaxWorkers is only a hard safety ceiling). Adding a
+                // (there is no target worker count - MaxWorkers is only a hard safety ceiling). Adding a
                 // worker must raise throughput by at least this fraction to be kept.
                 double gainThreshold = Math.Max(_autoscale.ThroughputImprovementRatio, _autoscale.MinScaleUpGainFraction * 0.5);
                 // After the brake fires, re-probe (try one more worker) this often, in case a later
                 // phase of the workload is CPU-bound and could use more. If it still doesn't help, the
-                // brake re-engages — so we explore upward periodically without thrashing.
+                // brake re-engages - so we explore upward periodically without thrashing.
                 double reprobeMs = Math.Max(2000, _autoscale.ScaleEvaluationMs * 5);
 
                 try
@@ -491,18 +491,18 @@ namespace NKitCore
                             double now = CurrentThroughput();
                             double baseline = Math.Max(0.0001, throughputBeforeLastScaleUp);
                             double gainRatio = (now - throughputBeforeLastScaleUp) / baseline;
-                            // The added worker didn't raise throughput enough — it isn't helping, so
+                            // The added worker didn't raise throughput enough - it isn't helping, so
                             // stop climbing. (While still proc-saturated the laggy sliding-window reading
                             // is ambiguous, but if adding a worker truly helped, throughput would rise;
                             // if it didn't after a full evaluation window, more workers won't either.)
                             if (gainRatio < gainThreshold)
                             {
-                                // The added worker didn't visibly raise throughput — STOP CLIMBING.
+                                // The added worker didn't visibly raise throughput - STOP CLIMBING.
                                 scaleUpDisallowed = true;
                                 brakeEngagedTime = DateTime.UtcNow;
                                 // A clear REGRESSION (throughput actually dropped, not merely failed to
-                                // improve) means the extra worker is making things worse — e.g. added
-                                // contention/thrash — so shed it even if the pool looks saturated. Only
+                                // improve) means the extra worker is making things worse - e.g. added
+                                // contention/thrash - so shed it even if the pool looks saturated. Only
                                 // when the gain was merely insufficient (flat/slightly positive) do we
                                 // keep a fully-saturated worker, since a flat reading there is usually
                                 // just noise / an Out-paced phase and shedding caused steady-state slowdown.
@@ -525,7 +525,7 @@ namespace NKitCore
                         }
 
                         // Out stage congested (processed sections piling up in _ready): more proc workers
-                        // cannot help — never scale up in this state.
+                        // cannot help - never scale up in this state.
                         bool outCongested = readyHeld >= workers;
                         // Proc is the bottleneck when pressure is high OR the producer stalled purely on
                         // worker saturation (which the tight admission gate otherwise hides).
@@ -544,7 +544,7 @@ namespace NKitCore
                         else
                         {
                             // Scale DOWN. The floor depends on WHY: while proc is the bottleneck, never
-                            // trim below the proc floor (legacy parallelism) — those workers are earning
+                            // trim below the proc floor (legacy parallelism) - those workers are earning
                             // their keep. Only when work is provably not proc-bound (Out congested, or
                             // pressure has genuinely dropped) may we go all the way down to MinWorkers.
                             int shrinkFloor = (outCongested || !procBound) ? floor : procFloor;
@@ -585,7 +585,7 @@ namespace NKitCore
             // A single long-lived task owns the ordered Out stage. It drains consecutive ready
             // sections in _nextToComplete order, calling the completer OUTSIDE the lock, and awaits a
             // wake pulse when the head isn't ready yet. This keeps the writer thread warm and lets the
-            // tail (PostProcess/xxHash/Step.Process) overlap with parallel processing — with no
+            // tail (PostProcess/xxHash/Step.Process) overlap with parallel processing - with no
             // per-section writer claim/relinquish handoff. Exactly one writer => ordering guaranteed.
             Task writerTask = Task.Run(async () =>
             {

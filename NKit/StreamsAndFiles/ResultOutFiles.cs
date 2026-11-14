@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace Nanook.NKit
                 if (SourceFiles.GetKnownFileExtension(combinedPath).Length > 0)
                     SourceFiles.GetFileNameParts(combinedPath, out newPath, out newName, out _, out newExt);
                 else
-                    newPath = _path; // name has no known extension — use it as-is as the stem
+                    newPath = _path; // name has no known extension - use it as-is as the stem
             }
 
             newName = SourceFiles.CleanseFileName(newName);
@@ -226,8 +226,8 @@ namespace Nanook.NKit
                 // FolderIndex / FolderFiles outputs (CUE/GDI index formats, extract-to-folder) write
                 // into a DEDICATED temp directory created per-step at WritePath (a unique folder under
                 // OutPath whose name ends with TempChar). On success it is renamed to the final name via
-                // Directory.Move; on error nothing moves it, so the whole temp directory — with its
-                // partially-written index + track files — must be removed here. Deleting the individual
+                // Directory.Move; on error nothing moves it, so the whole temp directory - with its
+                // partially-written index + track files - must be removed here. Deleting the individual
                 // OutFileParts (as the Image path does) is not enough: the directory and any files not
                 // yet registered in OutFileParts would be left behind. Guard tightly so we only ever
                 // remove our own temp directory: a folder output type, a path that still carries the

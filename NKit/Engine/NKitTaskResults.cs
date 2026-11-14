@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Dats;
+using Nanook.NKit.Dats;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -152,7 +152,7 @@ namespace Nanook.NKit
             r.Task = task;
             // For a decoded NKit source (NKitAsIso) the stream Format is always Iso, but the true
             // underlying container is carried on NKitSourceContainer (Gcz for .nkit.gcz, Iso for
-            // .nkit.iso). Report that, matching the SrcType logic in NKitTask.LogParams — otherwise
+            // .nkit.iso). Report that, matching the SrcType logic in NKitTask.LogParams - otherwise
             // fixing/converting a .nkit.gcz reports Iso instead of Gcz.
             Nanook.NKit.Nintendo.WiiGc.ImageInfo wiiGcInfo0 = stepResults[0].ImageInfo as Nanook.NKit.Nintendo.WiiGc.ImageInfo;
             r.ContainerType = (wiiGcInfo0?.IsNkitDecoded ?? false)
@@ -272,7 +272,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Release EVERYTHING heavy this result roots, including <see cref="Scan"/> and
-        /// <see cref="Source"/> — not just the step-context graph freed by
+        /// <see cref="Source"/> - not just the step-context graph freed by
         /// <see cref="ReleaseHeavyReferences"/>. For a Wii/GC image the retained <see cref="Scan"/>
         /// transitively roots the parsed filesystem (<c>FileSystemInfo</c>/partition map) and every
         /// <c>ScanArea</c>/<c>ScanSection</c> + section buffers, which is tens of MiB PER IMAGE.
@@ -290,7 +290,7 @@ namespace Nanook.NKit
             Source = null;
             // StepFiles (ResultOutFiles) holds a reference to the NKitStepContext (via its _stepContext
             // field, used during rename/OutputType). That step context re-roots the ENTIRE per-image
-            // graph — ImageInfo, the SectionProcessors and their Buffers/SegmentedMemoryStream, and the
+            // graph - ImageInfo, the SectionProcessors and their Buffers/SegmentedMemoryStream, and the
             // Scan with all its ScanSection/SectionData/SectionItem objects. So nulling Scan/Source above
             // does nothing while StepFiles is kept: a heap snapshot shows ResultOutFiles with an
             // inclusive size of ~6 MB EACH, accumulating one per retained UI row. Everything the result

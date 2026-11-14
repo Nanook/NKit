@@ -133,7 +133,7 @@ namespace NKit.Tests.NKDS
         /// **Validates: Requirements 1.5, 3.1**
         ///
         /// Property 2 (supplementary): Verifies that subsequent insertions at an existing offset
-        /// do not modify the OrderedList — the list count and offsets remain identical before
+        /// do not modify the OrderedList - the list count and offsets remain identical before
         /// and after duplicate-offset insertions.
         /// </summary>
         [Property(MaxTest = 200)]

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nanook.NKit.Iso.Iso9660
@@ -174,7 +174,7 @@ namespace Nanook.NKit.Iso.Iso9660
                             // directory entries with FsSize=-1, so setFileAnalysis skips the
                             // PostGapFsOffset/PostGapSize computation for them. processDirectory may
                             // run from ReadSystemData called by a PARENT directory's resolution,
-                            // which is before this entry is resolved by Current() — meaning Current()
+                            // which is before this entry is resolved by Current() - meaning Current()
                             // later sees FsSize!=-1 and skips the setFileAnalysis call. Without this
                             // refresh, PostGapFsOffset stays 0 for the last directory-area entry,
                             // making the large gap before the first data file invisible to ProcessData.

@@ -15,7 +15,7 @@ namespace NKit.Tests.Engine.ImageReading
     [Trait("Group", "ImageReading")]
     public class AreaFileSystemViewTests
     {
-        // Minimal IFsFile stub — only the members the view reads (identity + IsSystemFile).
+        // Minimal IFsFile stub - only the members the view reads (identity + IsSystemFile).
         private sealed class StubFsFile : IFsFile
         {
             public StubFsFile(string name, long fsOffset, bool system)
@@ -101,7 +101,7 @@ namespace NKit.Tests.Engine.ImageReading
         [Fact]
         public void FileSystems_SingleViewWhenNoPerFsTyping()
         {
-            // StubFsFile is not an FstFile, so there is no FsType typing — a single view over all.
+            // StubFsFile is not an FstFile, so there is no FsType typing - a single view over all.
             AreaFileSystemView view = build(
                 new StubFsFile("a", 0x0, false),
                 new StubFsFile("b", 0x1000, false));
@@ -137,7 +137,7 @@ namespace NKit.Tests.Engine.ImageReading
                 new StubFsFile("a", 0x0, false),
                 new StubFsFile("b", 0x1000, false),
             };
-            // Build from a COPY (as TryBuild does via ToArray) — mutating src must not change the view.
+            // Build from a COPY (as TryBuild does via ToArray) - mutating src must not change the view.
             AreaFileSystemView view = build(src.ToArray());
             src.Add(new StubFsFile("c", 0x2000, false));
 

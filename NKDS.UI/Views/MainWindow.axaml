@@ -62,7 +62,7 @@
                 PointerPressed="titleBar_PointerPressed"
                 Background="Transparent">
             <DockPanel>
-                <!-- Window caption buttons (Linux only — Windows/macOS provide their own) -->
+                <!-- Window caption buttons (Linux only - Windows/macOS provide their own) -->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="0"
                             VerticalAlignment="Top" Margin="0,-4,-8,-4"
                             Name="LinuxCaptionButtons"
@@ -95,7 +95,7 @@
             </DockPanel>
         </Border>
 
-        <!-- Title Bar (below toolbar, above image list — includes operation progress) -->
+        <!-- Title Bar (below toolbar, above image list - includes operation progress) -->
         <controls:TitleBarControl DockPanel.Dock="Top"
                                   Margin="8,0,8,0"/>
 
@@ -136,7 +136,7 @@
                        HorizontalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Resize grips (Linux only — on top of content for hit-testing) -->
+        <!-- Resize grips (Linux only - on top of content for hit-testing) -->
         <Border Height="5" VerticalAlignment="Top" Cursor="TopSide"
                 PointerPressed="resizeN_PointerPressed" Background="Transparent"
                 IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>

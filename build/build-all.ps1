@@ -1,5 +1,5 @@
 # =============================================================================
-# NKit build launcher — Windows + Linux, all outputs to build-output/
+# NKit build launcher - Windows + Linux, all outputs to build-output/
 # =============================================================================
 # Builds win-x64 and linux-x64 release archives and places them in
 # <repo-root>/build-output/ (gitignored).
@@ -35,7 +35,7 @@ $OutDir    = Join-Path $RepoRoot 'build-output'
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
-Write-Host "=== NKit local build — v$Version ===" -ForegroundColor Cyan
+Write-Host "=== NKit local build - v$Version ===" -ForegroundColor Cyan
 Write-Host "Output: $OutDir"
 Write-Host ""
 

@@ -211,11 +211,11 @@ namespace NKitDataStore.Binary.Serialization
             BinaryPrimitives.WriteInt32BigEndian(buffer.Slice(offset), entry.BlockMapSectionCompressedSize);
             offset += 4;
 
-            // MetadataSectionUncompressedSize (int32) — added in version 2
+            // MetadataSectionUncompressedSize (int32) - added in version 2
             BinaryPrimitives.WriteInt32BigEndian(buffer.Slice(offset), entry.MetadataSectionUncompressedSize);
             offset += 4;
 
-            // BlockMapSectionUncompressedSize (int32) — added in version 2
+            // BlockMapSectionUncompressedSize (int32) - added in version 2
             BinaryPrimitives.WriteInt32BigEndian(buffer.Slice(offset), entry.BlockMapSectionUncompressedSize);
             offset += 4;
 

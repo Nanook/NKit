@@ -68,12 +68,12 @@ namespace Nanook.NKit.Runtime
 
         private void DrainLoop()
         {
-            // Use zero-timeout TryTake() — the only BlockingCollection overload that never
+            // Use zero-timeout TryTake() - the only BlockingCollection overload that never
             // blocks and therefore never throws OperationCanceledException internally.
             // Any overload with a timeout (including GetConsumingEnumerable) uses a SemaphoreSlim
             // that throws when CompleteAdding() fires while the thread is waiting, causing
             // debugger first-chance breaks. The zero-timeout overload returns false immediately
-            // when the queue is empty — we sleep manually to avoid busy-spinning.
+            // when the queue is empty - we sleep manually to avoid busy-spinning.
             while (!_queue.IsCompleted)
             {
                 LogEvent evt;
@@ -88,7 +88,7 @@ namespace Nanook.NKit.Runtime
                     catch { /* a write failure must never crash the drain thread */ }
                 }
                 else
-                    Thread.Sleep(10); // nothing ready — yield briefly before checking again
+                    Thread.Sleep(10); // nothing ready - yield briefly before checking again
             }
 
             // Drain any items that arrived between the last TryTake and IsCompleted turning true.

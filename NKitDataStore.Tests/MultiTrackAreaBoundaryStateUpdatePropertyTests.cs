@@ -130,7 +130,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — BlockSize updated on area change.
+        /// Property 10: Multi-Track Area Boundary State Update - BlockSize updated on area change.
         ///
         /// When the stream position crosses an area boundary, OnAreaChanged SHALL update
         /// the current block size to match the entering area's BlockSize metadata.
@@ -165,7 +165,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — PhysicalOffset updated on area change.
+        /// Property 10: Multi-Track Area Boundary State Update - PhysicalOffset updated on area change.
         ///
         /// When the stream position crosses an area boundary, OnAreaChanged SHALL update
         /// the current base LBA (PhysicalOffset) to match the entering area's PhysicalOffset metadata.
@@ -200,7 +200,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — TrackType updated on area change.
+        /// Property 10: Multi-Track Area Boundary State Update - TrackType updated on area change.
         ///
         /// When the stream position crosses an area boundary, OnAreaChanged SHALL update
         /// the current track type (stride configuration) to match the entering area's metadata.
@@ -235,7 +235,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — LBA computation uses new PhysicalOffset.
+        /// Property 10: Multi-Track Area Boundary State Update - LBA computation uses new PhysicalOffset.
         ///
         /// After crossing an area boundary, subsequent LBA computations SHALL use the new area's
         /// PhysicalOffset as the base. The LBA for a sector at position P within the area is:
@@ -286,7 +286,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — LBA computation with buffer offset.
+        /// Property 10: Multi-Track Area Boundary State Update - LBA computation with buffer offset.
         ///
         /// When a buffer starts at an offset within the area (not at the area start),
         /// the LBA computation SHALL correctly account for both the area's PhysicalOffset
@@ -341,7 +341,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — Non-sequential area transitions.
+        /// Property 10: Multi-Track Area Boundary State Update - Non-sequential area transitions.
         ///
         /// When areas are entered in non-sequential order (e.g., seeking backwards),
         /// OnAreaChanged SHALL still correctly update state to match the target area.
@@ -387,7 +387,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.9**
         ///
-        /// Property 10: Multi-Track Area Boundary State Update — Full state consistency.
+        /// Property 10: Multi-Track Area Boundary State Update - Full state consistency.
         ///
         /// For any multi-track image with areas having different block sizes and physical offsets,
         /// after each area transition, ALL state fields (block size, physical offset, track type)

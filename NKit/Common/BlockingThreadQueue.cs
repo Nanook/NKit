@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,14 +13,14 @@ namespace Nanook.NKit
     // pipeline's producer task) with MaxParallel=10, up to 11 thread-pool threads were needed
     // simultaneously. Combined with 15 pipeline worker tasks also on the thread pool this caused
     // thread-pool starvation: QueueUserWorkItem callbacks could not start, _inFlight never
-    // reached zero, and the caller's .Wait() blocked forever — reproducing as a pipeline hang
+    // reached zero, and the caller's .Wait() blocked forever - reproducing as a pipeline hang
     // at ~99% of a conversion.
     //
     // Fix: MaxParallel dedicated Thread instances are created at construction and reused across
     // all Process() calls. They never compete with the thread pool. Process() returns a Task
     // that completes (via TaskCompletionSource) when the last worker finishes its item after
     // AddComplete() has been called. The caller's existing .Wait() on that Task is correct and
-    // harmless — it unblocks as soon as the last item is processed.
+    // harmless - it unblocks as soon as the last item is processed.
     internal class BlockingThreadQueue<T>
     {
         private class WorkItem
@@ -129,7 +129,7 @@ namespace Nanook.NKit
         // Registers the process (and optional finalise) delegate for this batch and returns a
         // Task that completes when every item added via Add()/AddComplete() has been processed.
         // The caller adds items AFTER calling Process(), then calls AddComplete(), then awaits
-        // or .Wait()s the returned Task — matching ImageBlockReader's existing pattern exactly.
+        // or .Wait()s the returned Task - matching ImageBlockReader's existing pattern exactly.
         public Task Process(Action<T, int> process, Action<T> finalise)
         {
             if (this.UseFinalise && finalise == null)
@@ -172,7 +172,7 @@ namespace Nanook.NKit
         // Permanently stop the worker (and finalise) threads and release them. After this the queue
         // can no longer process batches. Idempotent and safe to call from Dispose/Release on the
         // owner (ImageBlockReader). Without this the MaxParallel dedicated background threads created
-        // in the constructor block forever on Monitor.Wait and are never reclaimed — one set per
+        // in the constructor block forever on Monitor.Wait and are never reclaimed - one set per
         // ImageBlockReader (so one set per image container), which across a long-lived host (the UI,
         // or a batch CLI run) leaks ~MaxParallel threads and their sync handles per image.
         public void Shutdown()
@@ -191,7 +191,7 @@ namespace Nanook.NKit
                     Monitor.PulseAll(_lf);
             }
 
-            // Join so the threads are fully torn down before we return (bounded, defensive — the
+            // Join so the threads are fully torn down before we return (bounded, defensive - the
             // loops exit promptly once pulsed; never join the current thread).
             if (_workers != null)
             {
@@ -214,7 +214,7 @@ namespace Nanook.NKit
                 Monitor.PulseAll(_lq); // wake workers so they see _complete when queue drains
             }
             // If no items were ever added (or all finished before AddComplete was called),
-            // _inFlight is already 0 — signal completion now.
+            // _inFlight is already 0 - signal completion now.
             lock (_lp)
             {
                 if (_inFlight == 0)
@@ -270,7 +270,7 @@ namespace Nanook.NKit
                 if (_inFlight == 0)
                 {
                     // Only signal completion once _complete is set (no more items will arrive).
-                    // If _complete is not yet set, the last item could arrive after we check —
+                    // If _complete is not yet set, the last item could arrive after we check -
                     // AddComplete() will not call us again, so we re-check inside Add's lock path.
                     // In practice _inFlight can only reach 0 after _complete because Add() increments
                     // _inFlight before the worker can decrement it.

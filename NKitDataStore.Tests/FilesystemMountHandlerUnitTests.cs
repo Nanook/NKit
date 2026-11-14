@@ -176,7 +176,7 @@ public class FilesystemMountHandlerUnitTests
     /// When the per-type dictionary contains "system" + "iso9660", getBestFilesystem
     /// should return the iso9660 NkFs because iso9660 is in the priority list.
     /// "system" is not in the priority list, and the fallback loop picks the first
-    /// entry — but the priority loop finds iso9660 first.
+    /// entry - but the priority loop finds iso9660 first.
     /// Validates: Requirement 6.4
     /// </summary>
     [Fact]
@@ -280,7 +280,7 @@ public class FilesystemMountHandlerUnitTests
         // Assert: With only one per-type entry, IsMultiFilesystem is false
         Assert.False(item.IsMultiFilesystem);
 
-        // The single per-type key is "system" — in the ListFolder system-mode path,
+        // The single per-type key is "system" - in the ListFolder system-mode path,
         // it shows as a subfolder (FileSystemNkfsPerType.Count == 1 branch).
         Assert.Single(item.FileSystemNkfsPerType);
         string typeName = item.FileSystemNkfsPerType.Keys.First();

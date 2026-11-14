@@ -220,7 +220,7 @@ namespace NKit.Tests.Engine.ImageReading
                 for (int i = 0; i < ctx.Ahead.Count; i++)
                     aheadOffsetsAfterCollisions.Add(ctx.Ahead[i].FsOffset);
 
-                // The ahead queue should be unchanged — collision entries should not be added
+                // The ahead queue should be unchanged - collision entries should not be added
                 bool noNewAheadEntries = aheadOffsetsAfterCollisions.IsSubsetOf(aheadOffsetsAfterFirst);
 
                 // Additionally verify all ahead entries are in the OrderedList

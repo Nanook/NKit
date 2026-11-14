@@ -134,7 +134,7 @@ namespace NKit.Tests.Engine.Output
                         }
                         else
                         {
-                            // Subsequent extent — update File reference, reset Written
+                            // Subsequent extent - update File reference, reset Written
                             OverlapState state = activeOverlaps[key];
                             state.File = candidate;
                             state.Written = 0;

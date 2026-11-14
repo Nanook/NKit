@@ -344,7 +344,7 @@ namespace NKit.Tests.NKDS
             // Video partition 1: 64KB (1 block)
             byte[] video1Data = MakeData(seed: 10, size: blockSize);
 
-            // Game partition: 256KB (4 blocks) — the main content
+            // Game partition: 256KB (4 blocks) - the main content
             byte[] gameData = MakeData(seed: 20, size: blockSize * 4);
 
             // Video partition 2: 128KB (2 blocks)

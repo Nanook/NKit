@@ -74,7 +74,7 @@ namespace Nanook.NKit.Iso.Iso9660
             // TODO(audio-sniff): when there are no track types (no IndexFile/CHD metadata) a single
             // FileSystem area is assumed at offset 0; an image that is actually audio is mis-framed.
             // The header is peekable a few lines below (BufferStream "read and rewind"), so sniffing
-            // audio from the header is feasible here — the remaining need is an audio-without-tracktype
+            // audio from the header is feasible here - the remaining need is an audio-without-tracktype
             // sample to define the signature and a test. Tracked in NKitVault/10 Refactor/Warning Cleanup.md.
             _nextArea = AreaInfo.NextArea(-1, -1, -1, this.Size, -1, AreaType.None, _areas, ++_areaNumber);
             _nextArea = setAreaBlockInfo(_nextArea, null, 0); //little hack so we fit in with the loop in Read() but grab the block info
@@ -399,7 +399,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
                     // TODO(multi-session): only the first session's filesystem is walked; additional
                     // sessions on a multi-session CD are not enumerated. This is CD-only, so the image
-                    // is small enough to fully buffer and seek — the historical forward-only-stream
+                    // is small enough to fully buffer and seek - the historical forward-only-stream
                     // blocker no longer applies (BufferStream). Remaining work: locate each later
                     // session's PVD and emit an area per session in NextArea. Needs multi-session CD
                     // sample images + a test before implementing (do not change the single-session path
@@ -460,7 +460,7 @@ namespace Nanook.NKit.Iso.Iso9660
                 // Two caches can accumulate: Layer-B (this _stream, wrapping the decoder _iso) and
                 // Layer-A (the raw source the decoder reads from). For a pass-through container
                 // (DefaultAsIso over an archive entry) the decoder reads the raw bytes at the same
-                // image offset, so releasing Layer-A to _position is safe and necessary — without
+                // image offset, so releasing Layer-A to _position is safe and necessary - without
                 // it the raw-source cache grows to hold the whole image (a 40+ GiB PS3 .iso inside
                 // an archive OOM'd here). IReleasable is only implemented by containers that read a
                 // releasable BufferStream directly; others are a no-op.
@@ -484,7 +484,7 @@ namespace Nanook.NKit.Iso.Iso9660
             {
                 // The file system is parsed FULLY UP FRONT (Iso9660FileSystemReader) before any
                 // data section of the area is emitted, so by the time this runs the file list is
-                // complete and immutable — no spin-wait on AllFoldersParsed and no defensive copy of
+                // complete and immutable - no spin-wait on AllFoldersParsed and no defensive copy of
                 // a concurrently-growing collection are needed.
                 if (_fsInfo.AllFoldersParsed)
                 {
@@ -506,7 +506,7 @@ namespace Nanook.NKit.Iso.Iso9660
                             // CanSeekTo guards the reach: for a local (seekable) source the seek is
                             // free; for a forward-only archive it is allowed only when the target is
                             // within the cache reach limit. A PS3 image inside a zip can put the
-                            // eboot tens of GiB in — far beyond the limit — so CanSeekTo returns
+                            // eboot tens of GiB in - far beyond the limit - so CanSeekTo returns
                             // false there and we fall through to the calculated-guess path rather
                             // than forcing the cache to hold the whole span (which OOM'd before).
                             long off = _stream.Position;
@@ -523,7 +523,7 @@ namespace Nanook.NKit.Iso.Iso9660
                             _ps3.Ps3FileTest(sector, imageOffset, tstFile.Name, offset);
                             if (_context.SourceFile.Key == null)
                                 _context.SourceFile.Key = _key = _ps3.Key;
-                            // [In] [Ps3Enc] Detail: the key brute-force trail (masked keys only —
+                            // [In] [Ps3Enc] Detail: the key brute-force trail (masked keys only -
                             // first 4 ASCII chars + "...", never the key material).
                             ILogScope keyScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
                             if (keyScope != null && keyScope.IsEnabled(LogLevel.Detail) && _ps3.LastKeyTestDiag != null)
@@ -546,7 +546,7 @@ namespace Nanook.NKit.Iso.Iso9660
                             _info.ContainerType = _ps3.IsEncrypted ? ContainerType.Iso : ContainerType.DecIso;
                         _context.Log.Info(() => $"Encryption [Block test] - {(_ps3.IsEncrypted ? "Encrypted" : "Decrypted")}");
                         // [In] [Ps3Enc] Detail: the heuristic's signals + which branch decided the
-                        // encrypted/plaintext verdict — so a wrong block-test call can be explained.
+                        // encrypted/plaintext verdict - so a wrong block-test call can be explained.
                         ILogScope encScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
                         if (encScope != null && encScope.IsEnabled(LogLevel.Detail) && _ps3.LastEncTestDiag != null)
                             encScope.Log(LogLevel.Detail,

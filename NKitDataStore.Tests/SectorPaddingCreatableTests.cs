@@ -84,7 +84,7 @@ namespace NKitDataStore.Tests
             // EDC/ECC. It must therefore always be persisted in the SectorPaddingPack. If the
             // section were classified "fully creatable", the formatter would SKIP the pack, the
             // subheader would be lost, and the reader would reconstruct EDC/ECC over a zeroed
-            // subheader — producing a different CRC (the Mode2 DataStore round-trip failure this
+            // subheader - producing a different CRC (the Mode2 DataStore round-trip failure this
             // test now guards against). So a Mode2 section is NEVER fully creatable.
             const int sectorCount = 4;
             const long startLba = 12345;
@@ -101,7 +101,7 @@ namespace NKitDataStore.Tests
             // ...and because it is non-regenerable content, the section must NOT be fully creatable,
             // forcing the pack (with the subheader) to be written.
             Assert.False(SectorPaddingPacker.IsFullyCreatable(flags),
-                "A Mode2 section carries a non-regenerable subheader and must NOT be fully creatable — its pack must be stored.");
+                "A Mode2 section carries a non-regenerable subheader and must NOT be fully creatable - its pack must be stored.");
 
             // The stored pack must actually contain the subheader payload so reconstruction can
             // restore it before recomputing Mode2 EDC/ECC.
@@ -180,7 +180,7 @@ namespace NKitDataStore.Tests
             for (int i = 0; i < 0x800; i++)
                 original[0x18 + i] = (byte)(i & 0xFF);
             original[0x0F] = 0x02;
-            // Subheader: all 0x55, submode bit5=1 (Form2) — use 0x75 (0x55 | 0x20) for Form2
+            // Subheader: all 0x55, submode bit5=1 (Form2) - use 0x75 (0x55 | 0x20) for Form2
             original[0x12] = 0x75; original[0x13] = 0x55;
             original[0x10] = 0x55; original[0x11] = 0x55;
             original[0x14] = 0x55; original[0x15] = 0x55;
@@ -190,7 +190,7 @@ namespace NKitDataStore.Tests
                 original[i] = 0x55;
             // ReconstructPrefix mirrors 0x14-0x17 (=0x55) into 0x10-0x13, writes standard sync+MSF
             Ecm.ReconstructPrefix(original, 0, false, lba);
-            // Do NOT call ReconstructEcc — the EDC at 0x92C is intentionally non-standard (0x55 fill)
+            // Do NOT call ReconstructEcc - the EDC at 0x92C is intentionally non-standard (0x55 fill)
 
             // Analyse: should set Subheader (always for Mode2) + ExtUserData (always for Form2)
             SectorFlags[] flags = SectorPaddingPacker.Analyse(original, sectorCount, lba);
@@ -244,7 +244,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Mode2Form1 sector with non-standard subheader (all 0x55) through the
         /// ReadSectorTypesAndPositions + ApplySubheaderAndExtData + ReconstructEcc + UnpackPostEcc
-        /// pipeline — byte-identical output required.
+        /// pipeline - byte-identical output required.
         ///
         /// This exercises the exact path used by ImageBuilderIso9660Stream.OnBufferComplete.
         /// A Swap Magic-style sector where every byte of the subheader is a fill value.
@@ -309,7 +309,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Mode2Form1 sector with non-standard subheader AND non-standard EDC
-        /// (EDC doesn't match what ReconstructEcc computes — intentional copy-protection pattern).
+        /// (EDC doesn't match what ReconstructEcc computes - intentional copy-protection pattern).
         /// The full ReadSectorTypesAndPositions pipeline must restore both subheader and EDC.
         /// </summary>
         [Fact]

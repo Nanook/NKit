@@ -83,7 +83,7 @@ public class UdfSystemEntryOffsetPreservationTests
         (string name, long fsOffset, long size)[] entries,
         DataStride stride = null)
     {
-        long areaImageOffset = 0; // Zero ImageOffset — no bug observable
+        long areaImageOffset = 0; // Zero ImageOffset - no bug observable
 
         var scan = new Scan(SystemType.Default, "test_zero_offset_system");
 
@@ -150,7 +150,7 @@ public class UdfSystemEntryOffsetPreservationTests
     }
 
     /// <summary>
-    /// Property 2a: Regular File Offset Computation — area.ImageOffset + FsOffset
+    /// Property 2a: Regular File Offset Computation - area.ImageOffset + FsOffset
     ///
     /// For regular file entries (IsSystemFile = false) with random FsOffset values on areas
     /// with random non-zero ImageOffset, the computed imageOffset SHALL equal
@@ -192,7 +192,7 @@ public class UdfSystemEntryOffsetPreservationTests
     }
 
     /// <summary>
-    /// Property 2b: Strided Regular File Offset — area.ImageOffset + stride.CleanToOffset(FsOffset)
+    /// Property 2b: Strided Regular File Offset - area.ImageOffset + stride.CleanToOffset(FsOffset)
     ///
     /// For regular file entries on a strided area (e.g. Mode1Raw 0x930 sectors),
     /// the computed imageOffset SHALL equal area.ImageOffset + stride.CleanToOffset(FsOffset, false).
@@ -241,7 +241,7 @@ public class UdfSystemEntryOffsetPreservationTests
     }
 
     /// <summary>
-    /// Property 2c: System Entry with Zero ImageOffset — Produces FsOffset Directly
+    /// Property 2c: System Entry with Zero ImageOffset - Produces FsOffset Directly
     ///
     /// For system entries (IsSystemFile = true) on an area with ImageOffset = 0,
     /// the computed imageOffset SHALL equal 0 + file.FsOffset = file.FsOffset.
@@ -282,7 +282,7 @@ public class UdfSystemEntryOffsetPreservationTests
     }
 
     /// <summary>
-    /// Property 2d: Multiple Regular Files at Various Offsets — All Computed Correctly
+    /// Property 2d: Multiple Regular Files at Various Offsets - All Computed Correctly
     ///
     /// Generates multiple regular file entries with random FsOffset values on an area with
     /// non-zero ImageOffset and verifies ALL produce area.ImageOffset + FsOffset.
@@ -334,7 +334,7 @@ public class UdfSystemEntryOffsetPreservationTests
     }
 
     /// <summary>
-    /// Property 2e: Concrete Observation — Regular File with FsOffset=0x100000 on ImageOffset=0x7E0000
+    /// Property 2e: Concrete Observation - Regular File with FsOffset=0x100000 on ImageOffset=0x7E0000
     ///
     /// Specific observation from task description: regular file entry with FsOffset=0x100000
     /// on area with ImageOffset=0x7E0000 produces imageOffset=0x8E0000.

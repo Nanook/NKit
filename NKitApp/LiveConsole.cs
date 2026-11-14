@@ -9,12 +9,12 @@ namespace Nanook.NKit.App
     /// Console sink for nkit that, in a dynamic (interactive + ANSI) terminal, pins a progress
     /// footer with core stats (percentage, elapsed, throughput) at the bottom while normal log
     /// lines scroll ABOVE it. The footer is a Spectre <see cref="LiveDisplay"/> region, so Spectre
-    /// owns all cursor / wrap / scroll reconciliation — there is no hand-rolled escape handling.
+    /// owns all cursor / wrap / scroll reconciliation - there is no hand-rolled escape handling.
     ///
     /// <para>
     /// Capability-gated. The dynamic footer is only used when the output is a real interactive
-    /// terminal that supports ANSI. In EVERY other case — redirected, piped, a file, a CI log, or a
-    /// terminal without ANSI — output falls back to the EXACT legacy behaviour: raw
+    /// terminal that supports ANSI. In EVERY other case - redirected, piped, a file, a CI log, or a
+    /// terminal without ANSI - output falls back to the EXACT legacy behaviour: raw
     /// <see cref="Console.Write(string)"/>, so the ".1.2.3.4..." progress dots pass straight through
     /// unchanged (no core stats), and scripted runs / <c>Select-String</c> piping stay byte-for-byte
     /// identical.
@@ -53,7 +53,7 @@ namespace Nanook.NKit.App
         // A little Pac-Man-style ghost that paces left/right on the line under the progress bar,
         // randomly reversing, and wrapping around the window edges (off one side → back the other).
         // stepGhost() is called on every footer refresh, but the ghost only advances when at least
-        // GhostFrameMs milliseconds have elapsed since the last advance — preventing it from
+        // GhostFrameMs milliseconds have elapsed since the last advance - preventing it from
         // becoming a blur when the engine refreshes the footer very frequently.
         // Never shown outside dynamic mode.
         private readonly Random _ghostRnd = new Random();
@@ -64,8 +64,8 @@ namespace Nanook.NKit.App
         private int _ghostSinceTurn = 0;  // steps travelled since the last turn
         private int _ghostRunTarget = 0;  // steps to wander this leg before turning (random, >= 10)
         private int _ghostTurnHold = 0;   // refreshes remaining before the current turn frame swaps
-        private string[] _ghostLastPose;  // last rendered pose — returned unchanged when throttled
-        private int _ghostLastTrack = -1; // track width used last frame — reset ghost on resize
+        private string[] _ghostLastPose;  // last rendered pose - returned unchanged when throttled
+        private int _ghostLastTrack = -1; // track width used last frame - reset ghost on resize
         private int _lastWindowWidth = -1; // used to detect terminal resize inside the live scope
         private readonly System.Diagnostics.Stopwatch _ghostSw = System.Diagnostics.Stopwatch.StartNew();
         private const int GhostTurnHold = 4;   // hold each turn/eye frame this many advances (slower look)
@@ -178,7 +178,7 @@ namespace Nanook.NKit.App
         {
             if (!_dynamic)
             {
-                // Legacy path — no ANSI colour (redirected / piped / non-ANSI terminal), but the
+                // Legacy path - no ANSI colour (redirected / piped / non-ANSI terminal), but the
                 // Info-summary prefixes must STILL be removed at Info verbosity so redirected and
                 // scripted output does not show the raw "[Title]"/"[InParam]"/"[OutParam]" tokens.
                 // The ".1.2.3..." progress dots and every other line pass through unchanged.
@@ -189,14 +189,14 @@ namespace Nanook.NKit.App
             lock (_lock)
             {
                 // NOTE: in dynamic mode Log.Progress never emits the ".1.2.3..." dot stream (it is
-                // gated on !Dynamic), so there is nothing to suppress here — the footer owns the
+                // gated on !Dynamic), so there is nothing to suppress here - the footer owns the
                 // live progress.
 
                 // Emit the log text ABOVE the footer. The footer must have ZERO height at the
-                // instant the line is committed — otherwise Spectre repaints the still-populated
+                // instant the line is committed - otherwise Spectre repaints the still-populated
                 // footer onto the SAME physical line as the text, colliding on screen
                 // ("Caching 2723MiB... - 5.1% - ... Stats [Read 0%]"). So blank the live target,
-                // commit the line into the now-empty region, then restore the footer below it —
+                // commit the line into the now-empty region, then restore the footer below it -
                 // the exact blank-then-write-then-restore sequence CompleteStep already proves. Do
                 // NOT zero _pct here (unlike CompleteStep): the footer must keep the current
                 // progress when it is restored.
@@ -212,7 +212,7 @@ namespace Nanook.NKit.App
                 }
                 else
                 {
-                    // Outside the live scope (before/after a run) — no footer to protect, but still
+                    // Outside the live scope (before/after a run) - no footer to protect, but still
                     // colour the tags so the startup banner / results match the in-run output.
                     AnsiConsole.MarkupLine(colorizeTags(message.TrimEnd('\r', '\n'), level, _consoleLevel));
                 }
@@ -259,11 +259,11 @@ namespace Nanook.NKit.App
             while (i < line.Length && line[i] == ' ') { sb.Append(' '); i++; }
 
             // Consume consecutive leading "[...]" tags, colouring each. Stop at the first token that
-            // is not a bracket tag — everything from there on is the message (escaped, uncoloured).
+            // is not a bracket tag - everything from there on is the message (escaped, uncoloured).
             while (i < line.Length && line[i] == '[')
             {
                 int close = line.IndexOf(']', i);
-                if (close < 0) break; // unterminated — treat the rest as message
+                if (close < 0) break; // unterminated - treat the rest as message
                 string inner = line.Substring(i + 1, close - i - 1); // tag text without the brackets
                 string colour = tagColour(inner);
                 // In Spectre markup, literal brackets are escaped by doubling ("[[" and "]]"), and the
@@ -319,10 +319,10 @@ namespace Nanook.NKit.App
         {
             if (tryStripPrefix(line, InfoPrefix.Title, out string titleBody))
                 return colorizeTitle(titleBody);
-            // Input params: "Label : Value" — label white, value cyan.
+            // Input params: "Label : Value" - label white, value cyan.
             if (tryStripPrefix(line, InfoPrefix.InParam, out string inBody))
                 return colorizeKeyValue(inBody, White, "cyan");
-            // Output params: "Label : Value" — label white, value purple. Exception: on the Verify
+            // Output params: "Label : Value" - label white, value purple. Exception: on the Verify
             // result line only the outcome WORD is recoloured (VerifySuccess = green, any other
             // Verify* word = red); the rest of the value stays purple like every other OutParam.
             if (tryStripPrefix(line, InfoPrefix.OutParam, out string outBody))
@@ -418,7 +418,7 @@ namespace Nanook.NKit.App
             StringBuilder sb = new System.Text.StringBuilder(body.Length + 48);
             if (label.Length != 0)
                 sb.Append("[").Append(labelColour).Append("]").Append(Markup.Escape(label)).Append("[/]");
-            sb.Append(Markup.Escape(separator)); // ':' and surrounding spaces — uncoloured
+            sb.Append(Markup.Escape(separator)); // ':' and surrounding spaces - uncoloured
             if (value.Length != 0)
             {
                 // On the Verify line, colour ONLY the leading outcome word (green/red); the rest of
@@ -460,7 +460,7 @@ namespace Nanook.NKit.App
             if (inner.Length != 0 && inner[inner.Length - 1] == '%')
                 return "bold white";
 
-            // Section title "[Task/System]" (e.g. "[Scan/GameCube]") is NOT a scope/component tag —
+            // Section title "[Task/System]" (e.g. "[Scan/GameCube]") is NOT a scope/component tag -
             // it only happens to use brackets. Detect it by the '/' separator (no real scope/tag
             // contains one) and leave it UNCOLOURED so it doesn't render like a gold scope. Colour
             // scheme for the section title is TBD.
@@ -468,10 +468,10 @@ namespace Nanook.NKit.App
                 return null;
 
             // Tags are now EITHER a pipeline stage ([In]/[Pre]/[Proc#N]/[Out]) OR a category
-            // ([Input]/[Params]/[Config]/[Core]/[Results]/[Progress]) — never combined. NB: green
+            // ([Input]/[Params]/[Config]/[Core]/[Results]/[Progress]) - never combined. NB: green
             // and red are reserved (success / error), so neither is used here.
 
-            // Pipeline STAGES — exact tokens ([In]/[Pre]/[Out]) or the Proc# prefix. Exact matches
+            // Pipeline STAGES - exact tokens ([In]/[Pre]/[Out]) or the Proc# prefix. Exact matches
             // so a CATEGORY like [Input] (which starts with "In") is NOT mistaken for the In stage.
             // All colours are standard ANSI names Spectre renders on any terminal; green/red reserved.
             if (inner.Equals("In", StringComparison.OrdinalIgnoreCase)) return "aqua";
@@ -509,7 +509,7 @@ namespace Nanook.NKit.App
                 return;
             // On terminal resize, blank the live region first so Spectre resets its internal
             // line-count from zero. Without this, narrowing the window causes Spectre to
-            // over-clear — it clears based on the old (shorter) line count and overwrites
+            // over-clear - it clears based on the old (shorter) line count and overwrites
             // previously committed log lines above the footer.
             handleResizeIfNeeded();
             _ctx.UpdateTarget(buildFooter());
@@ -607,10 +607,10 @@ namespace Nanook.NKit.App
             else
             {
                 // Moving: he wanders a random distance (10..41 steps) before turning, so each leg is
-                // a good long, unhurried wander with natural variety — never an erratic quick turn.
+                // a good long, unhurried wander with natural variety - never an erratic quick turn.
                 if (_ghostSinceTurn >= _ghostRunTarget)
                 {
-                    _ghostTurn = 4;                       // four upright frames — a slow about-face
+                    _ghostTurn = 4;                       // four upright frames - a slow about-face
                     _ghostTurnEyesLeft = _ghostDir > 0;   // start eyes toward current travel
                     pose = _ghostTurnEyesLeft ? GhostEyesL : GhostEyesR;
                     _ghostTurnHold = GhostTurnHold;       // linger on this first eye frame
@@ -641,7 +641,7 @@ namespace Nanook.NKit.App
         /// Commit a one-line completion summary (100% + total elapsed + last stage load / workers)
         /// as a permanent LOG line ABOVE the footer, then clear the footer so nothing is left as a
         /// live/updatable region. Call this at step completion (ProgressEvent.IsComplete) from
-        /// INSIDE the live scope. In non-dynamic mode it is a no-op — the legacy per-step "~Xm Ys"
+        /// INSIDE the live scope. In non-dynamic mode it is a no-op - the legacy per-step "~Xm Ys"
         /// line already reports completion.
         /// </summary>
         public void CompleteStep(string completeMessage = null)
@@ -696,7 +696,7 @@ namespace Nanook.NKit.App
         // Read = In + Pre (section create + pre-process handoff), Process, Output; the busiest
         // (bottleneck) stage is highlighted red. On completion the percentage AND live stats are
         // dropped, leaving just the elapsed and the engine's completion detail (CRC / Partial Read /
-        // Failed) — matching the non-dynamic console.
+        // Failed) - matching the non-dynamic console.
         private string buildStatusMarkup(bool completed, string completeMessage)
         {
             TimeSpan ts = DateTime.UtcNow - _stepStart;
@@ -706,12 +706,12 @@ namespace Nanook.NKit.App
             // the step TYPE (task) is yellow, and the trailing pad keeps column alignment.
             string labelMarkup = buildStepLabelMarkup();
 
-            // On completion: no percentage, no stats — just "Step N/M: Task - elapsed - [detail]".
+            // On completion: no percentage, no stats - just "Step N/M: Task - elapsed - [detail]".
             if (completed)
             {
                 string done = $"{labelMarkup} - [{White}]{elapsed}[/]";
                 string msg = (completeMessage ?? "").Trim();
-                // Strip the leading "~Xm Ys  " timing (elapsed is already shown) — keep the bracketed
+                // Strip the leading "~Xm Ys  " timing (elapsed is already shown) - keep the bracketed
                 // detail like "[CRC 4C7A0149]". If parsing is uncertain, show the whole message.
                 int b = msg.IndexOf('[');
                 if (b >= 0)

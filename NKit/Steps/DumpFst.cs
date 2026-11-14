@@ -29,7 +29,7 @@ namespace Nanook.NKit
             if (encTitleKey == null)
             {
                 // Fallback to synthetic derivation
-                Console.WriteLine("Ticket key extraction failed — using GenerateRawKey fallback");
+                Console.WriteLine("Ticket key extraction failed - using GenerateRawKey fallback");
                 byte[] rawKey2 = TmdInfo.GenerateRawKey(titleId.ToString("X16"));
                 encTitleKey = TmdInfo.EncryptKey(rawKey2, titleId, WiiUConsts.KeyCommon);
             }

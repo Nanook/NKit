@@ -2,15 +2,15 @@
 set -euo pipefail
 
 # =============================================================================
-# NKit Unit-Test Gate — runs inside the same Docker container as local builds
+# NKit Unit-Test Gate - runs inside the same Docker container as local builds
 # =============================================================================
 #
 # Runs the fast unit-test gate (same exclusions as GitHub Actions CI) inside
 # the nkit-legacy-x64-builder container so .NET 10 SDK is always available.
 #
 # Excluded (matching CI):
-#   Area=Full   — WipedImageTests / ProcessingTests (need real disc images)
-#   Speed=Slow  — Real-image decode classes
+#   Area=Full   - WipedImageTests / ProcessingTests (need real disc images)
+#   Speed=Slow  - Real-image decode classes
 #
 # Usage (from Windows PowerShell):
 #   wsl -d Ubuntu-22.04 -- bash -lc "cd /mnt/d/Src/NKitCode/NKit && ./build/test.sh"
@@ -50,7 +50,7 @@ DOCKERFILE="$SCRIPT_DIR/docker/Dockerfile.legacy-x64"
 
 docker_up() { docker info >/dev/null 2>&1; }
 if ! docker_up; then
-    echo "Native dockerd not responding — starting it..."
+    echo "Native dockerd not responding - starting it..."
     if command -v service >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
         sudo service docker start || true
     fi

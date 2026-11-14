@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nanook.NKit
 {
@@ -35,7 +35,7 @@ namespace Nanook.NKit
             // reused for every image in the UI/CLI loop). The registration's CancellationTokenRegistration
             // was discarded (never disposed), and its closure captured this TheOverseer -> _stepContext
             // -> Scan (the whole ScanArea/ScanSection/FST graph). So every image left one overseer (and
-            // its entire scan graph) rooted on the never-cancelled token FOREVER — a ~5 MB/image leak in
+            // its entire scan graph) rooted on the never-cancelled token FOREVER - a ~5 MB/image leak in
             // Debug builds that survived the per-image forced GC. We now read the token DIRECTLY per
             // section (see SectionProcessed) instead of registering a callback: same behaviour (checks
             // stop when cancelled), no rooting, no leak.
@@ -91,7 +91,7 @@ namespace Nanook.NKit
 
             if (buff.ImageOffset != _lastImageOffset + _lastSize)
             {
-                // WiiU: Other sections (partition gaps) may produce non-contiguous image offsets —
+                // WiiU: Other sections (partition gaps) may produce non-contiguous image offsets -
                 // either the gap section itself, or the section immediately following a gap.
                 bool isWiiUGap = _image.Type == ImageType.WiiU &&
                                  (buff.Type == AreaType.Other || _lastAreaType == AreaType.Other);
@@ -162,7 +162,7 @@ namespace Nanook.NKit
                     // carries encryption. For a decoded/plaintext source (e.g. a decoded NKit or RVZ,
                     // SourceHasEncryption == false) the FileSystem area is legitimately plaintext here
                     // and encryption is applied downstream in the SectionProcessor, so IsEncrypted
-                    // being false is expected — do not flag it. (Patching also legitimately leaves it
+                    // being false is expected - do not flag it. (Patching also legitimately leaves it
                     // unencrypted.)
                     if (_info.OutputEncryption && _info.SourceHasEncryption && !ai.IsEncrypted && !buff.PatchInfo.MarkForPatching)
                         throw new Exception("Bad Encryption setting");

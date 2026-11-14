@@ -76,7 +76,7 @@ namespace Nanook.NKit.Vfs
                 _fuseMount = Fuse.Mount(mountPoint, this, options);
                 Trace.WriteLine("Filesystem mounted.");
 
-                // Block until unmount — the caller (MountOrchestrator) expects Run() to block
+                // Block until unmount - the caller (MountOrchestrator) expects Run() to block
                 // until the filesystem is actually unmounted.
                 _fuseMount.WaitForUnmountAsync().GetAwaiter().GetResult();
             }

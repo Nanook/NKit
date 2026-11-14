@@ -220,7 +220,7 @@ public class FormatRowViewModel : ViewModelBase
 
         if (IsRvzOptionsVisible)
         {
-            // Set encoding FIRST — this triggers the subscription that updates
+            // Set encoding FIRST - this triggers the subscription that updates
             // CompressionLevels and resets SelectedLevel to the default for that encoding.
             if (options.Encoding is not null && EncodingTypes.Contains(options.Encoding))
             {

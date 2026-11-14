@@ -4,7 +4,7 @@ namespace NKitCore
 {
     /// <summary>
     /// The core section contract. The core is generic over the section type (TSection) and never
-    /// touches the section's payload/buffer — it only sequences, pools and orders sections.
+    /// touches the section's payload/buffer - it only sequences, pools and orders sections.
     /// </summary>
     public interface ISection
     {

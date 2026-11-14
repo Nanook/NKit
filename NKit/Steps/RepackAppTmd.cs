@@ -51,7 +51,7 @@ namespace Nanook.NKit
                                                     : (ushort)((titleId >> 8) & 0xFFFF));
 
             // Copy content records from source TMD (type, index, size)
-            // but zero the hashes — FinaliseTmd will recompute them from .h3 files
+            // but zero the hashes - FinaliseTmd will recompute them from .h3 files
             for (int i = 0; i < tmdInfo.Content.Length; i++)
             {
                 Content c = tmdInfo.Content[i];
@@ -85,7 +85,7 @@ namespace Nanook.NKit
 
                 if (!File.Exists(appPath))
                 {
-                    Console.WriteLine($"  [{i}] {appName} MISSING — skipping");
+                    Console.WriteLine($"  [{i}] {appName} MISSING - skipping");
                     continue;
                 }
 
@@ -93,7 +93,7 @@ namespace Nanook.NKit
                 {
                     if (!File.Exists(h3Path))
                     {
-                        Console.WriteLine($"  [{i}] {h3Name} MISSING — skipping");
+                        Console.WriteLine($"  [{i}] {h3Name} MISSING - skipping");
                         continue;
                     }
                     byte[] h3 = File.ReadAllBytes(h3Path);

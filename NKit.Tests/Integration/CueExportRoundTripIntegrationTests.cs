@@ -395,7 +395,7 @@ namespace NKit.Tests.Engine.Output
         /// Verifies that stored area-level hashes in the DataStore match the hashes computed
         /// from the reconstructed CUE/BIN output. This tests the verification path where
         /// per-area CRC32 and XXHash64 stored during ingestion are compared against
-        /// reconstructed area hashes — the same comparison that the Verify-Image step performs.
+        /// reconstructed area hashes - the same comparison that the Verify-Image step performs.
         ///
         /// For CUE images with stride (Mode1 sectors), block-level hashes are computed over
         /// the clean/user data. The area-level hashes (passed to CreateArea) are computed over

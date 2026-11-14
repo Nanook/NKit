@@ -70,7 +70,7 @@ public class MountRegistryMergeIntegrationTests
 
     #endregion
 
-    #region isIso9660SystemType — applicable types return true
+    #region isIso9660SystemType - applicable types return true
 
     [Theory]
     [InlineData("Default")]
@@ -100,7 +100,7 @@ public class MountRegistryMergeIntegrationTests
 
     #endregion
 
-    #region isIso9660SystemType — non-applicable types return false
+    #region isIso9660SystemType - non-applicable types return false
 
     [Theory]
     [InlineData("GameCube")]
@@ -122,7 +122,7 @@ public class MountRegistryMergeIntegrationTests
 
     #endregion
 
-    #region mergeSystemFilesystem — no system key (no-op)
+    #region mergeSystemFilesystem - no system key (no-op)
 
     /// <summary>
     /// When the per-type dictionary does not contain a "system" key, the method
@@ -150,7 +150,7 @@ public class MountRegistryMergeIntegrationTests
 
     #endregion
 
-    #region mergeSystemFilesystem — only system key (retained)
+    #region mergeSystemFilesystem - only system key (retained)
 
     /// <summary>
     /// When "system" is the only key in the dictionary, the method should

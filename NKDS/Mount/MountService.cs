@@ -92,7 +92,7 @@ public sealed class MountService : IMountService, IDisposable
         {
             // TODO: Wire to actual Dokan/FUSE mount infrastructure during integration.
             // The platform-specific filesystem code (WindowsFs/LinuxFs) lives in the NKDS CLI project.
-            // For now, track the mount and return success — actual mounting will be delegated
+            // For now, track the mount and return success - actual mounting will be delegated
             // to the platform host when integration is complete.
             await Task.CompletedTask.ConfigureAwait(false);
 
@@ -201,7 +201,7 @@ public sealed class MountService : IMountService, IDisposable
         }
 
         // On Windows, Dokan handles mount point creation itself (supports drive letters
-        // like N:\, non-existent directories, and existing empty directories) — no
+        // like N:\, non-existent directories, and existing empty directories) - no
         // existence or emptiness check needed.
 
         // Check active mount conflicts

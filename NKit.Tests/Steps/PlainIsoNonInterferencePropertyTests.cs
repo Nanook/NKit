@@ -139,7 +139,7 @@ namespace NKit.Tests.Engine.Output
                 long physicalOffset = (long)i * 150 * blockSize;
                 string trackType = GetTrackType(hash);
 
-                // Pass null IndexFile items (plain ISO — no IndexFile)
+                // Pass null IndexFile items (plain ISO - no IndexFile)
                 AreaMetadata metadata = ModelBuildAreaMetadata(
                     areaType, blockSize, i, session, physicalOffset,
                     trackType, null, imageName);

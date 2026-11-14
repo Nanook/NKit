@@ -36,7 +36,7 @@ namespace Nanook.NKit
     /// <see cref="IFileSystemData.AllFoldersParsed"/> / the reader contract); the view then exposes
     /// an IMMUTABLE snapshot of the file list. Consumers read it by index over a stable count, so
     /// parallel section processors can read it while later areas are still being parsed on the read
-    /// thread — with no lock and no clone of the file data (the <see cref="IFsFile"/> elements are
+    /// thread - with no lock and no clone of the file data (the <see cref="IFsFile"/> elements are
     /// shared, but the list is frozen once published).
     /// </para>
     ///
@@ -44,10 +44,10 @@ namespace Nanook.NKit
     /// An area can hold multiple logical file systems (ISO9660 / Joliet / UDF / XDVDFS). The view
     /// exposes each as its own <see cref="IFileSystemView"/> in <see cref="FileSystems"/>, a
     /// <see cref="System"/> view of the system entries (Wii/GC boot.bin family; ISO/XBox volume
-    /// markers — the files flagged <see cref="IFsFile.IsSystemFile"/>), and a merged
+    /// markers - the files flagged <see cref="IFsFile.IsSystemFile"/>), and a merged
     /// <see cref="Primary"/> view over the whole ordered list. The section pipeline's
     /// <c>FileStartIndex</c>/<c>FileEndIndex</c> index window addresses <see cref="Primary"/>.
-    /// These are projections over the one snapshot — no copy of file data.
+    /// These are projections over the one snapshot - no copy of file data.
     /// </para>
     /// </summary>
     public interface IAreaFileSystemView
@@ -75,7 +75,7 @@ namespace Nanook.NKit
         IReadOnlyList<IFileSystemView> FileSystems { get; }
 
         /// <summary>
-        /// Blocks of data IDENTIFIED in the image but NOT part of the file-system folder tree — e.g.
+        /// Blocks of data IDENTIFIED in the image but NOT part of the file-system folder tree - e.g.
         /// the UDF backup anchor / partition mirror at the volume tail, or an mkisofs signature
         /// sector. They are worth reporting in a scan (an otherwise-unknown block whose purpose is
         /// known) but they belong to no folder. Unlike the frozen <see cref="Primary"/> snapshot
@@ -88,7 +88,7 @@ namespace Nanook.NKit
 
     /// <summary>
     /// A read-only view of ONE logical file system (or the merged/system projection). Iterate by
-    /// index up to <see cref="FileCount"/> — never <c>foreach</c> a live list. The element is the
+    /// index up to <see cref="FileCount"/> - never <c>foreach</c> a live list. The element is the
     /// shared <see cref="IFsFile"/>; the LIST is an immutable published snapshot, so indexed reads
     /// are stable for the view's lifetime.
     /// </summary>

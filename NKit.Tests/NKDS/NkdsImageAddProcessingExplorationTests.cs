@@ -21,11 +21,11 @@ namespace NKit.Tests.NKDS
     /// These tests encode the EXPECTED (correct) behavior and are designed to FAIL
     /// on unfixed code, confirming the bugs exist.
     ///
-    /// Bug 1: Dreamcast GDI/CUE Duplicate Processing — a zip archive containing both
+    /// Bug 1: Dreamcast GDI/CUE Duplicate Processing - a zip archive containing both
     /// a .gdi and .cue file referencing the same track files should produce only 1
     /// SourceFile (preferring CUE), but currently produces 2.
     ///
-    /// Bug 2: WiiU Format Misassignment — WiiU disc images (WUD/WUX/ISO) should be
+    /// Bug 2: WiiU Format Misassignment - WiiU disc images (WUD/WUX/ISO) should be
     /// stored as ImageFormat.Iso but are incorrectly stored as ImageFormat.App when
     /// a stale IsFolderMode=true context persists from a prior TMD app.
     ///
@@ -164,7 +164,7 @@ namespace NKit.Tests.NKDS
         /// Creates a SourceFile with WiiU disc image characteristics.
         /// In the real pipeline, WUX/WUD disc images scanned standalone have no IndexFile
         /// (IsFolderMode = false). The bug manifests when the formatter's format decision
-        /// is based on IsFolderMode alone — this test verifies the IndexFile-based check
+        /// is based on IsFolderMode alone - this test verifies the IndexFile-based check
         /// correctly identifies disc images (no TmdApp IndexFile → Iso).
         /// </summary>
         private static SourceFile CreateWiiUDiscSourceFile(string extension)
@@ -172,7 +172,7 @@ namespace NKit.Tests.NKDS
             SourceFile sf = new SourceFile();
             sf.ImageFiles = new[] { new SourceFileItem("", $"game{extension}", extension, extension, 0, 1024 * 1024, 0, false, false) };
             sf.SystemType = SystemType.WiiU;
-            // No IndexFile — WUX/WUD disc images are standalone files without a TMD index
+            // No IndexFile - WUX/WUD disc images are standalone files without a TMD index
             sf.Initialised();
             return sf;
         }
@@ -188,7 +188,7 @@ namespace NKit.Tests.NKDS
             // - Total contents field
             // We use a minimal valid structure that TmdInfo can parse
             byte[] tmd = new byte[0xB04 + 0x30]; // header + 1 content entry
-            // Signature type = RSA_2048 (0x00010001) at offset 0 — big-endian
+            // Signature type = RSA_2048 (0x00010001) at offset 0 - big-endian
             tmd[0] = 0x00; tmd[1] = 0x01; tmd[2] = 0x00; tmd[3] = 0x01;
             // Number of contents at offset 0x9E (relative to cert start at 0x140+0x1C4=0x304 ?)
             // Actually TMD structure: after 0x140 cert chain comes the signed data
@@ -286,7 +286,7 @@ namespace NKit.Tests.NKDS
 
         /// <summary>
         /// Bug 1 Exploration (multiple tracks): GDI + CUE both referencing track01.bin,
-        /// track02.bin, track03.raw — verify deduplication works with larger track sets.
+        /// track02.bin, track03.raw - verify deduplication works with larger track sets.
         ///
         /// EXPECTED TO FAIL on unfixed code.
         ///
@@ -359,7 +359,7 @@ namespace NKit.Tests.NKDS
 
         /// <summary>
         /// Bug 2 Exploration: A WiiU WUD source image (no IndexFile, no TMD) should
-        /// be stored as ImageFormat.Iso. The formatter checks IndexFile.FileType — when
+        /// be stored as ImageFormat.Iso. The formatter checks IndexFile.FileType - when
         /// null (disc image), format is Iso; when TmdApp, format is App.
         ///
         /// **Validates: Requirements 1.3, 1.4, 2.3, 2.4**
@@ -367,7 +367,7 @@ namespace NKit.Tests.NKDS
         [Fact]
         public void WiiUWudFormat_DiscImageWithoutIndex_ShouldStoreAsIso()
         {
-            // Arrange: create a WiiU WUD SourceFile — no IndexFile (disc image)
+            // Arrange: create a WiiU WUD SourceFile - no IndexFile (disc image)
             SourceFile sourceFile = CreateWiiUDiscSourceFile(".wud");
             Assert.False(sourceFile.IsFolderMode); // Disc images have no index
             Assert.Null(sourceFile.IndexFile);
@@ -430,7 +430,7 @@ namespace NKit.Tests.NKDS
         /// and the WUD should get ImageFormat.Iso (no IndexFile).
         ///
         /// This test verifies correct format assignment when both types coexist in the
-        /// same datastore — the formatter uses IndexFile.FileType to distinguish them.
+        /// same datastore - the formatter uses IndexFile.FileType to distinguish them.
         ///
         /// **Validates: Requirements 1.4, 2.4**
         /// </summary>
@@ -439,7 +439,7 @@ namespace NKit.Tests.NKDS
         {
             string dedupePath = Path.Combine(_tempDir, "batch_test");
 
-            // Step 1: Process a TMD app (this is correct — should be App)
+            // Step 1: Process a TMD app (this is correct - should be App)
             SourceFile tmdSourceFile = new SourceFile();
             tmdSourceFile.ImageFiles = new[] { new SourceFileItem("", "00000001", "", "", 0, 1024, 0, false, false) };
             tmdSourceFile.SystemType = SystemType.WiiU;
@@ -458,7 +458,7 @@ namespace NKit.Tests.NKDS
                 tmdFormatter.FinalizeImage(0, 0, 0); // Commit
             }
 
-            // Step 2: Process a WUD disc image (no IndexFile — disc image)
+            // Step 2: Process a WUD disc image (no IndexFile - disc image)
             SourceFile wudSourceFile = CreateWiiUDiscSourceFile(".wud");
             Assert.False(wudSourceFile.IsFolderMode); // Disc image has no index
             Assert.Null(wudSourceFile.IndexFile);

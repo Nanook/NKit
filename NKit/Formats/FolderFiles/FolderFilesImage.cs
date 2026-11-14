@@ -7,15 +7,15 @@ namespace Nanook.NKit.Formats.FolderFiles
 {
     /// <summary>
     /// A minimal <see cref="IImage"/> that presents a <see cref="FolderFilesAsIso"/> flat byte
-    /// stream as a sequence of <see cref="AreaType.Other"/> areas — one per source file.
+    /// stream as a sequence of <see cref="AreaType.Other"/> areas - one per source file.
     ///
     /// Each area is exactly one file's byte content, delivered in <c>blockSize</c>-sized sections.
     /// The area's <c>AreaInfo.Properties</c> carry:
-    ///   <c>"FileName"</c>  — relative path (e.g. "code/game.rpx")
-    ///   <c>"FileSize"</c>  — file size as a long
-    ///   <c>"FileIndex"</c> — zero-based index into the source file list
+    ///   <c>"FileName"</c>  - relative path (e.g. "code/game.rpx")
+    ///   <c>"FileSize"</c>  - file size as a long
+    ///   <c>"FileIndex"</c> - zero-based index into the source file list
     ///
-    /// No encryption, no hash tables — <c>IsEncrypted = false</c>, <c>HasSecurity = false</c>.
+    /// No encryption, no hash tables - <c>IsEncrypted = false</c>, <c>HasSecurity = false</c>.
     /// Steps receive raw plaintext bytes in <c>section.Decrypted</c> (= <c>section.Encrypted</c>).
     /// </summary>
     internal sealed class FolderFilesImage : IImage
@@ -184,7 +184,7 @@ namespace Nanook.NKit.Formats.FolderFiles
 
         // ── Helpers ───────────────────────────────────────────────────────────────────
 
-        private AreaInfo advanceArea() => null; // unused — kept for linker
+        private AreaInfo advanceArea() => null; // unused - kept for linker
     }
 
     // ── Supporting types ──────────────────────────────────────────────────────────────
@@ -219,7 +219,7 @@ namespace Nanook.NKit.Formats.FolderFiles
         public System.Nullable<CdType> CdDiscType { get; internal set; }
     }
 
-    /// <summary>Pass-through pre-processor — no decryption or hash parsing needed.</summary>
+    /// <summary>Pass-through pre-processor - no decryption or hash parsing needed.</summary>
     internal sealed class FolderFilesPreProcessor : IBufferPreProcessor
     {
         public long ImageSize => 0;
@@ -231,7 +231,7 @@ namespace Nanook.NKit.Formats.FolderFiles
 
     /// <summary>
     /// Minimal section processor for folder-file sections.
-    /// Passes bytes straight through — no checksums, no hash validation.
+    /// Passes bytes straight through - no checksums, no hash validation.
     /// </summary>
     internal sealed class FolderFilesSectionProcessor : SectionProcessorBase, ISectionProcessor
     {
@@ -245,7 +245,7 @@ namespace Nanook.NKit.Formats.FolderFiles
             this.Buffer = new Buffer(0x8000, false);
         }
 
-        // Override PatchInfo to always return non-null — the base Buffer may not yet be
+        // Override PatchInfo to always return non-null - the base Buffer may not yet be
         // set when Scan.SectionProcessed accesses PatchInfo; return a static stub.
         public new IPatchInfo PatchInfo => base.Buffer?.PatchInfo ?? _staticPatchInfo;
 
@@ -272,7 +272,7 @@ namespace Nanook.NKit.Formats.FolderFiles
 
         public new System.Collections.Generic.List<MetaData> MissingData => null;
 
-        // ISection pass-through — SectionProcessorBase provides most members via Buffer
+        // ISection pass-through - SectionProcessorBase provides most members via Buffer
         public System.Collections.Generic.IEnumerable<NonCreatableData> NonCreatableItems
             => System.Linq.Enumerable.Empty<NonCreatableData>();
 

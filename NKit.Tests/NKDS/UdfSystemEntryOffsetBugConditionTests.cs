@@ -115,7 +115,7 @@ public class UdfSystemEntryOffsetBugConditionTests
     }
 
     /// <summary>
-    /// Property 1: Bug Condition — UDF System Entry Double-Shifted Offset
+    /// Property 1: Bug Condition - UDF System Entry Double-Shifted Offset
     ///
     /// For UDF system entries (IsSystemFile = true) on an area with non-zero ImageOffset,
     /// the computed image offset in BuildPerTypeFsYaml SHALL equal file.FsOffset
@@ -142,7 +142,7 @@ public class UdfSystemEntryOffsetBugConditionTests
 
         Scan scan = CreateScanWithSystemEntries(areaImageOffset, entries);
 
-        // Invoke BuildPerTypeFsYaml — this is the method under test.
+        // Invoke BuildPerTypeFsYaml - this is the method under test.
         // We need a DataStoreIso9660Formatter instance. Since the method only uses _context.Log
         // (for non-essential logging), we create one with a minimal context.
         var formatter = new TestableDataStoreIso9660Formatter();
@@ -182,14 +182,14 @@ public class UdfSystemEntryOffsetBugConditionTests
 
         string label = allCorrect
             ? "All system entries have correct absolute offsets (no double-shift)"
-            : $"BUG CONFIRMED — system entries are double-shifted by area.ImageOffset (0x{areaImageOffset:X}):\n" +
+            : $"BUG CONFIRMED - system entries are double-shifted by area.ImageOffset (0x{areaImageOffset:X}):\n" +
               string.Join("\n", failures);
 
         return allCorrect.ToProperty().Label(label);
     }
 
     /// <summary>
-    /// Property 1b: Bug Condition — Strided UDF System Entry Offset
+    /// Property 1b: Bug Condition - Strided UDF System Entry Offset
     ///
     /// For UDF system entries on a strided area (e.g. Dreamcast GD-ROM with 0x930 sectors),
     /// the computed image offset SHALL equal stride.CleanToOffset(file.FsOffset, false)
@@ -257,14 +257,14 @@ public class UdfSystemEntryOffsetBugConditionTests
 
         string label = allCorrect
             ? "All strided system entries have correct stride-converted offsets (no double-shift)"
-            : $"BUG CONFIRMED — strided system entries are double-shifted by area.ImageOffset (0x{areaImageOffset:X}):\n" +
+            : $"BUG CONFIRMED - strided system entries are double-shifted by area.ImageOffset (0x{areaImageOffset:X}):\n" +
               string.Join("\n", failures);
 
         return allCorrect.ToProperty().Label(label);
     }
 
     /// <summary>
-    /// Property 1c: Bug Condition — Multiple System Entry Types All Exhibit Double-Shift
+    /// Property 1c: Bug Condition - Multiple System Entry Types All Exhibit Double-Shift
     ///
     /// Generates multiple UDF system entry types with random FsOffset values on an area with
     /// non-zero ImageOffset and verifies all produce the correct absolute offset.
@@ -433,7 +433,7 @@ public class UdfSystemEntryOffsetBugConditionTests
                     long imageOffset;
                     if (isSystemEntry)
                     {
-                        // System entries (UDF metadata) have FsOffset that is NOT area-relative —
+                        // System entries (UDF metadata) have FsOffset that is NOT area-relative -
                         // it already represents the correct position. Do not add area.ImageOffset.
                         imageOffset = stride != null
                             ? stride.CleanToOffset(file.FsOffset, false)

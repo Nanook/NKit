@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Nintendo;
+using Nanook.NKit.Nintendo;
 using Nanook.NKit.Nintendo.WiiU;
 using Nanook.NKit.Steps.Shared;
 using System;
@@ -299,7 +299,7 @@ namespace Nanook.NKit
 
                 // Non-Game HASHLESS partitions (Update/GameUpdate) are read back per-sector with the
                 // disc key. The per-file zero loop below only clears NAMED file extents in
-                // section.Decrypted, leaving the inter-file GAPS as real content — and for hashless
+                // section.Decrypted, leaving the inter-file GAPS as real content - and for hashless
                 // content section.Decrypted is never re-encrypted, so section.Encrypted (original source
                 // ciphertext) is emitted verbatim and the gaps scan as "Other" not "Nulls".
                 // For these partitions wipe the WHOLE decrypted region (gaps included), preserving only
@@ -310,7 +310,7 @@ namespace Nanook.NKit
                 if (nonGameHashless)
                 {
                     // Update/GameUpdate title.tik/cert/tmd are NOT intrinsic (only the SI partition's
-                    // title.* are) — wipe the WHOLE decrypted region including them and the inter-file
+                    // title.* are) - wipe the WHOLE decrypted region including them and the inter-file
                     // gaps, then re-encrypt (below) so the section AND the RepeatedApp Other regions that
                     // mirror it read back as Nulls.
                     Array.Clear(section.Decrypted, 0, (int)section.Size);
@@ -334,14 +334,14 @@ namespace Nanook.NKit
             bool hasSecurity = section.IsEncrypted && _cntHeader != null && _cntHeader.HasHashes && section.Type != AreaType.Other;
 
             // Re-encrypt zeroed Update/GameUpdate hashless content with the wipe disc key so read-back
-            // yields Nulls — the whole FileSystem region (wiped above) AND its RepeatedApp Other regions
+            // yields Nulls - the whole FileSystem region (wiped above) AND its RepeatedApp Other regions
             // are wiped in place, and the gap-copy for those gaps is suppressed (WipedInPlace).
             // SI partition is NOT handled here: its whole FileSystem area (title.* + bulk) is rewritten
             // from SiBuffer in ProcessResults (bulk zeroed there, title.* re-signed), and its RepeatedApp
             // Other regions are then replicated from that now-null SI source by the gap-copy.
             // Game (hashed) partitions go through the hasSecurity/h2 path instead.
             // Re-encrypt the zeroed Update/GameUpdate FileSystem region with the wipe disc key so it
-            // reads back as Nulls. The RepeatedApp "Other" area that follows is NOT wiped here — it is a
+            // reads back as Nulls. The RepeatedApp "Other" area that follows is NOT wiped here - it is a
             // huge region only partially emitted as sections; instead the ProcessResults gap-copy
             // replicates this now-null FileSystem source across the whole Other area. Because the source
             // is exactly one content (SizePaddedToBlock) and the reader resets the RepeatedApp IV every

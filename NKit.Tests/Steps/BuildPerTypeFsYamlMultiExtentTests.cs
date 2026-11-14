@@ -330,7 +330,7 @@ namespace NKit.Tests.Engine.Output
             FstFile fstFile = new FstFile(root, "00001.ssif", FsType.Udf, 0x5000, 0x30000, FsItemType.File);
             fstFile.XxHash = 0xFEDC_BA98_7654_3210ul;
             fstFile.Crc = 0xFEDCBA98u;
-            // No SplitParts — this is a single UDF file referencing shared sectors
+            // No SplitParts - this is a single UDF file referencing shared sectors
 
             long areaImageOffset = 0x0;
             string fullPath = "/BDMV/00001.ssif";
@@ -380,7 +380,7 @@ namespace NKit.Tests.Engine.Output
             Assert.Single(normalNodes);
             Assert.Single(sharedNodes);
 
-            // Both have all standard fields — the shared file is indistinguishable in format
+            // Both have all standard fields - the shared file is indistinguishable in format
             Assert.True(normalNodes[0].IsFile);
             Assert.True(sharedNodes[0].IsFile);
             Assert.True(sharedNodes[0].Offset > 0);

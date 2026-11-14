@@ -183,7 +183,7 @@ public class ErrorStreamRoutingPropertyTests
             }
         }
 
-        // Total counts must match exactly — no duplication, no loss
+        // Total counts must match exactly - no duplication, no loss
         if (operationErrors.Count != expectedOperationCount) return false;
         if (imageErrors.Count != expectedImageCount) return false;
 

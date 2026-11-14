@@ -76,7 +76,7 @@ namespace Nanook.NKit.Container.ZArchive
         private int _cacheUsed;
 
         private readonly byte[] _decompBuffer = new byte[BlockSize];
-        // Thread-local decompressor — one ZStdBlock per thread, created once and reused across
+        // Thread-local decompressor - one ZStdBlock per thread, created once and reused across
         // all block reads. Avoids allocating and freeing a native ZSTD_DCtx per block.
         [ThreadStatic]
         private static ZStdBlock _tlsDecompressor;
@@ -372,7 +372,7 @@ namespace Nanook.NKit.Container.ZArchive
                 }
             }
 
-            // Not in cache — load it
+            // Not in cache - load it
             int evict = _cacheUsed < CacheCapacity ? _cacheUsed++ : _cacheLruOrder[CacheCapacity - 1];
             _cacheBlockIndex[evict] = blockIndex;
             loadBlock(blockIndex, _cacheData[evict]);
@@ -406,7 +406,7 @@ namespace Nanook.NKit.Container.ZArchive
 
             if (compressedSize == BlockSize)
             {
-                // Stored uncompressed — read directly into dest
+                // Stored uncompressed - read directly into dest
                 _stream.Seek(blockFileOffset, SeekOrigin.Begin);
                 readExact(_stream, dest, 0, BlockSize);
             }

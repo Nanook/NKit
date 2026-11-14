@@ -38,11 +38,11 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     [Property(MaxTest = 100)]
     public bool InvalidWindowDecorationMode_ReturnsClientSideDecorations(NonEmptyString arbitraryValue)
     {
-        // Filter out valid enum values — we only want invalid strings
+        // Filter out valid enum values - we only want invalid strings
         string value = arbitraryValue.Get;
         if (value == nameof(WindowDecorationMode.ClientSideDecorations) ||
             value == nameof(WindowDecorationMode.NativeTitleBar))
-            return true; // Skip valid values — property is vacuously true for them
+            return true; // Skip valid values - property is vacuously true for them
 
         string configPath = Path.Combine(_tempDir, $"cfg-invalid-{Guid.NewGuid():N}.json");
         string legacyPath = Path.Combine(_tempDir, $"legacy-invalid-{Guid.NewGuid():N}.json");
@@ -176,7 +176,7 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         string configPath = Path.Combine(_tempDir, $"cfg-missing-{Guid.NewGuid():N}.json");
         string legacyPath = Path.Combine(_tempDir, $"legacy-missing-{Guid.NewGuid():N}.json");
 
-        // Don't create the file — it should not exist
+        // Don't create the file - it should not exist
         ConfigService service = new ConfigService(configPath, legacyPath);
         WindowDecorationMode result = service.GetWindowDecorationMode();
 

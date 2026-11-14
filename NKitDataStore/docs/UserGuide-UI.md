@@ -1,4 +1,4 @@
-# NKit DataStore — UI User Guide
+# NKit DataStore - UI User Guide
 
 NKit DataStore includes a graphical application for managing, analysing, and exporting disc images stored in DataStore sets. This guide covers the application layout, every toolbar operation, analytical features, and supporting dialogs.
 
@@ -28,11 +28,11 @@ NKit DataStore includes a graphical application for managing, analysing, and exp
 
 The main window is divided into the following areas:
 
-- **Toolbar** — A horizontal bar at the top containing grouped operation buttons and a set selector dropdown. Operations are organised into logical groups: file management, import, lifecycle, analytics, mount, and grouping.
-- **Set Selector** — A dropdown within the toolbar that selects the active set. When "All" is selected, images from every open set are shown. Individual set names target operations at a specific set.
-- **Image List** — The central area displaying a sortable, multi-select data grid of all images in the active set (or all sets). Columns include name, system, format, size, and verification status.
-- **Filter Bar** — An optional bar (toggled via the toolbar) providing text search and system filter controls to narrow the image list.
-- **Progress Panels** — Panels that appear at the bottom during long-running operations, showing operation name, current item, percentage, elapsed time, and a cancel button.
+- **Toolbar** - A horizontal bar at the top containing grouped operation buttons and a set selector dropdown. Operations are organised into logical groups: file management, import, lifecycle, analytics, mount, and grouping.
+- **Set Selector** - A dropdown within the toolbar that selects the active set. When "All" is selected, images from every open set are shown. Individual set names target operations at a specific set.
+- **Image List** - The central area displaying a sortable, multi-select data grid of all images in the active set (or all sets). Columns include name, system, format, size, and verification status.
+- **Filter Bar** - An optional bar (toggled via the toolbar) providing text search and system filter controls to narrow the image list.
+- **Progress Panels** - Panels that appear at the bottom during long-running operations, showing operation name, current item, percentage, elapsed time, and a cancel button.
 
 ---
 
@@ -96,12 +96,12 @@ The toolbar contains the following operations, organised into groups. Each butto
 The image list is the central data grid showing all images matching the current set selection and filters.
 
 **Columns** include:
-- Name — The image filename
-- System — The detected system (GameCube, Wii, WiiU, Directories, etc.)
-- Format — The source format of the stored image
-- Size — The logical size of the image
-- Set — The set the image belongs to (visible when viewing "All" sets)
-- Verification status — Pass/fail indicator after running Verify
+- Name - The image filename
+- System - The detected system (GameCube, Wii, WiiU, Directories, etc.)
+- Format - The source format of the stored image
+- Size - The logical size of the image
+- Set - The set the image belongs to (visible when viewing "All" sets)
+- Verification status - Pass/fail indicator after running Verify
 
 **Interactions:**
 - Click a column header to sort (cycles through ascending → descending → default order)
@@ -141,7 +141,7 @@ The Threshold Grouping window computes pairwise similarity between all currently
 **How it works:**
 1. Click the **Grouping** toolbar button to open the window (requires at least 2 filtered images)
 2. Configure the similarity threshold (default 60%) and thread count
-3. Click **Start** to begin computation — the window loads block hashes into memory, then computes pairwise similarity across all filtered images
+3. Click **Start** to begin computation - the window loads block hashes into memory, then computes pairwise similarity across all filtered images
 4. Results show groups of images that share content above the threshold
 
 **Two-phase computation:**
@@ -149,8 +149,8 @@ The Threshold Grouping window computes pairwise similarity between all currently
 - Phase 2 (50–100% progress): Compute pairwise similarity between all loaded images
 
 **Configuration:**
-- **Threshold** — Minimum similarity percentage to consider two images as related (adjustable with +/− buttons; results re-filter instantly without recomputation)
-- **Threads** — Number of parallel threads for computation (up to 2× CPU cores)
+- **Threshold** - Minimum similarity percentage to consider two images as related (adjustable with +/− buttons; results re-filter instantly without recomputation)
+- **Threads** - Number of parallel threads for computation (up to 2× CPU cores)
 
 **Results display:**
 - Header summary with total groups and total grouped images
@@ -158,11 +158,11 @@ The Threshold Grouping window computes pairwise similarity between all currently
 - Each image within a group shows its best match percentage
 
 **Toolbar buttons:**
-- **Start** — Begin the computation
-- **Cancel** — Abort a running computation
-- **Save** — Export grouped results as YAML
-- **Export** — Save the full pairwise similarity matrix for later import
-- **Import** — Load a previously exported pairwise matrix to avoid recomputation
+- **Start** - Begin the computation
+- **Cancel** - Abort a running computation
+- **Save** - Export grouped results as YAML
+- **Export** - Save the full pairwise similarity matrix for later import
+- **Import** - Load a previously exported pairwise matrix to avoid recomputation
 
 **Re-filtering:**
 After computation completes, adjusting the threshold re-filters the existing results instantly without recomputing. This allows exploring different grouping thresholds from a single computation run.
@@ -181,17 +181,17 @@ The Dat Verification window verifies images in the active set against a dat file
 4. Verification runs automatically against the active set
 
 **Result categories:**
-- **Correct** — Image matches a dat entry by name and CRC
-- **Missing** — Dat entry has no matching image in the set
-- **Badly Named** — Image matches by CRC but has the wrong filename
-- **Wrong CRC** — Image matches by name but has a different CRC
-- **Unmatched** — Image exists in the set but has no corresponding dat entry
+- **Correct** - Image matches a dat entry by name and CRC
+- **Missing** - Dat entry has no matching image in the set
+- **Badly Named** - Image matches by CRC but has the wrong filename
+- **Wrong CRC** - Image matches by name but has a different CRC
+- **Unmatched** - Image exists in the set but has no corresponding dat entry
 
 **Features:**
 - Summary counts for each category (invariant to filtering)
 - Filter toggles to show/hide each category in the results grid
 - Sortable results grid (by status, name, etc.)
-- **Rename** button — Automatically rename badly-named images to match their dat entry names
+- **Rename** button - Automatically rename badly-named images to match their dat entry names
 - Re-verifies automatically when the active set changes
 - Dat path history for quick re-selection
 
@@ -230,8 +230,8 @@ The Export dialog allows you to choose target formats for each system and source
 | Other | Any | Same format (no conversion) |
 
 **Format-specific options:**
-- **RVZ** — Encoding (e.g., zstd, lzma), compression level, and block size
-- **CISO / WBFS** — Lossless mode toggle
+- **RVZ** - Encoding (e.g., zstd, lzma), compression level, and block size
+- **CISO / WBFS** - Lossless mode toggle
 
 **Dialog features:**
 - Output directory selection with browse button and MRU history
@@ -256,9 +256,9 @@ The Mount dialog configures how images are exposed as a virtual filesystem.
 | **Update Mode** | Mount in update mode (mutually exclusive with the view options above) |
 
 **Linux-specific options (FUSE):**
-- **Allow Other** — Allow other users to access the mount (`allow_other` FUSE option)
-- **UID** — Override file owner user ID
-- **GID** — Override file owner group ID
+- **Allow Other** - Allow other users to access the mount (`allow_other` FUSE option)
+- **UID** - Override file owner user ID
+- **GID** - Override file owner group ID
 
 Setting UID or GID automatically enables Allow Other.
 

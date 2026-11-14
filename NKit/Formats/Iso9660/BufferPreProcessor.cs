@@ -35,19 +35,19 @@ namespace Nanook.NKit.Iso.Iso9660
 
         // UDF backup structures (backup anchor + partition mirror) live only in the LAST ~0x8000 of
         // a UDF volume. Only scan sections whose end falls within this trailing window, and only when
-        // UDF is present — so the per-sector signature scan runs on at most the final section(s), not
+        // UDF is present - so the per-sector signature scan runs on at most the final section(s), not
         // across the whole image (which doubled processing time).
         private const long UdfTailWindow = 0x100000; // 1 MiB safety margin over the ~0x8000 spec size
 
         // Read-time: scan this FileSystem section's buffer for end-of-image UDF markers and add them
-        // to the FST (no seek — the buffer is the section being read). Mirrors the legacy sequential-
+        // to the FST (no seek - the buffer is the section being read). Mirrors the legacy sequential-
         // read discovery, but bounded to the UDF tail so it is effectively free elsewhere.
         public void DiscoverMarkers(IFileSystemInfo fsInfo, IBuffer buffer)
         {
             if (buffer.Type != AreaType.FileSystem || !(fsInfo is FileSystemInfo isoFs) || !isoFs.AllFoldersParsed || !isoFs.HasUdf)
                 return;
             // The backup structures sit at the end of the AREA (each session on a multi-session disc
-            // has its own), so bound the scan to the trailing window of this area's extent — not the
+            // has its own), so bound the scan to the trailing window of this area's extent - not the
             // whole image (which would miss an earlier session's backup).
             if (buffer.ImageOffset + buffer.Size < isoFs.AreaEnd - UdfTailWindow)
                 return;

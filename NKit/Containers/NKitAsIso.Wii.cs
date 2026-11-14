@@ -15,7 +15,7 @@ namespace Nanook.NKit.Container
     ///     [encoded filler gap before partition, if any]
     ///     [partition header block: ticket/TMD/cert/H3, size = field 0x2b8 &lt;&lt; 2]
     ///     [partition sub-header 0x440 (own NKit fields, dol/fst pointers)]
-    ///     [hdr-to-FST region] [FST] [hash flags data — skipped, hashes deferred]
+    ///     [hdr-to-FST region] [FST] [hash flags data - skipped, hashes deferred]
     ///     [files + gaps (same encoding as GameCube)]
     ///   [trailing filler to image size]
     ///
@@ -33,7 +33,7 @@ namespace Nanook.NKit.Container
             // Disc header (0x50000). NKitAsIso emits a self-describing DECODED image: the NKit
             // header block at 0x200 is cleared below so the source presents as a normal decoded ISO
             // (WiiGc.Image sees IsNkit=false, IsNkitDecoded=true). The correct repacked
-            // partition-table offsets are written below, so no downstream patch step is needed —
+            // partition-table offsets are written below, so no downstream patch step is needed -
             // a single-step conversion (e.g. straight to RVZ) works directly.
             _hdr = new byte[WiiConsts.WiiDiscHdrSize];
             srcCopy(0, _hdr, 0, _hdr.Length);
@@ -94,7 +94,7 @@ namespace Nanook.NKit.Container
             // Track the game partition's junk context separately (fix for issue #16): filler after
             // channel/other non-game, non-update partitions must use the game partition's junk id,
             // not zeros. The game partition may come before or after channel partitions.
-            // Only applies when a game partition exists on this disc — pure-channel installation
+            // Only applies when a game partition exists on this disc - pure-channel installation
             // discs have no game partition and use zeros for inter-partition filler.
             bool hasGamePartition = partitions.Any(p => p.Type == (uint)PartitionType.Game);
             byte[] gameJunkId = null;
@@ -127,7 +127,7 @@ namespace Nanook.NKit.Container
                 else if (part.Type != (uint)PartitionType.Update)
                 {
                     // Filler after a channel or other non-game, non-update partition must use the
-                    // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros —
+                    // game partition's junk (0x1C nulls + junk keyed on the game id), not zeros -
                     // but only on discs that actually have a game partition. Pure-channel install
                     // discs have no game partition and use zeros.
                     if (hasGamePartition)
@@ -216,7 +216,7 @@ namespace Nanook.NKit.Container
                 // Emit the recovery update partition verbatim (raw on-disc encrypted+hashed bytes)
                 // at 0x50000, then null-fill the remaining gap up to the data-partition offset.
                 // Record [start,end) so the downstream reader passes this region through unchanged
-                // (already encrypted+hashed — no re-encrypt/re-hash).
+                // (already encrypted+hashed - no re-encrypt/re-hash).
                 long fileLen = Math.Min(_updatePartitionFileLen, dataStart - updateStart);
                 _segments.Add(new Segment { IsoOffset = updateStart, Length = fileLen, Type = SegmentType.UpdateFile, SrcOffsetL = 0 });
                 _insertedUpdateStart = updateStart;
@@ -228,7 +228,7 @@ namespace Nanook.NKit.Container
             else if (dataStart > updateStart)
             {
                 // No recovery file: null-fill the whole update region. A null region has no valid
-                // partition header, so it is NOT listed as an Update partition (see table below) —
+                // partition header, so it is NOT listed as an Update partition (see table below) -
                 // just leading filler. Valid, non-crashing disc (won't CRC-match the original).
                 _segments.Add(new Segment { IsoOffset = updateStart, Length = dataStart - updateStart, Type = SegmentType.Zero });
                 dstPos = dataStart;
@@ -535,7 +535,7 @@ namespace Nanook.NKit.Container
             byte[] partJunkId = subHdr.Read(WiiConsts.DataHdrIdOffset, 4);
             int partDiscNo = subHdr[WiiConsts.DataHdrDiscNoOffset];
 
-            // Clear NKit fields and set the encrypted-hash marker that the standard image expects —
+            // Clear NKit fields and set the encrypted-hash marker that the standard image expects -
             // but ONLY for normal (non-wiped) partitions. For wiped partitions the NKit encoder
             // wrote the boot.bin verbatim (no NKit header written, no enc-hash marker set), so we
             // must leave subHdr untouched to reproduce the exact original decrypted bytes.
@@ -589,7 +589,7 @@ namespace Nanook.NKit.Container
                 subSrc += fstSize;
 
                 // Read the hash flags bitmask (which groups have preserved hashes that couldn't be
-                // recreated). We defer hash generation, so we don't emit these — but we must consume
+                // recreated). We defer hash generation, so we don't emit these - but we must consume
                 // the trailing preserved-hash DATA after the files+gaps, sized by this bitmask.
                 flagsLen = wiiHashFlagsLength(partFsSize);
                 hashFlags = new byte[flagsLen];
@@ -617,7 +617,7 @@ namespace Nanook.NKit.Container
 
             // Hacked/invalid FST (an entry pointing to offset 0). There is no usable file list
             // to drive the per-file gap/junk walk. NKit v1 handles this "bad image" case (NkitReaderWii: conFiles == null) by treating the ENTIRE post-FST
-            // region as a single gap and decoding it through the gap decoder — NOT a verbatim copy
+            // region as a single gap and decoding it through the gap decoder - NOT a verbatim copy
             // (gap regions are junk/nulls/fill-encoded in the NKit source). Mirror that here: one
             // decodeWiiFsGap over the whole remaining FS region, as the first-and-last file, so the
             // partition still reconstructs (and CRCs) correctly while the FST stays "invalid".
@@ -706,17 +706,17 @@ namespace Nanook.NKit.Container
                 // 4-byte-aligned file length (files are stored 4-aligned in the source, and v1
                 // computes the post-file gap from the ALIGNED end). Using the unaligned end left a
                 // tiny (1-3 byte) residual "gap" that made us read the next file's data as a gap
-                // encoding word — corrupting srcPos for the rest of the partition.
+                // encoding word - corrupting srcPos for the rest of the partition.
                 long fileAligned = fileSize + (fileSize % 4 == 0 ? 0 : 4 - (fileSize % 4));
                 if (fileSize > 0)
                 {
                     // The packed NKit source ALWAYS holds the full 4-aligned file bytes, so the
                     // SOURCE cursor must advance by the full fileAligned (v1: srcPos += size,
                     // unconditional). Only the OUTPUT FS run may be clamped to the partition end
-                    // (defensive — don't emit past partFsSize). Clamping the source advance too
+                    // (defensive - don't emit past partFsSize). Clamping the source advance too
                     // (the old Math.Min on subSrc) under-consumed the source whenever a file's
                     // aligned end fell within the final partition group, desyncing subSrc so every
-                    // later gap/file read the wrong bytes — corrupting the rebuilt FST on large
+                    // later gap/file read the wrong bytes - corrupting the rebuilt FST on large
                     // (dual-layer) partitions. Keep the two clamps independent.
                     long runLen = Math.Min(fileAligned, partFsSize - fsPos);
                     if (runLen > 0)
@@ -747,7 +747,7 @@ namespace Nanook.NKit.Container
                     // reads the 4-8 byte word (junk is regenerated, not stored), so the source
                     // cursor must still advance the FULL gapLen. The streaming decode advanced only
                     // by the words it read, leaving subSrc short whenever the compacted gap exceeded
-                    // the encoding size — which desynced every later file (dual-layer FST corruption).
+                    // the encoding size - which desynced every later file (dual-layer FST corruption).
                     // The LAST file is excluded: its trailing "gap" is junk-to-partition-end, which
                     // is regenerated and NOT backed by source bytes.
                     long gapSrcStart = subSrc;
@@ -792,7 +792,7 @@ namespace Nanook.NKit.Container
             _segments.Add(new Segment { IsoOffset = dstPos, Length = blockLen, Type = SegmentType.WiiPartition, Map = map });
             dstPos += blockLen;
 
-            _wiiFst = null; // clear after use — only valid during this partition's gap decoding
+            _wiiFst = null; // clear after use - only valid during this partition's gap decoding
             partJunkIdOut = partJunkId;
             partJunkStartOut = map.JunkStartFsOffset;
             return subSrc;
@@ -991,7 +991,7 @@ namespace Nanook.NKit.Container
 
                 if (inSector < WiiConsts.WiiSectorHashSize)
                 {
-                    // Hash gap (0x400 per sector). Normally zeros — hashes are generated downstream.
+                    // Hash gap (0x400 per sector). Normally zeros - hashes are generated downstream.
                     // But if this sector's GROUP has preserved (non-recreatable) hashes, reproduce
                     // them EXACTLY from the stored blob; the SectionProcessor then skips rebuild for
                     // this group (see processWiiNkitDecoded preserved-group handling).
@@ -1116,7 +1116,7 @@ namespace Nanook.NKit.Container
                 else if (pos >= r.FsOffset + r.FsLength) lo = mid + 1;
                 else { map.LastRunIndex = mid; return r; }
             }
-            // Not found (defensive) — return a synthetic zero run covering the request.
+            // Not found (defensive) - return a synthetic zero run covering the request.
             return new WiiFsRun { FsOffset = pos, FsLength = long.MaxValue, Kind = WiiFsRunKind.Zero };
         }
 
@@ -1163,7 +1163,7 @@ namespace Nanook.NKit.Container
 
         // The FST buffer of the partition currently being decoded, set by parseWiiPartition before
         // gap decoding begins. Allows decodeWiiFsGap to write the real file size into the FST for
-        // JunkFile-encoded entries (files whose content is pure junk — v1 stores size 0 in the FST
+        // JunkFile-encoded entries (files whose content is pure junk - v1 stores size 0 in the FST
         // and records the real size in the JunkFile gap word). Fix for issue #13.
         private byte[] _wiiFst;
 

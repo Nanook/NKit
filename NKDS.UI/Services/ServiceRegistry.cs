@@ -36,43 +36,43 @@ public sealed class ServiceRegistry : IDisposable
     {
         try
         {
-            // 1. ConfigService — no dependencies
+            // 1. ConfigService - no dependencies
             ConfigService = new ConfigService();
 
-            // 2. DataStoreService — no dependencies
+            // 2. DataStoreService - no dependencies
             DataStoreService = new DataStoreService();
 
-            // 3. BlockComparisonService — depends on IDataStoreService
+            // 3. BlockComparisonService - depends on IDataStoreService
             BlockComparisonService = new BlockComparisonService(DataStoreService);
 
-            // 4. HashCacheService — depends on IDataStoreService
+            // 4. HashCacheService - depends on IDataStoreService
             HashCacheService = new HashCacheService(DataStoreService);
 
-            // 5. SimilarityGroupService — no dependencies
+            // 5. SimilarityGroupService - no dependencies
             SimilarityGroupService = new SimilarityGroupService();
 
-            // 6. ThresholdGroupingService — no dependencies
+            // 6. ThresholdGroupingService - no dependencies
             ThresholdGroupingService = new ThresholdGroupingService();
 
-            // 7. StatsCalculationService — no dependencies
+            // 7. StatsCalculationService - no dependencies
             StatsCalculationService = new StatsCalculationService();
 
-            // 8. PlatformFsHostFactory — static factory, platform-detected
+            // 8. PlatformFsHostFactory - static factory, platform-detected
             PlatformFsHostFactory = NKDS.Mount.PlatformFsHostFactory.CreateForCurrentPlatform();
 
-            // 9. DatVerificationService — no dependencies
+            // 9. DatVerificationService - no dependencies
             DatVerificationService = new DatVerificationService();
 
-            // 10. SessionManager — depends on IDataStoreService
+            // 10. SessionManager - depends on IDataStoreService
             SessionManager = new SessionManager(DataStoreService);
 
-            // 11. FileHandleReleaseStrategy — no dependencies
+            // 11. FileHandleReleaseStrategy - no dependencies
             FileHandleReleaseStrategy = new FileHandleReleaseStrategy();
 
-            // 12. ExclusiveAccessManager — depends on SessionManager, FileHandleReleaseStrategy
+            // 12. ExclusiveAccessManager - depends on SessionManager, FileHandleReleaseStrategy
             ExclusiveAccessManager = new ExclusiveAccessManager(SessionManager, FileHandleReleaseStrategy);
 
-            // 13. ErrorNotificationService — no dependencies
+            // 13. ErrorNotificationService - no dependencies
             ErrorNotificationService = new ErrorNotificationService();
 
             // Wire ErrorNotificationService to services created before it
@@ -81,10 +81,10 @@ public sealed class ServiceRegistry : IDisposable
             ((HashCacheService)HashCacheService).SetErrorNotification(ErrorNotificationService);
             ((StatsCalculationService)StatsCalculationService).SetErrorNotification(ErrorNotificationService);
 
-            // 14. FileAssociationService — platform-detected factory, no dependencies
+            // 14. FileAssociationService - platform-detected factory, no dependencies
             FileAssociationService = CreateFileAssociationService();
 
-            // 15. SharedObservableState — no dependencies
+            // 15. SharedObservableState - no dependencies
             SharedState = new SharedObservableState();
         }
         catch

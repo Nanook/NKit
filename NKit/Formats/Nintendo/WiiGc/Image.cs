@@ -72,11 +72,11 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
             // An update-removed Wii NKit source reinserts its update partition itself during its
             // structure parse. The lookup lives in FixData, which the Wii domain layer resolves;
-            // wire the targeted FixData into the container FIRST — BEFORE anything reads the source
+            // wire the targeted FixData into the container FIRST - BEFORE anything reads the source
             // (including `_iso.Size` below, which for a WiiFixAsIso-wrapped NKitAsIso triggers the
             // decorator's layout build → the inner NKitAsIso parse → update reinsertion). If it were
             // wired after, the parse would run with null recovery data and NULL-FILL the update
-            // region instead of reinserting the recovery partition — changing the brute-force result
+            // region instead of reinserting the recovery partition - changing the brute-force result
             // (a VerifyFailed). Reach the NKitAsIso through a Fix decorator (WiiFixAsIso may wrap it).
             Container.NKitAsIso nkitUpd = _iso as Container.NKitAsIso
                 ?? (_iso as Container.WiiFixAsIso)?.Inner as Container.NKitAsIso;
@@ -94,7 +94,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             }
 
             // Now safe to read the source size (may trigger a WiiFixAsIso layout build / inner
-            // NKitAsIso parse — recovery FixData is wired above so the update reinsertion works).
+            // NKitAsIso parse - recovery FixData is wired above so the update reinsertion works).
             this.Size = SizeOrig = _iso.SizeEstimated ? lenCalc(_iso.Size) : _iso.Size;
 
             byte[] header;
@@ -107,8 +107,8 @@ namespace Nanook.NKit.Nintendo.WiiGc
             else
             {
                 // Construct/Setup only need the disc header (0x50000) to gather format + partition
-                // table. Read EXACTLY the disc header — not the extra 0x8000 partition-header
-                // region — so that for a decoded NKitAsIso source this read does NOT reach into the
+                // table. Read EXACTLY the disc header - not the extra 0x8000 partition-header
+                // region - so that for a decoded NKitAsIso source this read does NOT reach into the
                 // reinserted update partition (at 0x50000+) and force the container's full
                 // structure parse (whole-source decompress + premature "Inserted update partition"
                 // log) before processing has even started. The extra 0x8000 is only needed by the
@@ -132,7 +132,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             _info.SystemType = this.SystemType;
             _info.ContainerType = _iso.Format;
             // The NKitAsIso decoder presents fully-decoded partition data in the standard Wii
-            // block layout (0x8000 sectors, 0x400 hash gaps left zero) — plaintext, not encrypted,
+            // block layout (0x8000 sectors, 0x400 hash gaps left zero) - plaintext, not encrypted,
             // hashes not yet built. This is the RVZ-style contract: treat it as a hashed source
             // (so the 0x400-gap block layout and FS reads are correct) that is NOT source-encrypted
             // (so no source decryption runs on our plaintext). Hashes are rebuilt and encryption is
@@ -142,7 +142,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // NKit already returns the correct disc (update reinserted or null-filled), and the
             // decorator sits on top for the layout/update-brute-force work. Reach through the
             // decorator so the decoded-source contract (plaintext, deferred encryption/hashes) is
-            // detected either way — otherwise the wrapped bytes would be wrongly treated as
+            // detected either way - otherwise the wrapped bytes would be wrongly treated as
             // encrypted on-disc data.
             Container.NKitAsIso nkitInner = _iso as Container.NKitAsIso
                 ?? (_iso as Container.WiiFixAsIso)?.Inner as Container.NKitAsIso
@@ -175,7 +175,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
             // [In] [WiiGc] Detail: the resolved source/output security-flag matrix + the branch that
             // set it. A wrong flag here silently double-encrypts, drops hashes, or treats plaintext
-            // as encrypted — otherwise invisible. Once per image (ctor), guarded on Detail.
+            // as encrypted - otherwise invisible. Once per image (ctor), guarded on Detail.
             ILogScope flagScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
             if (flagScope != null && flagScope.IsEnabled(LogLevel.Detail))
             {
@@ -210,7 +210,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 _info.IsWiiFixLayoutApplied = true;
 
             // Wii Fix on a DECODED NKit source (single-step, no Expand): NKitAsIso already returns
-            // the disc in its final, correct on-disc layout — partition table reflowed, offsets
+            // the disc in its final, correct on-disc layout - partition table reflowed, offsets
             // repacked, the update partition reinserted from recovery (or null-filled if missing).
             // So the in-pipeline reflow (applyWiiPartitionTableFixes / applyDataPartitionFixes) must
             // NOT run: it was written to correct an EXPANDED encrypted ISO (the old Expand→Fix
@@ -234,7 +234,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 // A decoded NKit source serves clean plaintext partition data (hashes/encryption
                 // deferred to the parallel stage). That is fine for Scan/Convert/Expand, but a Wii
                 // FIX must run the update-partition brute-force against a real, self-consistent,
-                // on-disc ENCRYPTED image — so a decoded-nkit Wii Fix must first Expand to an ISO
+                // on-disc ENCRYPTED image - so a decoded-nkit Wii Fix must first Expand to an ISO
                 // (ReqPatch routes it through the Expand-Image-Patch step) rather than fixing the
                 // decoded plaintext directly (which leaves the per-area CRCs inconsistent with the
                 // streamed bytes and breaks the dat brute-force). GameCube fix is single-step and
@@ -247,13 +247,13 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 // ReqPatch (the Expand-Image-Patch route) is now scoped to the EXPAND task only:
                 // expanding a legacy raw NKit (_info.IsNkit) to a full ISO IS the patch operation.
                 // Every other task reads the corrected image in a single pass:
-                //   • Wii Fix     — single-step Fix-WiiGc when no verify; TWO steps (Fix-WiiGc ->
+                //   • Wii Fix     - single-step Fix-WiiGc when no verify; TWO steps (Fix-WiiGc ->
                 //                   Verify-Image) ONLY when a verify is required, because the Wii
                 //                   update-partition brute-force + region/age calcs run on the
                 //                   COMPLETED on-disc file, so verify must re-read the finished
                 //                   image. This is driven by the Fix routing rows, NOT ReqPatch.
-                //   • GameCube Fix — fixes AND verifies in one pass (GcFixAsIso corrects at read).
-                //   • FixExtract/Extract/Dedupe/Convert/Scan/Verify/Wipe — single pass.
+                //   • GameCube Fix - fixes AND verifies in one pass (GcFixAsIso corrects at read).
+                //   • FixExtract/Extract/Dedupe/Convert/Scan/Verify/Wipe - single pass.
                 // So ReqPatch stays n for everything except Expand; nothing falls through to
                 // NotSupported.
                 ReqPatch = _info.IsNkit && _context.TaskType == TaskType.Expand,
@@ -288,7 +288,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // ── Detail summaries (once per image) ────────────────────────────────────────────
             // Give the SectionProcessor a log scope ([Sect]) so it can emit a per-FileSystem-area
             // summary (the processor only holds IImageInfo, so route the Log through ImageInfo).
-            // Reading is the [In] stage — the SectionProcessor summary and this Image summary both
+            // Reading is the [In] stage - the SectionProcessor summary and this Image summary both
             // log under [In] and identify their class in the message text (category None → the tag
             // is just "[In]").
             _info.SectionLog = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
@@ -301,7 +301,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     + $" enc:{(_info.SourceHasEncryption ? "y" : "n")} areas:{_areas.Count}");
 
             // (Container/format internals are logged by NKitInput via IAsIso.FormatSummary under the
-            // [In] scope — so no separate line here.)
+            // [In] scope - so no separate line here.)
 
             _nextArea = AreaInfo.NextArea(-1, -1, -1, this.SizeOrig, 0, this.Type == ImageType.Wii ? AreaType.ImageHeader : AreaType.FileSystem, null, ++_areaNumber);
             _nextArea = setAreaBlockInfo(_nextArea, null, 0); //little hack so we fit in with the loop in Read() but grab the block info
@@ -341,7 +341,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         public AreaType Read(IBuffer buffer, out IFileSystemInfo fsInfo)
         {
             // Emit any buffered fix log lines now (first processing read) so they land in the
-            // progress area, after the params banner — the corrected layout was built earlier
+            // progress area, after the params banner - the corrected layout was built earlier
             // during construction when the header was read.
             if (_iso is Container.GcFixAsIso gcFixLog)
                 gcFixLog.FlushLog();
@@ -385,7 +385,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         if (_info.Mode == ReadMode.Fix)
                         {
                             // A decoded NKit source (IsWiiFixLayoutApplied) is already in its final,
-                            // correct on-disc layout AND at its correct decoded size — NKitAsIso
+                            // correct on-disc layout AND at its correct decoded size - NKitAsIso
                             // authored both. Skip the WHOLE Fix-mode header rework: the reflow
                             // (applyWiiPartitionTableFixes) AND the size normalisation
                             // (SizeOrig = FixSize). Overriding SizeOrig to the canonical FixSize
@@ -394,7 +394,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                             // back byte-correct). Leaving SizeOrig at its constructor value keeps the
                             // Setup() area list valid, so Fix streams byte-identical to Verify. When
                             // the decoded NKit's update was null-filled (recovery missing) the layout
-                            // is still correct — only the update bytes are zero — so the streamed CRC
+                            // is still correct - only the update bytes are zero - so the streamed CRC
                             // won't match the dat and FixWiiGcStep still brute-forces/reinserts it.
                             if (!_info.IsWiiFixLayoutApplied)
                             {
@@ -469,7 +469,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         //detect bad RVZ where the game WipePartition data is stored and not decrypted.
                         //Resolve the real RvzAsIso THROUGH any Fix decorator (WiiFixAsIso wraps the
                         //source for a Fix, so `_iso as RvzAsIso` would be null and NRE). Skip when a
-                        //Fix decorator has already corrected the layout — the served bytes are the
+                        //Fix decorator has already corrected the layout - the served bytes are the
                         //corrected disc, not raw RVZ partition data.
                         RvzAsIso rvzSrc = _iso as RvzAsIso
                                         ?? (_iso as Container.WiiFixAsIso)?.Inner as RvzAsIso;
@@ -484,7 +484,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         }
 
                         //NKitAsIso reinserted the (already encrypted+hashed) update partition from a
-                        //recovery file — pass it through unchanged (do not re-encrypt/re-hash). Reuse
+                        //recovery file - pass it through unchanged (do not re-encrypt/re-hash). Reuse
                         //the RVZ encrypted-partition marker so it is treated as source-encrypted.
                         if (this.Type == ImageType.Wii && _area.Type == AreaType.FileSystem && !_fsInfo.IsRvtH
                             && _iso is Container.NKitAsIso nkitEnc && nkitEnc.IsInsertedEncryptedPartition(_area.ImageOffset))
@@ -494,7 +494,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         }
 
                         //An inserted (placeholder) partition fed from a recovery file (_insertPtnStream)
-                        //is verbatim, already-encrypted+hashed on-disc data — e.g. a Fix that injects a
+                        //is verbatim, already-encrypted+hashed on-disc data - e.g. a Fix that injects a
                         //missing update partition from a recovery fix file. There is no parseable FST
                         //(the up-front read is skipped below while the insert stream is live), so it must
                         //NOT be decrypted / re-hashed / junk-filled. Mark it the same as the NKit-reinsert
@@ -517,7 +517,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         // Runs for EVERY mode: the peek never moves the read cursor and (now that the
                         // RVZ group decode is idempotent) re-reading a peeked group returns identical
                         // bytes, so the partition data area reaches the preprocessor with the whole
-                        // file system already available — no block holding, no inline FST caching.
+                        // file system already available - no block holding, no inline FST caching.
                         if (_fsInfo != null && !_fsInfo.InvalidPartitionData && _insertPtnStream == null)
                             readFileSystemUpFront(_area, _position);
 
@@ -530,7 +530,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
                     _nextArea = AreaInfo.NextArea(_area.ImageOffset, -1, -1, this.SizeOrig, nextArea, nextAreaType, _areas, ++_areaNumber);
 
-                    // [In] [WiiGc] Detail: reader's own per-area progress — the last line before a
+                    // [In] [WiiGc] Detail: reader's own per-area progress - the last line before a
                     // crash shows which area/offset/size the reader was on. Once per area transition
                     // (this block only runs when _position hits an area boundary), so no per-section cost.
                     ILogScope areaScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
@@ -560,7 +560,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     // Fix normally zero-fills the inter/trailing "Other" padding so the pipeline
                     // regenerates it deterministically. But a decoded NKit source (or a WiiFixAsIso
                     // decorator) already presents the disc in final layout WITH its correct trailing
-                    // junk materialised in the stream — zeroing it here would replace real junk with
+                    // junk materialised in the stream - zeroing it here would replace real junk with
                     // nulls and change the CRC (the Verify/Convert path, which reads this region,
                     // reproduces the correct junk). So when the layout is already applied, READ the
                     // Other region verbatim like every non-Fix path.
@@ -578,7 +578,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 buffer.ReInitialise(_area, true);
 
                 // Removed-block marks arrive as ABSOLUTE image offsets (invariant of whichever
-                // buffer the source decoder filled — e.g. a BufferStream cache block, which can
+                // buffer the source decoder filled - e.g. a BufferStream cache block, which can
                 // cover many sections). Take only the marks that fall within THIS section's image
                 // range, rebased to the section buffer, before the MetaData ctor derives FsOffset.
                 foreach (MetaData md in takeRemovedBlocks(_position, _position + pos))
@@ -599,9 +599,9 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 skip(); //after providing current data check if we can skip some of the current filesystem
 
                 // Bound the shared cache: release cached blocks below the returned-data mark on
-                // both layers — Layer-B (this _stream over the decoder) and, for a container that
+                // both layers - Layer-B (this _stream over the decoder) and, for a container that
                 // reads a raw archive entry (DefaultAsIso, possibly behind a Fix decorator),
-                // Layer-A (the raw source) via IReleasable — otherwise the raw-source cache grows
+                // Layer-A (the raw source) via IReleasable - otherwise the raw-source cache grows
                 // to hold the whole image when the source is a forward-only archive entry.
                 _stream.ReleaseTo(_position);
                 (_iso as IReleasable)?.ReleaseTo(_position);
@@ -625,7 +625,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                         // The legacy raw-NKit path needs the 0x8000 partition-header region that
                         // follows the disc header. It is NOT read up front (the constructor reads
                         // only the 0x50000 disc header so a decoded NKitAsIso source is not forced
-                        // to parse at Open). Read it here, on demand, via the BufferStream — a
+                        // to parse at Open). Read it here, on demand, via the BufferStream - a
                         // cached, cursor-safe peek that does not advance the sequential read.
                         byte[] ptnHdr = new byte[WiiConsts.WiiDiscHdrPtnSize];
                         long savedPos = _stream.Position;
@@ -662,7 +662,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         }
 
         // Reposition to a skip target through the stream reads actually flow through (_stream), not
-        // _iso directly — seeking _iso alone desyncs it from the BufferStream cursor and delivers
+        // _iso directly - seeking _iso alone desyncs it from the BufferStream cursor and delivers
         // wrong bytes at the skipped-to boundary. Skips are always forward.
         private void skipStreamTo(long imageOffset) => _stream.SafeSeek(imageOffset, SeekOrigin.Begin);
 
@@ -827,7 +827,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         // Parse the whole FST up front by PEEKING the (partition) data area's system region from the
         // stream, before any FileSystem-area section is emitted. Wii/GC keep the FST at the start of
         // the data area. The BufferStream peek idiom (negative count) reads each block WITHOUT moving
-        // the read cursor — it is forward-only clean (never rewinds a decoder). After this returns
+        // the read cursor - it is forward-only clean (never rewinds a decoder). After this returns
         // _fsInfo.FileSystem is populated, so the downstream preprocessor is a pure pass-through and
         // every emitted FileSystem section already knows its file coverage. Re-reading a peeked group
         // on the subsequent sequential pass is safe because the RVZ group decode is now idempotent.
@@ -879,7 +879,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // Seek to it using the cached stream, read the DOL header (18 section offsets +
             // sizes = 0xD8 bytes), compute its size, and register it as a virtual system file
             // so the SectionProcessor classifies the region as __main.dol rather than a gap.
-            // Skip for NKit sources — on a nkit.iso the DOL is at its compacted source position,
+            // Skip for NKit sources - on a nkit.iso the DOL is at its compacted source position,
             // not at MainDolOffset; NKitAsIso handles reconstruction via emitRelocatedDol.
             if (_fsInfo != null && _fsInfo.MainDolOffset > _fsInfo.FstOffset + _fsInfo.FstSize
                 && _fsInfo.NkitVersion == 0)
@@ -887,7 +887,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 long dolStreamPos = dataAreaStart + _fsInfo.MainDolOffset;
                 byte[] dolHdr = new byte[0x90 + 18 * 4]; // offsets 0x00-0x47 + sizes 0x90-0xD7
                 _stream.Position = dolStreamPos;
-                int dolRead = _stream.Read(dolHdr, 0, -dolHdr.Length); // peek — does not advance cursor
+                int dolRead = _stream.Read(dolHdr, 0, -dolHdr.Length); // peek - does not advance cursor
                 if (dolRead >= dolHdr.Length)
                     _fsInfo.RegisterRelocatedDol(dolHdr);
                 _stream.Position = dataAreaStart; // restore cursor

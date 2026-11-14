@@ -6,7 +6,7 @@ namespace Nanook.NKit
     /// <summary>
     /// A single structured log event. Created by <see cref="ILogScope"/> methods,
     /// routed to <see cref="ILogSink"/> implementations by the <see cref="ILogBus"/>.
-    /// Sinks decide how to format/filter — producers never build display strings.
+    /// Sinks decide how to format/filter - producers never build display strings.
     /// </summary>
     internal sealed class LogEvent
     {

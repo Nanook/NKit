@@ -16,12 +16,12 @@ namespace Nanook.NKit.Vfs
         public long Size { get; }
 
         /// <summary>
-        /// Returns 0 — combined hash is not available for a multi-extent file.
+        /// Returns 0 - combined hash is not available for a multi-extent file.
         /// </summary>
         public ulong XxHash => 0;
 
         /// <summary>
-        /// Returns 0 — combined CRC is not available for a multi-extent file.
+        /// Returns 0 - combined CRC is not available for a multi-extent file.
         /// </summary>
         public uint Crc => 0;
     }

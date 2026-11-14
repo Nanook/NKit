@@ -51,14 +51,14 @@ namespace Nanook.NKit.Engine.Core
 
             // ---- Autoscale + window config (computed BEFORE the pool so the pool is sized to the
             // maximum number of sections that can be live at once). ----
-            // Hard SAFETY ceiling only (not a target) — intentionally NOT the logical core count.
+            // Hard SAFETY ceiling only (not a target) - intentionally NOT the logical core count.
             // Processing is often I/O/decode-latency bound, so useful concurrency can exceed the
             // core count; the autoscaler's throughput brake (not this ceiling) governs the real
             // worker count and typically settles well below it.
             int maxWorkers = NKitCoreConsts.MaxWorkers;
             if (maxWorkers < 1) maxWorkers = 1;
 
-            // Worker count is fully autoscaled — there is no user "parallelism" knob any more. Start
+            // Worker count is fully autoscaled - there is no user "parallelism" knob any more. Start
             // at a sensible concurrency (the logical-processor count, clamped to the ceiling) so the
             // pool is warm from the outset; the autoscaler climbs above this when it clearly helps and
             // brakes on any throughput regression, so the ceiling is never a real constraint.
@@ -71,7 +71,7 @@ namespace Nanook.NKit.Engine.Core
 
             // The pool free-list MUST be at least the maximum number of sections that can be live at
             // once (window = maxWorkers + lookAhead), plus a small margin. If it were smaller, returned
-            // processors would be dropped and then re-created on the next Rent — recreating the
+            // processors would be dropped and then re-created on the next Rent - recreating the
             // expensive SectionProcessor/buffer every cycle. Sizing it to the window guarantees each
             // processor is constructed ONCE and reused for the whole run, matching the legacy design.
             int maxPoolFree = maxWorkers + lookAhead + NKitCoreConsts.PoolFreeMargin;
@@ -89,7 +89,7 @@ namespace Nanook.NKit.Engine.Core
             ILogScope inScope = stageLog?.ScopeFor(LogScopes.In);
             ILogScope preScope = stageLog?.ScopeFor(LogScopes.Pre);
             ILogScope outScope = stageLog?.ScopeFor(LogScopes.Out);
-            // Worker scale up/down is cross-cutting engine info: no pipeline STAGE scope — it uses
+            // Worker scale up/down is cross-cutting engine info: no pipeline STAGE scope - it uses
             // a "Core"-prefixed scope so it renders as "[Core]".
             ILogScope poolScope = stageLog?.ScopeFor(LogScopes.Core);
 
@@ -114,7 +114,7 @@ namespace Nanook.NKit.Engine.Core
 
             DateTime started = DateTime.UtcNow;
             string statsFile = NKitCoreConsts.StatsFile;
-            // "cap" is the HARD SAFETY CEILING (logical core count), not a target — the autoscaler
+            // "cap" is the HARD SAFETY CEILING (logical core count), not a target - the autoscaler
             // climbs on throughput/saturation and stops itself well before this in most workloads.
             // "procs" is how many SectionProcessors have been CONSTRUCTED: it must settle at roughly
             // the window size (maxWorkers + lookAhead) and then stop growing. If it keeps climbing,
@@ -148,7 +148,7 @@ namespace Nanook.NKit.Engine.Core
             try
             {
                 // GetConsumingEnumerable() throws OperationCanceledException internally when
-                // CompleteAdding() unblocks a waiting thread — use TryTake + ManualResetEventSlim
+                // CompleteAdding() unblocks a waiting thread - use TryTake + ManualResetEventSlim
                 // to wake immediately when a section arrives, with no exceptions or busy-spinning.
                 while (!completed.IsCompleted)
                 {
@@ -184,7 +184,7 @@ namespace Nanook.NKit.Engine.Core
                 try { context.Dispose(); } catch { }
                 // The BlockingCollection is created per image and owns internal SemaphoreSlim wait
                 // handles (OS handles). Dispose it so those handles are released at image completion
-                // rather than leaking one set per image across a long-lived host (the UI) — handle
+                // rather than leaking one set per image across a long-lived host (the UI) - handle
                 // and working-set creep even when the managed heap stays flat.
                 try { completed.Dispose(); } catch { }
                 try { completedReady.Dispose(); } catch { }
@@ -424,10 +424,10 @@ namespace Nanook.NKit.Engine.Core
                 context.PublishAreaFileSystem(areaNo, fsInfo);
                 _lastAreaNo = areaNo;
 
-                // [In] Detail: per-area geometry, CONFIRMED once the boundary is resolved (coarse —
+                // [In] Detail: per-area geometry, CONFIRMED once the boundary is resolved (coarse -
                 // once per area, not per section; guarded so the hot path does nothing when off).
                 // This is the IImage reader's area sizing/typing, distinct from the container decode
-                // and from [Pre]'s filesystem-parse confirmation — helps localise a bug to the
+                // and from [Pre]'s filesystem-parse confirmation - helps localise a bug to the
                 // reader's area walk. All values are already in hand (no extra work).
                 if (_log != null && _log.IsEnabled(LogLevel.Detail))
                     _log.Log(LogLevel.Detail,
@@ -473,7 +473,7 @@ namespace Nanook.NKit.Engine.Core
             if (fsInfo?.FileSystem != null)
                 _preProcessor.GetFiles(fsInfo, buf, fsInfo.FileSystem.Files, ref _fstOutIndex);
 
-            // [Pre] Detail: at each area start, report the resolved file count (coarse — per area).
+            // [Pre] Detail: at each area start, report the resolved file count (coarse - per area).
             if (areaStart && _log != null && _log.IsEnabled(LogLevel.Detail))
             {
                 int files = fsInfo?.FileSystem?.Files?.Count ?? 0;
@@ -537,7 +537,7 @@ namespace Nanook.NKit.Engine.Core
             _overseer.SectionProcessed(ns);
             _stepContext.Step.Process(ns);
 
-            // [Out] Detail: per-area completion (coarse — on the last section of an area, ordered).
+            // [Out] Detail: per-area completion (coarse - on the last section of an area, ordered).
             if (sec.IsLastInArea && _log != null && _log.IsEnabled(LogLevel.Detail))
                 _log.Log(LogLevel.Detail,
                     $"Area {sec.AreaIndex} completed (emitted through 0x{sec.ImageOffset + sec.Length:X})");

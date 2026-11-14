@@ -40,7 +40,7 @@ namespace Nanook.NKit.SampleProcessingApp
             string taskArg = args.Length > 1 ? args[1].ToLowerInvariant() : "scan";
             string outputDir = args.Length > 2 ? args[2] : Path.Combine(Directory.GetCurrentDirectory(), "nkit-sample-out");
 
-            // Optional: --replacements <file> — pipe-separated discpath|localpath lines
+            // Optional: --replacements <file> - pipe-separated discpath|localpath lines
             string replacementsFile = null;
             for (int i = 3; i < args.Length - 1; i++)
                 if (args[i].ToLowerInvariant() == "--replacements")
@@ -52,7 +52,7 @@ namespace Nanook.NKit.SampleProcessingApp
             // ---- 1. Configuration ─────────────────────────────────────────────────────────────
             // For task=rebuild: run NKit's extract task (100% file coverage via SkipToImageOffsetSet)
             // to a temp directory. After extraction, WiiDiscRebuildHandler reads files from disk.
-            // No injection into NKitProcessor — the extract task writes to disk in the normal way.
+            // No injection into NKitProcessor - the extract task writes to disk in the normal way.
             string nkitTask = taskArg == "rebuild" ? "extract" : "convert";
             Action<string, LogLevel> consoleLog = (message, level) => Console.WriteLine($"[{level}] {message}");
 
@@ -111,7 +111,7 @@ namespace Nanook.NKit.SampleProcessingApp
                     byte[] capturedImageHeader     = null;
                     byte[] capturedPartitionHeader = null;
 
-                    // Capture the last PartitionHeader — on standard Wii discs UPDATE comes
+                    // Capture the last PartitionHeader - on standard Wii discs UPDATE comes
                     // before DATA, so the last one captured is always the DATA (game) partition.
                     processor.OnSection = block =>
                     {
@@ -133,7 +133,7 @@ namespace Nanook.NKit.SampleProcessingApp
                     string dataDir = System.IO.Path.Combine(extractRoot, "DATA");
                     if (!System.IO.Directory.Exists(dataDir))
                     {
-                        // Look one level deeper — NKit may have created a named subdirectory
+                        // Look one level deeper - NKit may have created a named subdirectory
                         string sub = System.IO.Directory.GetDirectories(extractRoot).FirstOrDefault();
                         if (sub != null && System.IO.Directory.Exists(System.IO.Path.Combine(sub, "DATA")))
                             extractRoot = sub;
@@ -147,7 +147,7 @@ namespace Nanook.NKit.SampleProcessingApp
                         WiiDiscRebuildHandler.LoadReplacements(replacementsFile));
                     rebuildHandler.Build(capturedImageHeader, capturedPartitionHeader, extractRoot);
 
-                    // Clean up NKit's extracted files — the rebuilt ISO is all we need
+                    // Clean up NKit's extracted files - the rebuilt ISO is all we need
                     try { System.IO.Directory.Delete(nkitTempOut, recursive: true); }
                     catch (Exception ex) { Console.WriteLine($"  (extract cleanup failed: {ex.Message})"); }
 
@@ -163,7 +163,7 @@ namespace Nanook.NKit.SampleProcessingApp
                 // ---- 5b. For extract: run a second pass for geometry recovery ----------------
                 if (handler is ExtractHandler)
                 {
-                    // Single-pass now handles overlaps — no second pass needed.
+                    // Single-pass now handles overlaps - no second pass needed.
                 }
 
                 // ---- 6. Read the final result -------------------------------------------------

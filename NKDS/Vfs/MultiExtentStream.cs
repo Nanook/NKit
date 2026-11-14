@@ -16,7 +16,7 @@ namespace Nanook.NKit.Vfs
         private long _position;
         private bool _disposed;
 
-        // Cached streams per extent — opened on first access to each extent
+        // Cached streams per extent - opened on first access to each extent
         private readonly Stream[] _extentStreams;
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Nanook.NKit.Vfs
                         _extentStreams[i] = null;
                     }
                 }
-                // Do not dispose _reader — it is shared/pooled and managed externally
+                // Do not dispose _reader - it is shared/pooled and managed externally
             }
             base.Dispose(disposing);
         }

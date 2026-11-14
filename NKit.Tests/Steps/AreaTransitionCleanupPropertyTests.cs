@@ -294,7 +294,7 @@ namespace NKit.Tests.Engine.Output
         /// **Validates: Requirements 8.1, 8.2**
         ///
         /// Property 10 (supplementary): Area transition cleanup handles overlaps
-        /// at various progress states — some just started (TotalWritten near 0),
+        /// at various progress states - some just started (TotalWritten near 0),
         /// some nearly complete, and some partially done. All streams must be
         /// disposed regardless of their progress.
         /// </summary>

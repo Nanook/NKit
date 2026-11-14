@@ -183,7 +183,7 @@ namespace NKit.Tests.Engine.Output
 
             return Prop.ForAll(testGen.ToArbitrary(), data =>
             {
-                // Create file list — some will be overlaps, some won't
+                // Create file list - some will be overlaps, some won't
                 List<TestFsFile> files = Enumerable.Range(0, data.FileCount)
                     .Select(i => new TestFsFile($"file{i}.m2ts", "BDMV/STREAM",
                         data.BaseOffset + ((long)i * 0x100000), 0x50000))

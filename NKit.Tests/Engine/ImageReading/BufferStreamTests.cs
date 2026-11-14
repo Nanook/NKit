@@ -9,7 +9,7 @@ namespace NKit.Tests.Engine.ImageReading
     /// <summary>
     /// Contract tests for <see cref="BufferStream"/> (the PeekStream replacement built on
     /// NKitStream's BlockBufferedStream). Exercises both a seekable base (fast path) and a
-    /// forward-only base (buffered path) — the latter is the case PeekStream could not seek
+    /// forward-only base (buffered path) - the latter is the case PeekStream could not seek
     /// backward over reliably and which caused the Wii-fix-from-archive regression.
     /// </summary>
     [Trait("Area", "Engine")]
@@ -26,7 +26,7 @@ namespace NKit.Tests.Engine.ImageReading
             return d;
         }
 
-        // A base stream that reports CanSeek=false and refuses backward seeks — models a
+        // A base stream that reports CanSeek=false and refuses backward seeks - models a
         // forward-only archive entry (SourceStream over a zip).
         private sealed class ForwardOnlyStream : Stream
         {
@@ -171,7 +171,7 @@ namespace NKit.Tests.Engine.ImageReading
         public void CanSeekTo_SeekableBase_AlwaysTrue()
         {
             // A seekable source is served directly (uncached), so any offset is reachable for
-            // free — even one far beyond the seek-reach limit.
+            // free - even one far beyond the seek-reach limit.
             using BufferStream c = new BufferStream(new VirtualForwardStream(_bigLength, seekable: true));
             Assert.True(c.CanSeekTo(0));
             Assert.True(c.CanSeekTo(_bigLength - 1));
@@ -268,7 +268,7 @@ namespace NKit.Tests.Engine.ImageReading
             // Regression guard for the PS3/WiiU OOM: a consumer reading a large forward-only
             // source strictly forward and calling ReleaseTo after each chunk (as the Image readers
             // do) must not retain the whole source. We can't measure RAM directly, but the floor
-            // advancing means blocks below it were freed — a read there now throws. If ReleaseTo
+            // advancing means blocks below it were freed - a read there now throws. If ReleaseTo
             // were absent (the bug), every block from 0 to the frontier would stay resident.
             const long total = 2L * 1024 * 1024 * 1024; // 2 GiB virtual source
             const int chunk = 32 * 1024 * 1024;         // 32 MiB reads

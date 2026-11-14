@@ -29,7 +29,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 4.6, 1.1, 2.1**
         ///
-        /// Property 1: Round-trip preservation — Arbitrary partition data round-trips correctly.
+        /// Property 1: Round-trip preservation - Arbitrary partition data round-trips correctly.
         ///
         /// For any audio partition byte array with arbitrary content (length is a multiple
         /// of BlockSize), the trim-and-reconstruct cycle produces byte-identical output.
@@ -94,7 +94,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 4.6, 1.1, 2.1**
         ///
-        /// Property 1: Round-trip preservation — Partition with non-aligned leading zeros.
+        /// Property 1: Round-trip preservation - Partition with non-aligned leading zeros.
         ///
         /// For any audio partition where the first non-zero byte falls at a non-aligned
         /// position (not on a BlockSize boundary), the round-trip still preserves all data
@@ -155,7 +155,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 4.6, 1.1, 2.1**
         ///
-        /// Property 1: Round-trip preservation — Partition with no leading zeros.
+        /// Property 1: Round-trip preservation - Partition with no leading zeros.
         ///
         /// When the first byte is non-zero (no leading zeros), TrimOffset is 0 and the
         /// entire partition is stored verbatim. Round-trip produces identical output.
@@ -210,7 +210,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 4.6, 1.1, 2.1**
         ///
-        /// Property 1: Round-trip preservation — All-zeros partition round-trips correctly.
+        /// Property 1: Round-trip preservation - All-zeros partition round-trips correctly.
         ///
         /// When the entire partition is zeros, TrimOffset equals partition size, no data
         /// is stored, and reconstruction fills the entire buffer with zeros (matching original).
@@ -254,7 +254,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 4.6, 1.1, 2.1**
         ///
-        /// Property 1: Round-trip preservation — Default BlockSize (64 KiB) round-trip.
+        /// Property 1: Round-trip preservation - Default BlockSize (64 KiB) round-trip.
         ///
         /// Verifies the round-trip property using the default 64 KiB BlockSize to confirm
         /// correctness at the actual production block size.

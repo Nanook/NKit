@@ -94,10 +94,10 @@ namespace NKitDataStore.Tests
             data[0] = 0xFF; // non-zero before the offset region
             data[BlockSize + 50] = 0x01; // non-zero within the scanned region
 
-            // Act — scan starting at offset BlockSize
+            // Act - scan starting at offset BlockSize
             long result = LeadingZeroScanner.FindFirstNonZero(data, BlockSize, BlockSize);
 
-            // Assert — position 50 relative to dataOffset
+            // Assert - position 50 relative to dataOffset
             Assert.Equal(50, result);
         }
 

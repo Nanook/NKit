@@ -217,7 +217,7 @@ namespace Nanook.NKit
                 List<FolderGroupInfo> folderGroups = SyntheticSourceDetector.DetectFolderGroups(images);
 
                 // Also detect Loadiine folders on disk (code/content/meta structure without tmd/app files).
-                // Skip when the trigger was a single WUA file (hasRealWuaImages with no dir inputs) —
+                // Skip when the trigger was a single WUA file (hasRealWuaImages with no dir inputs) -
                 // we don't want to probe the WUA file's parent directory for Loadiine subdirs.
                 bool skipLoadiineScan = hasRealWuaImages && !images.Any(sf => sf.ImageType != SourceImageType.Wua);
                 if (!skipLoadiineScan)
@@ -359,10 +359,10 @@ namespace Nanook.NKit
         {
             log?.Trace(() => Log.Divider);
 
-            // Detail: one summary line per source file — status, format/archive type, total size and
+            // Detail: one summary line per source file - status, format/archive type, total size and
             // the make-up (image parts / index / archive parts). Tagged [SourceFile] so the scan is
             // filterable. The per-part breakdown below is ALSO Detail now (was Debug/Trace) so a
-            // detail run shows exactly which files/parts compose the source and their sizes — the
+            // detail run shows exactly which files/parts compose the source and their sizes - the
             // information needed when a split/archived/indexed source is picked up wrongly.
             // Prefer sf.Length (sum of image-part sizes); fall back to summing the parts directly in
             // case it has not been populated for this source shape.
@@ -532,7 +532,7 @@ namespace Nanook.NKit
                     // disambiguate a genuine duplicate name (see DataStoreAsIso.FormatDuplicateName).
                     // Because "{id}" cannot collide with a real dump name (unlike a bare " (123)",
                     // which matches legitimate year/rev suffixes such as "... (2003)"), we can parse
-                    // it back directly with no datastore validation — a real name ending in "{n}" is
+                    // it back directly with no datastore validation - a real name ending in "{n}" is
                     // never produced by any dump convention.
                     if (Container.DataStoreAsIso.TryParseDuplicateName(sf.Name, out string baseName, out long dsid))
                     {
@@ -562,7 +562,7 @@ namespace Nanook.NKit
             cleanUpIndexFiles(items);
 
             // Remove redundant GDI index files when a CUE index in the same container
-            // references the same track files. Redump GDI files are not valid — CUE is
+            // references the same track files. Redump GDI files are not valid - CUE is
             // the authoritative index for these archives.
             removeRedundantGdiFiles(items);
 
@@ -636,7 +636,7 @@ namespace Nanook.NKit
             // all surrounding whitespace so double-spaces never appear:
             //   "one : two"  → "one - two"
             //   "one: two"   → "one - two"
-            //   "one:two"    → "one-two"   (bare colon — handled by the Replace below)
+            //   "one:two"    → "one-two"   (bare colon - handled by the Replace below)
             name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+:\s*|\s*:\s+", " - ");
             name = name.Replace(":", "-");
 
@@ -826,7 +826,7 @@ namespace Nanook.NKit
         /// Removes GDI index files that are redundant with a CUE index file in the
         /// same container. Two index files are considered redundant when any filenames
         /// in their Parts lists intersect (case-insensitive). Redump GDI files are not
-        /// valid — CUE is the authoritative index for these archives.
+        /// valid - CUE is the authoritative index for these archives.
         /// </summary>
         private static void removeRedundantGdiFiles(List<FileItem> files)
         {

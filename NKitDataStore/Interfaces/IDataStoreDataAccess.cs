@@ -143,7 +143,7 @@ namespace NKitDataStore.Interfaces
 
         /// <summary>
         /// Returns a lightweight snapshot of the index file health for the specified set.
-        /// Reads only the in-memory header — no disk I/O. Safe to call at any time.
+        /// Reads only the in-memory header - no disk I/O. Safe to call at any time.
         /// </summary>
         IndexHealthInfo GetIndexHealth(string setName);
 

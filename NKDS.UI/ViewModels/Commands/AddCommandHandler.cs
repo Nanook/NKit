@@ -29,7 +29,7 @@ public class AddCommandHandler : ICommandHandler
             IReadOnlyList<ImageSessionModel> sessions = await ctx.DataStoreService.Sessions.FirstAsync();
             if (sessions.Count == 0 || ctx.Toolbar.SelectedSetName == null) return RxVoid.Default;
 
-            // Filter out "All" — only real set names are valid targets for Add
+            // Filter out "All" - only real set names are valid targets for Add
             List<string> availableSetNames = ctx.Toolbar.AvailableSetNames
                 .Where(n => !string.Equals(n, SessionResolver.AllSetsName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -77,7 +77,7 @@ public class AddCommandHandler : ICommandHandler
                     using NkdsOperations ops = new NkdsOperations();
                     List<string> files = dialogVm.SelectedFiles.ToList();
 
-                    // Phase 1: Pre-Scan — discover all candidate images upfront
+                    // Phase 1: Pre-Scan - discover all candidate images upfront
                     IReadOnlyList<CandidateImage> candidates = await ops.PreScanAsync(
                         dataStorePath, setName, files,
                         keyFixPaths: keyFixPaths,
@@ -89,10 +89,10 @@ public class AddCommandHandler : ICommandHandler
                     // Clear sort so pre-populated rows appear in scan order (processing order)
                     await Dispatcher.UIThread.InvokeAsync(() => ctx.ImageList.ClearSort());
 
-                    // Phase 2: Pre-Populate — insert Pending rows into Image_List before processing
+                    // Phase 2: Pre-Populate - insert Pending rows into Image_List before processing
                     await ctx.SyncService.PrePopulateAsync(setName, dataStorePath, candidates);
 
-                    // Phase 3: Process — execute pipeline for each candidate sequentially
+                    // Phase 3: Process - execute pipeline for each candidate sequentially
                     // Detect aux mode: if an aux store already exists in the directory, enable it.
                     // This ensures Xbox dual mode (aux + split) works when aux mode was previously configured.
                     string? auxModeForAdd = null;
@@ -106,7 +106,7 @@ public class AddCommandHandler : ICommandHandler
                                 auxModeForAdd = "y";
                         }
                     }
-                    catch { /* ignore — aux detection failure is non-fatal */ }
+                    catch { /* ignore - aux detection failure is non-fatal */ }
 
                     OperationResult result = await ops.AddPreScannedAsync(
                         dataStorePath, setName, candidates,
@@ -154,13 +154,13 @@ public class AddCommandHandler : ICommandHandler
                 // Flush deferred Sessions emissions from the close/reopen cycle.
                 await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
 
-                // Resume without a full rebuild — pre-populated rows are already in _allImages
+                // Resume without a full rebuild - pre-populated rows are already in _allImages
                 // and committed rows have been updated in-place via InsertImageAsync.
                 ctx.ImageList.ResumeFiltersWithoutRebuild();
 
                 // NOTE: deliberately NO post-add ReconcileAsync here. Committed images are already
                 // shown via the live onImageCommitted -> InsertImageAsync updates, so reconcile was
-                // only a safety-net merge — but it also PRUNED terminal outcome rows that have no
+                // only a safety-net merge - but it also PRUNED terminal outcome rows that have no
                 // backing store image (a rolled-back duplicate shows "Skipped"), making them flash
                 // and vanish. We now leave those outcome rows in place; a manual Refresh re-queries
                 // the store and clears them. (A rare committed-but-not-live-inserted image likewise
@@ -175,7 +175,7 @@ public class AddCommandHandler : ICommandHandler
                 // Flush deferred Sessions emissions while still suppressed
                 await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
                 ctx.ImageList.ResumeFiltersWithoutRebuild();
-                // No ReconcileAsync needed — cancelled images weren't committed to DataStore
+                // No ReconcileAsync needed - cancelled images weren't committed to DataStore
                 ctx.ErrorNotification.PublishCancellation("Add Images");
             }
             catch (Exception ex)
@@ -183,7 +183,7 @@ public class AddCommandHandler : ICommandHandler
                 // Flush deferred Sessions emissions while still suppressed
                 await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
                 ctx.ImageList.ResumeFiltersWithoutRebuild();
-                // No ReconcileAsync needed — error path, rows are preserved as-is
+                // No ReconcileAsync needed - error path, rows are preserved as-is
                 ctx.ErrorNotification.PublishOperationError($"Add Images failed: {ex.Message}");
             }
             finally

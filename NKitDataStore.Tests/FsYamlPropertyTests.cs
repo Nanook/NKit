@@ -58,7 +58,7 @@ namespace NKitDataStore.Tests
         {
             FsYaml yaml = new FsYaml();
 
-            // Always add the "." root — ToYaml() always emits "fs:" and FromYaml()
+            // Always add the "." root - ToYaml() always emits "fs:" and FromYaml()
             // always creates a "." root when it encounters "fs:", so the round-trip
             // always produces at least one filesystem root.
             FsYamlNode root = yaml.AddFileSystem(".", 0);

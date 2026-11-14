@@ -13,7 +13,7 @@ namespace NKitDataStore.Tests
     /// </summary>
     public class NkFsPipelineIntegrationTests
     {
-        #region 20.1 — Constants and Format Detection Tests
+        #region 20.1 - Constants and Format Detection Tests
 
         /// <summary>
         /// Validates: Requirements 2.1
@@ -84,7 +84,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 20.2 — Loading Boundary Fallback Tests
+        #region 20.2 - Loading Boundary Fallback Tests
 
         /// <summary>
         /// When NkFs binary data is present, it should be loaded via NkFs.FromBytes()
@@ -207,7 +207,7 @@ namespace NKitDataStore.Tests
             }
             catch
             {
-                // NkFs deserialization failed — fall back to YAML
+                // NkFs deserialization failed - fall back to YAML
                 result = null;
             }
 
@@ -227,7 +227,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 20.3 — Mount Handler Navigation Tests
+        #region 20.3 - Mount Handler Navigation Tests
 
         /// <summary>
         /// FilesystemMountHandler.ListFolder enumerates root children via NkFs.GetChildren(0).
@@ -245,7 +245,7 @@ namespace NKitDataStore.Tests
 
             NkFs nkfs = NkFs.FromFsYaml(fsYaml);
 
-            // Enumerate root children (index 0) — same as FilesystemMountHandler.ListFolder
+            // Enumerate root children (index 0) - same as FilesystemMountHandler.ListFolder
             List<(int index, NkFsEntry entry)> children = nkfs.GetChildren(0).ToList();
 
             Assert.Equal(3, children.Count);
@@ -274,7 +274,7 @@ namespace NKitDataStore.Tests
 
             NkFs nkfs = NkFs.FromFsYaml(fsYaml);
 
-            // Resolve a nested path — same as FilesystemMountHandler.FindInFolder
+            // Resolve a nested path - same as FilesystemMountHandler.FindInFolder
             int dirIdx = nkfs.ResolvePath("data");
             Assert.True(dirIdx > 0);
             NkFsEntry dirEntry = nkfs.GetEntry(dirIdx);
@@ -446,7 +446,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 20.4 — Virtual Filesystem.yaml and VfsStreamHelper Tests
+        #region 20.4 - Virtual Filesystem.yaml and VfsStreamHelper Tests
 
         /// <summary>
         /// When NkFs data is present, the system mode should add a virtual Filesystem.yaml entry.
@@ -626,7 +626,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 20.5 — Formatter Write Verification and Backward Compatibility Tests
+        #region 20.5 - Formatter Write Verification and Backward Compatibility Tests
 
         /// <summary>
         /// Verify that the pipeline formatter write pattern produces NkFs binary
@@ -723,7 +723,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// The backward compatibility conversion is in-memory only.
-        /// Converting YAML to NkFs does not produce a write-back — it only creates an NkFs object.
+        /// Converting YAML to NkFs does not produce a write-back - it only creates an NkFs object.
         /// Validates: Requirements 11.3
         /// </summary>
         [Fact]
@@ -743,7 +743,7 @@ namespace NKitDataStore.Tests
             FsYaml reparsed = FsYaml.FromBytes(yamlBytes);
             Assert.Equal(parsed.ToYaml(), reparsed.ToYaml());
 
-            // The NkFs object exists only in memory — no ToBytes() is called for write-back
+            // The NkFs object exists only in memory - no ToBytes() is called for write-back
             // We verify the NkFs is usable without any side effects
             Assert.NotNull(nkfs);
             Assert.Equal(2, nkfs.EntryCount);

@@ -303,7 +303,7 @@ namespace NKit.Tests.Engine.ImageReading
             List<FileItem> files = ListDataStoreFiles(setName, "*");
 
             // Assert: Only the Xbox ISO should be matching (CUE/GDI folder entries are
-            // non-matching containers — only their internal .cue/.gdi index files are processable)
+            // non-matching containers - only their internal .cue/.gdi index files are processable)
             Assert.Single(files);
 
             // Xbox XISO should have .iso extension
@@ -375,7 +375,7 @@ namespace NKit.Tests.Engine.ImageReading
                     break;
 
                 case AreaType.Other:
-                    // Xbox video partitions — no additional metadata beyond base
+                    // Xbox video partitions - no additional metadata beyond base
                     break;
             }
 

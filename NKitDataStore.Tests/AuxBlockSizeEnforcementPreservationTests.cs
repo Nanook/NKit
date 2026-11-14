@@ -12,7 +12,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 3.1, 3.2, 3.5**
     ///
-    /// Property 2: Preservation — No-Aux and Matching-Aux Behavior Unchanged
+    /// Property 2: Preservation - No-Aux and Matching-Aux Behavior Unchanged
     ///
     /// These tests are EXPECTED TO PASS on unfixed code. They confirm baseline behavior
     /// that must be preserved after the fix is applied:
@@ -61,7 +61,7 @@ namespace NKitDataStore.Tests
             string testDir = Path.Combine(_tempDir, Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(testDir);
 
-            // Create a set with the specified block size — no aux store in directory
+            // Create a set with the specified block size - no aux store in directory
             SetInfo setInfo;
             using (var store = new DataStore(testDir))
             {
@@ -74,7 +74,7 @@ namespace NKitDataStore.Tests
             if (!passed)
             {
                 _output.WriteLine(
-                    $"FAILURE: Created set with block size {blockSize} in directory WITHOUT aux store — " +
+                    $"FAILURE: Created set with block size {blockSize} in directory WITHOUT aux store - " +
                     $"got {setInfo.BlockSize} instead of expected {blockSize}.");
             }
 
@@ -121,7 +121,7 @@ namespace NKitDataStore.Tests
             {
                 _output.WriteLine(
                     $"FAILURE: Created primary set with block size {blockSize} in directory WITH aux store " +
-                    $"having SAME block size {blockSize} — got {primaryInfo.BlockSize} instead of expected {blockSize}.");
+                    $"having SAME block size {blockSize} - got {primaryInfo.BlockSize} instead of expected {blockSize}.");
             }
 
             return passed;

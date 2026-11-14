@@ -22,7 +22,7 @@ namespace NKit.Tests.Settings.Cli
         [Fact]
         public void ShortenedVerbAliases_Removed()
         {
-            // Shortened task names (vfy/dd/fx/cnv/ext) were dropped — only full verb names resolve,
+            // Shortened task names (vfy/dd/fx/cnv/ext) were dropped - only full verb names resolve,
             // so a shortened token is treated as an input (drag-drop), not a verb.
             ParsedCommand c = CliParser.Parse(new[] { "vfy", "game.iso" });
             Assert.Null(c.Verb);
@@ -93,7 +93,7 @@ namespace NKit.Tests.Settings.Cli
 
         [Fact]
         public void FlagPrefix_NonSystemLeader_IsUnknownOption() =>
-            // "--rvz:format" — leader "rvz" is not a system, so the flag does not resolve.
+            // "--rvz:format" - leader "rvz" is not a system, so the flag does not resolve.
             Assert.Throws<CliException>(() => CliParser.Parse(new[] { "convert", "game.iso", "--rvz:format", "x" }));
 
         [Fact]

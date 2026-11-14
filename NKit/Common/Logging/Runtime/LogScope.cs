@@ -16,7 +16,7 @@ namespace Nanook.NKit.Runtime
     /// <para>
     /// Scopes are safe to use concurrently: a single scope may be logged from many worker threads,
     /// and children may be created concurrently. The only mutable state is <see cref="Status"/>
-    /// (guarded) — properties are immutable once the scope is created.
+    /// (guarded) - properties are immutable once the scope is created.
     /// </para>
     /// </summary>
     internal sealed class LogScope : ILogScope

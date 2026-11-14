@@ -99,7 +99,7 @@ namespace NKit.Tests.Engine.Output
         [Property(MaxTest = 200)]
         public Property LowerPriorityFilesystemEntries_AreExcluded()
         {
-            // Generate a preferred filesystem type (at least Iso9660 — to have something to filter)
+            // Generate a preferred filesystem type (at least Iso9660 - to have something to filter)
             Gen<FsType> preferredFsGen = Gen.Elements(FsType.Iso9660, FsType.Joliet, FsType.Udf);
 
             // Generate a set of FidelityFileList entries with mixed filesystem types
@@ -181,7 +181,7 @@ namespace NKit.Tests.Engine.Output
                         size: 0x5000))
                     .ToList();
 
-                // Determine preferred type — should be the MAX of all candidate FsTypes
+                // Determine preferred type - should be the MAX of all candidate FsTypes
                 FsType preferred = DeterminePreferredFsType(candidates);
                 FsType expectedPreferred = candidateFsTypes.Max();
 

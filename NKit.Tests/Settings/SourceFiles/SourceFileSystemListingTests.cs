@@ -220,7 +220,7 @@ namespace NKit.Tests.Settings.SourceFiles
             Assert.All(folderEntries, f => Assert.False(f.IsMatch, "CUE folder entries should be non-matching"));
 
             // Duplicate names get the unambiguous {imageId} marker appended on the folder entries
-            // (via DataStoreAsIso.FormatDuplicateName — routed through the same helper the listing
+            // (via DataStoreAsIso.FormatDuplicateName - routed through the same helper the listing
             // uses so the expected format can't drift from the production format).
             List<string> names = folderEntries.Select(f => f.PathFileName).OrderBy(n => n).ToList();
             Assert.Contains(Nanook.NKit.Container.DataStoreAsIso.FormatDuplicateName("Game Title", imageId1), names);

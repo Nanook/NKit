@@ -109,7 +109,7 @@ namespace NKit.Tests.Engine.Output
                 }
                 catch when (splitWriterActive && targetTracker == splitTracker)
                 {
-                    // Split write failed — mark as failed, fall back to primary
+                    // Split write failed - mark as failed, fall back to primary
                     splitFailed = true;
                     primaryTracker.Write(gap.ImageOffset, gap.Size);
                     routingResults.Add((WriterTarget.Primary, gap));
@@ -124,7 +124,7 @@ namespace NKit.Tests.Engine.Output
         #region Property Tests
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — All gaps route to split
+        /// Property 5: Game Partition Filler Routing to Split - All gaps route to split
         ///
         /// For any set of gap/filler records in an AreaType.FileSystem section when
         /// _splitWriter is active and not failing, ALL gap data SHALL be written
@@ -167,7 +167,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — Offsets preserved
+        /// Property 5: Game Partition Filler Routing to Split - Offsets preserved
         ///
         /// For any gap/filler data routed to the split writer, the image offset and
         /// size of each write SHALL match the original gap record exactly.
@@ -207,7 +207,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — Split inactive routes to primary
+        /// Property 5: Game Partition Filler Routing to Split - Split inactive routes to primary
         ///
         /// For any gap/filler data in an AreaType.FileSystem section when _splitWriter is
         /// NOT active (null), ALL data SHALL route to the primary writer instead.
@@ -247,7 +247,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — No data goes to aux writer
+        /// Property 5: Game Partition Filler Routing to Split - No data goes to aux writer
         ///
         /// For any AreaType.FileSystem section, regardless of whether aux or split writers
         /// are active, gap/filler data SHALL NEVER be routed to the shared aux writer.
@@ -283,7 +283,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — Routing is deterministic
+        /// Property 5: Game Partition Filler Routing to Split - Routing is deterministic
         ///
         /// For any set of gap records and split writer state, calling the routing logic
         /// multiple times with the same inputs SHALL produce the same routing decisions.
@@ -327,7 +327,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 5: Game Partition Filler Routing to Split — Ordering preserved
+        /// Property 5: Game Partition Filler Routing to Split - Ordering preserved
         ///
         /// For any set of gap records, the split writer SHALL receive writes in the
         /// same order as the gaps appear in the section (ordering is preserved).

@@ -277,7 +277,7 @@ namespace Nanook.NKit.Container
 
             // Dreamcast GD-ROM stored as ImageFormat.Chd: rehydrate the CHD track metadata from the
             // loose chd.meta.txt file so this source presents identically to a live CHD file. Unlike
-            // the CUE/GDI folder-index path we deliberately do NOT set SourceFile.IndexFile — a live
+            // the CUE/GDI folder-index path we deliberately do NOT set SourceFile.IndexFile - a live
             // CHD has no external index (its layout lives in ChdMetaData), and leaving IndexFile null
             // lets SourceFile.Initialised() keep ImageType=Chd, which is what routes export through
             // the GdRomWriter (ChdGdRomcue) path. The Iso9660 Image reader consumes MetaData exactly
@@ -312,10 +312,10 @@ namespace Nanook.NKit.Container
                             _context.Log?.Info(() => $"Rehydrated CHD metadata from '{Steps.Shared.DataStoreIso9660Formatter.ChdMetaFileName}' ({trackLines.Count} tracks, blockSize {chdBlockSize}, media {this.MetaData?.MediaType}).");
                         }
                         else
-                            _context.Log?.Error(() => $"CHD meta file present but unusable (tracks {trackLines.Count}, blockSize {chdBlockSize}) — deduped Dreamcast CHD export may be incorrect.");
+                            _context.Log?.Error(() => $"CHD meta file present but unusable (tracks {trackLines.Count}, blockSize {chdBlockSize}) - deduped Dreamcast CHD export may be incorrect.");
                     }
                     else
-                        _context.Log?.Error(() => $"ImageFormat.Chd image '{image.Name}' has no {Steps.Shared.DataStoreIso9660Formatter.ChdMetaFileName} — export cannot reconstruct CHD geometry.");
+                        _context.Log?.Error(() => $"ImageFormat.Chd image '{image.Name}' has no {Steps.Shared.DataStoreIso9660Formatter.ChdMetaFileName} - export cannot reconstruct CHD geometry.");
                 }
                 catch (Exception ex)
                 {
@@ -464,7 +464,7 @@ namespace Nanook.NKit.Container
                     }
 
                     // ImageFormat.Chd already presented itself as a live-CHD shape (single .chd
-                    // ImageFiles entry, no IndexFile, Initialised() called) above — skip the
+                    // ImageFiles entry, no IndexFile, Initialised() called) above - skip the
                     // IndexFile/Initialised handling that would otherwise force ImageType to Cue/Gdi.
                     if (_format != ContainerType.Chd)
                     {
@@ -622,7 +622,7 @@ namespace Nanook.NKit.Container
         // entry names. We append the image id in an UNAMBIGUOUS marker: "Name {id}". Braces are
         // never used by redump/no-intro dump names (unlike a bare " (123)", which collides with
         // legitimate year/rev suffixes such as "... (2003)"), so a "{id}" suffix can always be
-        // parsed back with zero false positives — no datastore lookup needed to validate it. This
+        // parsed back with zero false positives - no datastore lookup needed to validate it. This
         // is the single source of truth for the format; all write and parse sites route through here.
         private static readonly System.Text.RegularExpressions.Regex _DuplicateNameSuffix =
             new System.Text.RegularExpressions.Regex(@"^(.*) \{(\d+)\}$", System.Text.RegularExpressions.RegexOptions.Compiled);
@@ -647,7 +647,7 @@ namespace Nanook.NKit.Container
         /// <summary>
         /// Parses a listing entry name of the form <c>"Name {id}"</c>. Returns true and outputs the
         /// base name + id when the unambiguous <c>{id}</c> marker is present; false otherwise (the
-        /// name is used as-is). Unambiguous by construction — no datastore validation required.
+        /// name is used as-is). Unambiguous by construction - no datastore validation required.
         /// </summary>
         internal static bool TryParseDuplicateName(string entryName, out string baseName, out long imageId)
         {

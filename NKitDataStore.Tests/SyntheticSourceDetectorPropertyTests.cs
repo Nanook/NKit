@@ -279,7 +279,7 @@ namespace NKitDataStore.Tests
                 {
                     new SourceFileItem(dirPath, fileName, ".iso", "", 0, 1024, 0, false, false)
                 },
-                // No IndexFile — this is a plain ISO, not a TmdApp
+                // No IndexFile - this is a plain ISO, not a TmdApp
             };
             return sf;
         }
@@ -316,12 +316,12 @@ namespace NKitDataStore.Tests
             for (int i = 0; i < contentCount; i++)
             {
                 int off = contentOffset + (i * contentItemLen);
-                // ContentId (4 bytes big-endian) — use sequential IDs
+                // ContentId (4 bytes big-endian) - use sequential IDs
                 data[off + 3] = (byte)(i & 0xFF);
                 data[off + 2] = (byte)((i >> 8) & 0xFF);
                 // Index (2 bytes)
                 data[off + 5] = (byte)(i & 0xFF);
-                // Size (8 bytes) — small non-zero size
+                // Size (8 bytes) - small non-zero size
                 data[off + 0x0F] = 0x10;
             }
 

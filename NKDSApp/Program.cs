@@ -18,7 +18,7 @@ namespace Nanook.NKit.Vfs
             Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Trace.AutoFlush = true;
 
-            // Set up the config directory structure before anything else — including before the
+            // Set up the config directory structure before anything else - including before the
             // interactive builder runs, so $configPath$/keys/, dats/, fix/ etc. already exist
             // when the user is filling in prompts. This is a no-op if already set up.
             bool configCreated = Nanook.NKit.AppSettings.EnsureDefaultConfigExists();
@@ -60,7 +60,7 @@ namespace Nanook.NKit.Vfs
             }
             else if (!args[0].StartsWith("-") && !NkdsCommandLine.IsKnownCommand(args[0]) && NkdsTerminal.IsInteractive)
             {
-                // First arg looks like a path, not a command — treat as drag-drop datastore.
+                // First arg looks like a path, not a command - treat as drag-drop datastore.
                 seededDatastorePath = args[0];
                 goInteractive = true;
             }

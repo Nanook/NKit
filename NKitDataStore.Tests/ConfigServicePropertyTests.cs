@@ -319,7 +319,7 @@ public sealed class ConfigServicePropertyTests : IDisposable
             byte[] content = randomBytes ?? Array.Empty<byte>();
             File.WriteAllBytes(configPath, content);
 
-            // Construct ConfigService — should gracefully fall back to defaults
+            // Construct ConfigService - should gracefully fall back to defaults
             ConfigService service = new ConfigService(configPath, legacyPath);
 
             // Assert defaults
@@ -367,7 +367,7 @@ public sealed class ConfigServicePropertyTests : IDisposable
             // Write invalid content to the config file
             File.WriteAllText(configPath, invalidContent);
 
-            // Construct ConfigService — should gracefully fall back to defaults
+            // Construct ConfigService - should gracefully fall back to defaults
             ConfigService service = new ConfigService(configPath, legacyPath);
 
             // Assert defaults

@@ -96,7 +96,7 @@ public partial class Add1GmrDialog : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(dir);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
@@ -130,7 +130,7 @@ public partial class Add1GmrDialog : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastDir);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
@@ -169,7 +169,7 @@ public partial class Add1GmrDialog : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastDir);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
             {
@@ -200,7 +200,7 @@ public partial class Add1GmrDialog : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastPath);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
             {

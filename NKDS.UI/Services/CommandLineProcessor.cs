@@ -81,7 +81,7 @@ public sealed class CommandLineProcessor
             return;
         }
 
-        // No operation in progress — start a new one with the full args
+        // No operation in progress - start a new one with the full args
         await ProcessArgsAsync(args);
     }
 

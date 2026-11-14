@@ -11,7 +11,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 3.1, 3.2, 3.3, 3.4**
     ///
-    /// Property 2: Preservation — Embedded-Mode Sets Continue to Re-Embed Correctly
+    /// Property 2: Preservation - Embedded-Mode Sets Continue to Re-Embed Correctly
     ///
     /// These tests are EXPECTED TO PASS on unfixed code. They confirm baseline behavior
     /// that must be preserved after the fix is applied:
@@ -268,7 +268,7 @@ namespace NKitDataStore.Tests
                         TestDataStoreHelper.WaitForSetIdle(store, setName);
                     }
 
-                    // No removals — call CompactSet directly
+                    // No removals - call CompactSet directly
                     store.CompactSet(setName);
 
                     // Verify: file still has valid EmbeddedFooter
@@ -371,7 +371,7 @@ namespace NKitDataStore.Tests
                         TestDataStoreHelper.WaitForSetIdle(store, setName);
                     }
 
-                    // No removals — call CompactSet directly
+                    // No removals - call CompactSet directly
                     store.CompactSet(setName);
 
                     // Verify: index file exists as standalone

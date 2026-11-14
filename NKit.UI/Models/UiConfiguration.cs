@@ -133,7 +133,7 @@ namespace NKit.Ui.Models
 
             /// <summary>
             /// Window decoration mode for Linux. "native" uses OS title bar, "csd" uses client-side decorations.
-            /// Only affects Linux — Windows/macOS always use their native decorations.
+            /// Only affects Linux - Windows/macOS always use their native decorations.
             /// </summary>
             [YamlMember(Alias = "windowDecorationMode")]
             public string WindowDecorationMode { get; set; } = "csd";

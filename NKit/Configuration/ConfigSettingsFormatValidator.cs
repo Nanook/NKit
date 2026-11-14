@@ -248,7 +248,7 @@ namespace Nanook.NKit.Configuration
 
             string[] parts = formatString.Split(':');
             if (parts.Length > 1)
-                return ValidationResult.Error("NKit ISO format takes no parameters — use 'nkitiso' (or 'nkit.iso')");
+                return ValidationResult.Error("NKit ISO format takes no parameters - use 'nkitiso' (or 'nkit.iso')");
 
             return ValidationResult.Success();
         }

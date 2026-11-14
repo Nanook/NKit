@@ -292,7 +292,7 @@ public class CreateSetDialogViewModel : ViewModelBase
         if (!string.IsNullOrEmpty(selectedPath))
         {
             FolderPath = selectedPath;
-            // Immediate validation — bypass debounce for browse selection
+            // Immediate validation - bypass debounce for browse selection
             ValidateFolderPath();
             if (FolderPathError == null)
                 DetectExistingAux(selectedPath);
@@ -309,7 +309,7 @@ public class CreateSetDialogViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(dataStorePath) || !Directory.Exists(dataStorePath))
         {
-            // Path is empty/invalid — clear aux detection, leave controls editable
+            // Path is empty/invalid - clear aux detection, leave controls editable
             ClearAuxDetection();
             return;
         }
@@ -327,7 +327,7 @@ public class CreateSetDialogViewModel : ViewModelBase
             return;
         }
 
-        // No aux found — clear detection, enable controls, default name to folder name + .aux.nkds
+        // No aux found - clear detection, enable controls, default name to folder name + .aux.nkds
         ClearAuxDetection();
         string folderName = Path.GetFileName(dataStorePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         if (!string.IsNullOrWhiteSpace(folderName))

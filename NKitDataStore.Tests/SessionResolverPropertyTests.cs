@@ -466,7 +466,7 @@ public class SessionResolverPropertyTests : IDisposable
         int sessionCount = Math.Min(sessionCountWrapper.Get, 5); // Cap to keep test fast
 
         // Generate sessions with varying image collections and paths.
-        // Use null DataStores — Phase 2 (ListSetNames) will throw NullReferenceException
+        // Use null DataStores - Phase 2 (ListSetNames) will throw NullReferenceException
         // which is suppressed, exercising the exception suppression + fallback path.
         // Phase 1 (images) is exercised by randomly including matching images.
         List<ImageSessionModel> sessions = new List<ImageSessionModel>();
@@ -479,7 +479,7 @@ public class SessionResolverPropertyTests : IDisposable
                 Guid.NewGuid().ToString(),
                 path,
                 null,
-                null!, // null DataStore — ListSetNames throws, which is suppressed
+                null!, // null DataStore - ListSetNames throws, which is suppressed
                 images));
         }
 

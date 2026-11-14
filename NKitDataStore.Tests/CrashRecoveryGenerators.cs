@@ -448,7 +448,7 @@ namespace NKitDataStore.Tests
                 case CrashPoint.DuringCommitAfterPrimary:
                 case CrashPoint.AfterCommit:
                     // Both headers written, commit completed
-                    // Clean state (or nearly clean — just needs lock release)
+                    // Clean state (or nearly clean - just needs lock release)
                     files.Add(new IntermediateFile
                     {
                         RelativePath = $"{setName}.nkds",

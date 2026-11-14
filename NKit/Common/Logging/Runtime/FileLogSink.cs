@@ -103,11 +103,11 @@ namespace Nanook.NKit.Runtime
             sb.Append(LevelTag(evt.Level));
             sb.Append(' ');
 
-            // Source tag comes from the SCOPE (e.g. "[In]", "[Core]", "[Wii]") — classification is
+            // Source tag comes from the SCOPE (e.g. "[In]", "[Core]", "[Wii]") - classification is
             // scope + level only; there is no category axis. Cross-cutting lines set a "prefix"
             // scope property (see ScopePrefix) so they render their tag here.
             string prefix = ScopePrefix.Resolve(evt.Scope);
-            // Skip the bare root scope ("NKit") — not a useful tag on dividers/uncategorised lines.
+            // Skip the bare root scope ("NKit") - not a useful tag on dividers/uncategorised lines.
             if (!string.IsNullOrEmpty(prefix) && prefix != "NKit")
                 sb.Append('[').Append(prefix).Append("] ");
 

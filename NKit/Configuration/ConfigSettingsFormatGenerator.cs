@@ -166,7 +166,7 @@ namespace Nanook.NKit.Configuration
 
         /// <summary>
         /// Generates a dedupe configuration string from component values.
-        /// Format: setName:shardSize:blockSize:autoCreateAux — trailing empty parts are trimmed.
+        /// Format: setName:shardSize:blockSize:autoCreateAux - trailing empty parts are trimmed.
         /// </summary>
         public static string GenerateDedupeFormatString(string setName = null, string shardSize = null, string blockSize = null, string autoCreateAux = null)
         {

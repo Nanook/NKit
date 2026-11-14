@@ -166,7 +166,7 @@ namespace NKitDataStore.Binary
 
             if (_pendingImage == null)
             {
-                // No pending image — nothing to commit (e.g., UpdateImageName already committed directly)
+                // No pending image - nothing to commit (e.g., UpdateImageName already committed directly)
                 IsCompleted = true;
                 return;
             }
@@ -218,7 +218,7 @@ namespace NKitDataStore.Binary
             // Step 6.5: Flush shard write buffer so data is visible to readers before index commit
             _shardFileManager?.FlushWrite();
 
-            // Step 7: Atomic commit — flush data, write secondary header, flush, write primary header, flush
+            // Step 7: Atomic commit - flush data, write secondary header, flush, write primary header, flush
             _indexFile.AtomicCommit();
 
             // Step 8: Update the in-memory block index with new blocks

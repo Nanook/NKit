@@ -31,7 +31,7 @@
 	</Window.Styles>
 	<Panel>
 	<Grid RowDefinitions="90, *" ColumnDefinitions="160, *" Margin="0,5,0,0">
-		<!-- Window caption buttons (Linux only — Windows/macOS provide their own) -->
+		<!-- Window caption buttons (Linux only - Windows/macOS provide their own) -->
 		<StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="0"
 		            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"
 		            Name="LinuxCaptionButtons"
@@ -149,7 +149,7 @@
 		<uc:ProcessFilesControl Name="ucProcessFilesControl" Grid.Column="1" Grid.Row="1" Padding="5"/>
 	</Grid>
 
-        <!-- Resize grips (Linux only — on top of content for hit-testing) -->
+        <!-- Resize grips (Linux only - on top of content for hit-testing) -->
         <Border Height="5" VerticalAlignment="Top" Cursor="TopSide"
                 PointerPressed="resizeN_PointerPressed" Background="Transparent"
                 IsVisible="{OnPlatform False, Linux=True}" IsHitTestVisible="True"/>

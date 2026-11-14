@@ -41,9 +41,9 @@ namespace NKit.Tests.Integration
             {
                 // ── 1. Build a synthetic TMD + ticket + cert ──────────────────────────
                 // Two contents:
-                //   Index 0 — hashless (AppType.Fst-like), FST header so NKit's probe recognises it
+                //   Index 0 - hashless (AppType.Fst-like), FST header so NKit's probe recognises it
                 const int dataPerBlock  = 0xFC00;
-                //   Index 1 — hashed, 3 chunks of arbitrary data
+                //   Index 1 - hashed, 3 chunks of arbitrary data
                 //
                 // The title key is all-zeros. NKit's zero-key fallback probe in Image.Setup()
                 // will recognise the FST and accept the content without needing a real common key.
@@ -180,7 +180,7 @@ namespace NKit.Tests.Integration
         /// Builds a minimal WiiU FST binary with <paramref name="contentCount"/> content entries,
         /// padded to a full 0x8000-byte block. NKit's FstBlock parser reads:
         ///   +0x00  uint32 magic (ignored)
-        ///   +0x04  uint32 multiplier (block size shift — we use 0 = 1-byte blocks → offsets in bytes)
+        ///   +0x04  uint32 multiplier (block size shift - we use 0 = 1-byte blocks → offsets in bytes)
         ///   +0x08  uint32 contentCount
         ///   +0x0C  byte   hashDisabled (1 = no hash verification)
         /// Followed by contentCount × 0x20-byte content records (all zeros is fine for a test FST).
@@ -201,7 +201,7 @@ namespace NKit.Tests.Integration
             fst.WriteUInt32B(0x08, (uint)contentCount);
             // hashDisabled = 1
             fst[0x0C] = 1;
-            // Content records at offset (1+i)*0x20 — all zeros is sufficient for the probe
+            // Content records at offset (1+i)*0x20 - all zeros is sufficient for the probe
             return fst;
         }
 
@@ -240,11 +240,11 @@ namespace NKit.Tests.Integration
             tmd.WriteUInt16B(0x1DE, (ushort)contentCount);
             tmd.WriteUInt16B(0x1E0, 0);       // boot index
 
-            // info-hash at 0x1E4 — left zeros for now; FinaliseTmd will patch it
+            // info-hash at 0x1E4 - left zeros for now; FinaliseTmd will patch it
             // ContentInfo group at 0x204: first group covers all contents
             tmd.WriteUInt16B(0x204, 0);                            // offset = 0
             tmd.WriteUInt16B(0x206, (ushort)contentCount);         // count
-            // group SHA-256 hash at 0x208 — left zeros; FinaliseTmd patches
+            // group SHA-256 hash at 0x208 - left zeros; FinaliseTmd patches
 
             // Content records
             for (int i = 0; i < contentList.Count; i++)
@@ -256,7 +256,7 @@ namespace NKit.Tests.Integration
                 // type: 0x0001 = encrypted; 0x0003 = encrypted+hashed
                 tmd.WriteUInt16B(off + 0x06, (ushort)(hashed ? 0x0003 : 0x0001));
                 tmd.WriteUInt64B(off + 0x08, (ulong)size);
-                // hash at off+0x10 — left zeros; FinaliseTmd patches
+                // hash at off+0x10 - left zeros; FinaliseTmd patches
             }
 
             return tmd;

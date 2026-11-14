@@ -16,8 +16,8 @@ namespace NKit.Tests.Engine.Output
     /// the data SHALL be written to the Primary_Store.
     ///
     /// The DataStoreXboxFormatter has two entry points relevant to BlockPadding:
-    /// 1. BeginFileWrite — always routes to _imageWriter (primary) regardless of BlockType
-    /// 2. FinaliseSectionAndPersistBlockPadding — is a no-op for Xbox (no block padding persisted)
+    /// 1. BeginFileWrite - always routes to _imageWriter (primary) regardless of BlockType
+    /// 2. FinaliseSectionAndPersistBlockPadding - is a no-op for Xbox (no block padding persisted)
     ///
     /// Both ensure BlockPadding never leaks to aux or split writers.
     ///
@@ -53,7 +53,7 @@ namespace NKit.Tests.Engine.Output
             //       return _imageWriter.BeginWriteStream(imageOffset, type, imageOffset, stride, strideOriginOffset);
             //   }
             //
-            // Note: BeginFileWrite does NOT check _auxWriter or _splitWriter — it ALWAYS uses _imageWriter.
+            // Note: BeginFileWrite does NOT check _auxWriter or _splitWriter - it ALWAYS uses _imageWriter.
             // This is by design: BlockPadding (and all file writes) go to primary.
             // Only ProcessSection routes gap data to aux/split based on AreaType.
 
@@ -117,7 +117,7 @@ namespace NKit.Tests.Engine.Output
             //       // No block padding to persist.
             //   }
             //
-            // The implementation is an empty method — no writes occur to ANY writer.
+            // The implementation is an empty method - no writes occur to ANY writer.
             WriteTracker writeTracker = new WriteTracker();
             SimulateFinaliseSectionAndPersistBlockPadding(
                 imageOffset, areaType, hasAux, hasSplit, writeTracker);
@@ -134,10 +134,10 @@ namespace NKit.Tests.Engine.Output
         /// For any section processed by the Xbox formatter, data classified as BlockPadding
         /// is only ever written via BeginFileWrite (which goes to primary) or not written at all
         /// (FinaliseSectionAndPersistBlockPadding is a no-op). The ProcessSection method itself
-        /// only writes gap data classified as BlockType.Other — never BlockType.BlockPadding.
+        /// only writes gap data classified as BlockType.Other - never BlockType.BlockPadding.
         ///
         /// This verifies the routing invariant: ProcessSection routes AreaType.Other gaps to aux,
-        /// AreaType.FileSystem gaps to split, and ImageHeader to primary — but none of these
+        /// AreaType.FileSystem gaps to split, and ImageHeader to primary - but none of these
         /// use BlockType.BlockPadding. BlockPadding data exclusively uses the BeginFileWrite path.
         ///
         /// **Validates: Requirements 4.5**
@@ -196,12 +196,12 @@ namespace NKit.Tests.Engine.Output
             "primary";
 
         /// <summary>
-        /// Models the Xbox FinaliseSectionAndPersistBlockPadding — a no-op.
+        /// Models the Xbox FinaliseSectionAndPersistBlockPadding - a no-op.
         /// </summary>
         private static void SimulateFinaliseSectionAndPersistBlockPadding(
             long imageOffset, AreaType areaType, bool hasAux, bool hasSplit, WriteTracker tracker)
         {
-            // Xbox implementation is empty — no writes to any writer.
+            // Xbox implementation is empty - no writes to any writer.
             // This is unlike ISO9660/Wii formatters which persist sector headers as BlockPadding.
         }
 

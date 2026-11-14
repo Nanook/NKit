@@ -247,7 +247,7 @@ namespace NKitDataStore.Tests
             // the partition (byte 500 vs byte 1200). This means subsequent blocks also
             // contain different slices of the audio content and will NOT share BlockKeys.
             // Per Requirement 6.2: blocks share keys only when they contain "byte-identical
-            // data at the same offset relative to TrimOffset" — which is not the case here
+            // data at the same offset relative to TrimOffset" - which is not the case here
             // since the audio is shifted by 700 bytes between the two partitions.
 
             // === ACT: RECONSTRUCTION SIMULATION ===
@@ -264,7 +264,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// End-to-end integration test: Verifies that the full pipeline handles
-        /// a partition with no leading zeros correctly — TrimOffset is 0, all data
+        /// a partition with no leading zeros correctly - TrimOffset is 0, all data
         /// is stored, and reconstruction is byte-identical.
         ///
         /// Validates Requirements 4.6, 6.2.
@@ -327,7 +327,7 @@ namespace NKitDataStore.Tests
 
             // Reconstruct: entire partition is zeros
             byte[] reconstructed = new byte[totalSize];
-            // No stored data to copy — all zeros by default
+            // No stored data to copy - all zeros by default
 
             Assert.Equal(partition, reconstructed);
         }

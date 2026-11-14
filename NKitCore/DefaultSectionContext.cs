@@ -12,7 +12,7 @@ namespace NKitCore
     ///
     /// The pool free-list is bounded by <paramref name="maxPoolFree"/> so returned sections are
     /// reused rather than re-allocated (large per-section buffers), but the free list never grows
-    /// without bound. There is deliberately no aggressive "shrink to 2" trim — the live section
+    /// without bound. There is deliberately no aggressive "shrink to 2" trim - the live section
     /// count is already bounded by the core's admission control, so keeping up to maxPoolFree shells
     /// warm avoids re-allocating large byte[] buffers as the pipeline breathes.
     /// </summary>

@@ -14,7 +14,7 @@ namespace Nanook.NKit.App
         {
             // Cursor safety net: Spectre hides the terminal cursor (ESC[?25l) during interactive
             // prompts and only restores it when a prompt returns normally. A Ctrl+C (SIGINT) during
-            // a prompt tears the process down before that restore runs, leaving the cursor hidden —
+            // a prompt tears the process down before that restore runs, leaving the cursor hidden -
             // the Linux complaint. Register process-exit + Ctrl+C hooks up front so the cursor is
             // always restored, however the process ends. Guarded/try-caught (the setter can throw on
             // some non-Windows terminals). We do NOT set a.Cancel here, so Ctrl+C still terminates.
@@ -80,7 +80,7 @@ namespace Nanook.NKit.App
 
             CancellationTokenSource cancel = new CancellationTokenSource();
 
-            // Set up the config directory structure before anything else — including before the
+            // Set up the config directory structure before anything else - including before the
             // interactive builder runs, so $configPath$/keys/, dats/, fix/ etc. already exist
             // when the user is filling in prompts. This is a no-op if already set up.
             bool configCreated = AppSettings.EnsureDefaultConfigExists();
@@ -92,7 +92,7 @@ namespace Nanook.NKit.App
 
             // New verb-based CLI front-end: parse argv, handle help/version, launch interactive when
             // there is no task and the terminal allows it, else translate to AppSettings overrides.
-            // NOTE: the graceful Ctrl+C handler is registered AFTER this call — during the interactive
+            // NOTE: the graceful Ctrl+C handler is registered AFTER this call - during the interactive
             // builder we want Ctrl+C to terminate the process (default behaviour), not be swallowed.
             Cli.CliResult cli = Cli.CliFrontEnd.Process(
                 args ?? Array.Empty<string>(),

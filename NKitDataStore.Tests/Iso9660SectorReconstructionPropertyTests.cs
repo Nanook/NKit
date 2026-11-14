@@ -31,7 +31,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 3.7, 5.2, 5.3, 5.4**
         ///
-        /// Property 1: ISO9660 Sector Reconstruction Round-Trip — Mode1
+        /// Property 1: ISO9660 Sector Reconstruction Round-Trip - Mode1
         ///
         /// For any valid 2048-byte user data and any valid LBA value (0-449999),
         /// placing user data at offset 0x10 in a 2352-byte sector buffer, calling
@@ -70,7 +70,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 3.7, 5.2, 5.3, 5.4**
         ///
-        /// Property 1: ISO9660 Sector Reconstruction Round-Trip — Mode2Form1
+        /// Property 1: ISO9660 Sector Reconstruction Round-Trip - Mode2Form1
         ///
         /// For any valid 2048-byte user data and any valid LBA value (0-449999),
         /// placing user data at offset 0x18 in a 2352-byte sector buffer with a valid
@@ -125,7 +125,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 3.7, 5.2, 5.3, 5.4**
         ///
-        /// Property 1: ISO9660 Sector Reconstruction Round-Trip — Mode2Form2
+        /// Property 1: ISO9660 Sector Reconstruction Round-Trip - Mode2Form2
         ///
         /// For any valid 2324-byte user data and any valid LBA value (0-449999),
         /// placing user data at offset 0x18 in a 2352-byte sector buffer with a valid

@@ -81,7 +81,7 @@ namespace NKit.Tests.Engine.Output
 
         /// <summary>
         /// Verifies that the ISO9660 formatter DOES have BuildPerTypeFsYaml (positive control).
-        /// This confirms the test approach is valid — only ISO9660 has the per-type logic.
+        /// This confirms the test approach is valid - only ISO9660 has the per-type logic.
         /// </summary>
         [Fact]
         public void Iso9660Formatter_DoesHave_BuildPerTypeFsYaml()
@@ -94,7 +94,7 @@ namespace NKit.Tests.Engine.Output
 
         /// <summary>
         /// Verifies that the GameCube formatter's _imageWriter field writes only to
-        /// FileSystemNkfsRootPath ("filesystem.nkfs") — the unified path.
+        /// FileSystemNkfsRootPath ("filesystem.nkfs") - the unified path.
         /// Validates: Requirement 7.1
         /// </summary>
         [Fact]
@@ -143,7 +143,7 @@ namespace NKit.Tests.Engine.Output
 
         /// <summary>
         /// Verifies that non-ISO9660 formatters do not reference TryExtractFsTypeName or
-        /// ResolveTargetFsType — methods used exclusively for per-type nkfs logic.
+        /// ResolveTargetFsType - methods used exclusively for per-type nkfs logic.
         /// Validates: Requirement 7.5
         /// </summary>
         [Theory]

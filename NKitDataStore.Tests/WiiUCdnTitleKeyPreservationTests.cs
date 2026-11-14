@@ -17,7 +17,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
     ///
-    /// Property 2: Preservation — Non-VFS-CDN Behavior Unchanged
+    /// Property 2: Preservation - Non-VFS-CDN Behavior Unchanged
     ///
     /// These tests verify that paths which ALREADY work on unfixed code continue
     /// to produce the same results after the fix is applied. They follow the
@@ -48,7 +48,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Mock IImageReader that simulates the NKitApp/standalone path for a WiiU CDN image:
-        /// - OpenStream SUCCEEDS (returns valid area data) — simulating standalone reader
+        /// - OpenStream SUCCEEDS (returns valid area data) - simulating standalone reader
         /// - GetAreas returns areas with valid AreaValueType.TitleKey metadata
         /// - No cachedOffsets passed to constructor (NKitApp path)
         /// </summary>
@@ -227,7 +227,7 @@ namespace NKitDataStore.Tests
             public void Dispose() { }
 
             /// <summary>
-            /// OpenStream SUCCEEDS — returns a MemoryStream with the area data.
+            /// OpenStream SUCCEEDS - returns a MemoryStream with the area data.
             /// This simulates the NKitApp/standalone reader path where readAreaBytes works.
             /// </summary>
             public Stream OpenStream(long offsetStart)
@@ -314,7 +314,7 @@ namespace NKitDataStore.Tests
                 var areas = new List<AreaRecord>();
                 long offset = 0;
 
-                // ImageHeader area — NO TitleKey (ISO uses disc key, not title key)
+                // ImageHeader area - NO TitleKey (ISO uses disc key, not title key)
                 var imageHeaderMeta = new AreaMetadata();
                 imageHeaderMeta.Set(AreaValueType.FsType, "ImageHeader");
                 imageHeaderMeta.Set(AreaValueType.Encrypted, false);

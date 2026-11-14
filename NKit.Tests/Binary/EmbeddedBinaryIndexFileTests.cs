@@ -427,7 +427,7 @@ namespace NKit.Tests.NKDS.Binary
                             tx.Commit();
                         }
                     }
-                    // dataAccess disposed — file handles released
+                    // dataAccess disposed - file handles released
 
                     // Step 2: Capture block region after first commit
                     long boundaryAfterFirstCommit = GetShardBoundaryFromFile(embeddedPath);
@@ -464,7 +464,7 @@ namespace NKit.Tests.NKDS.Binary
                             tx.Commit();
                         }
                     }
-                    // dataAccess disposed — file handles released
+                    // dataAccess disposed - file handles released
 
                     // Step 4: Verify block region after second commit
                     long boundaryAfterSecondCommit = GetShardBoundaryFromFile(embeddedPath);
@@ -488,7 +488,7 @@ namespace NKit.Tests.NKDS.Binary
                         dataAccess.EnsureSetExists(setName, shardSize: 0, blockSize: 0x10000);
                         dataAccess.CompactSet(setName);
                     }
-                    // dataAccess disposed — file handles released
+                    // dataAccess disposed - file handles released
 
                     // Step 6: Verify block region after compaction
                     long boundaryAfterCompaction = GetShardBoundaryFromFile(embeddedPath);

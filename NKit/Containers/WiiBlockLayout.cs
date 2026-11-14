@@ -15,7 +15,7 @@ namespace Nanook.NKit.Container
     /// exist. This helper converts between FS space and block (sector) space, and inserts the
     /// 0x400 hash gaps when emitting decoded FS data into a partition's block layout.
     ///
-    /// Hash areas themselves are left as zeros here — hash generation and encryption are the
+    /// Hash areas themselves are left as zeros here - hash generation and encryption are the
     /// responsibility of the parallel processing stage downstream, not the container.
     ///
     /// This mirrors the math in <see cref="Buffer.OffsetToFsOffset"/> /
@@ -34,7 +34,7 @@ namespace Nanook.NKit.Container
             WiiConsts.WiiSectorSize, WiiConsts.WiiSectorHashSize, WiiConsts.WiiSectorFsSize);
 
         /// <summary>
-        /// Flat layout (no hashes) — sector == data. Used for GameCube and unhashed regions.
+        /// Flat layout (no hashes) - sector == data. Used for GameCube and unhashed regions.
         /// </summary>
         public static WiiBlockLayout Flat => new WiiBlockLayout(
             WiiConsts.WiiSectorSize, 0, WiiConsts.WiiSectorSize);
@@ -126,7 +126,7 @@ namespace Nanook.NKit.Container
             int dRmn;
             if (inSector < HashSize)
             {
-                // Positioned in (or before) the hash area — advance to the data region
+                // Positioned in (or before) the hash area - advance to the data region
                 dOff += HashSize - inSector;
                 dRmn = FsSize;
             }

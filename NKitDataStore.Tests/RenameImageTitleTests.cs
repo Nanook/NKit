@@ -3,7 +3,7 @@ using NKitDataStore.Interfaces;
 namespace NKitDataStore.Tests
 {
     /// <summary>
-    /// Guards <see cref="DataStore.RenameImageTitle"/> — the set-aware rename that keeps a WiiU
+    /// Guards <see cref="DataStore.RenameImageTitle"/> - the set-aware rename that keeps a WiiU
     /// multi-TMD title consistent. Such a title is stored as a <c>TmdAppFolder</c> umbrella
     /// (Name = base) plus one <c>App</c> child per TMD (<c>"{base} [tmd.N]"</c>). The mount recombine
     /// relies on <c>ExtractBaseName(child) == umbrella.Name</c>, so a rename MUST update the umbrella
@@ -47,7 +47,7 @@ namespace NKitDataStore.Tests
             AddStub(store, setName, "Old Game [tmd.1]", ImageFormat.App);
             TestDataStoreHelper.WaitForSetIdle(store, setName);
 
-            // Rename via the umbrella record — RenameImageTitle must fan out to the whole group.
+            // Rename via the umbrella record - RenameImageTitle must fan out to the whole group.
             ImageRecord umbrella = store.ListImagesInSet(setName).Single(i => i.Format == ImageFormat.TmdAppFolder);
             int count = store.RenameImageTitle(new GlobalImageKey(setName, umbrella.Id), "New Game");
             TestDataStoreHelper.WaitForSetIdle(store, setName);
@@ -83,7 +83,7 @@ namespace NKitDataStore.Tests
             AddStub(store, setName, "Old Game [tmd.1]", ImageFormat.App);
             TestDataStoreHelper.WaitForSetIdle(store, setName);
 
-            // Identify the group via a CHILD, not the umbrella — base is derived from it.
+            // Identify the group via a CHILD, not the umbrella - base is derived from it.
             ImageRecord child1 = store.ListImagesInSet(setName).Single(i => i.Name == "Old Game [tmd.1]");
             int count = store.RenameImageTitle(new GlobalImageKey(setName, child1.Id), "Fresh Name");
             TestDataStoreHelper.WaitForSetIdle(store, setName);

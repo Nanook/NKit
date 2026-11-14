@@ -152,7 +152,7 @@ namespace NKit.Tests.Engine.Output
                     IFsFile file = state.File;
 
                     // Skip if this section item's file IS the overlap candidate
-                    // UNLESS it's a primary overlap (in candidateSet) — then we always write
+                    // UNLESS it's a primary overlap (in candidateSet) - then we always write
                     bool skipWrite = (chunk.OwnerFile == file) && !candidateSet.Contains(file);
                     if (skipWrite)
                         continue;
@@ -187,7 +187,7 @@ namespace NKit.Tests.Engine.Output
                     SimOverlapState state = activeOverlaps[containingPath];
                     if (state.TotalWritten >= state.TotalSize)
                     {
-                        // Completed — would close stream in real code
+                        // Completed - would close stream in real code
                         break; // No more writing needed
                     }
                 }
@@ -401,7 +401,7 @@ namespace NKit.Tests.Engine.Output
         /// to the containing file's stream.
         ///
         /// This validates that ProcessOverlaps writes bytes from ALL section items that
-        /// intersect the containing file's range — whether they are for contained files
+        /// intersect the containing file's range - whether they are for contained files
         /// or for gaps between contained files.
         ///
         /// **Validates: Requirements 2.1, 2.2**

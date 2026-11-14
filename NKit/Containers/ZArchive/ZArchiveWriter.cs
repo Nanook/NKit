@@ -51,13 +51,13 @@ namespace Nanook.NKit.Container.ZArchive
                 _tlsCompressor = new ZStdBlock(new GrindCore.CompressionOptions
                 {
                     BlockSize = BlockSize,
-                    Type = (GrindCore.CompressionType)19  // level 19 — maximum compression
+                    Type = (GrindCore.CompressionType)19  // level 19 - maximum compression
                 });
             return _tlsCompressor;
         }
 
         // ── Parallel pipeline ─────────────────────────────────────────────────
-        // Pool slot: (uncompressed, compressed) buffer pair.  No ZStdBlock here — the
+        // Pool slot: (uncompressed, compressed) buffer pair.  No ZStdBlock here - the
         // thread-local compressor above is used by whichever worker thread processes the slot.
         private sealed class BlockBuffer
         {
@@ -256,9 +256,9 @@ namespace Nanook.NKit.Container.ZArchive
             _sha256?.Dispose();
             // Shut down the CircularSequenceQueue worker threads. Without this, each
             // ZArchiveWriter instance leaks ItemCount threads that block indefinitely
-            // on slot.Ready.Wait() — across many test runs this exhausts thread limits.
+            // on slot.Ready.Wait() - across many test runs this exhausts thread limits.
             try { _queue?.Dispose(); } catch { }
-            // _tlsCompressor is intentionally not disposed here — it lives for the thread's lifetime
+            // _tlsCompressor is intentionally not disposed here - it lives for the thread's lifetime
             // and is reused across all ZArchiveWriter instances on the same thread.
         }
 

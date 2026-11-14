@@ -49,7 +49,7 @@ namespace Nanook.NKit.Steps.Shared
             _imageWriter = _dataStore.AddImage(resolvedSetName, imageName, context.SystemType.ToString(), ImageFormat.Iso);
             _imageWriter.CompressionParallelism = 16;
 
-            // Aux writer setup — aux set discovered by convention in DedupeStep
+            // Aux writer setup - aux set discovered by convention in DedupeStep
             if (!string.IsNullOrEmpty(auxSetName))
             {
                 _auxDataStore = new NKitDataStore.DataStore(dedupePath);
@@ -417,18 +417,18 @@ namespace Nanook.NKit.Steps.Shared
                 // Note: item.Gap.FsOffset is section-relative (buffer-local), so we use it directly
                 // without area-relative clipping. The gap is guaranteed to be within this section
                 // since it was created from this section's buffer.
-                // Skip NJunk gaps — they are regeneratable and should not be preserved.
+                // Skip NJunk gaps - they are regeneratable and should not be preserved.
                 if (item.File == null && item.Gap != null && item.Gap.FsSize > 0 && item.Gap.DataType != DataType.NJunk)
                 {
                     if (item.GapInfo == null || item.GapInfo.Count == 0)
                     {
-                        // Single gap with no sub-parts — persist the whole gap
+                        // Single gap with no sub-parts - persist the whole gap
                         long imageOffset = section.ImageOffset + stride.CleanToOffset(item.Gap.FsOffset, false);
                         ranges.Add(new GapRange(imageOffset, item.Gap.FsOffset, (int)item.Gap.FsSize, DataType.Other, 0));
                     }
                     else
                     {
-                        // Gap has sub-parts (GapInfo) — persist each "Other" sub-part individually
+                        // Gap has sub-parts (GapInfo) - persist each "Other" sub-part individually
                         foreach (ISectionData gd in item.GapInfo.Where(a => a.DataType == DataType.Other))
                         {
                             long imageOffset = section.ImageOffset + stride.CleanToOffset(gd.FsOffset, false);
@@ -463,7 +463,7 @@ namespace Nanook.NKit.Steps.Shared
                         }
                     }
 
-                    // Handle post-file gaps with DataType "Other" — these contain real data
+                    // Handle post-file gaps with DataType "Other" - these contain real data
                     // that cannot be regenerated (e.g. CDi/ISO9660 gap data between files).
                     // Persist each "Other" sub-part from GapInfo, or the whole gap if no sub-parts.
                     if (item.Gap != null && item.Gap.FsSize > 0 && item.Gap.DataType == DataType.Other)
@@ -484,10 +484,10 @@ namespace Nanook.NKit.Steps.Shared
                     }
                 }
 
-                // Handle Fill gaps — non-zero fill bytes cannot be reconstructed from scratch
+                // Handle Fill gaps - non-zero fill bytes cannot be reconstructed from scratch
                 // (OnGapFill always writes zeros), so store them verbatim as DataType.Other.
                 // Zero-fill gaps (FillByte=0x00) must also be stored because some systems
-                // (GC, Wii) override OnGapFill to generate junk rather than zeros — a zero-padded
+                // (GC, Wii) override OnGapFill to generate junk rather than zeros - a zero-padded
                 // gap region would be reconstructed as junk without the stored data.
                 IEnumerable<ISectionData> gaps = item.Gap?.DataType == DataType.Fill ? new[] { item.Gap } : item.GapInfo?.Where(a => a.DataType == DataType.Fill) ?? Enumerable.Empty<ISectionData>();
                 foreach (ISectionData gap in gaps)
@@ -535,7 +535,7 @@ namespace Nanook.NKit.Steps.Shared
         /// <summary>
         /// Creates area records in both primary and aux stores from the scan's area list.
         /// The CRC values (sra.Crc) are computed upstream by Scan.SectionProcessed() and are
-        /// specific to the current image — the formatter is instantiated fresh per image by
+        /// specific to the current image - the formatter is instantiated fresh per image by
         /// DedupeStep.Initialise(), so no stale state can carry over between images.
         /// </summary>
         public void CreateAreas(IEnumerable<ScanArea> areas)

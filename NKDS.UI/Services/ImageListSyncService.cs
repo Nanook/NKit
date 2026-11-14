@@ -56,7 +56,7 @@ public class ImageListSyncService : IImageListSyncService
             {
                 // Locate the placeholder row. It was inserted with the temporary (negative) id, so
                 // prefer TempId when present. A commit that FAILED verification carries the REAL
-                // committed image (correct id/CRC/size) alongside WasFailed=true — update the
+                // committed image (correct id/CRC/size) alongside WasFailed=true - update the
                 // placeholder in place to that record so the CRC/size columns populate and the row
                 // keeps its position, then set the Failed status. Falling back to Image.Id covers
                 // the stub-record failure events (no real commit) that carry only the temp id there.
@@ -87,7 +87,7 @@ public class ImageListSyncService : IImageListSyncService
                 else if (committedEvent.WasFailed && committedEvent.Image.Id > 0)
                 {
                     // No placeholder to update, but the image WAS committed (real id) and failed
-                    // verification — insert a real row with the Failed status so it is never left
+                    // verification - insert a real row with the Failed status so it is never left
                     // absent or blank. (Skip/cancel/dup stubs carry no real record, so nothing to add.)
                     ImageRowViewModel failedRow = new ImageRowViewModel(committedEvent.Image, committedEvent.SessionId)
                     {
@@ -99,7 +99,7 @@ public class ImageListSyncService : IImageListSyncService
                 return;
             }
 
-            // TmdAppFolder images are internal aggregation containers — don't show them
+            // TmdAppFolder images are internal aggregation containers - don't show them
             // in the list since the children (individual [tmd.X] App images) are shown instead.
             if (committedEvent.Image.Format == NKitDataStore.ImageFormat.TmdAppFolder)
             {
@@ -129,7 +129,7 @@ public class ImageListSyncService : IImageListSyncService
                     return;
                 }
 
-                // No pre-populated row found — remove old placeholder (legacy flow)
+                // No pre-populated row found - remove old placeholder (legacy flow)
                 _imageList.RemoveRows(row =>
                     row.Image.SetName == committedEvent.SetName && row.Image.Id == committedEvent.TempId);
             }
@@ -282,7 +282,7 @@ public class ImageListSyncService : IImageListSyncService
             List<ImageRowViewModel> rows = new List<ImageRowViewModel>(candidates.Count);
             foreach (CandidateImage candidate in candidates)
             {
-                // Skip synthetic folder entries (TmdAppFolder grouping containers) —
+                // Skip synthetic folder entries (TmdAppFolder grouping containers) -
                 // they're processed by the pipeline but shouldn't appear in the UI.
                 if (candidate.Source.IsSyntheticFolder)
                     continue;

@@ -242,7 +242,7 @@ namespace NKitDataStore
                 // Re-resolve the shard path in case the file was replaced
                 shardPath = resolveShardPath(fileId);
 
-                // Retry once — if this also fails, let the IOException propagate
+                // Retry once - if this also fails, let the IOException propagate
                 readFromShard(fileId, shardPath, offset, length, buffer);
             }
 

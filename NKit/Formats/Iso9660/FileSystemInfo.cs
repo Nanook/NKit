@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nanook.NKit.Iso.Iso9660
 {
@@ -34,7 +34,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
         public bool AllFoldersParsed => ((Fst)this.FileSystem).AllFolderRecordsParsed;
 
-        // UDF present — only then can there be tail markers (backup AVDP / partition mirror).
+        // UDF present - only then can there be tail markers (backup AVDP / partition mirror).
         public bool HasUdf => ((Fst)this.FileSystem).HasUdf;
 
         // Total image size (used to bound the tail scan to the end of the image).
@@ -52,7 +52,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
         // Force the frozen AreaView snapshot to rebuild on next access. Needed when late tail markers
         // are added to a SHARED FileSystemInfo AFTER its view was first frozen (XBox video2 reuses
-        // video1's FST; its tail markers are discovered at video2 setup — after video1 froze the
+        // video1's FST; its tail markers are discovered at video2 setup - after video1 froze the
         // view). Safe because the core processes areas in order: video1 is fully complete before
         // video2 setup, so no reader is using the old snapshot when it is invalidated.
         public void ResetAreaView() => _areaView = null;
@@ -60,7 +60,7 @@ namespace Nanook.NKit.Iso.Iso9660
         public void ProcessBlock(IBuffer buffer) => ((Fst)this.FileSystem).SetFsData(buffer);
 
         // Scan a fed TAIL buffer directly for end-of-image system markers (UDF AVDP backup /
-        // partition mirror, mkisofs) and add them to the FST — bypassing the file-relative gap-walk
+        // partition mirror, mkisofs) and add them to the FST - bypassing the file-relative gap-walk
         // navigation of SetFsData/processFileGaps (which does not scan the trailing region because
         // the last file's post-gap "covers" it). Used by the up-front tail feed.
         public void DiscoverTailMarkersBlock(IBuffer buffer)
@@ -71,7 +71,7 @@ namespace Nanook.NKit.Iso.Iso9660
             if (fs.Files.Count == before)
                 return;
             // The frozen AreaView (built during an earlier area's processing) will NOT reflect these
-            // late additions to the live FST list — GetFiles reads Primary (the frozen snapshot). So
+            // late additions to the live FST list - GetFiles reads Primary (the frozen snapshot). So
             // register any newly-added SYSTEM entries on the view's DiscoveredFiles, which Primary
             // surfaces past the frozen count (tail-extension). Deduped by FsOffset, so idempotent.
             if (this.AreaView is AreaFileSystemView view)

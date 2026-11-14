@@ -126,7 +126,7 @@ namespace Nanook.NKit
                 //    _cache.SetNewSize(requestedBuffSize);
 
                 //_iso.Read(-1, 0x20 - (int)_iso.Position, _cache); //first 4 bytes of plain iso format has already been read
-                // Synthetic folder sources (LoadiineFolder) have no ImageFiles — skip file extension detection
+                // Synthetic folder sources (LoadiineFolder) have no ImageFiles - skip file extension detection
                 string fileext = (_context.SourceFile.IsSyntheticFolder || (_context.SourceFile.ImageFiles?.Length ?? 0) == 0)
                     ? ""
                     : _context.SourceFile.ImageFiles[0].Extension.ToLower(); //last resort
@@ -178,7 +178,7 @@ namespace Nanook.NKit
                     // The Fix decorator now WRAPS the previous _iso and owns reading it (WiiFixAsIso
                     // reads its inner through its own BufferStream). Do NOT dispose the pre-wrap
                     // detection _isoStream here: its manager wraps the SAME inner container, and
-                    // BufferStream disposal cascades to dispose the underlying source — which would
+                    // BufferStream disposal cascades to dispose the underlying source - which would
                     // tear the inner (e.g. a decoded NKitAsIso) out from under the decorator. The
                     // inner's lifetime is owned by the decorator + the final Close()/Dispose path.
                     _iso = fixWrapped;

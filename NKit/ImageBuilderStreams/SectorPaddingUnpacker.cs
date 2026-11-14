@@ -191,7 +191,7 @@ namespace Nanook.NKit
                 if ((flags & SectorFlags.MsfMode) != 0)
                     dataPos += SectorFlagsHelper.MsfModeSize;
 
-                // Bit 4: Subheader — APPLY NOW (needed for EDC/ECC computation)
+                // Bit 4: Subheader - APPLY NOW (needed for EDC/ECC computation)
                 if ((flags & SectorFlags.Subheader) != 0)
                 {
                     Array.Copy(packData, dataPos, buffer, sectorBase + SubheaderOffset, SectorFlagsHelper.SubheaderSize);
@@ -206,7 +206,7 @@ namespace Nanook.NKit
                 if ((flags & SectorFlags.Ecc) != 0)
                     dataPos += SectorFlagsHelper.GetEccSize(flags);
 
-                // Bit 7: Extended user data — APPLY NOW (needed for Mode2Form2 EDC computation)
+                // Bit 7: Extended user data - APPLY NOW (needed for Mode2Form2 EDC computation)
                 if ((flags & SectorFlags.ExtUserData) != 0)
                 {
                     Array.Copy(packData, dataPos, buffer, sectorBase + ExtUserDataOffset, SectorFlagsHelper.ExtUserDataSize);
@@ -246,25 +246,25 @@ namespace Nanook.NKit
 
                 int sectorBase = bufferOffset + (i * RawSectorSize);
 
-                // Bit 2: Sync — APPLY NOW
+                // Bit 2: Sync - APPLY NOW
                 if ((flags & SectorFlags.Sync) != 0)
                 {
                     Array.Copy(packData, dataPos, buffer, sectorBase + SyncOffset, SectorFlagsHelper.SyncSize);
                     dataPos += SectorFlagsHelper.SyncSize;
                 }
 
-                // Bit 3: MSF/mode — APPLY NOW
+                // Bit 3: MSF/mode - APPLY NOW
                 if ((flags & SectorFlags.MsfMode) != 0)
                 {
                     Array.Copy(packData, dataPos, buffer, sectorBase + MsfModeOffset, SectorFlagsHelper.MsfModeSize);
                     dataPos += SectorFlagsHelper.MsfModeSize;
                 }
 
-                // Bit 4: Subheader — SKIP (already applied in pre-ECC phase)
+                // Bit 4: Subheader - SKIP (already applied in pre-ECC phase)
                 if ((flags & SectorFlags.Subheader) != 0)
                     dataPos += SectorFlagsHelper.SubheaderSize;
 
-                // Bit 5: EDC — APPLY NOW (overwrites computed EDC with non-standard value)
+                // Bit 5: EDC - APPLY NOW (overwrites computed EDC with non-standard value)
                 if ((flags & SectorFlags.Edc) != 0)
                 {
                     int edcOffset = GetEdcOffset(sectorType);
@@ -272,7 +272,7 @@ namespace Nanook.NKit
                     dataPos += SectorFlagsHelper.EdcSize;
                 }
 
-                // Bit 6: ECC — APPLY NOW (overwrites computed ECC with non-standard value)
+                // Bit 6: ECC - APPLY NOW (overwrites computed ECC with non-standard value)
                 if ((flags & SectorFlags.Ecc) != 0)
                 {
                     int eccSize = SectorFlagsHelper.GetEccSize(sectorType);
@@ -281,7 +281,7 @@ namespace Nanook.NKit
                     dataPos += eccSize;
                 }
 
-                // Bit 7: Extended user data — SKIP (already applied in pre-ECC phase)
+                // Bit 7: Extended user data - SKIP (already applied in pre-ECC phase)
                 if ((flags & SectorFlags.ExtUserData) != 0)
                     dataPos += SectorFlagsHelper.ExtUserDataSize;
             }

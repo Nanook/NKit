@@ -42,7 +42,7 @@ namespace NKit.Tests.Engine.Output
         [Fact]
         public void Extract_SupportedBroadly()
         {
-            // Extract has wii/gamecube, wiiu, xbox, and _IsoFsSystems rows — broad support.
+            // Extract has wii/gamecube, wiiu, xbox, and _IsoFsSystems rows - broad support.
             Assert.True(TaskCapabilities.IsSupported(TaskType.Extract, SystemType.Wii));
             Assert.True(TaskCapabilities.IsSupported(TaskType.Extract, SystemType.PS2));
             Assert.True(TaskCapabilities.IsSupported(TaskType.Extract, SystemType.XBox));

@@ -104,7 +104,7 @@ namespace NKit.Tests.Settings
             task.Steps[0].ImageInfo = new ImageInfo() { IsFolderIndex = file.IndexFile != null };
             task.Initialise(presets.System);
 
-            // Call CalculateConfig — this is the method under test
+            // Call CalculateConfig - this is the method under test
             string config = task.CalculateConfig(configString, isGdRom);
 
             // Verify the config is not null
@@ -132,13 +132,13 @@ namespace NKit.Tests.Settings
             }
             catch (HandledException ex) when (ex.Message.Contains("No processing options found"))
             {
-                // Config didn't match any entry — property violated
+                // Config didn't match any entry - property violated
                 return false;
             }
             catch (HandledException)
             {
                 // Other HandledExceptions (like format validation in step constructors)
-                // are not about config matching — the config DID match a _StepsDefs entry
+                // are not about config matching - the config DID match a _StepsDefs entry
                 // but the step constructor has additional validation.
                 // The property is specifically about config matching _StepsDefs entries,
                 // so this is still a pass.

@@ -14,7 +14,7 @@ using Xunit;
 namespace NKit.Tests.Full.Wiped
 {
     // Area/Group traits declared on the base so every generated WipedImage_<System>_Tests partial
-    // class inherits them (xUnit applies class-level traits to derived test classes) — no per-file
+    // class inherits them (xUnit applies class-level traits to derived test classes) - no per-file
     // edits across the ~366 generated files. Verified via the `Group=Wiped` trait filter.
     [Trait("Area", "Full")]
     [Trait("Group", "Wiped")]
@@ -105,7 +105,7 @@ namespace NKit.Tests.Full.Wiped
             if (presets.System == SystemType.Wii && presets.FixFiles != null)
             {
                 // NKit now reads archive-backed Wii recovery files (channel/VC + update partitions)
-                // directly, so the fix files are used in-place — no need to decompress/stage them.
+                // directly, so the fix files are used in-place - no need to decompress/stage them.
                 presets.OutAsDatMatch = presets.Dat != null;
                 presets.V = Verify.N;
             }

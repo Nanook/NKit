@@ -41,7 +41,7 @@ namespace NKitDataStore
         public List<FsYamlNode> FileSystems { get; } = new List<FsYamlNode>();
 
         /// <summary>
-        /// Image File System entries — references to files in child images.
+        /// Image File System entries - references to files in child images.
         /// Used by TmdAppFolder to point to files reconstructed from child image area records.
         /// </summary>
         public List<FsYamlIfsEntry> ImageFileSystems { get; } = new List<FsYamlIfsEntry>();
@@ -180,7 +180,7 @@ namespace NKitDataStore
 
             if (fsLineIndex < 0)
             {
-                // No fs: section — still try to parse ifs: section
+                // No fs: section - still try to parse ifs: section
                 parseIfsSection(lines, 0, result);
                 return result;
             }
@@ -819,7 +819,7 @@ namespace NKitDataStore
                         }
                     }
                 }
-                // Intermediate directories are never marked as system — they are structural.
+                // Intermediate directories are never marked as system - they are structural.
                 // Only leaf files carry the system flag.
                 current = existing ?? current.AddDirectory(segment);
             }
@@ -843,7 +843,7 @@ namespace NKitDataStore
     /// <summary>
     /// Represents a file reference in the ifs (Image File System) section.
     /// Points to a file reconstructed from a child image's area records.
-    /// The ImageId is a lookup handle — it identifies the first child image that
+    /// The ImageId is a lookup handle - it identifies the first child image that
     /// contains this file as an area (matched via AreaValueType.FileName metadata).
     /// </summary>
     public class FsYamlIfsEntry

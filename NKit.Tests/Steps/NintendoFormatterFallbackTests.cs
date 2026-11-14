@@ -200,7 +200,7 @@ namespace NKit.Tests.Engine.Output
 
             IEnumerable<IFsFile> result = ResolveFileSource(fsInfo, fs);
 
-            // The ?? operator does not trigger for empty lists — Entries is non-null
+            // The ?? operator does not trigger for empty lists - Entries is non-null
             Assert.Same(fidelity.Entries, result);
             Assert.Empty(result);
         }

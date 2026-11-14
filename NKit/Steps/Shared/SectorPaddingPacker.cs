@@ -11,8 +11,8 @@ namespace Nanook.NKit
     /// Per-sector flag bits (see <see cref="SectorFlags"/>):
     ///   Sync     (bit 2): sync pattern differs from standard (12 bytes at 0x00).
     ///   MsfMode  (bit 3): MSF or mode byte differs from LBA-computed value (4 bytes at 0x0C).
-    ///   Subheader(bit 4): for Mode2 — XA subheader (8 bytes at 0x10) is always stored because
-    ///                      it is content; for Mode1 — intermediate-data bytes (0x10-0x17) are
+    ///   Subheader(bit 4): for Mode2 - XA subheader (8 bytes at 0x10) is always stored because
+    ///                      it is content; for Mode1 - intermediate-data bytes (0x10-0x17) are
     ///                      stored when non-zero because reconstruction leaves them as gap zeros.
     ///   Edc      (bit 5): stored EDC differs from Ecm.ReconstructEcc output.
     ///   Ecc      (bit 6): stored ECC differs from Ecm.ReconstructEcc output.
@@ -65,7 +65,7 @@ namespace Nanook.NKit
 
                 // In a Mode 1 area (blockFsOffset == 0x10) every sector is treated as Mode 1
                 // regardless of its mode byte. Some discs (e.g. Sega CD coverdiscs) have trailing
-                // unstructured data where byte 0x0F happens to be 0x02 — not a real Mode 2 sector.
+                // unstructured data where byte 0x0F happens to be 0x02 - not a real Mode 2 sector.
                 // If we mistype it as Mode 2, bytes 0x810–0x817 fall into neither the Mode 1 stored
                 // stride (0x10–0x80F) nor any pack payload, and come back as zeros on export.
                 // blockFsOffset == -1 (unknown/not passed) keeps the original mode-byte typing.
@@ -126,7 +126,7 @@ namespace Nanook.NKit
                 // Subheader / intermediate-data bytes at 0x10-0x17 (8 bytes).
                 //
                 // Mode2 sectors: the subheader (file/channel/subMode/codingInfo × 2) is pure
-                // content — it cannot be derived from the LBA or user data.  Always store it so
+                // content - it cannot be derived from the LBA or user data.  Always store it so
                 // the EDC/ECC computation during reconstruction uses the correct bytes.
                 //
                 // Non-standard mode byte (not 0x01 / not 0x02): the sector is treated as Mode1
@@ -136,7 +136,7 @@ namespace Nanook.NKit
                 // Store them when non-zero.
                 //
                 // Genuine Mode1 (mode=0x01) on a Mode1 disc (blockFsOffset=0x10): bytes 0x10-0x17
-                // are the user data start and are correctly restored from the datastore — no need
+                // are the user data start and are correctly restored from the datastore - no need
                 // to store them separately in the pack.
                 //
                 // Genuine Mode1 (mode=0x01) on a Mode2 disc (blockFsOffset=0x18): bytes 0x10-0x17
@@ -214,7 +214,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Returns true if the precomputed per-sector flags indicate the whole section is
-        /// fully recreatable — i.e. NO sector needs sync, MSF/mode, EDC, ECC, subheader, or
+        /// fully recreatable - i.e. NO sector needs sync, MSF/mode, EDC, ECC, subheader, or
         /// extended user data stored.
         ///
         /// Subheader (bit 4) covers three cases:
@@ -244,7 +244,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Serializes precomputed per-sector flags into the compact Sector_Padding_Pack byte array
         /// (version + header + presence bitmap + per-present-sector flag byte and payloads).
-        /// Cheap: no reconstruction — reads the stored payload bytes directly from
+        /// Cheap: no reconstruction - reads the stored payload bytes directly from
         /// <paramref name="sectionData"/> for the components each flag marks. Returns null if input
         /// is invalid.
         /// </summary>

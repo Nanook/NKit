@@ -74,7 +74,7 @@ namespace NKit.Tests.NKDS.Binary
         ///
         /// Property 3: Image_BlockMap_Section serialization round-trip.
         /// For any valid collection of OffsetRecord objects (with arbitrary Offset, Size, Type,
-        /// OffsetStart, and Blocks list — where Blocks may be null, empty, or contain up to
+        /// OffsetStart, and Blocks list - where Blocks may be null, empty, or contain up to
         /// max_offset_blocks BlockKey entries) and their associated block shard locations
         /// (BlockKey → file_id, offset, size), serializing to an Image_BlockMap_Section and
         /// deserializing back SHALL produce collections with identical values for all fields,

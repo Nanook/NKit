@@ -278,7 +278,7 @@ namespace Nanook.NKit
                     // LZMA needs the file's 5-byte compressor properties (lc/lp/pb + LE dict size,
                     // stored per WIA spec in wia_disc_t.compr_data). Use them; fall back to the
                     // hardcoded default only if the header omitted them. The hardcoded dict size did
-                    // not match large chunk sizes, decoding to garbage — hence use _compressionBytes.
+                    // not match large chunk sizes, decoding to garbage - hence use _compressionBytes.
                     byte[] lzmaProps = (_compressionBytes != null && _compressionBytes.Length == 5) ? _compressionBytes : _lzmaProperties;
                     using (LzmaBlock ls = new LzmaBlock(new GrindCore.CompressionOptions() { BlockSize = dstData.Length, InitProperties = lzmaProps }))
                         ls.Decompress(srcData, 0, size, dstData, 0, ref destDataLength);

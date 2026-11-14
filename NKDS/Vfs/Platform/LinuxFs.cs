@@ -29,7 +29,7 @@ namespace Nanook.NKit.Vfs
         private readonly object _handleLock = new object();
         private uint? _overrideUid;
         private uint? _overrideGid;
-        // Global read lock removed — reads on different file handles proceed in parallel.
+        // Global read lock removed - reads on different file handles proceed in parallel.
         // Per-context locking (context.ReadLock) serialises concurrent access to the same handle.
         private readonly char _separator = '/';
         private IFuseMount _fuseMount;
@@ -74,7 +74,7 @@ namespace Nanook.NKit.Vfs
                 _fuseMount = Fuse.Mount(mountPoint, this, options);
                 Trace.WriteLine("Filesystem mounted.");
 
-                // Block until unmount — the caller (MountOrchestrator) expects Run() to block
+                // Block until unmount - the caller (MountOrchestrator) expects Run() to block
                 // until the filesystem is actually unmounted. WaitForUnmountAsync() completes
                 // when the FUSE loop exits (via Dispose/LazyUnmount/external fusermount -u).
                 _fuseMount.WaitForUnmountAsync().GetAwaiter().GetResult();

@@ -49,7 +49,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         CreateSetDialogViewModel vm = new CreateSetDialogViewModel(sessionPath, configService);
 
-        // Assert — session path takes priority over MRU history
+        // Assert - session path takes priority over MRU history
         Assert.Equal(sessionPath, vm.FolderPath);
     }
 
@@ -63,7 +63,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         CreateSetDialogViewModel vm = new CreateSetDialogViewModel(null, configService);
 
-        // Assert — first MRU entry is used when no session path is provided
+        // Assert - first MRU entry is used when no session path is provided
         Assert.Equal(@"C:\First", vm.FolderPath);
     }
 
@@ -76,7 +76,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         CreateSetDialogViewModel vm = new CreateSetDialogViewModel(null, configService);
 
-        // Assert — FolderPath is empty when no session and no MRU history
+        // Assert - FolderPath is empty when no session and no MRU history
         Assert.Equal("", vm.FolderPath);
     }
 
@@ -86,7 +86,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
     [Fact]
     public async Task BrowseCommand_OpensInteraction_WithCurrentFolderPathAsStartLocation()
     {
-        // Arrange — set FolderPath to a real existing directory
+        // Arrange - set FolderPath to a real existing directory
         StubConfigService configService = new StubConfigService(dataStoreHistory: []);
         CreateSetDialogViewModel vm = new CreateSetDialogViewModel(null, configService);
         string existingDir = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);
@@ -102,7 +102,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         await vm.BrowseCommand.Execute();
 
-        // Assert — the interaction was called with the current FolderPath as suggested path
+        // Assert - the interaction was called with the current FolderPath as suggested path
         Assert.Equal(existingDir, receivedSuggestedPath);
     }
 
@@ -123,7 +123,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         await vm.BrowseCommand.Execute();
 
-        // Assert — FolderPath is updated to the selected folder
+        // Assert - FolderPath is updated to the selected folder
         Assert.Equal(selectedFolder, vm.FolderPath);
     }
 
@@ -144,14 +144,14 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         await vm.BrowseCommand.Execute();
 
-        // Assert — FolderPath retains its previous value
+        // Assert - FolderPath retains its previous value
         Assert.Equal(existingDir, vm.FolderPath);
     }
 
     [Fact]
     public async Task BrowseCommand_WithNonExistentPath_OpensPickerWithoutSuggestedLocation()
     {
-        // Arrange — set FolderPath to a path that doesn't exist
+        // Arrange - set FolderPath to a path that doesn't exist
         StubConfigService configService = new StubConfigService(dataStoreHistory: []);
         CreateSetDialogViewModel vm = new CreateSetDialogViewModel(null, configService);
         vm.FolderPath = @"Z:\NonExistent\Path\That\Does\Not\Exist";
@@ -166,7 +166,7 @@ public class CreateSetInlineFolderInitializationTests : IDisposable
         // Act
         await vm.BrowseCommand.Execute();
 
-        // Assert — suggested path is null when current FolderPath doesn't exist
+        // Assert - suggested path is null when current FolderPath doesn't exist
         Assert.Null(receivedSuggestedPath);
     }
 

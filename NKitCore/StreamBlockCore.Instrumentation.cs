@@ -86,7 +86,7 @@ namespace NKitCore
         }
 
         // ─────────────────────────────────────────────────────────────────────────────────────────
-        // Built-in progress/telemetry line formatter (DISABLED — baked in for a future engine
+        // Built-in progress/telemetry line formatter (DISABLED - baked in for a future engine
         // refactor that will surface progress logging directly from the core).
         //
         // Today the NKit test runner (NKitCoreRunner.TraceStats) formats this exact line from the
@@ -128,8 +128,8 @@ namespace NKitCore
         //         workersCol, snap.QueueLength, snap.ReadyHeld, snap.TotalProcessedMB, cfgTag);
         // }
         //
-        // Optional sink helper (also disabled): write the formatted line to Trace, and — when the
-        // corresponding env vars are set — to the console and/or an append-only stats file. Kept env-
+        // Optional sink helper (also disabled): write the formatted line to Trace, and - when the
+        // corresponding env vars are set - to the console and/or an append-only stats file. Kept env-
         // gated so it is inert unless a host opts in.
         //
         // internal static void EmitStatsLine(InstrumentationSnapshot snap, DateTime started, string cfgTag)

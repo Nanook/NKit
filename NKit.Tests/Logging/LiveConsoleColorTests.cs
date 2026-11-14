@@ -12,7 +12,7 @@ namespace NKit.Tests.Logging
     /// Pre=yellow, Proc=fuchsia, Core=purple, everything else gold3; green/red reserved), the tag
     /// brackets are preserved, and the message stays uncoloured.</item>
     /// <item><b>Info</b>: only the Info-summary prefixes ([Title]/[InParam]/[OutParam]) are
-    /// recognised — the prefix is stripped from the display and the line coloured; every other line
+    /// recognised - the prefix is stripped from the display and the line coloured; every other line
     /// passes through uncoloured (raw stage tags do not reach the console at Info verbosity).</item>
     /// </list>
     /// In all cases the produced markup must PARSE (Spectre throws on malformed markup).
@@ -39,12 +39,12 @@ namespace NKit.Tests.Logging
             => (string)_colorize.Invoke(null, new object[] { line, Level(level), Level(consoleLevel) });
 
         [Theory]
-        // Pipeline stages (plain [In]/[Out]/[Pre]/[Proc#N] — no :category suffix any more).
+        // Pipeline stages (plain [In]/[Out]/[Pre]/[Proc#N] - no :category suffix any more).
         [InlineData("[10%] [In] Area 3 x", "bold white", "aqua")]
         [InlineData("[5%] [Out] done", "bold white", "blue")]
         [InlineData("[5%] [Pre] fst", "bold white", "yellow")]
         [InlineData("[42%] [Proc#5] worker", "bold white", "fuchsia")]
-        // Cross-cutting categories — all gold.
+        // Cross-cutting categories - all gold.
         [InlineData("[9%] [Core] Worker 1 spawned", "bold white", "purple")]
         [InlineData("[Input] System detected", null, "gold3")]
         [InlineData("[Params] Step chain", null, "gold3")]
@@ -68,7 +68,7 @@ namespace NKit.Tests.Logging
         public void Colorize_SectionTitleTaskSystem_NotColoured_AtDetail()
         {
             // "[Scan/GameCube]" is a SECTION TITLE, not a scope/component tag (it contains '/').
-            // At Detail it must render as literal, UNCOLOURED text — not swept up as a gold scope.
+            // At Detail it must render as literal, UNCOLOURED text - not swept up as a gold scope.
             string markup = Colorize("[Scan/GameCube]  FreeLoader for GameCube (Europe)");
             Assert.Contains("[[Scan/GameCube]]", markup); // literal brackets preserved
             Assert.DoesNotContain("[gold3]", markup);     // NOT coloured as a scope
@@ -206,7 +206,7 @@ namespace NKit.Tests.Logging
         public void Info_MessageThatLooksLikePrefixButIsNot_Passthrough()
         {
             // A line whose text merely CONTAINS a token later on (not at the very start) is not a
-            // prefix — passthrough, uncoloured.
+            // prefix - passthrough, uncoloured.
             string markup = Colorize("Extracted 42 files [InParam] not a prefix", "Info", "Info");
             Assert.DoesNotContain("[grey]", markup);
             Assert.Contains("Extracted 42 files", markup);
@@ -254,7 +254,7 @@ namespace NKit.Tests.Logging
         [Fact]
         public void Detail_TitlePrefix_LeftVerbatim_NotStripped()
         {
-            // At Detail verbosity the [Title] prefix is NOT stripped — the raw tagged text shows.
+            // At Detail verbosity the [Title] prefix is NOT stripped - the raw tagged text shows.
             string markup = Colorize("[Title] [Scan/GameCube]  FreeLoader", "Info", "Detail");
             Assert.Contains("[[Title]]", markup); // prefix left in place (as a literal tag)
             Assert.NotNull(new Markup(markup));

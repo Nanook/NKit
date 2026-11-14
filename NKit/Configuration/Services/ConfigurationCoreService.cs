@@ -211,7 +211,7 @@ namespace Nanook.NKit.Configuration.Services
                 if (string.IsNullOrEmpty(executableName))
                     return ConfigSettingsConstants.ConfigFileNameCLI;
 
-                // nkds shares the nkit pipeline configuration — always use nkit.yaml regardless of
+                // nkds shares the nkit pipeline configuration - always use nkit.yaml regardless of
                 // the executable name so that a local nkit.yaml next to the nkds exe is detected as
                 // portable mode and the user-area config is found in the standard nkit config dir.
                 // nkds-ui uses nkds-ui.yaml (same pattern as nkit-ui uses nkit-ui.yaml).

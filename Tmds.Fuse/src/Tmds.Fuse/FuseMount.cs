@@ -681,7 +681,7 @@ namespace Tmds.Fuse
                 {
                     Fuse.LazyUnmount(_mountPoint);
 
-                    // Give fuse a kick to help unblock the loop — access the mount point
+                    // Give fuse a kick to help unblock the loop - access the mount point
                     // so fuse_loop sees an operation and can check its exit flag. Swallow
                     // any exception in case the directory was already removed by the OS or
                     // by fusermount3 during the unmount sequence.

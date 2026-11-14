@@ -4,7 +4,7 @@ namespace Nanook.NKit
     /// Receives log events and progress updates. Implementations decide how to render,
     /// filter, and store them (console, file, UI, etc.).
     /// <para>
-    /// Sinks must be thread-safe — events may arrive from multiple workers concurrently.
+    /// Sinks must be thread-safe - events may arrive from multiple workers concurrently.
     /// </para>
     /// </summary>
     internal interface ILogSink

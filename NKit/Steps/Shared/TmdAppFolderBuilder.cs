@@ -132,7 +132,7 @@ namespace Nanook.NKit.Steps.Shared
                     if (ifsFileNames.Contains(fileName))
                         continue;
 
-                    // Skip .app files — these are stored as child images
+                    // Skip .app files - these are stored as child images
                     string ext = Path.GetExtension(fileName);
                     if (ext.Equals(".app", StringComparison.OrdinalIgnoreCase))
                         continue;

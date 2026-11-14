@@ -389,7 +389,7 @@ namespace NKitDataStore.Tests
             }
             else
             {
-                // Single image — verify it has valid block structure
+                // Single image - verify it has valid block structure
                 using IImageReader reader = store.OpenImageReader(new GlobalImageKey("WiiSet", images[0].Id));
                 List<OffsetRecord> offsets = reader.GetOffsets().ToList();
                 Assert.NotEmpty(offsets);

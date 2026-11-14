@@ -337,7 +337,7 @@ namespace NKitDataStore.Tests
                 }
             };
 
-            // Only track data and index files in source — all should be excluded
+            // Only track data and index files in source - all should be excluded
             List<SimulatedSourceFile> sourceFiles = new List<SimulatedSourceFile>
             {
                 new() { Name = "track01.bin", Size = 734003280 },
@@ -456,7 +456,7 @@ namespace NKitDataStore.Tests
             Assert.False(images[0].Removed); // Cue format
             Assert.False(images[1].Removed); // Gdi format
             Assert.False(images[2].Removed); // TmdAppFolder format
-            Assert.True(images[3].Removed);  // CueFolder — deleted
+            Assert.True(images[3].Removed);  // CueFolder - deleted
         }
 
         #endregion
@@ -489,7 +489,7 @@ namespace NKitDataStore.Tests
                 new() { Name = "audio.wav", Size = 176400000 },
                 new() { Name = "data.iso", Size = 500000000 },
                 new() { Name = "backup.img", Size = 300000000 },
-                new() { Name = "playlist.m3u", Size = 128 },  // auxiliary — should be included
+                new() { Name = "playlist.m3u", Size = 128 },  // auxiliary - should be included
             };
 
             FsYaml result = SimulateBuild(sourceFiles, childImages);
@@ -531,7 +531,7 @@ namespace NKitDataStore.Tests
             {
                 new() { Name = "game.cue", Size = 512 },
                 new() { Name = "game2.gdi", Size = 256 },
-                new() { Name = "notes.nfo", Size = 1024 },  // auxiliary — should be included
+                new() { Name = "notes.nfo", Size = 1024 },  // auxiliary - should be included
             };
 
             FsYaml result = SimulateBuild(sourceFiles, childImages);
@@ -577,13 +577,13 @@ namespace NKitDataStore.Tests
 
             List<SimulatedSourceFile> sourceFiles = new List<SimulatedSourceFile>
             {
-                // Track data files — excluded
+                // Track data files - excluded
                 new() { Name = "track01.bin", Size = 734003280 },
                 new() { Name = "track02.bin", Size = 52920000 },
-                // Index files — excluded
+                // Index files - excluded
                 new() { Name = "disc1.cue", Size = 512 },
                 new() { Name = "disc2.cue", Size = 512 },
-                // Auxiliary files — included in fs
+                // Auxiliary files - included in fs
                 new() { Name = "playlist.m3u", Size = 128 },
                 new() { Name = "cover.jpg", Size = 50000 },
             };

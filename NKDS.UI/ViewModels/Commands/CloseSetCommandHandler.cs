@@ -35,7 +35,7 @@ public class CloseSetCommandHandler : ICommandHandler
                 // 4. Suppress intermediate reactive updates during close.
                 //    Unmounting active mounts before the DataStore is disposed is handled centrally
                 //    by SessionManager.Close() (via its BeforeClose hook), so it applies uniformly to
-                //    every close path — not just this command. We just call Close() here.
+                //    every close path - not just this command. We just call Close() here.
                 ctx.ImageList.SuppressFilters();
                 try
                 {

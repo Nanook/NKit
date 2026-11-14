@@ -3,7 +3,7 @@ namespace Nanook.NKit
     /// <summary>
     /// A public, engine-agnostic snapshot of pipeline telemetry for UI display. Populated from the
     /// NKitCore StreamBlockCore instrumentation and raised via <c>NKitProcessor.StatsEvent</c>.
-    /// Stage fractions are 0..1 and (In + Pre + Proc + Out) sum to roughly 1 — they show where the
+    /// Stage fractions are 0..1 and (In + Pre + Proc + Out) sum to roughly 1 - they show where the
     /// wall-clock is spent, i.e. which stage is the bottleneck.
     /// </summary>
     public sealed class EngineStats

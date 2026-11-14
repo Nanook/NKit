@@ -191,7 +191,7 @@ namespace Nanook.NKit.Container
                 }
             }
             // Grow the cache whenever the required size exceeds the current allocation.
-            // (The guard was inverted — `size < _tempCacheSize` only reallocated when shrinking,
+            // (The guard was inverted - `size < _tempCacheSize` only reallocated when shrinking,
             // so a subsequent larger request bumped _tempCacheSize without growing _tempCache,
             // leaving an undersized array that the oversized-sector copy loop then overran:
             // "Source array was not long enough".)

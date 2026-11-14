@@ -41,7 +41,7 @@ namespace NKit.Tests.NKDS.Split
         #region Property Tests
 
         /// <summary>
-        /// Property 15: Split Store Discovery by Exact Match — Returns non-null when file exists
+        /// Property 15: Split Store Discovery by Exact Match - Returns non-null when file exists
         ///
         /// For any valid set name, when the file {setName}.split.nkds exists in the base
         /// directory, ResolveSplitSetName SHALL return a non-null result equal to "{setName}.split".
@@ -72,7 +72,7 @@ namespace NKit.Tests.NKDS.Split
         }
 
         /// <summary>
-        /// Property 15: Split Store Discovery by Exact Match — Returns null when file does not exist
+        /// Property 15: Split Store Discovery by Exact Match - Returns null when file does not exist
         ///
         /// For any valid set name, when the file {setName}.split.nkds does NOT exist in
         /// the base directory, ResolveSplitSetName SHALL return null.
@@ -86,7 +86,7 @@ namespace NKit.Tests.NKDS.Split
             if (setName == null)
                 return true; // Skip degenerate input
 
-            // Create an empty directory — no split file present
+            // Create an empty directory - no split file present
             string testDir = Path.Combine(_tempDir, Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(testDir);
 
@@ -98,7 +98,7 @@ namespace NKit.Tests.NKDS.Split
         }
 
         /// <summary>
-        /// Property 15: Split Store Discovery by Exact Match — Does not match near-miss filenames
+        /// Property 15: Split Store Discovery by Exact Match - Does not match near-miss filenames
         ///
         /// For any valid set name, when the directory contains files with similar but non-exact
         /// names (e.g., "{setName}.split.nkds.bak", "{setName}X.split.nkds", "X{setName}.split.nkds"),
@@ -130,7 +130,7 @@ namespace NKit.Tests.NKDS.Split
         }
 
         /// <summary>
-        /// Property 15: Split Store Discovery by Exact Match — Biconditional (if and only if)
+        /// Property 15: Split Store Discovery by Exact Match - Biconditional (if and only if)
         ///
         /// For any valid set name and a boolean controlling file presence, ResolveSplitSetName
         /// returns non-null if and only if the exact file exists. This is the core biconditional

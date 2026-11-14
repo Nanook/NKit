@@ -282,7 +282,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.2, 6.3**
         ///
-        /// Property 6: Image Record Dual-Write — CreateArea calls.
+        /// Property 6: Image Record Dual-Write - CreateArea calls.
         ///
         /// For any set of areas generated for an image, when aux is enabled,
         /// both the primary and aux writers receive identical CreateArea calls
@@ -358,7 +358,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.2, 6.3**
         ///
-        /// Property 6: Image Record Dual-Write — FinalizeImage calls.
+        /// Property 6: Image Record Dual-Write - FinalizeImage calls.
         ///
         /// For any image finalization parameters (size, crc, xxHash), when aux is
         /// enabled, both the primary and aux writers receive identical FinalizeImage
@@ -401,7 +401,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.2, 6.3**
         ///
-        /// Property 6: Image Record Dual-Write — Full image lifecycle.
+        /// Property 6: Image Record Dual-Write - Full image lifecycle.
         ///
         /// For any image added with aux enabled, the complete lifecycle
         /// (CreateAreas → ProcessSection headers → BuildFileSystemYaml → FinalizeImage)
@@ -424,7 +424,7 @@ namespace NKitDataStore.Tests
             TrackingWriter primaryTracker = new TrackingWriter();
             TrackingWriter auxTracker = new TrackingWriter();
 
-            // Step 1: CreateAreas — both writers receive identical area records
+            // Step 1: CreateAreas - both writers receive identical area records
             List<AreaConfig> areas = new List<AreaConfig>();
             for (int i = 0; i < areaCount; i++)
             {
@@ -444,7 +444,7 @@ namespace NKitDataStore.Tests
             }
             ModelCreateAreas(areas, auxEnabled: true, primaryTracker, auxTracker);
 
-            // Step 2: ProcessSection ImageHeaders — both writers receive header data
+            // Step 2: ProcessSection ImageHeaders - both writers receive header data
             for (int i = 0; i < headerCount; i++)
             {
                 long headerOffset = (long)rng.Next(0, 0x10000) * 0x100;
@@ -453,7 +453,7 @@ namespace NKitDataStore.Tests
                     primaryTracker, auxTracker);
             }
 
-            // Step 3: BuildFileSystemYaml — both writers receive filesystem data
+            // Step 3: BuildFileSystemYaml - both writers receive filesystem data
             int fsDataLength = rng.Next(100, 10000);
             FileWriteConfig fsConfig = new FileWriteConfig
             {
@@ -464,7 +464,7 @@ namespace NKitDataStore.Tests
             rng.NextBytes(fsConfig.Data);
             ModelBuildFileSystemYaml(fsConfig, auxEnabled: true, primaryTracker, auxTracker);
 
-            // Step 4: FinalizeImage — both writers receive identical finalization
+            // Step 4: FinalizeImage - both writers receive identical finalization
             FinalizeConfig finalizeConfig = new FinalizeConfig
             {
                 TotalSize = areas.Sum(a => a.Size),

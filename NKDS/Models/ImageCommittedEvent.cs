@@ -16,10 +16,10 @@ public sealed class ImageCommittedEvent
     /// <summary>The session ID of the owning DataStore session.</summary>
     public required string SessionId { get; init; }
 
-    /// <summary>Whether the image was skipped (e.g. system filter / no-op — nothing to add).</summary>
+    /// <summary>Whether the image was skipped (e.g. system filter / no-op - nothing to add).</summary>
     public bool WasSkipped { get; init; }
 
-    /// <summary>Whether the image already existed in the set (identical content) — a no-op duplicate add.</summary>
+    /// <summary>Whether the image already existed in the set (identical content) - a no-op duplicate add.</summary>
     public bool WasAlreadyExists { get; init; }
 
     /// <summary>Whether the image processing failed (exception during pipeline).</summary>

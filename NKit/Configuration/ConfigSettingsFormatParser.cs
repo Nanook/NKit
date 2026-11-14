@@ -461,12 +461,12 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatWbfs => ParseWbfsFormat(formatString),
                 ConfigSettingsConstants.FormatCiso => ParseCisoFormat(formatString),
                 ConfigSettingsConstants.FormatGdi => new GdiFormatConfiguration { FormatType = formatType },
-                // "nkitiso" is canonical; "nkit.iso" is the legacy alias — both produce the same config object.
+                // "nkitiso" is canonical; "nkit.iso" is the legacy alias - both produce the same config object.
                 ConfigSettingsConstants.FormatNkitIso or ConfigSettingsConstants.FormatNkitIsoAlias => new SimpleFormatConfiguration { FormatType = ConfigSettingsConstants.FormatNkitIso },
                 ConfigSettingsConstants.FormatWua => ParseWuaFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatDecIso => new SimpleFormatConfiguration { FormatType = formatType },
-                // "apptmd" is a CLI alias for "app" — normalise it so downstream code sees FormatApp
+                // "apptmd" is a CLI alias for "app" - normalise it so downstream code sees FormatApp
                 "apptmd" => new SimpleFormatConfiguration { FormatType = ConfigSettingsConstants.FormatApp },
                 _ => throw new ArgumentException($"Unknown or unsupported format '{formatType}'")
             };

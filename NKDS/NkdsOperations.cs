@@ -566,7 +566,7 @@ public sealed class NkdsOperations : INkdsOperations
                         }
                         else
                         {
-                            // Task 7.2: Image committed successfully — find the ImageRecord and fire callback.
+                            // Task 7.2: Image committed successfully - find the ImageRecord and fire callback.
                             // Note on aux mode (Req 9.1): When aux store routing is active, the NKit pipeline
                             // routes update partition blocks to the aux set internally (via DedupeStep/DataStoreWiiFormatter),
                             // but the image record is always committed to the primary set identified by `setName`.
@@ -592,7 +592,7 @@ public sealed class NkdsOperations : INkdsOperations
                                         // The image data IS committed (CRC/XxHash are correct), but the
                                         // pipeline may still have FAILED verification (e.g. a CHD source
                                         // whose stored hash cannot match the produced image). A commit that
-                                        // did not verify must report a DEFINITIVE Failed status — never a
+                                        // did not verify must report a DEFINITIVE Failed status - never a
                                         // blank one. Verify was only actually attempted when the pipeline
                                         // ran a verifying step (VerifyResult != Unverified); an Unverified
                                         // result means verification was not requested, so it is not a failure.
@@ -779,7 +779,7 @@ public sealed class NkdsOperations : INkdsOperations
             }
             catch
             {
-                // Wrap unreadable archive exceptions — skip scanning entirely if the
+                // Wrap unreadable archive exceptions - skip scanning entirely if the
                 // top-level scan fails (e.g., corrupt archive). Return empty list.
                 return (IReadOnlyList<CandidateImage>)candidates;
             }
@@ -794,7 +794,7 @@ public sealed class NkdsOperations : INkdsOperations
                 {
                     // Skip entries that won't be processable (archives containing archives,
                     // index-only entries, empty archives, entries with no data, etc.)
-                    // Only include entries with Valid status — these are the actual images
+                    // Only include entries with Valid status - these are the actual images
                     // that the NKitProcessor pipeline will process.
                     if (sourceFile.Status != SourceFileResult.Valid)
                         continue;
@@ -822,7 +822,7 @@ public sealed class NkdsOperations : INkdsOperations
 
     /// <summary>
     /// Processes pre-scanned candidate images sequentially.
-    /// Skips the internal ScanGrouped call — uses the provided CandidateImage list directly.
+    /// Skips the internal ScanGrouped call - uses the provided CandidateImage list directly.
     /// Callbacks fire per-image for progress, status, and commit events.
     /// </summary>
     public Task<OperationResult> AddPreScannedAsync(
@@ -867,11 +867,11 @@ public sealed class NkdsOperations : INkdsOperations
                 // Build AppSettings for the pipeline (we need settings for NKitProcessor)
                 // The -in paths are not used (we iterate candidates directly, skipping ScanGrouped),
                 // but AppSettings requires at least one -in path for initialization.
-                // Use dataStorePath as a dummy input — only -out, -task, and -dedupe matter.
+                // Use dataStorePath as a dummy input - only -out, -task, and -dedupe matter.
                 string[] args = buildImportArgs(dataStorePath, setName, new List<string> { dataStorePath }, null, null, auxModeText, keyFixPaths);
                 AppSettings settings = new AppSettings(null, args);
 
-                // Initialize the log — NKitProcessor and steps require settings._log to be initialized.
+                // Initialize the log - NKitProcessor and steps require settings._log to be initialized.
                 // Without this, internal code paths throw NullReferenceException.
                 using Log log = settings.GetLog((_, _) => { });
 
@@ -899,7 +899,7 @@ public sealed class NkdsOperations : INkdsOperations
                     string itemName = candidate.DisambiguatedName;
 
                     // Check for cancellation before processing each image.
-                    // On cancellation, do NOT throw — instead mark remaining items as AddCancelled.
+                    // On cancellation, do NOT throw - instead mark remaining items as AddCancelled.
                     if (cancellationToken.IsCancellationRequested)
                     {
                         // Transition currently-pending items (from this point onward) to AddCancelled
@@ -937,13 +937,13 @@ public sealed class NkdsOperations : INkdsOperations
                     }
 
                     // Fire onItemStarted for counter display (e.g., "1/65")
-                    // Skip synthetic folder entries — they're processed silently (no UI row)
+                    // Skip synthetic folder entries - they're processed silently (no UI row)
                     bool isSyntheticFolder = candidate.Source.IsSyntheticFolder;
                     if (!isSyntheticFolder)
                     {
                         onItemStarted?.Invoke(processed, total);
 
-                        // Transition status to Processing (rows already exist as Pending —
+                        // Transition status to Processing (rows already exist as Pending -
                         // do NOT fire IsProcessing=true committed event, just signal status change via progress)
                         onImageProgress?.Invoke(new ImageProgressEvent
                         {
@@ -1010,13 +1010,13 @@ public sealed class NkdsOperations : INkdsOperations
                         // A re-added image already in the set is reported via ImageAlreadyExists
                         // (the dedupe pipeline detects it at FinalizeImage and rolls the transaction
                         // back). ImageSkipped covers the system-filter/no-op skip. Either means the
-                        // image was NOT committed, so treat both as the duplicate/skip case — otherwise
+                        // image was NOT committed, so treat both as the duplicate/skip case - otherwise
                         // the success branch below finds no committed row and the UI row stays stuck on
                         // "Add Processing".
                         if (result.ImageAlreadyExists || result.ImageSkipped)
                         {
                             // Nothing was committed: either the image already exists in the set
-                            // (ImageAlreadyExists — rolled back at FinalizeImage) or it was a system
+                            // (ImageAlreadyExists - rolled back at FinalizeImage) or it was a system
                             // filter / no-op skip (ImageSkipped). Report them distinctly so the UI can
                             // show "Already Exists" vs "Skipped".
                             duplicates.Add(itemName);
@@ -1042,7 +1042,7 @@ public sealed class NkdsOperations : INkdsOperations
                         }
                         else if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
-                            // Pipeline reported an error — transition to Failed
+                            // Pipeline reported an error - transition to Failed
                             errors.Add(new OperationErrorEntry
                             {
                                 ItemName = itemName,
@@ -1069,7 +1069,7 @@ public sealed class NkdsOperations : INkdsOperations
                         }
                         else
                         {
-                            // Success — find committed ImageRecord and fire callback
+                            // Success - find committed ImageRecord and fire callback
                             if (onImageCommitted != null)
                             {
                                 try
@@ -1089,7 +1089,7 @@ public sealed class NkdsOperations : INkdsOperations
                                         // The image data IS committed, but the pipeline may still have
                                         // FAILED verification (e.g. a CD-style CHD/cue that does not
                                         // round-trip through the DataStore). A commit that did not verify
-                                        // must report a DEFINITIVE Failed status — never a blank one.
+                                        // must report a DEFINITIVE Failed status - never a blank one.
                                         // Unverified means verification was not requested, not a failure.
                                         bool verifyAttempted = result.VerifyResult != VerifyResult.Unverified;
                                         bool verifyFailed = verifyAttempted && result.VerifyResult != VerifyResult.VerifySuccess;
@@ -1232,7 +1232,7 @@ public sealed class NkdsOperations : INkdsOperations
             }
             catch (Exception ex)
             {
-                // Unexpected top-level failure — write full details for debugging
+                // Unexpected top-level failure - write full details for debugging
                 string debugInfo = $"{ex.GetType().FullName}: {ex.Message}\n{ex.StackTrace}";
                 try { File.WriteAllText(Path.Combine(dataStorePath, "_addPreScanned_error.txt"), debugInfo); } catch { }
 
@@ -1530,11 +1530,11 @@ public sealed class NkdsOperations : INkdsOperations
 
                         // Build export args: -in points to setName.nkds//imageName.ext
                         // For App/Cdn images (WiiU), the DataStore lists them without
-                        // extension — pass the image name as-is (e.g. "test [tmd.3648]").
-                        // For CUE/GDI images, the DataStore presents them as folders —
+                        // extension - pass the image name as-is (e.g. "test [tmd.3648]").
+                        // For CUE/GDI images, the DataStore presents them as folders -
                         // the mask must target the index file inside: "folder/name.cue".
                         // When multiple images share the same name, addDataStoreFiles
-                        // disambiguates by appending " (id)" — the mask must match.
+                        // disambiguates by appending " (id)" - the mask must match.
                         string nkdsPath = Path.Combine(dataStorePath, setName + DataStore.DatabaseFileExtension);
 
                         // Check for duplicate names (same logic as addDataStoreFiles)
@@ -1813,7 +1813,7 @@ public sealed class NkdsOperations : INkdsOperations
                         {
                             if (imageSize == 0 && imageCrc32 == 0 && imageXxHash64 == 0)
                             {
-                                // Empty directory — nothing to verify
+                                // Empty directory - nothing to verify
                                 onImageVerified?.Invoke(imageId, true);
                                 processed++;
                                 progress?.Report(new OperationProgress
@@ -1828,7 +1828,7 @@ public sealed class NkdsOperations : INkdsOperations
                             }
                             if (imageCrc32 == 0 && imageXxHash64 == 0 && imageSize > 0)
                             {
-                                // Legacy image — cannot verify
+                                // Legacy image - cannot verify
                                 errors.Add(new OperationErrorEntry
                                 {
                                     ItemName = itemName,
@@ -1846,7 +1846,7 @@ public sealed class NkdsOperations : INkdsOperations
                                 continue;
                             }
 
-                            // Folder image with valid checksums — verify by reading the
+                            // Folder image with valid checksums - verify by reading the
                             // concatenated byte stream directly and comparing checksums.
                             // The NKitProcessor pipeline does not support Folder format,
                             // so we perform verification inline.
@@ -1925,11 +1925,11 @@ public sealed class NkdsOperations : INkdsOperations
 
                         // Build verify args: -in points to setName.nkds//imageName.ext
                         // For App/Cdn images (WiiU), the DataStore lists them without
-                        // extension — pass the image name as-is (e.g. "test [tmd.3648]").
-                        // For CUE/GDI images, the DataStore presents them as folders —
+                        // extension - pass the image name as-is (e.g. "test [tmd.3648]").
+                        // For CUE/GDI images, the DataStore presents them as folders -
                         // the mask must target the index file inside: "folder/name.cue".
                         // When multiple images share the same name, addDataStoreFiles
-                        // disambiguates by appending " (id)" — the mask must match.
+                        // disambiguates by appending " (id)" - the mask must match.
                         string nkdsPath = Path.Combine(dataStorePath, setName + DataStore.DatabaseFileExtension);
 
                         // Check for duplicate names (same logic as addDataStoreFiles)
@@ -2398,7 +2398,7 @@ public sealed class NkdsOperations : INkdsOperations
             }
             else
             {
-                // File node — check cancellation, open stream and write to disk
+                // File node - check cancellation, open stream and write to disk
                 cancellationToken.ThrowIfCancellationRequested();
 
                 try
@@ -2555,7 +2555,7 @@ public sealed class NkdsOperations : INkdsOperations
             "-dedupe", dedupeParam
         };
 
-        // Disable NKit config file loading — NKDS passes all required settings
+        // Disable NKit config file loading - NKDS passes all required settings
         // (keys, fixInfo, fixFiles) directly via command-line override arguments.
         args.Add("-cfg");
         args.Add("n");
@@ -2583,7 +2583,7 @@ public sealed class NkdsOperations : INkdsOperations
             "-in", nkdsFilePath + "//" + mask
         };
 
-        // Disable NKit config file loading — NKDS passes all required settings
+        // Disable NKit config file loading - NKDS passes all required settings
         // (keys, fixInfo, fixFiles) directly via command-line override arguments.
         args.Add("-cfg");
         args.Add("n");
@@ -2611,7 +2611,7 @@ public sealed class NkdsOperations : INkdsOperations
             "-in", nkdsFilePath + "//" + mask
         };
 
-        // Disable NKit config file loading — NKDS passes all required settings
+        // Disable NKit config file loading - NKDS passes all required settings
         // (keys, fixInfo, fixFiles) directly via command-line override arguments.
         args.Add("-cfg");
         args.Add("n");

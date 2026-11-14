@@ -405,7 +405,7 @@ namespace Nanook.NKit
         {
             get
             {
-                // Synthetic folder sources have no image files — return the source folder path
+                // Synthetic folder sources have no image files - return the source folder path
                 if (IsSyntheticFolder)
                     return SyntheticFolderGroup?.SourceFolder ?? Name ?? "";
 

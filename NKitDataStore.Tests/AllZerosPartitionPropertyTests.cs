@@ -23,7 +23,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.3, 4.5**
         ///
-        /// Property 6: All-zeros partition produces no stored blocks — FindFirstNonZero returns dataLength.
+        /// Property 6: All-zeros partition produces no stored blocks - FindFirstNonZero returns dataLength.
         ///
         /// For any all-zero byte array of length N (where N is a multiple of BlockSize),
         /// FindFirstNonZero returns N, indicating no non-zero byte exists and the entire
@@ -48,7 +48,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.3, 4.5**
         ///
-        /// Property 6: All-zeros partition produces no stored blocks — TrimOffset equals partition size.
+        /// Property 6: All-zeros partition produces no stored blocks - TrimOffset equals partition size.
         ///
         /// When FindFirstNonZero returns dataLength (all zeros), the convention from
         /// ProcessSection sets TrimOffset to the partition size. This means
@@ -76,7 +76,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.3, 4.5**
         ///
-        /// Property 6: All-zeros partition produces no stored blocks — Zero blocks stored.
+        /// Property 6: All-zeros partition produces no stored blocks - Zero blocks stored.
         ///
         /// When TrimOffset equals the partition size, the number of blocks to store is
         /// (partitionSize - trimOffset) / blockSize == 0. This verifies the arithmetic
@@ -105,7 +105,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.3, 4.5**
         ///
-        /// Property 6: All-zeros partition produces no stored blocks — Reconstruction serves all zeros.
+        /// Property 6: All-zeros partition produces no stored blocks - Reconstruction serves all zeros.
         ///
         /// When TrimOffset equals partition size, reconstruction fills the entire partition
         /// with zeros (via gap-fill). This verifies that a zero-filled buffer of the
@@ -144,7 +144,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.3, 4.5**
         ///
-        /// Property 6: All-zeros partition produces no stored blocks — Various block sizes.
+        /// Property 6: All-zeros partition produces no stored blocks - Various block sizes.
         ///
         /// For any power-of-two block size and any all-zero partition that is a multiple
         /// of that block size, the full pipeline (scan → align → trim) results in

@@ -57,7 +57,7 @@ public class PerImageErrorAccumulationPropertyTests
             .ToList();
 
         if (errors.Count == 0)
-            return true; // Vacuously true — no additional errors to test
+            return true; // Vacuously true - no additional errors to test
 
         // Arrange: create an image already in Failed state
         ImageRowViewModel row = CreateFailedImageRow(initialError.Get);
@@ -85,7 +85,7 @@ public class PerImageErrorAccumulationPropertyTests
         if (row.ProcessingStatus != ImageProcessingStatus.Failed)
             return false;
 
-        // 4. OutputText length grew (not replaced) — it must be longer than after initial error
+        // 4. OutputText length grew (not replaced) - it must be longer than after initial error
         if (row.OutputText.Length <= outputAfterInitial.Length)
             return false;
 

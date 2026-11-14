@@ -94,13 +94,13 @@ namespace NKitDataStore.Tests
         {
             SourceFile[] sources = new[]
             {
-                // Dir with 3 TmdApp — should produce a group
+                // Dir with 3 TmdApp - should produce a group
                 CreateTmdAppSourceFile("/games/Mario", "Mario", "tmd.0"),
                 CreateTmdAppSourceFile("/games/Mario", "Mario", "tmd.1"),
                 CreateTmdAppSourceFile("/games/Mario", "Mario", "tmd.2"),
-                // Dir with 1 TmdApp — should also produce a group
+                // Dir with 1 TmdApp - should also produce a group
                 CreateTmdAppSourceFile("/games/Kirby", "Kirby", "tmd.0"),
-                // Dir with 2 TmdApp — should produce a group
+                // Dir with 2 TmdApp - should produce a group
                 CreateTmdAppSourceFile("/games/Zelda", "Zelda", "tmd.0"),
                 CreateTmdAppSourceFile("/games/Zelda", "Zelda", "tmd.1"),
             };
@@ -138,7 +138,7 @@ namespace NKitDataStore.Tests
         {
             SourceFile[] sources = new[]
             {
-                // 1 TmdApp + 2 non-TmdApp in same dir — should produce a group with 1 child
+                // 1 TmdApp + 2 non-TmdApp in same dir - should produce a group with 1 child
                 CreateTmdAppSourceFile("/games/Mixed", "Mixed", "tmd.0"),
                 CreateNonTmdAppSourceFile("/games/Mixed", "game.iso"),
                 CreateNonTmdAppSourceFile("/games/Mixed", "game2.iso"),
@@ -286,7 +286,7 @@ namespace NKitDataStore.Tests
                 {
                     new SourceFileItem(dirPath, fileName, ".iso", "", 0, 1024, 0, false, false)
                 },
-                // No IndexFile — this is a plain ISO, not a TmdApp
+                // No IndexFile - this is a plain ISO, not a TmdApp
             };
             return sf;
         }

@@ -241,7 +241,7 @@ namespace NKitDataStore
         }
 
         // OpenImageReader profiling. Off by default; flip this constant to true to log open timings
-        // (matches the code-controlled MountDebug pattern — no environment variable).
+        // (matches the code-controlled MountDebug pattern - no environment variable).
         private const bool _profile = false;
 
         private static bool shouldProfile() => _profile;
@@ -339,12 +339,12 @@ namespace NKitDataStore
         /// A WiiU digital title is stored as a <see cref="ImageFormat.TmdAppFolder"/> umbrella
         /// (Name = the plain base title) plus one <see cref="ImageFormat.App"/> child per TMD, each
         /// named "<c>{base} [tmd.N]</c>". The mount recombines them by matching
-        /// <see cref="ExtractBaseName"/>(child) against the umbrella Name — so a rename MUST update
+        /// <see cref="ExtractBaseName"/>(child) against the umbrella Name - so a rename MUST update
         /// the umbrella AND every child together, preserving each child's <c>[tmd.N]</c> index, or
         /// the recombine breaks. A plain single image is renamed as-is.
         ///
         /// <paramref name="newBaseName"/> is the new BASE title (no <c>[tmd.N]</c> suffix). The
-        /// image identified by <paramref name="key"/> may be the umbrella OR any child — the base
+        /// image identified by <paramref name="key"/> may be the umbrella OR any child - the base
         /// title is derived from it and the whole group is renamed in ONE transaction.
         /// Returns the number of image records renamed.
         /// </summary>
@@ -383,7 +383,7 @@ namespace NKitDataStore
                 }
             }
 
-            // If the identified image wasn't captured above (plain image with no base match — e.g. a
+            // If the identified image wasn't captured above (plain image with no base match - e.g. a
             // name that isn't tmd-disambiguated and has no umbrella), rename just it.
             if (renames.Count == 0)
                 renames.Add((key.ImageId, newBaseName, target.Format));
@@ -590,7 +590,7 @@ namespace NKitDataStore
         /// Scans all WiiU images stored with <see cref="ImageFormat.App"/> and repairs
         /// any that are disc images (WUD/WUX/ISO) by updating them to <see cref="ImageFormat.Iso"/>.
         /// CDN app images keep a tmd-disambiguated name (e.g. "Title [tmd.0]") or have
-        /// zero areas — disc images have areas and no tmd-style bracket suffix.
+        /// zero areas - disc images have areas and no tmd-style bracket suffix.
         /// </summary>
         public int RepairWiiUImageFormats()
         {
@@ -763,7 +763,7 @@ namespace NKitDataStore
         {
             if (!string.IsNullOrWhiteSpace(_scopedSetName))
             {
-                // Never list aux or split sets — they are internal and should not be mounted
+                // Never list aux or split sets - they are internal and should not be mounted
                 if (_scopedSetName.EndsWith(_AuxSetSuffix, StringComparison.OrdinalIgnoreCase)
                     || _scopedSetName.EndsWith(_SplitSetSuffix, StringComparison.OrdinalIgnoreCase))
                     return Enumerable.Empty<string>();
@@ -792,7 +792,7 @@ namespace NKitDataStore
 
             return allNames.Where(name =>
             {
-                // Exclude aux and split sets — they are internal implementation details
+                // Exclude aux and split sets - they are internal implementation details
                 // and should never be listed for mounting or user-facing operations.
                 if (name.EndsWith(_AuxSetSuffix, StringComparison.OrdinalIgnoreCase)
                     || name.EndsWith(_SplitSetSuffix, StringComparison.OrdinalIgnoreCase))
@@ -1329,7 +1329,7 @@ namespace NKitDataStore
         /// <summary>
         /// Opens an image reader from an auxiliary (aux or split) store for the specified image name.
         /// Returns the reader if the image is found in the store, or <c>null</c> otherwise.
-        /// The returned reader and its underlying DataStore are intentionally not disposed here —
+        /// The returned reader and its underlying DataStore are intentionally not disposed here -
         /// their lifetime is tied to the consuming AuxBlockProvider.
         /// </summary>
         private static IImageReader? OpenAuxReaderForImage(string baseDirectory, string auxSetName, string imageName)

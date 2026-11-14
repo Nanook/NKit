@@ -5,7 +5,7 @@ namespace Nanook.NKit
 {
     /// <summary>
     /// Encodes a single GameCube disc gap region into the NKit v01 gap format.
-    /// Direct port of v1 Gap.cs — same block classification, run-length encoding,
+    /// Direct port of v1 Gap.cs - same block classification, run-length encoding,
     /// and header format.
     ///
     /// Streaming design: once the gap type is determined to be Mixed (first non-Junk,
@@ -16,12 +16,12 @@ namespace Nanook.NKit
     ///
     /// Peak allocation is a small pre-header buffer (a few descriptors at most) plus one
     /// ~50 MiB NonJunk run window.  For AllJunk / AllScrub gaps the only output is a
-    /// single 4-byte header — nothing is buffered.
+    /// single 4-byte header - nothing is buffered.
     ///
     /// Usage per gap:
-    ///   1. <see cref="Begin"/> — records write callback and stream position
+    ///   1. <see cref="Begin"/> - records write callback and stream position
     ///   2. <see cref="Feed"/> per 256-byte block until it returns true
-    ///   3. <see cref="Complete"/> — flushes trailing run, writes gap header,
+    ///   3. <see cref="Complete"/> - flushes trailing run, writes gap header,
     ///      returns total bytes written (header + descriptors + raw data)
     /// </summary>
     internal sealed class GcNkitGapEncoder
@@ -33,17 +33,17 @@ namespace Nanook.NKit
 
         // Pre-header buffer: holds Junk/Scrub descriptors written before the gap type
         // is confirmed as Mixed.  At most a handful of 4-byte descriptor words.
-        private const int _PreHdrBufSize = 256; // 64 descriptors × 4 bytes — ample
+        private const int _PreHdrBufSize = 256; // 64 descriptors × 4 bytes - ample
 
         // NonJunk accumulation window: capped at ~52 MiB (203777 blocks × 256 bytes + 4).
         private const int _NonJunkBufSize = (int)(_MaxNonJunkBlocks * BlockSize) + 4;
 
-        // Gap header type bits (low 2 bits) — v1 GapType enum
+        // Gap header type bits (low 2 bits) - v1 GapType enum
         private const uint _TypeAllJunk  = 0u;
         private const uint _TypeAllScrub = 1u;
         private const uint _TypeMixed    = 2u;
 
-        // Block descriptor top-2-bit types — v1 GapBlockType enum
+        // Block descriptor top-2-bit types - v1 GapBlockType enum
         private const uint _BlkJunk    = 0u;
         private const uint _BlkNonJunk = 1u;
         private const uint _BlkScrub   = 2u;
@@ -105,7 +105,7 @@ namespace Nanook.NKit
         private byte[]   _discId;
         private byte     _discNo;
 
-        // Pool of reusable 256KB junk arrays — avoids per-call allocation in PrefillJunkCache.
+        // Pool of reusable 256KB junk arrays - avoids per-call allocation in PrefillJunkCache.
         private byte[][] _junkPool;
 
         // Junk multi-block cache: keyed by junk block start offset → 256KB junk bytes.
@@ -118,18 +118,18 @@ namespace Nanook.NKit
         // can use it instead of data[offset], which may be 0x00 for scrubbed sources.
         private byte _lastFastPathFillByte;
 
-        // Pre-classified disc regions from section.Items — set by SetSectionJunkMap().
+        // Pre-classified disc regions from section.Items - set by SetSectionJunkMap().
         // classifyBlock checks these before generating junk, short-circuiting NJunk.Fill
         // for regions the pipeline SectionProcessor has already verified.
-        // Pre-classified disc regions from section.Items — set by SetSectionJunkMap().
+        // Pre-classified disc regions from section.Items - set by SetSectionJunkMap().
         private System.Collections.Generic.List<ClassifiedRegion> _classifiedRegions;
-        // Index cache for sequential access — avoids full list scan on every classifyBlock.
+        // Index cache for sequential access - avoids full list scan on every classifyBlock.
         private int _classifiedIdx;
 
         /// <summary>
         /// When true, classifyBlock skips the SectionProcessor pre-classification fast-path
         /// and the parallel junk batch cache. Every block is classified by direct per-block
-        /// NJunk comparison — the v1-equivalent linear scan path. Useful for debugging
+        /// NJunk comparison - the v1-equivalent linear scan path. Useful for debugging
         /// classification mismatches; can be left enabled if correct and not slower.
         /// </summary>
         public bool DirectScanMode { get; set; }
@@ -141,7 +141,7 @@ namespace Nanook.NKit
         {
             public long     DiscStart;
             public long     DiscEnd;    // exclusive
-            public DataType Type;       // NJunk or Fill — only these are useful for fast-path
+            public DataType Type;       // NJunk or Fill - only these are useful for fast-path
             public int      DataNulls;
             public byte     FillByte;
         }
@@ -245,7 +245,7 @@ namespace Nanook.NKit
             }
             else
             {
-                // Serial — PrefillJunkCache runs on the completer thread which must not
+                // Serial - PrefillJunkCache runs on the completer thread which must not
                 // dispatch thread-pool work (would starve the pipeline workers and hang).
                 for (int j = 0; j < jbCount; j++)
                 {
@@ -260,7 +260,7 @@ namespace Nanook.NKit
 
             // Sync the single-block cache only if the last block was actually generated.
             // If it was skipped (covered by a classified NJunk region), _junkCache must NOT
-            // be updated — leaving _junkCacheBlockStart unchanged forces a fresh Fill on
+            // be updated - leaving _junkCacheBlockStart unchanged forces a fresh Fill on
             // the next slow-path lookup, preventing stale/garbage junk bytes.
             long lastBs = jbStart + (long)(jbCount - 1) * NJunk.JunkBlockSize;
             if (_junkBatchCache.ContainsKey(lastBs))
@@ -301,7 +301,7 @@ namespace Nanook.NKit
                 // No descriptors were emitted so the pre-header buffer is empty.
                 writeWord(hdr);
             }
-            // Mixed: header was already written (correct type) — nothing more to do.
+            // Mixed: header was already written (correct type) - nothing more to do.
 
             _inProgress = false;
         }
@@ -314,7 +314,7 @@ namespace Nanook.NKit
         /// </summary>
         private void processClassified(byte[] data, int offset, int length, int bType)
         {
-            // Use _lastFastPathFillByte for the effective fill byte — for scrubbed sources this
+            // Use _lastFastPathFillByte for the effective fill byte - for scrubbed sources this
             // may differ from data[offset] (e.g. 0xA8/0x55 regions scrubbed to 0x00 in the ISO).
             byte effectiveFill = _lastFastPathFillByte;
 
@@ -460,7 +460,7 @@ namespace Nanook.NKit
         {
             if (!_headerWritten)
             {
-                // Still possibly AllJunk/AllScrub — buffer instead of streaming.
+                // Still possibly AllJunk/AllScrub - buffer instead of streaming.
                 if (_preHdrLen + 4 > _preHdrBuf.Length)
                 {
                     // Grow pre-header buffer (rare, only for degenerate images).
@@ -492,7 +492,7 @@ namespace Nanook.NKit
         // ── Fill check ────────────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Size of the fill-check unit — aligns to 1024-byte boundaries so that
+        /// Size of the fill-check unit - aligns to 1024-byte boundaries so that
         /// four consecutive 256-byte blocks are examined as a single unit.
         /// </summary>
         private const int _FillCheckSize = 0x400; // 1024 bytes
@@ -503,7 +503,7 @@ namespace Nanook.NKit
         /// </summary>
         private const int _FillCheckBatchBlocks = 256; // 256 KB per parallel batch
 
-        // Scratch result arrays for checkFillByte — reused across calls.
+        // Scratch result arrays for checkFillByte - reused across calls.
         // One entry per _FillCheckSize unit: 0xFF means "uniform, fill byte = result",
         // 0x100 means "not uniform".
         private int[]  _fillResults;
@@ -515,7 +515,7 @@ namespace Nanook.NKit
         /// Returns the fill byte if uniform, or -1 if not.
         ///
         /// The check is always aligned to <see cref="_FillCheckSize"/> within the data
-        /// window — if <paramref name="offset"/> is not aligned the first unit is
+        /// window - if <paramref name="offset"/> is not aligned the first unit is
         /// shrunk to reach the next boundary.
         /// </summary>
         private int checkFillByte(byte[] data, int offset, int length)
@@ -533,7 +533,7 @@ namespace Nanook.NKit
             int[] results   = _fillResults;
             byte[] fillBufs = _fillBytes;
 
-            // Serial — checkFillByte runs on the completer thread which must not dispatch
+            // Serial - checkFillByte runs on the completer thread which must not dispatch
             // thread-pool work (would starve the pipeline workers and hang).
             for (int u = 0; u < units; u++)
             {
@@ -568,7 +568,7 @@ namespace Nanook.NKit
         private bool isJunkCoveredByRegion(long start, long end)
         {
             if (_classifiedRegions == null) return false;
-            // Linear scan — list is small (one section's gap items, typically 1-4 entries)
+            // Linear scan - list is small (one section's gap items, typically 1-4 entries)
             foreach (ClassifiedRegion r in _classifiedRegions)
             {
                 if (r.Type == DataType.NJunk && r.DiscStart <= start && end <= r.DiscEnd)
@@ -579,7 +579,7 @@ namespace Nanook.NKit
 
         private int classifyBlock(byte[] data, int offset, int length, long discOffset, int leadNulls)
         {
-            // Reset to the actual byte — fast-path Fill will override if needed.
+            // Reset to the actual byte - fast-path Fill will override if needed.
             _lastFastPathFillByte = data[offset];
             if (_dolStart >= 0 && _dolEnd > 0
                 && discOffset < _dolEnd && discOffset + length > _dolStart)
@@ -605,11 +605,11 @@ namespace Nanook.NKit
                         // v1's blockCompare exactly. Fill fast-path retained for scrub detection.
                         if (r.Type == DataType.Fill)
                         {
-                            // Store the correct fill byte — data[offset] may be 0x00 for scrubbed sources.
+                            // Store the correct fill byte - data[offset] may be 0x00 for scrubbed sources.
                             _lastFastPathFillByte = r.FillByte;
                             return _ClassScrub;
                         }
-                        // DataType.Data or other — fall through to full scan
+                        // DataType.Data or other - fall through to full scan
                     }
                 }
             }

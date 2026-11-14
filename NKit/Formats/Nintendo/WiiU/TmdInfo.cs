@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -108,10 +108,10 @@ namespace Nanook.NKit.Nintendo.WiiU
             byte[] tik = new byte[0x350];
             tik.WriteUInt16B(0x0, 0x1);
             tik.WriteUInt16B(0x2, 0x4);
-            // Signature bytes 0x004..0x103 left as zeros — standard fake-sign convention.
+            // Signature bytes 0x004..0x103 left as zeros - standard fake-sign convention.
             // RSA(0, e, n) = 0, producing null bytes that trigger FakeSigned detection.
             tik.WriteString(WiiUConsts.TicketIssuerOffset, WiiUConsts.TicketIssuer.Length, issuer);
-            // 0x180..0x1BB: ECC public key / server padding — zeros in all retail and fake-signed tickets.
+            // 0x180..0x1BB: ECC public key / server padding - zeros in all retail and fake-signed tickets.
             tik.Write8(0x1bc, 1);
 
             tik.WriteUInt64B(WiiUConsts.TicketTitleIdOffset, titleId);
@@ -242,7 +242,7 @@ namespace Nanook.NKit.Nintendo.WiiU
         /// synthesised TMD.  Must be called for each content after <see cref="SynthesiseTmd"/>
         /// and before <see cref="WiiUAppTmdBuilder.FinaliseTmd"/> (which fills the hash fields).
         /// Type: 0x0001 = hashless, 0x0002 = hashed (disc-based content uses 0x2001/0x2003
-        /// but NUS standard is 0x0001/0x0002 — use the disc-format flags for authenticity).
+        /// but NUS standard is 0x0001/0x0002 - use the disc-format flags for authenticity).
         /// </summary>
         public static void WriteContentRecord(byte[] tmd, int recordIndex, uint contentId, int contentIdx, ushort contentType, long size)
         {
@@ -251,7 +251,7 @@ namespace Nanook.NKit.Nintendo.WiiU
             tmd.WriteUInt16B(off + 0x04, (ushort)contentIdx);
             tmd.WriteUInt16B(off + 0x06, contentType);
             tmd.WriteUInt64B(off + 0x08, (ulong)size);
-            // Hash at off+0x10 is left zeros — FinaliseTmd fills it
+            // Hash at off+0x10 is left zeros - FinaliseTmd fills it
         }
 
         private static readonly string CommonIssuer = WiiUConsts.CommonIssuer;

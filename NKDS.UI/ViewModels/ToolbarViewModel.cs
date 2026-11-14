@@ -10,7 +10,7 @@ namespace NkdsUi.ViewModels;
 /// <summary>
 /// Manages the toolbar button collection, enabled states, Active Set selection,
 /// and concurrent operation conflict detection.
-/// Commands are placeholder (no-op) — actual execution logic is wired in task 10.2.
+/// Commands are placeholder (no-op) - actual execution logic is wired in task 10.2.
 /// </summary>
 public class ToolbarViewModel : ViewModelBase, IDisposable
 {
@@ -515,7 +515,7 @@ public class ToolbarViewModel : ViewModelBase, IDisposable
         }
 
         // Rebuild the collection. The ComboBox two-way binding may set SelectedSetName to null
-        // during Clear() — we'll restore it after.
+        // during Clear() - we'll restore it after.
         AvailableSetNames.Clear();
         AvailableSetNames.Add("All");
         foreach (string name in sorted)

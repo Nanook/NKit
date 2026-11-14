@@ -148,7 +148,7 @@ public class ComparisonPanelViewModel : ViewModelBase, IDisposable
         CancelCommand.DisposeWith(_disposables);
 
         // Auto-recompute when scope restrictions change while a reference image is set
-        // (skipped during Comparison Mode — ComparisonModeViewModel handles scope changes)
+        // (skipped during Comparison Mode - ComparisonModeViewModel handles scope changes)
         this.WhenAnyValue(x => x.RestrictToSameSet, x => x.RestrictToSameSystem)
             .Skip(1) // Skip the initial value emission
             .Where(_ => ReferenceImage != null && !IsInComparisonMode)

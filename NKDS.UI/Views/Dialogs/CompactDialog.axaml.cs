@@ -26,17 +26,17 @@ public partial class CompactDialog : Window
 
         _commandDisposables = new MultipleDisposable();
 
-        // Full compact — returns FullCompact
+        // Full compact - returns FullCompact
         viewModel.ConfirmCommand
             .Subscribe(_ => Close(CompactDialogResult.FullCompact))
             .DisposeWith(_commandDisposables);
 
-        // Fast compact (index only) — returns FastCompact
+        // Fast compact (index only) - returns FastCompact
         viewModel.ConfirmFastCommand
             .Subscribe(_ => Close(CompactDialogResult.FastCompact))
             .DisposeWith(_commandDisposables);
 
-        // Cancel — returns Cancelled (default 0, same as X-button close)
+        // Cancel - returns Cancelled (default 0, same as X-button close)
         viewModel.CancelCommand
             .Subscribe(_ => Close(CompactDialogResult.Cancelled))
             .DisposeWith(_commandDisposables);

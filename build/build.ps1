@@ -57,7 +57,7 @@ $GrindCoreNativeMarker = "$GrindCoreNativeDir/$Runtime/native"
 $NeedsDownload = $false
 if (-not (Test-Path "$GrindCoreNativeMarker/GrindCore.lib") -and -not (Test-Path "$GrindCoreNativeMarker/libGrindCore.a")) {
     $NeedsDownload = $true
-    Write-Host "GrindCore native libs not found — downloading from latest GitHub release..." -ForegroundColor Yellow
+    Write-Host "GrindCore native libs not found - downloading from latest GitHub release..." -ForegroundColor Yellow
 } else {
     Write-Host "GrindCore native libs present at $GrindCoreNativeMarker."
 }
@@ -81,7 +81,7 @@ if ($NeedsDownload) {
         Write-Host "GrindCore native libs ready." -ForegroundColor Green
     } catch {
         Write-Host "WARNING: Could not download GrindCore native libs: $_" -ForegroundColor Yellow
-        Write-Host "Continuing — will fall back to dynamic linking if static lib is absent." -ForegroundColor Yellow
+        Write-Host "Continuing - will fall back to dynamic linking if static lib is absent." -ForegroundColor Yellow
     }
 }
 Write-Host ""
@@ -93,7 +93,7 @@ if ($BuildNkdsUi)  { dotnet restore $NkdsUiProject --runtime $Runtime }
 
 # --- Inject GrindCore static library ---
 # The AOT link needs the static GrindCore.lib in the referenced package's native folder. The
-# GrindCore version MUST match the <PackageReference> version (hardcoding it drifts — e.g. it was
+# GrindCore version MUST match the <PackageReference> version (hardcoding it drifts - e.g. it was
 # pinned to 0.8.0 while the projects moved to 0.9.0, so the injected lib landed in the wrong folder
 # and the link silently fell back to the dynamic .dll). Derive it from the csproj instead.
 $StaticLibName = "GrindCore.lib"
@@ -166,7 +166,7 @@ foreach ($appType in @("console", "gui", "nkds", "nkds-ui")) {
         Remove-Item "$dir/rd.xml" -ErrorAction SilentlyContinue
         # GrindCore.dll is statically linked, remove if present
         Remove-Item "$dir/GrindCore.dll" -ErrorAction SilentlyContinue
-        # Also remove the static lib — injected into NuGet cache for the AOT linker,
+        # Also remove the static lib - injected into NuGet cache for the AOT linker,
         # it may get copied to publish output but is already baked into the native binary.
         Remove-Item "$dir/GrindCore.lib" -ErrorAction SilentlyContinue
         Remove-Item "$dir/libGrindCore.a" -ErrorAction SilentlyContinue
@@ -193,7 +193,7 @@ if ($BuildNkds -and (Test-Path "publish/nkds/$Runtime")) {
     if (Test-Path "NKitApp/ConfigInfo.txt") { Copy-Item "NKitApp/ConfigInfo.txt" "publish/nkds/$Runtime/" }
 }
 if ($BuildGui -and (Test-Path "publish/gui/$Runtime")) {
-    # nkit-ui.yaml is included via NKit.UI.csproj CopyToPublishDirectory — no manual copy needed.
+    # nkit-ui.yaml is included via NKit.UI.csproj CopyToPublishDirectory - no manual copy needed.
     if (Test-Path "NKit/defaults")         { Copy-Item "NKit/defaults" "publish/gui/$Runtime/" -Recurse -Force }
     if (Test-Path "NKit.UI/ConfigInfo.txt") { Copy-Item "NKit.UI/ConfigInfo.txt" "publish/gui/$Runtime/" }
 }

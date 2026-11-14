@@ -87,7 +87,7 @@ namespace NKitDataStore.Tests
             public IEnumerable<AreaRecord> GetAreas() => Array.Empty<AreaRecord>();
 
             /// <summary>
-            /// Throws the configured exception — simulates MergeAuxOffsets failure.
+            /// Throws the configured exception - simulates MergeAuxOffsets failure.
             /// </summary>
             public IEnumerable<OffsetRecord> GetOffsets() => throw _exceptionToThrow;
 
@@ -172,7 +172,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.2, 7.3**
         ///
-        /// Property 11: MergeAuxOffsets Failure Does Not Propagate — Construction resilience.
+        /// Property 11: MergeAuxOffsets Failure Does Not Propagate - Construction resilience.
         /// For any exception type thrown by MergeAuxOffsets (via auxReader.GetOffsets()),
         /// the ImageBuilder constructor SHALL NOT throw and SHALL remain in a valid state.
         ///
@@ -209,7 +209,7 @@ namespace NKitDataStore.Tests
             ThrowingAuxReader throwingAuxReader = new ThrowingAuxReader(createExceptionByIndex(exceptionIndex));
             AuxBlockProvider auxBlockProvider = new AuxBlockProvider(primaryProvider, splitReader: null, auxReader: throwingAuxReader);
 
-            // Act — construct ImageBuilder with the AuxBlockProvider (MergeAuxOffsets will throw internally)
+            // Act - construct ImageBuilder with the AuxBlockProvider (MergeAuxOffsets will throw internally)
             ImageBuilder builder = null;
             try
             {
@@ -217,7 +217,7 @@ namespace NKitDataStore.Tests
             }
             catch
             {
-                // Construction threw — property violated (Requirement 7.3)
+                // Construction threw - property violated (Requirement 7.3)
                 return false;
             }
 
@@ -239,10 +239,10 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.2, 7.3**
         ///
-        /// Property 11: MergeAuxOffsets Failure Does Not Propagate — Read() remains functional.
+        /// Property 11: MergeAuxOffsets Failure Does Not Propagate - Read() remains functional.
         /// For any exception thrown by MergeAuxOffsets, the ImageBuilder SHALL still support
         /// Read() operations. Since aux offsets weren't merged, blocks stored exclusively in
-        /// aux produce zeros during reconstruction — but the Read() call itself must succeed
+        /// aux produce zeros during reconstruction - but the Read() call itself must succeed
         /// without throwing.
         ///
         /// We verify:
@@ -283,7 +283,7 @@ namespace NKitDataStore.Tests
 
             try
             {
-                // Read from the beginning — should not throw
+                // Read from the beginning - should not throw
                 byte[] buffer = new byte[readSize];
                 int bytesRead = builder.Read(buffer, 0, readSize);
 
@@ -303,7 +303,7 @@ namespace NKitDataStore.Tests
             }
             catch
             {
-                // Read() threw — property violated (Requirement 7.2: continue operation)
+                // Read() threw - property violated (Requirement 7.2: continue operation)
                 return false;
             }
             finally

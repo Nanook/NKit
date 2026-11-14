@@ -3,8 +3,8 @@ namespace Nanook.NKit
     /// <summary>
     /// Optional capability implemented by an <see cref="IAsIso"/> container that reads directly
     /// from a <see cref="BufferStream"/> source (e.g. <see cref="Container.DefaultAsIso"/>). It lets
-    /// a consumer that drives the container through the <see cref="IAsIso"/> interface — rather than
-    /// through the BufferStream itself — bound the shared cache by declaring how far it has consumed.
+    /// a consumer that drives the container through the <see cref="IAsIso"/> interface - rather than
+    /// through the BufferStream itself - bound the shared cache by declaring how far it has consumed.
     ///
     /// <para>
     /// This exists for the ISO/PS3 path: a container (e.g. DefaultAsIso over a forward-only archive

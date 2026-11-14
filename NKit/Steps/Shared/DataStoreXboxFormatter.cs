@@ -61,7 +61,7 @@ namespace Nanook.NKit.Steps.Shared
             _imageWriter = _dataStore.AddImage(resolvedSetName, imageName, context.SystemType.ToString(), ImageFormat.Iso);
             _imageWriter.CompressionParallelism = 16;
 
-            // Aux writer setup — aux set discovered by convention in DedupeStep.
+            // Aux writer setup - aux set discovered by convention in DedupeStep.
             // By the time the formatter is constructed, DedupeStep has already resolved
             // and optionally auto-created the aux set. If auxSetName is non-null, the set exists.
             // Standard aux stores (.aux suffix) use standard sharding (50GB).
@@ -88,8 +88,8 @@ namespace Nanook.NKit.Steps.Shared
                 }
             }
 
-            // Split writer setup — per-game split store for game partition filler (Xbox/Xbox360 dual mode).
-            // Split stores use embedded mode (shardSize=0) — a single file per game.
+            // Split writer setup - per-game split store for game partition filler (Xbox/Xbox360 dual mode).
+            // Split stores use embedded mode (shardSize=0) - a single file per game.
             if (!string.IsNullOrEmpty(splitSetName))
             {
                 try
@@ -113,7 +113,7 @@ namespace Nanook.NKit.Steps.Shared
         }
 
         /// <summary>
-        /// Xbox uses cooked 0x800 sectors with no striding — always returns null.
+        /// Xbox uses cooked 0x800 sectors with no striding - always returns null.
         /// </summary>
         public DataStride GetStrideForPartition(int partitionId) => null;
 
@@ -249,7 +249,7 @@ namespace Nanook.NKit.Steps.Shared
             }
             else if (section.Type == AreaType.Other)
             {
-                // Video partition areas — write the ENTIRE section content to the shared aux store.
+                // Video partition areas - write the ENTIRE section content to the shared aux store.
                 // Xbox/Xbox360 video partitions (AreaType.Other) contain ISO9660 video/demo content
                 // that is identical across games and therefore deduplicatable in the shared aux.
                 // Unlike FileSystem gaps which are selectively persisted, video partition data is
@@ -278,8 +278,8 @@ namespace Nanook.NKit.Steps.Shared
                 // Detection: the XDvdFs game partition always starts at one of the known XISO_OFFSET
                 // values. Any FileSystem area NOT at a known XDvdFs offset is a video partition.
                 // For trimmed/XISO images (only one FileSystem area at offset 0), there's no video
-                // partition — all data is game data and goes through the normal game partition path.
-                // Use section.AreaInfo.ImageOffset for area lookup — section.ImageOffset is the chunk
+                // partition - all data is game data and goes through the normal game partition path.
+                // Use section.AreaInfo.ImageOffset for area lookup - section.ImageOffset is the chunk
                 // position which may differ from the area start for chunked sections.
                 long areaImageOffset = section.AreaInfo?.ImageOffset ?? section.ImageOffset;
                 bool isXDvdFsGamePartition = Array.IndexOf(Microsoft.XBox.Consts.XISO_OFFSET, areaImageOffset) >= 0;
@@ -290,7 +290,7 @@ namespace Nanook.NKit.Steps.Shared
 
                 if (isVideoPartition && _auxWriter != null)
                 {
-                    // ISO9660 video partition — write the ENTIRE section content to shared aux.
+                    // ISO9660 video partition - write the ENTIRE section content to shared aux.
                     IImageWriter targetWriter = _auxWriter;
                     try
                     {
@@ -307,7 +307,7 @@ namespace Nanook.NKit.Steps.Shared
                 }
                 else
                 {
-                    // XDvdFs game partition — persist gaps where fill byte is non-zero or data type is not expected default
+                    // XDvdFs game partition - persist gaps where fill byte is non-zero or data type is not expected default
                     // Route gap/filler data to _splitWriter (per-game split store) when active (Requirement 4.2)
                     _storedRanges = GetGapsForXbox(section, stride).ToList();
 
@@ -329,7 +329,7 @@ namespace Nanook.NKit.Steps.Shared
                         IImageWriter targetWriter = (_splitWriter != null && !splitFailed) ? _splitWriter : _imageWriter;
                         try
                         {
-                            // Use section.Encrypted for gap data — it always contains the final/original data
+                            // Use section.Encrypted for gap data - it always contains the final/original data
                             // (section.Decrypted may have been modified by the pre-processor for gap regions)
                             byte[] src = section.Encrypted ?? section.Decrypted;
                             Stream writeStream = targetWriter.BeginWriteStream(persist.ImageOffset, BlockType.Other, persist.ImageOffset, stride, null);
@@ -360,7 +360,7 @@ namespace Nanook.NKit.Steps.Shared
                                     $"No orphaned blocks. Falling back to primary: {ex.Message}");
                             }
 
-                            // Mark split as failed — all subsequent blocks in this section go to primary
+                            // Mark split as failed - all subsequent blocks in this section go to primary
                             splitFailed = true;
 
                             // Write the failed block to primary
@@ -377,7 +377,7 @@ namespace Nanook.NKit.Steps.Shared
         /// <summary>
         /// Determines if a file should be preserved in the datastore.
         /// Skip zero-length and missing files.
-        /// Also skip files in ISO9660 video partitions — their entire section data
+        /// Also skip files in ISO9660 video partitions - their entire section data
         /// is written to the shared aux store, so individual files should not be
         /// duplicated into the primary store.
         /// </summary>
@@ -386,7 +386,7 @@ namespace Nanook.NKit.Steps.Shared
             if (file == null)
                 return false;
 
-            // ISO9660 video partition files are stored as whole-section data in aux — skip individual preservation
+            // ISO9660 video partition files are stored as whole-section data in aux - skip individual preservation
             if (section.Type == AreaType.FileSystem && _auxWriter != null)
             {
                 long areaImageOffset = section.AreaInfo?.ImageOffset ?? section.ImageOffset;
@@ -417,13 +417,13 @@ namespace Nanook.NKit.Steps.Shared
             {
                 // Handle pre-file gaps (gap-only items with no file)
                 // These always contain non-regeneratable data (disc headers, volume descriptors, etc.)
-                // Persist unconditionally — the ImageBuilder fills gaps with zeros, so any
+                // Persist unconditionally - the ImageBuilder fills gaps with zeros, so any
                 // gap-only item that exists must have meaningful content.
                 if (item.File == null && item.Gap != null && item.Gap.FsSize > 0)
                 {
                     if ((item.GapInfo?.Count ?? 0) == 0)
                     {
-                        // Single gap with no sub-parts — only persist if not Fill 0x00
+                        // Single gap with no sub-parts - only persist if not Fill 0x00
                         if (item.Gap.FillByte != 0 || item.Gap.DataType != DataType.Fill)
                         {
                             long imageOffset = section.ImageOffset + item.Gap.Offset;
@@ -432,7 +432,7 @@ namespace Nanook.NKit.Steps.Shared
                     }
                     else
                     {
-                        // Has GapInfo sub-parts — only persist non-Fill-0x00 sub-parts
+                        // Has GapInfo sub-parts - only persist non-Fill-0x00 sub-parts
                         foreach (ISectionData gap in item.GapInfo)
                         {
                             if (gap.FillByte != 0 || gap.DataType != DataType.Fill)

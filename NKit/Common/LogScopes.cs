@@ -5,16 +5,16 @@ namespace Nanook.NKit
     /// <summary>
     /// Central definition of every log SCOPE prefix and COMPONENT tag used across NKit logging.
     /// Using these constants (instead of string literals) means a "find references" on a name
-    /// locates every log line that uses that tag — the primary aid when debugging a specific stage
+    /// locates every log line that uses that tag - the primary aid when debugging a specific stage
     /// or component.
     /// <para>
     /// Two kinds of tag:
     /// </para>
     /// <list type="bullet">
-    /// <item><b>Scopes</b> — the pipeline STAGE a line belongs to (<c>[In]</c>/<c>[Pre]</c>/
+    /// <item><b>Scopes</b> - the pipeline STAGE a line belongs to (<c>[In]</c>/<c>[Pre]</c>/
     /// <c>[Out]</c>) or a cross-cutting phase (<c>[Config]</c>/<c>[Input]</c>). Passed to
     /// <c>Log.ScopeFor(...)</c>; the sink renders it as the first bracket.</item>
-    /// <item><b>Components</b> — WHICH class wrote the line (e.g. <c>[CSO]</c>, <c>[RVZ]</c>,
+    /// <item><b>Components</b> - WHICH class wrote the line (e.g. <c>[CSO]</c>, <c>[RVZ]</c>,
     /// <c>[Image]</c>). Prepended to the message via <see cref="Tag"/> so the rendered line reads
     /// <c>[In] [CSO] message</c>. Needed because several IAsIso decoders/readers can be active
     /// (even nested) and otherwise a line does not say which one emitted it.</item>
@@ -127,7 +127,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Masked identifier for a key, safe to log: the first 2 bytes rendered as 4 hex chars
-        /// followed by "..." — enough to distinguish which candidate key was tried (works for binary
+        /// followed by "..." - enough to distinguish which candidate key was tried (works for binary
         /// AES keys too) without revealing the key material. Returns "(null)" / "(empty)" as needed.
         /// </summary>
         public static string MaskKey(byte[] key)

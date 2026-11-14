@@ -197,7 +197,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Processes a Loadiine folder on disk (code/content/meta) by storing all its files
-        /// via DataStoreFolderFormatter — identical to adddir, but triggered automatically by
+        /// via DataStoreFolderFormatter - identical to adddir, but triggered automatically by
         /// folder structure detection rather than explicit user invocation.
         /// </summary>
         private FolderProcessResult processLoadiineFolder(

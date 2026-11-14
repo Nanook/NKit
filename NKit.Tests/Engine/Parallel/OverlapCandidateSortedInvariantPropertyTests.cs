@@ -109,7 +109,7 @@ namespace NKit.Tests.Engine.Parallel
                 int offsetIdx = candidateOffsets.BinarySearch(f.FsOffset);
                 if (offsetIdx >= 0)
                 {
-                    // Same offset as a candidate — skip unless it's a displaced split extent
+                    // Same offset as a candidate - skip unless it's a displaced split extent
                     if (candidateFullNames.Contains(f.FullName))
                     {
                         if (f.SplitParts == null)
@@ -179,7 +179,7 @@ namespace NKit.Tests.Engine.Parallel
                         size))
                     .ToList();
 
-                // Build fidelity entries — these include candidates plus additional files
+                // Build fidelity entries - these include candidates plus additional files
                 // that may become overlap candidates
                 List<IFsFile> fidelityEntries = new List<IFsFile>(candidates);
                 for (int i = 0; i < data.fidelityOffsets.Count; i++)
@@ -222,7 +222,7 @@ namespace NKit.Tests.Engine.Parallel
         /// **Validates: Requirements 1.4**
         ///
         /// Property 2 (supplementary): The sorted invariant holds even when all fidelity
-        /// entries have identical offsets — the output list may contain duplicates at the
+        /// entries have identical offsets - the output list may contain duplicates at the
         /// same offset but must still be non-decreasing.
         /// </summary>
         [Property(MaxTest = 200)]

@@ -66,7 +66,7 @@ namespace NKitDataStore.Tests
                     ifsFileNames.Add(file.FileName);
 
             // Generate real folder files (tmd, tik, cetk, h3, etc.)
-            // Some may overlap with ifs names — the builder excludes those from fs
+            // Some may overlap with ifs names - the builder excludes those from fs
             List<SimulatedRealFile> realFiles = GenerateRealFiles(s, ifsFileNames);
 
             // Simulate TmdAppFolderBuilder.Build() logic:
@@ -80,7 +80,7 @@ namespace NKitDataStore.Tests
             foreach (SimulatedRealFile rf in realFiles)
             {
                 if (ifsFileNames.Contains(rf.Name))
-                    continue; // excluded — same as builder's skip logic
+                    continue; // excluded - same as builder's skip logic
 
                 root.AddFile(rf.Name, currentOffset, rf.Size, 0, 0);
                 fsFileNames.Add(rf.Name);
@@ -165,7 +165,7 @@ namespace NKitDataStore.Tests
                 childImages.Add(new SimulatedChildImage { ImageId = imageId, Files = files });
             }
 
-            // Generate real files — deliberately include some names that collide with ifs
+            // Generate real files - deliberately include some names that collide with ifs
             List<SimulatedRealFile> realFiles = new List<SimulatedRealFile>();
             string[] realPatterns = { "title.tmd", "title.tik", "title.cert", "title.cetk" };
             for (int i = 0; i < realFileCount; i++)

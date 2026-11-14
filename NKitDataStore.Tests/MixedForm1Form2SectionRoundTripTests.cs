@@ -16,7 +16,7 @@ namespace NKitDataStore.Tests
     /// The bug: if the Mode2Form1 sector's MSF happens to match the standard LBA-derived value,
     /// the packer would not set MsfMode, and the form-type bits in the flag byte are the only
     /// indicator that the sector is Form1. The unpacker must read those bits and reconstruct
-    /// the sector as Form1 — not Form2.
+    /// the sector as Form1 - not Form2.
     /// </summary>
     public class MixedForm1Form2SectionRoundTripTests
     {
@@ -64,7 +64,7 @@ namespace NKitDataStore.Tests
             // Second half (source for mirror): [0x16] must also NOT have bit 5 set
             sector[0x14] = 0x00;
             sector[0x15] = 0x00;
-            sector[0x16] = 0x01; // Form1: bit 5 NOT set — this gets mirrored to [0x12]
+            sector[0x16] = 0x01; // Form1: bit 5 NOT set - this gets mirrored to [0x12]
             sector[0x17] = 0xFE;
 
             // User data: some non-trivial content
@@ -91,7 +91,7 @@ namespace NKitDataStore.Tests
             SectorFlags[] flags = SectorPaddingPacker.Analyse(sectionData, sectorCount, startLba);
             byte[] pack = SectorPaddingPacker.Serialize(sectionData, flags);
 
-            // Simulate reconstruction buffer (zeros — as if gap fill occurred)
+            // Simulate reconstruction buffer (zeros - as if gap fill occurred)
             byte[] buffer = new byte[sectorCount * RawSectorSize];
 
             // Copy user data into buffer (OnGapFill writes zeros; actual data blocks write
@@ -251,7 +251,7 @@ namespace NKitDataStore.Tests
 
             Assert.False(
                 (reconSubmode & 0x20) != 0,
-                $"Reconstructed sector 50 has submode 0x{reconSubmode:X2} — bit 5 set means Form2, " +
+                $"Reconstructed sector 50 has submode 0x{reconSubmode:X2} - bit 5 set means Form2, " +
                 $"but the original is Form1 (0x01). The subheader was not correctly restored.");
         }
 
@@ -343,7 +343,7 @@ namespace NKitDataStore.Tests
         // Also check what byte got written to buffer[50*0x930 + 0x12]
         byte reconSubmode = buffer[form2Count * RawSectorSize + 0x12];
         Assert.True((reconSubmode & 0x20) == 0,
-            $"buffer[sector50 + 0x12] = 0x{reconSubmode:X2} — Form2 bit set. Subheader was not correctly applied.");
+            $"buffer[sector50 + 0x12] = 0x{reconSubmode:X2} - Form2 bit set. Subheader was not correctly applied.");
     }
 }
 

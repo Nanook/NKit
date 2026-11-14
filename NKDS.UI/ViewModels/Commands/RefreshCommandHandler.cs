@@ -5,7 +5,7 @@ namespace NkdsUi.ViewModels.Commands;
 
 /// <summary>
 /// Handles the Refresh toolbar operation.
-/// Triggers SyncService reconciliation without exclusive access — picks up any
+/// Triggers SyncService reconciliation without exclusive access - picks up any
 /// external changes to the DataStore by re-reading the current set from disk.
 /// </summary>
 public class RefreshCommandHandler : ICommandHandler
@@ -22,7 +22,7 @@ public class RefreshCommandHandler : ICommandHandler
 
                 if (selectedSet == "All")
                 {
-                    // "All" is a virtual filter — reconcile each real set
+                    // "All" is a virtual filter - reconcile each real set
                     IReadOnlyList<string> availableSetNames = ctx.SharedState.AvailableSetNames;
                     foreach (string setName in availableSetNames)
                     {

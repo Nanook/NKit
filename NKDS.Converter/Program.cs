@@ -254,7 +254,7 @@ public class Program
                     Console.Error.WriteLine($"  Verification failed: {mismatches.Count} mismatch(es) found:");
                     foreach (ConversionVerifier.Mismatch? m in mismatches.Take(20))
                     {
-                        Console.Error.WriteLine($"    [{m.Table}] {m.RecordId} — {m.Field}: expected={m.Expected}, actual={m.Actual}");
+                        Console.Error.WriteLine($"    [{m.Table}] {m.RecordId} - {m.Field}: expected={m.Expected}, actual={m.Actual}");
                     }
                     if (mismatches.Count > 20)
                     {

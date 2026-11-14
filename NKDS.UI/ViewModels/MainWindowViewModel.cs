@@ -228,7 +228,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
             ShowDatVerificationWindow,
             this);
 
-        // Build OperationContext — bundles all dependencies for command handlers
+        // Build OperationContext - bundles all dependencies for command handlers
         _operationContext = new OperationContext(
             DataStoreService: dataStoreService,
             SessionManager: SessionManager,
@@ -298,7 +298,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
         // Propagate user-initiated SelectedSetName changes from Toolbar (UI dropdown) back to SharedState.
         // Skip(1) avoids propagating the initial value (which came FROM SharedState via ToolbarVM init).
-        // Filter out null — transient null occurs when the ComboBox clears during collection rebuild.
+        // Filter out null - transient null occurs when the ComboBox clears during collection rebuild.
         Toolbar.WhenAnyValue(x => x.SelectedSetName)
             .Skip(1)
             .Where(name => name != null)
@@ -371,12 +371,12 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
                 if (row.ProcessingStatus == ImageProcessingStatus.Failed)
                 {
-                    // Already failed — append the new error to OutputText
+                    // Already failed - append the new error to OutputText
                     row.AppendOutput(error.Message);
                 }
                 else
                 {
-                    // First failure — set status and reason
+                    // First failure - set status and reason
                     row.ProcessingStatus = ImageProcessingStatus.Failed;
                     row.StatusReason = error.Message;
                 }
@@ -649,7 +649,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
     private void onAllImagesChanged(IReadOnlyList<ImageRecord> allImages)
     {
-        // Skip during exclusive access operations — images will be restored after reopen.
+        // Skip during exclusive access operations - images will be restored after reopen.
         if (_suppressSessionUpdates || SessionManager.IsExclusiveAccessActive)
             return;
 
@@ -667,7 +667,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
     private void onSessionsClosed(List<string> removedSessionIds)
     {
-        // Skip during managed transitions — the full state will be rebuilt after.
+        // Skip during managed transitions - the full state will be rebuilt after.
         if (_suppressSessionUpdates || SessionManager.IsExclusiveAccessActive)
             return;
 
@@ -775,7 +775,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                // Clear operation state — the MountCommandHandler manages its own _activeMounts
+                // Clear operation state - the MountCommandHandler manages its own _activeMounts
                 _sharedState.OperationInProgressOnSet = null;
 
                 // Update toolbar mount state
@@ -811,7 +811,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     /// </summary>
     public Task CleanupMountsAsync()
     {
-        // Dispose the orchestrator — it unmounts all active mounts internally
+        // Dispose the orchestrator - it unmounts all active mounts internally
         _mountOrchestrator.Dispose();
 
         return Task.CompletedTask;
@@ -887,7 +887,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
     /// <summary>
     /// Opens the Add Images dialog pre-populated with the specified file paths.
     /// Called from the MainWindow code-behind when files are dragged onto the window.
-    /// Requires a DataStore to be open — the caller should gate on HasDataStoreOpen.
+    /// Requires a DataStore to be open - the caller should gate on HasDataStoreOpen.
     /// </summary>
     internal void ExecuteAddWithDroppedFiles(IReadOnlyList<string> droppedFiles) =>
         // Pre-populate the dialog VM with the dropped files, then execute the normal Add flow

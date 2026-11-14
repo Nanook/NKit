@@ -20,8 +20,8 @@ build/build-all.ps1          ← run this locally
                        build/build.sh --legacy-container that CI uses.
 ```
 
-Both paths produce identical archive layouts — CLI zip (nkit + nkds + config)
-and UI zip (nkit-ui + nkds-ui + config) — and both land in `build-output/`.
+Both paths produce identical archive layouts - CLI zip (nkit + nkds + config)
+and UI zip (nkit-ui + nkds-ui + config) - and both land in `build-output/`.
 
 ## Quick start
 
@@ -76,7 +76,7 @@ share the same build logic.
 ## Runtime notes
 
 - Linux binaries target Ubuntu 18.04 / glibc 2.27 for broad compatibility.
-- `nkit` and `nkds` AOT-static-link GrindCore — no `.so` needed at runtime.
+- `nkit` and `nkds` AOT-static-link GrindCore - no `.so` needed at runtime.
 - `nkit-ui` and `nkds-ui` ship `libSkiaSharp.so` and `libHarfBuzzSharp.so`
   alongside the binary; Avalonia loads them at startup on Linux.
 - All binaries require `libicu` (standard on desktop Linux distros).

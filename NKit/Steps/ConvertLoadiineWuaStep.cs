@@ -15,9 +15,9 @@ namespace Nanook.NKit
     /// Output:  A single <c>.wua</c> ZArchive containing the title folder tree.
     ///
     /// Each section carries:
-    ///   <c>section.AreaInfo.Properties["FileName"]</c> — relative path (e.g. "code/game.rpx")
-    ///   <c>section.AreaOffset</c> — byte offset within the current file (0 = file start)
-    ///   <c>section.Decrypted</c>  — raw file bytes for this section
+    ///   <c>section.AreaInfo.Properties["FileName"]</c> - relative path (e.g. "code/game.rpx")
+    ///   <c>section.AreaOffset</c> - byte offset within the current file (0 = file start)
+    ///   <c>section.Decrypted</c>  - raw file bytes for this section
     /// </summary>
     internal class ConvertLoadiineWuaStep : StepBase, IStep
     {

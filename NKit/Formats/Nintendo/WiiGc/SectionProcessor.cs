@@ -92,7 +92,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
         // [Sect] Detail: one concise summary per FileSystem AREA (partition), NOT per section. Pool
         // processors are reused and Process() runs per 2 MiB section, so gate on the STABLE area id
-        // (AreaInfo.AreaNo) — the previous per-section AreaOffset changed every section. A section
+        // (AreaInfo.AreaNo) - the previous per-section AreaOffset changed every section. A section
         // is additionally logged (Warning, red) ONLY when it is bad (not valid), so failures stand
         // out without the healthy-section noise.
         private void logAreaSummary(string pathLabel)
@@ -106,7 +106,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 return;
 
             // Per-area summary: emit exactly once per area, deduped ACROSS the whole processor pool
-            // (TryMarkAreaLogged is shared on ImageInfo — a per-instance field would log once per
+            // (TryMarkAreaLogged is shared on ImageInfo - a per-instance field would log once per
             // pooled processor, i.e. many times for the same area).
             if (AreaInfo != null && info.TryMarkAreaLogged(AreaInfo.AreaNo))
             {
@@ -122,7 +122,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
 
             // Bad section: log at Warning (rendered red) so it is not lost among healthy sections.
             // ONLY meaningful for sections that carry verifiable hashes (Wii partitions). GameCube /
-            // RVT-H (GcRvtH path) have no hashes to validate, so IsValid is false by default there —
+            // RVT-H (GcRvtH path) have no hashes to validate, so IsValid is false by default there -
             // reporting those as "Bad" is a false positive, so skip them.
             if (!IsValid && this.SectionHasVerifiableHashes)
                 log.Log(LogLevel.Detail,
@@ -135,7 +135,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             _buffer = base.Buffer;
             _fsInfo = (FileSystemInfo)base.FileSystemData;
             _hasJunk = Type == AreaType.FileSystem || (Type == AreaType.Other && _fsInfo != null && _fsInfo.Type != PartitionType.Update);
-            // GcFixAsIso already produced the final, correct GameCube image up front — do not
+            // GcFixAsIso already produced the final, correct GameCube image up front - do not
             // re-patch the FST/header here (it would overwrite the correct pointers with
             // recomputed ones and corrupt the already-valid output).
             bool fix = this.ImageInfo.Mode == ReadMode.Fix && !((ImageInfo)this.ImageInfo).IsGcFixApplied;
@@ -227,7 +227,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     _security.Populate(_fsInfo.Key, _buffer.Encrypted, _buffer.Decrypted, (int)Size, true, false, false, AreaOffset, _fsInfo.H3Table, State, false);
                     fsSectionCreateItems();
                     valid = _security.IsValid(false, out creatable);
-                    _security.Encrypt(); //no-op (already encrypted) — returns source bytes
+                    _security.Encrypt(); //no-op (already encrypted) - returns source bytes
                     fsSectionAnalyseItems();
                     this.IsCreatable = creatable;
                     this.IsValid = valid;
@@ -315,7 +315,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     _security.Populate(_fsInfo.Key, _buffer.Encrypted, _buffer.Decrypted, (int)Size, true, false, false, AreaOffset, _fsInfo.H3Table, State, false);
                     fsSectionCreateItems();
                     valid = _security.IsValid(false, out creatable);
-                    _security.Encrypt(); //no-op — already encrypted
+                    _security.Encrypt(); //no-op - already encrypted
                     fsSectionAnalyseItems();
                 }
                 else if (((ImageInfo)this.ImageInfo).IsPreservedHashGroup != null
@@ -323,7 +323,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 {
                     // This 0x200000 group has PRESERVED (non-recreatable) hashes. NKitAsIso already
                     // reproduced them verbatim into the decrypted hash gaps on read, so we must NOT
-                    // regenerate them (a hacked disc's hashes are intentionally invalid — rebuilding
+                    // regenerate them (a hacked disc's hashes are intentionally invalid - rebuilding
                     // would change them). Populate as decrypted with hashesRestored=true so the
                     // security layer treats the hashes as final; no MarkDirty, no rebuild.
                     _security.Populate(_fsInfo.Key, _buffer.Encrypted, _buffer.Decrypted, (int)Size, false, false, false, AreaOffset, _fsInfo.H3Table, State, true);
@@ -478,7 +478,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         {
             // GameCube Fix already fully applied up front by GcFixAsIso: the stream is the final,
             // proven-correct ISO (system-area brute force resolved deterministically by CRC, files
-            // placed, gaps junk-filled, size corrected). Only build items and checksum — do NOT
+            // placed, gaps junk-filled, size corrected). Only build items and checksum - do NOT
             // run any buffer-mutating step (fillMissingData/gap-fill/FST-patch/analyse) over data
             // that is already final.
             if (((ImageInfo)this.ImageInfo).IsGcFixApplied)
@@ -533,7 +533,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                     _security.Populate(_fsInfo.Key, _buffer.Encrypted, _buffer.Decrypted, (int)Size, true, false, false, AreaOffset, _fsInfo.H3Table, State, false);
                     fsSectionCreateItems();
                     valid = _security.IsValid(false, out creatable);
-                    _security.Encrypt(); //no-op (already encrypted) — returns source bytes
+                    _security.Encrypt(); //no-op (already encrypted) - returns source bytes
                     fsSectionAnalyseItems();
                     this.IsCreatable = creatable;
                     this.IsValid = valid;
@@ -821,7 +821,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         // Regenerate junk into every gap of this section using the FST analysis (leading ExpectedNulls
         // then position-seeded junk). Returns true if any gap was written so the caller forces a hash
         // rebuild + re-encrypt. This restores the disc's junk/null pattern for a wiped source whose
-        // gaps decrypt to nulls. Only gap ranges are touched — file data is never modified.
+        // gaps decrypt to nulls. Only gap ranges are touched - file data is never modified.
         private bool fsSectionGapFillChanged()
         {
             bool filled = false;
@@ -842,7 +842,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 }
             }
             if (filled && Type == AreaType.FileSystem)
-                _security.MarkDirty(); //decrypted buffer changed — force hash rebuild + re-encrypt
+                _security.MarkDirty(); //decrypted buffer changed - force hash rebuild + re-encrypt
             State.Clear();
             MissingData.Clear(); //we're resolved it all so pretent we had none
             return filled;
@@ -883,7 +883,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // The trailing 'Other' filler after a partition is JUNK seeded with the disc id (the
             // retail scan shows DataType=NJunk-1C/NJunk-00 here, JunkID = disc Id), NOT nulls. An
             // Other section is never a Wii partition (_wiiPtn=false), so createJunk seeds it from
-            // _discId and does not need a parsed FST — a null FstData does not force nulls here.
+            // _discId and does not need a parsed FST - a null FstData does not force nulls here.
             if (fix)
             {
                 MissingData.Clear();
@@ -1263,7 +1263,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
                 // _junkFsOffset) / JunkBlockSize]; if _junkFsOffset kept a stale value from the last
                 // real partition the computed index falls outside _junk[] (IndexOutOfRangeException).
                 // The buffers are zero-filled, so verbatim data simply classifies as Data/Fill, never
-                // NJunk — which is correct for an FST-less verbatim/blank region.
+                // NJunk - which is correct for an FST-less verbatim/blank region.
                 _junkLength = _wiiPtn ? FsSize : Size;
                 _junkFsOffset = _wiiPtn ? FsOffset : ImageOffset;
                 long jd = _junkFsOffset % NJunk.JunkBlockSize;

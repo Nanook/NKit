@@ -62,7 +62,7 @@ namespace NKitDataStore
                 }
                 else
                 {
-                    // No matching directory exists — clone the system directory with IsSystem=true
+                    // No matching directory exists - clone the system directory with IsSystem=true
                     FsYamlNode newDir = targetParent.AddDirectory(systemEntry.Name, isSystem: true);
                     if (systemEntry.Children != null)
                     {

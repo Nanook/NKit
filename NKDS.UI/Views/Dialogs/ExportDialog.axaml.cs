@@ -58,7 +58,7 @@ public partial class ExportDialog : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastPath);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
             {

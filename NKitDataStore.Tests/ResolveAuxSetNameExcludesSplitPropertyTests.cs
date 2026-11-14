@@ -118,7 +118,7 @@ namespace NKitDataStore.Tests
         ///
         /// Property 14 (supplementary): ResolveAuxSetName with ONLY split files returns null.
         /// When a directory contains only .split.nkds files (no .aux.nkds),
-        /// ResolveAuxSetName SHALL return null — split files are never matched.
+        /// ResolveAuxSetName SHALL return null - split files are never matched.
         /// </summary>
         [Property(MaxTest = 100)]
         public bool ResolveAuxSetName_WithOnlySplitFiles_ReturnsNull(
@@ -135,7 +135,7 @@ namespace NKitDataStore.Tests
             string primaryPath = Path.Combine(testDir, $"primary{DataStore.DatabaseFileExtension}");
             File.WriteAllBytes(primaryPath, Array.Empty<byte>());
 
-            // Create ONLY split files — no aux file
+            // Create ONLY split files - no aux file
             for (int i = 0; i < splitCount; i++)
             {
                 string splitBaseName = $"game{(splitNameSeed.Get + i) % 100}";
@@ -147,7 +147,7 @@ namespace NKitDataStore.Tests
             // Act: resolve aux set name
             string result = DataStore.ResolveAuxSetName(primaryPath);
 
-            // Property: result must be null — split files are never matched as aux
+            // Property: result must be null - split files are never matched as aux
             return result == null;
         }
 
@@ -172,7 +172,7 @@ namespace NKitDataStore.Tests
             File.WriteAllBytes(primaryPath, Array.Empty<byte>());
 
             // Create an aux file whose base name happens to contain "split" but
-            // is NOT a split sidecar — e.g., "splitview.aux.nkds"
+            // is NOT a split sidecar - e.g., "splitview.aux.nkds"
             string auxBaseName = $"splitview{seed.Get % 20}";
             string auxFileName = $"{auxBaseName}{DataStore._AuxSetSuffix}{DataStore.DatabaseFileExtension}";
             string auxFilePath = Path.Combine(testDir, auxFileName);
@@ -182,7 +182,7 @@ namespace NKitDataStore.Tests
             string result = DataStore.ResolveAuxSetName(primaryPath);
 
             // Property: the aux file should be found (the word "split" in the base name
-            // does not trigger the exclusion — only ".split." pattern does)
+            // does not trigger the exclusion - only ".split." pattern does)
             if (result == null)
                 return false;
 

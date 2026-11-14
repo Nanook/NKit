@@ -1,10 +1,10 @@
-# OGMR — One Game, Many ROMs
+# OGMR - One Game, Many ROMs
 
 Pre-built game grouping masks for use with the `nkds ogmr` command and beyond. Each system folder contains a YAML file that maps every Redump dat entry to its canonical game, enabling per-game NKDS sets with maximum deduplication.
 
 ## General Purpose
 
-While these OGMR files were created for NKDS, the grouping data itself is general-purpose. Any tool or workflow that needs to identify which game a ROM belongs to can use these masks — whether that's an OGMR (One Game, Many ROMs) collection keeping all variants together, a 1G1R (One Game, One ROM) scenario selecting the best single version per game, a ROM manager, a batch renaming script, or any other datfile-driven workflow. The YAML format is simple and the regex masks are standard.
+While these OGMR files were created for NKDS, the grouping data itself is general-purpose. Any tool or workflow that needs to identify which game a ROM belongs to can use these masks - whether that's an OGMR (One Game, Many ROMs) collection keeping all variants together, a 1G1R (One Game, One ROM) scenario selecting the best single version per game, a ROM manager, a batch renaming script, or any other datfile-driven workflow. The YAML format is simple and the regex masks are standard.
 
 ## What's Here
 
@@ -46,7 +46,7 @@ nkds ogmr OGMR/nintendo_wii/nintendo_wii_ogmr.yaml --datastore D:\NKitData\Wii D
 | Xbox | 2,678 | 1,295 | 230 | PASS |
 | Xbox 360 | 3,686 | 1,800 | 315 | PASS |
 
-All systems pass validation — zero orphans, zero false positives, each dat entry matched exactly once.
+All systems pass validation - zero orphans, zero false positives, each dat entry matched exactly once.
 
 ## How Masks Work
 
@@ -60,9 +60,9 @@ games:
       - '^Foreign Title(?= \(|\.iso|\.bin|\.cue|$)'
 ```
 
-The boundary lookahead `(?= \(|\.iso|...)` prevents partial matches — ensuring a mask for "Example Game" doesn't accidentally match "Example Game 2".
+The boundary lookahead `(?= \(|\.iso|...)` prevents partial matches - ensuring a mask for "Example Game" doesn't accidentally match "Example Game 2".
 
-Masks match on the base title, making them tolerant of most dat name changes (region tag edits, revision bumps, language additions). Only an actual title rename would require a mask update — and the validation step catches that.
+Masks match on the base title, making them tolerant of most dat name changes (region tag edits, revision bumps, language additions). Only an actual title rename would require a mask update - and the validation step catches that.
 
 ## Regenerating Masks
 
@@ -83,7 +83,7 @@ The script parses the datfile, applies title variant mappings, groups entries, g
 
 The `translations.yaml` and `suggestions.yaml` files contain manually verified translations of foreign-language game titles to their canonical English name. These were time-consuming to create and verify. They can be fine-tuned where groupings are not 100% correct.
 
-*Note: "Translations" here refers to translated game titles (e.g., a Japanese game name mapped to its English equivalent) — not language ports of the games themselves.*
+*Note: "Translations" here refers to translated game titles (e.g., a Japanese game name mapped to its English equivalent) - not language ports of the games themselves.*
 
 ## Ownership & Maintenance
 
@@ -91,7 +91,7 @@ This initial set of OGMR files represents a significant amount of work to produc
 
 Ideally these lists would be maintained by or alongside the datting communities (Redump, No-Intro, Tosec) who already track game entries and have the expertise to keep groupings accurate as dats evolve. If you represent one of these communities and are interested in taking ownership, please reach out on [Discord](https://discord.gg/YT792u5yWJ).
 
-I am also willing to align NKDS's `ogmr` command with any variant of the standard that may evolve from this initial work — whether that's a different YAML schema, a different grouping approach, or integration with existing tooling.
+I am also willing to align NKDS's `ogmr` command with any variant of the standard that may evolve from this initial work - whether that's a different YAML schema, a different grouping approach, or integration with existing tooling.
 
 In the meantime, community contributions via pull requests are welcome.
 

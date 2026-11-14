@@ -51,7 +51,7 @@ public partial class CreateSetDialog : ReactiveWindow<CreateSetDialogViewModel>
                     if (!string.IsNullOrWhiteSpace(currentPath) && Directory.Exists(currentPath))
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(currentPath);
                 }
-                catch { /* Ignore — open picker without suggested location */ }
+                catch { /* Ignore - open picker without suggested location */ }
 
                 IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
                 {

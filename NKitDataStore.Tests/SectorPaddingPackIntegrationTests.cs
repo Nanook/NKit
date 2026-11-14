@@ -15,7 +15,7 @@ namespace NKitDataStore.Tests
         private readonly ITestOutputHelper _output;
         private readonly string _testDir;
 
-        // Path to Swap Magic 3 BIN — if present, the live-disc test runs; otherwise it is skipped.
+        // Path to Swap Magic 3 BIN - if present, the live-disc test runs; otherwise it is skipped.
         private const string SwapMagicBinPath =
             @"D:\NKitFiles\PS2_Iso\Swap Magic 3 (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) (Unl) (CD Version 3.00)\Swap Magic 3 (USA) (En,Ja,Fr,De,Es,It,Zh,Ko) (Unl) (CD Version 3.00).bin";
 
@@ -393,8 +393,8 @@ namespace NKitDataStore.Tests
         {
             // Arrange: create a sector with a non-standard MSF (simulating copy protection)
             // Use LBAs that produce different MSF minute values to ensure clear mismatch.
-            // LBA 300: MSF = (0, 6, 0)  — minute 0
-            // LBA 10000: MSF = (2, 15, 25) — minute 2
+            // LBA 300: MSF = (0, 6, 0)  - minute 0
+            // LBA 10000: MSF = (2, 15, 25) - minute 2
             const long actualLba = 300;
             const long fakeLba = 10000;
 
@@ -658,7 +658,7 @@ namespace NKitDataStore.Tests
                     // Non-standard subheader: all 0x55 (Swap Magic style, Form1: 0x55 & 0x20 = 0)
                     for (int j = 0x10; j < 0x18; j++) sectionData[off + j] = 0x55;
                     Ecm.ReconstructPrefix(sectionData, off, false, startLba + i);
-                    // Standard ECC would be computed from 0x55 data — instead stomp with 0x55 fill
+                    // Standard ECC would be computed from 0x55 data - instead stomp with 0x55 fill
                     for (int j = 0x81C; j < 0x930; j++) sectionData[off + j] = 0x55;
                     // Also stomp EDC with non-standard value
                     sectionData[off + 0x818] = 0x55; sectionData[off + 0x819] = 0x55;
@@ -666,7 +666,7 @@ namespace NKitDataStore.Tests
                 }
             }
 
-            // Pack — Analyse should detect non-standard ECC/EDC for sectors 25-29
+            // Pack - Analyse should detect non-standard ECC/EDC for sectors 25-29
             byte[] packData = SectorPaddingPacker.Pack(sectionData, sectorCount, startLba);
             Assert.NotNull(packData);
             _output.WriteLine($"Pack size: {packData.Length} bytes");
@@ -750,7 +750,7 @@ namespace NKitDataStore.Tests
         /// Reads sections from the actual deduped Swap Magic nkds and compares against
         /// the raw BIN. Saves the first mismatching section to D:\Temp\ for binary diff.
         /// This tests the full OffsetsManager+ImageBuilder pipeline with all 364 sections
-        /// loaded simultaneously — the real failure condition.
+        /// loaded simultaneously - the real failure condition.
         /// </summary>
         [Fact]
         public void ReadFromRealNkds_SwapMagic_FindFirstMismatch()
@@ -845,7 +845,7 @@ namespace NKitDataStore.Tests
             }
             _output.WriteLine("All sections: byte-identical ✓");
         }
-        /// AND section 1 (sectors 892-1784) — the first two full sections — and verifies the
+        /// AND section 1 (sectors 892-1784) - the first two full sections - and verifies the
         /// full DataStore round-trip produces byte-identical output for both.
         /// Saves mismatching sections to D:\Temp\ for binary comparison.
         /// Skipped when the disc file is not available.
@@ -861,7 +861,7 @@ namespace NKitDataStore.Tests
 
             const int sectorCount = 892;
             const int RawSectionSize = sectorCount * RawSectorSize; // 0x200340
-            // Test all sections — compute from file size
+            // Test all sections - compute from file size
             long binFileSize = new FileInfo(SwapMagicBinPath).Length;
             int numSections = (int)(binFileSize / RawSectionSize);
             _output.WriteLine($"Testing {numSections} sections from {binFileSize} byte disc");
@@ -892,7 +892,7 @@ namespace NKitDataStore.Tests
                 Assert.NotNull(packData);
                 _output.WriteLine($"Section {secIdx} (LBA {sectionLba}-{sectionLba+sectorCount-1}): pack={packData.Length} bytes");
 
-                // Store in DataStore — one image per section for isolation
+                // Store in DataStore - one image per section for isolation
                 string storePath = Path.Combine(_testDir, $"e2e_live_sec{secIdx}");
                 Directory.CreateDirectory(storePath);
                 using DataStore store = new DataStore(storePath);
@@ -969,7 +969,7 @@ namespace NKitDataStore.Tests
                 }
             }
 
-            Assert.False(anyFailed, "One or more sections had reconstruction mismatches — see D:\\Temp\\swapm_sec*.bin");
+            Assert.False(anyFailed, "One or more sections had reconstruction mismatches - see D:\\Temp\\swapm_sec*.bin");
         }
     }
 }

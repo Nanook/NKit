@@ -1,6 +1,6 @@
 # Compaction
 
-This document describes the `CompactSet` operation in NKitDataStore — how it reclaims space after image removal, the differences between separate and embedded mode compaction, aux/file data handling, crash recovery, and the correctness guarantees enforced by the implementation.
+This document describes the `CompactSet` operation in NKitDataStore - how it reclaims space after image removal, the differences between separate and embedded mode compaction, aux/file data handling, crash recovery, and the correctness guarantees enforced by the implementation.
 
 ## Overview
 
@@ -10,7 +10,7 @@ When images are removed from a set, their directory entries are marked as remove
 2. Rewriting the index file without removed images' directory entries, metadata sections, and block map sections
 3. Pruning the block index to contain only entries referenced by live images
 
-The operation is designed to be crash-safe at every step — an interrupted compact can be recovered on the next open.
+The operation is designed to be crash-safe at every step - an interrupted compact can be recovered on the next open.
 
 ## Storage Modes
 
@@ -108,7 +108,7 @@ CompactSetEmbedded(setName)
   └── Step 6: Reopen as embedded, compute new boundary, update caches
 ```
 
-## CompactShards — Shard File Compaction
+## CompactShards - Shard File Compaction
 
 This is the core operation that reclaims space from shard files. It operates on the block data layer.
 
@@ -161,10 +161,10 @@ CompactShards(setName, indexFile)
 ### Key Invariants
 
 - **Block index pruning always executes** when there are unreferenced entries, regardless of whether any shard file was physically rewritten. This prevents orphaned block index entries from accumulating.
-- **Shared blocks** (referenced by multiple live images) are never removed — only blocks exclusively referenced by removed images are pruned.
-- **Sets with no removed images** produce no changes — no shard rewrites, no block index modifications.
+- **Shared blocks** (referenced by multiple live images) are never removed - only blocks exclusively referenced by removed images are pruned.
+- **Sets with no removed images** produce no changes - no shard rewrites, no block index modifications.
 
-## CompactTo — Index File Compaction
+## CompactTo - Index File Compaction
 
 Rewrites the entire index file from scratch, producing a clean defragmented output.
 
@@ -213,7 +213,7 @@ Aux data (auxiliary file records stored alongside block data in shards) is handl
 
 ### Stale Footer Problem
 
-When images are removed via `DeleteImage`, the index grows (new directory appended at end, `FileEndOffset` updated in header). However, the `EmbeddedFooter.IndexSize` at the end of the file is NOT updated — it still reflects the size from the last re-embed operation.
+When images are removed via `DeleteImage`, the index grows (new directory appended at end, `FileEndOffset` updated in header). However, the `EmbeddedFooter.IndexSize` at the end of the file is NOT updated - it still reflects the size from the last re-embed operation.
 
 **Solution**: `CompactSetEmbedded` uses `indexFile.Header.FileEndOffset` as the authoritative index size for extraction, not the footer's stale `IndexSize`.
 
@@ -315,7 +315,7 @@ The following properties are enforced by the implementation and verified by prop
 
 2. **Empty Set Cleanup**: When all images are removed and `CompactSet` is called, the block index is empty and no shard files remain on disk.
 
-3. **Incremental Integrity**: After any sequence of removals with `CompactSet` after each, every intermediate state is valid — all remaining images pass full verification.
+3. **Incremental Integrity**: After any sequence of removals with `CompactSet` after each, every intermediate state is valid - all remaining images pass full verification.
 
 4. **No-Removal Preservation**: Compacting a set with no removed images produces no changes (shard files byte-for-byte identical, block index unchanged).
 
@@ -325,9 +325,9 @@ The following properties are enforced by the implementation and verified by prop
 
 ## Performance Characteristics
 
-- **Shard compaction** is O(live data size) — only live chunks are copied
-- **Index compaction** is O(live images × section size) — copies all live sections sequentially
-- **Block index pruning** is O(total block entries) — single pass with HashSet lookup
+- **Shard compaction** is O(live data size) - only live chunks are copied
+- **Index compaction** is O(live images × section size) - copies all live sections sequentially
+- **Block index pruning** is O(total block entries) - single pass with HashSet lookup
 - **Copy-on-write** means the original shard is intact until the atomic replace succeeds
 - **Shards that don't need compaction** (all live data already contiguous) are skipped entirely
 

@@ -60,7 +60,7 @@ namespace NKit.Tests.Full.TextDriven
             // Release mode mirrors the UI's retention of one NKitTaskResults per row:
             //   none  - keep the full result (worst case; reproduces the raw leak)
             //   heavy - call ReleaseHeavyReferences() (nulls StepResults, KEEPS Scan/Source)
-            //   all   - call ReleaseAllReferences() (also nulls Scan/Source) — the UI fix
+            //   all   - call ReleaseAllReferences() (also nulls Scan/Source) - the UI fix
             string mode = (Environment.GetEnvironmentVariable("NKIT_MEMTEST_RELEASE") ?? "all").Trim().ToLowerInvariant();
             if (mode != "none" && mode != "heavy" && mode != "all") mode = "all";
             string logPath = Environment.GetEnvironmentVariable("NKIT_MEMTEST_LOG");
@@ -88,7 +88,7 @@ namespace NKit.Tests.Full.TextDriven
             long baselineWorking = -1;
 
             // Retain every result for the whole run, exactly like the UI keeps one per row. This is
-            // what makes a per-image leak visible — the earlier version dropped each result, which
+            // what makes a per-image leak visible - the earlier version dropped each result, which
             // is why the CLI-style loop looked flat.
             List<NKitTaskResults> retained = new System.Collections.Generic.List<NKitTaskResults>(iters);
 

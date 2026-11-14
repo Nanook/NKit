@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace Nanook.NKit
 {
     /// <summary>
-    /// Pure, immutable normalisation of "what am I actually processing?" — built ONCE, before the
+    /// Pure, immutable normalisation of "what am I actually processing?" - built ONCE, before the
     /// <c>_StepsDefs</c> lookup in <see cref="NKitTaskContext"/>. It absorbs the source-fact logic
     /// that used to be smeared across <c>CreateSteps</c> (the config-string selection and the
     /// dual-format split) and the whole of the former <c>CalculateConfig</c> per-system switch.
@@ -16,7 +16,7 @@ namespace Nanook.NKit
     /// </summary>
     internal sealed class SourceProfile
     {
-        /// <summary>"image" or "folderindex" — the <c>SrcType</c> discriminator for the table.</summary>
+        /// <summary>"image" or "folderindex" - the <c>SrcType</c> discriminator for the table.</summary>
         public string SrcType { get; }
 
         /// <summary>The normalised <c>Config</c> token used as the table discriminator (was the result of CalculateConfig).</summary>
@@ -57,13 +57,13 @@ namespace Nanook.NKit
             // the ONLY signal for a CHD: a CHD deliberately has no external IndexFile (its track layout
             // lives in ChdMetaData -> ImageInfo.IsFolderIndex), so a CD-style CHD is folder-index with
             // IndexFile == null. Both the SrcType and the dual-format selection MUST use this combined
-            // signal — keying either on IndexFile alone misroutes a CHD.
+            // signal - keying either on IndexFile alone misroutes a CHD.
             bool isFolderIndex = sourceFile.IndexFile != null || (imageInfo?.IsFolderIndex ?? false);
             bool isDataStore = sourceFile?.IsDataStore == true;
 
             // #1 base config-string selection (was a nested ternary in CreateSteps).
             // Wipe outputs the SAME formats as Expand (it is expand-plus-content/key-wiping), so it
-            // MUST resolve its config-string and output container identically to Expand — never from
+            // MUST resolve its config-string and output container identically to Expand - never from
             // settings.Convert. Both mirror the source container.
             bool expandLike = task == TaskType.Expand || task == TaskType.Wipe;
             string configString =
@@ -75,7 +75,7 @@ namespace Nanook.NKit
 
             // #2 A dual format ("imageFmt/folderIndexFmt") carries a shape-dependent choice. We already
             // know the source shape (isFolderIndex, detected above), so target the correct half up front
-            // — the table then only ever sees a single concrete format, never a "/".
+            // - the table then only ever sees a single concrete format, never a "/".
             configString = DualFormat.Parse(configString).For(isFolderIndex);
 
             string srcType = (isFolderIndex ? OutputType.FolderIndex : OutputType.Image).ToString().ToLower();
@@ -83,7 +83,7 @@ namespace Nanook.NKit
             // so the routing table dispatches to the direct pipeline steps instead of disc-image
             // steps that would silently receive no matching AreaType sections.
             // Applies to Convert, Extract and Wipe. All other tasks (Scan, Verify, Fix, Expand,
-            // Dedupe) either work correctly as "image" or are NotSupported — no change needed.
+            // Dedupe) either work correctly as "image" or are NotSupported - no change needed.
             bool isFolderFormat = sourceFile?.SyntheticFolderGroup?.IsFolderFormat == true
                                || sourceFile?.ImageType == SourceImageType.Wua;
             if (isFolderFormat && (task == TaskType.Convert || task == TaskType.Extract || task == TaskType.Wipe))
@@ -93,7 +93,7 @@ namespace Nanook.NKit
             return new SourceProfile(srcType, config, configString, isGdRom, isDataStore, isFolderIndex);
         }
 
-        // The former NKitTaskContext.CalculateConfig — moved here verbatim (behaviour identical), now
+        // The former NKitTaskContext.CalculateConfig - moved here verbatim (behaviour identical), now
         // pure over its arguments. Absorbs workarounds #6-#10. Exposed so the test harness (which
         // supplies its own pre-selected configString + folder-index fact) exercises the same logic.
         public static string CalculateConfig(TaskType task, SystemType system, string configString, bool isGdRom, bool isFolderIndex, SourceFile sourceFile)
@@ -131,7 +131,7 @@ namespace Nanook.NKit
                 case TaskType.Wipe:
                     // Wipe mirrors Expand's OUTPUT FORMAT (via the expand-like configString selection in
                     // From()), but its routing-table Config DISCRIMINATOR is the "none" sentinel (meaning
-                    // "no format config") exactly as on main — NOT the Expand format value. The only
+                    // "no format config") exactly as on main - NOT the Expand format value. The only
                     // special cases are Dreamcast GD-ROM CHD and XBox/360 archive sources.
                     config = "none";
                     if (system == SystemType.Dreamcast && isGdRom && sourceFile?.ImageType == SourceImageType.Chd) // #8
@@ -163,7 +163,7 @@ namespace Nanook.NKit
                         case SystemType.XBox360:
                             config = fmt[0];
                             break;
-                        default: // #10 — folderindex sources only pass cue/toc through
+                        default: // #10 - folderindex sources only pass cue/toc through
                             if (isFolderIndex)
                                 config = (fmt[0] == "cue" || fmt[0] == "toc") ? fmt[0] : "";
                             else

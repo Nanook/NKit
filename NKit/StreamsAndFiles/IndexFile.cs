@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -119,7 +119,7 @@ namespace Nanook.NKit
                 {
                     addFiles.AddRange(folderFiles.Where(a => a.FileName.Equals($"tik.{tmdVer}", StringComparison.OrdinalIgnoreCase) || a.FileName.Equals($"cetk.{tmdVer}", StringComparison.OrdinalIgnoreCase)));
                     // If no version-specific cetk was found, fall back to any cetk in the folder.
-                    // Multiple TMD versions of the same title share the same title key — the cetk
+                    // Multiple TMD versions of the same title share the same title key - the cetk
                     // from any version can decrypt the title key (same TitleId, same common-key IV).
                     if (!addFiles.Any(a => a.FileName.StartsWith("cetk", StringComparison.OrdinalIgnoreCase)))
                     {
@@ -139,8 +139,8 @@ namespace Nanook.NKit
                     // NOTE: CUE handling assumes EITHER a single backing file holding all tracks, OR
                     // the fully-split layout (one file per track). The parser reads multiple FILE/TRACK
                     // pairs, but the INDEX offset maths and the ToCue/ToGdi emit side model those two
-                    // shapes only — a MIXED layout (multiple files each containing multiple tracks) is
-                    // not supported. (The old "1 track per file" wording was inaccurate — it is the
+                    // shapes only - a MIXED layout (multiple files each containing multiple tracks) is
+                    // not supported. (The old "1 track per file" wording was inaccurate - it is the
                     // reverse.) Tracked in NKitVault/10 Refactor/Warning Cleanup.md.
                     string fn = null;
                     int fileBlockSize = 2352; //default

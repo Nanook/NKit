@@ -140,13 +140,13 @@ namespace NKit.Tests.Engine.Output
 
             foreach (IFsFile extent in extents)
             {
-                // Phase 1: Activation — mirrors the real code's while loop
+                // Phase 1: Activation - mirrors the real code's while loop
                 long discStart = extent.FsOffset;
                 long discEnd = extent.FsOffset + extent.FsSize;
 
                 if (!activeOverlaps.ContainsKey(fullPath))
                 {
-                    // First extent — open new stream
+                    // First extent - open new stream
                     bool isPrimary = candidateSet.Contains(extent);
                     MemoryStream stream = new MemoryStream();
                     long totalSize = extent.SplitParts?.Size ?? extent.FsSize;
@@ -161,7 +161,7 @@ namespace NKit.Tests.Engine.Output
                 }
                 else
                 {
-                    // Subsequent extent of same split file — record transition
+                    // Subsequent extent of same split file - record transition
                     SimulatedOverlapState state = activeOverlaps[fullPath];
                     TransitionRecord record = new TransitionRecord
                     {
@@ -580,7 +580,7 @@ namespace NKit.Tests.Engine.Output
                         splitParts: splitParts))
                     .ToList();
 
-                // EMPTY candidateSet — these are secondary overlaps
+                // EMPTY candidateSet - these are secondary overlaps
                 HashSet<IFsFile> candidateSet = new HashSet<IFsFile>();
 
                 (List<TransitionRecord> transitions, SimulatedOverlapState _, bool _) =
@@ -601,7 +601,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 7g: Variable extent sizes — TotalWritten accumulates correctly
+        /// Property 7g: Variable extent sizes - TotalWritten accumulates correctly
         /// even when extents have different sizes.
         ///
         /// For any primary split file with extents of varying sizes, TotalWritten at each

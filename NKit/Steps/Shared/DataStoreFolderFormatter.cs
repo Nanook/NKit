@@ -100,7 +100,7 @@ namespace Nanook.NKit.Steps.Shared
                 // EOF, but if we have not received the expected number of bytes the source
                 // ended early. Storing the short data anyway would record the FULL expected
                 // Size alongside a Crc32/XxHash64 computed over only the bytes we actually
-                // received — an image that looks correct by size/CRC yet fails verification.
+                // received - an image that looks correct by size/CRC yet fails verification.
                 // Throwing here lets the caller (NkdsOperations) record a per-image error and
                 // roll the un-finalized image back cleanly instead of persisting corruption.
                 if (totalRead != fileSize)

@@ -82,7 +82,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Report progress for this scope. <paramref name="total"/> may be null if unknown.
-        /// Progress is a separate data stream from log events — sinks handle it independently.
+        /// Progress is a separate data stream from log events - sinks handle it independently.
         /// </summary>
         void ReportProgress(long current, long? total = null);
     }

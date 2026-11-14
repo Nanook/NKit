@@ -35,7 +35,7 @@ namespace Nanook.NKit.Steps.Shared
             if (!Directory.Exists(dedupePath))
                 Directory.CreateDirectory(dedupePath);
 
-            // Validate track files before opening the DataStore — abort early if any are missing
+            // Validate track files before opening the DataStore - abort early if any are missing
             ValidateTrackFiles();
 
             string resolvedSetName = setName ?? context.SystemType.ToString();
@@ -60,10 +60,10 @@ namespace Nanook.NKit.Steps.Shared
                 if (context.SystemType == SystemType.Dreamcast && context.ImageInfo?.MediaType == MediaType.GD)
                 {
                     // Dreamcast GD-ROM. The raw CHD track bytes are stored VERBATIM (no pad/pregap
-                    // mutation — preservation-safe), and the CHD's own track metadata is persisted as
+                    // mutation - preservation-safe), and the CHD's own track metadata is persisted as
                     // a loose chd.meta.txt file (see WriteChdMetaFile). Storing ImageFormat.Chd tells
                     // read-back (DataStoreAsIso) to rehydrate the CHD tracks via ChdMetaData.Parse so
-                    // the source presents identically to a live CHD file — export can then run the
+                    // the source presents identically to a live CHD file - export can then run the
                     // existing GdRomWriter path to produce a correct CUE or GDI (the chdman PAD frames
                     // and pregap geometry are reconstructed from the stored metadata, since Pad != 0
                     // is what gates GdRomWriter.adjustChdTracks). We deliberately do NOT convert at
@@ -80,7 +80,7 @@ namespace Nanook.NKit.Steps.Shared
                 }
             }
 
-            // ImageFileName uses .bin for CUE and Chd (the data file) — the .cue index / chd.meta.txt
+            // ImageFileName uses .bin for CUE and Chd (the data file) - the .cue index / chd.meta.txt
             // are stored separately as loose files. Using .cue/.chd here would trigger index file
             // resolution in the verify source file scanner.
             string displayExtension = (imageFormat == ImageFormat.Cue || imageFormat == ImageFormat.Chd) ? ".bin" : Container.DataStoreAsIso.GetImageExtension(imageFormat);
@@ -106,7 +106,7 @@ namespace Nanook.NKit.Steps.Shared
 
             if (blockSize == 0x800)
             {
-                // Cooked sectors — no striding needed
+                // Cooked sectors - no striding needed
                 return null;
             }
 
@@ -183,7 +183,7 @@ namespace Nanook.NKit.Steps.Shared
                 };
             }
 
-            // Unrecognized block size — skip stride computation and log warning
+            // Unrecognized block size - skip stride computation and log warning
             _context.Log?.Info(() => $"DataStoreIso9660Formatter: Unrecognized block size 0x{blockSize:X} for area {partitionId}, skipping stride computation.");
             return null;
         }
@@ -227,7 +227,7 @@ namespace Nanook.NKit.Steps.Shared
             switch (scanArea.Type)
             {
                 case AreaType.FileSystem:
-                    // PhysicalOffset — starting LBA for sector address computation.
+                    // PhysicalOffset - starting LBA for sector address computation.
                     // track.PhysicalOffset is stored in bytes (LBA * blockSize), so divide
                     // by blockSize to store the actual sector number (LBA).
                     if (props["PhysicalOffset"] != null)
@@ -274,7 +274,7 @@ namespace Nanook.NKit.Steps.Shared
                     if (!string.IsNullOrEmpty(trackType))
                         metadata.Set(AreaValueType.Type, trackType);
 
-                    // PS3 encryption metadata — per-area based on region (odd regions are encrypted).
+                    // PS3 encryption metadata - per-area based on region (odd regions are encrypted).
                     // PS3 discs have alternating plaintext/encrypted regions. The scan sets
                     // IsEncryptionSupported per-area from PlayStation3.IsEncryptionSupported(areaNo)
                     // which returns Regions[areaNo].Encrypted (true for odd indices).
@@ -470,7 +470,7 @@ namespace Nanook.NKit.Steps.Shared
 
             if (section.Type == AreaType.FileSystem)
             {
-                // When a FileSystem section has no mapped items (empty FST — e.g. Track 2 of a
+                // When a FileSystem section has no mapped items (empty FST - e.g. Track 2 of a
                 // PS2 multi-track CUE+BIN whose track geometry couldn't be resolved), the gap/file
                 // machinery produces an empty range list and the entire section content is silently
                 // dropped. Detect this and fall back to storing the section verbatim so the data
@@ -481,7 +481,7 @@ namespace Nanook.NKit.Steps.Shared
                     // For raw 0x930 sectors with no mapped FST items (pure gap sections between
                     // FST end and the first data file): store the user-data (FS-stripped) bytes
                     // so verify can reproduce the original disc content. These sectors contain
-                    // whatever the disc mastering wrote there — often non-zero — and the CRC
+                    // whatever the disc mastering wrote there - often non-zero - and the CRC
                     // comparison requires byte-exact reproduction.
                     //
                     // Use section.Read() which strips headers and delivers only the 0x800 user-data
@@ -508,7 +508,7 @@ namespace Nanook.NKit.Steps.Shared
                             section.Read(0, (int)section.FsSize, writeStream);
                             FinalizeFileWrite(imageOffset, writeStream);
                         }
-                        // Always persist sector padding pack for raw sections — even with no FST
+                        // Always persist sector padding pack for raw sections - even with no FST
                         // items, the sectors may have non-standard sync/MSF/subheader/EDC/ECC that
                         // must survive the DataStore round-trip (e.g. all-zero null sectors whose
                         // headers the reconstruction would otherwise fill with standard patterns).
@@ -584,7 +584,7 @@ namespace Nanook.NKit.Steps.Shared
                     {
                         if (s > cursor)
                         {
-                            // Uncovered range [cursor, s) — store only if it has non-zero user data
+                            // Uncovered range [cursor, s) - store only if it has non-zero user data
                             long relOffset = cursor;
                             int gapFsSize = (int)(s - cursor);
                             bool hasData = false;
@@ -636,7 +636,7 @@ namespace Nanook.NKit.Steps.Shared
             }
             else if (section.Type == AreaType.Audio)
             {
-                // Audio tracks — store the raw audio data (no stride, full 2352-byte sectors).
+                // Audio tracks - store the raw audio data (no stride, full 2352-byte sectors).
                 // Audio areas only exist in CUE/GDI disc images (regardless of container format
                 // like NKit, 7z, etc.), so leading-zero trimming is always safe to apply here.
                 //
@@ -650,7 +650,7 @@ namespace Nanook.NKit.Steps.Shared
 
                 if (firstNonZero == size)
                 {
-                    // All bytes are zero — store TrimOffset = partition size, write no blocks.
+                    // All bytes are zero - store TrimOffset = partition size, write no blocks.
                     AreaRecord area = _imageWriter.GetAreas().FirstOrDefault(a => a.Offset == section.ImageOffset);
                     if (area != null)
                     {
@@ -675,13 +675,13 @@ namespace Nanook.NKit.Steps.Shared
                 }
                 else
                 {
-                    // No leading zeros — store verbatim.
+                    // No leading zeros - store verbatim.
                     _imageWriter.WriteData(section.ImageOffset, data, 0, size, BlockType.File);
                 }
             }
             else if (section.Type == AreaType.Other)
             {
-                // Other areas (pre-gap, lead-in, etc.) — store verbatim
+                // Other areas (pre-gap, lead-in, etc.) - store verbatim
                 _imageWriter.WriteData(section.ImageOffset, section.Decrypted, 0, (int)section.Size, BlockType.Other);
             }
         }
@@ -750,7 +750,7 @@ namespace Nanook.NKit.Steps.Shared
             AreaInfo ai = section.AreaInfo;
             int blockSize = ai.BlockSize;
 
-            // Only applicable for raw sectors (0x930) — non-raw block sizes don't need padding
+            // Only applicable for raw sectors (0x930) - non-raw block sizes don't need padding
             if (blockSize != SectorPaddingPacker.RawSectorSize)
                 return;
 
@@ -774,7 +774,7 @@ namespace Nanook.NKit.Steps.Shared
                 if (flags != null)
                 {
                     // If the whole section is fully recreatable (no sync/MSF/EDC/ECC to store), skip
-                    // the record entirely — the reader regenerates everything from the physical LBA
+                    // the record entirely - the reader regenerates everything from the physical LBA
                     // when no BlockPadding segment is present (see ImageBuilderIso9660Stream). This is
                     // the byte-saving win from a correct IsCreatable.
                     if (SectorPaddingPacker.IsFullyCreatable(flags))
@@ -800,7 +800,7 @@ namespace Nanook.NKit.Steps.Shared
                     }
                     else
                     {
-                        // Fallback to area properties — PhysicalOffset is stored in bytes (LBA * blockSize)
+                        // Fallback to area properties - PhysicalOffset is stored in bytes (LBA * blockSize)
                         object propPhysOff = ai.Properties?["PhysicalOffset"];
                         physicalOffset = propPhysOff != null ? (long)(ulong)propPhysOff : 0;
                         trackImageOffset = ai.ImageOffset;
@@ -918,7 +918,7 @@ namespace Nanook.NKit.Steps.Shared
                         continue;
                     }
 
-                    // Skip non-first split parts — the first part (SplitIndex == 0) emits all extents
+                    // Skip non-first split parts - the first part (SplitIndex == 0) emits all extents
                     if (fstFile.SplitParts != null && fstFile.SplitParts.Parts.Count >= 2 && fstFile.SplitIndex > 0)
                         continue;
 
@@ -937,7 +937,7 @@ namespace Nanook.NKit.Steps.Shared
                     long imageOffset;
                     if (isSystemEntry)
                     {
-                        // System entries (UDF metadata) have FsOffset that is NOT area-relative —
+                        // System entries (UDF metadata) have FsOffset that is NOT area-relative -
                         // it already represents the correct position. Do not add area.ImageOffset.
                         imageOffset = stride != null
                             ? stride.CleanToOffset(file.FsOffset, false)
@@ -1020,7 +1020,7 @@ namespace Nanook.NKit.Steps.Shared
 
                         // Emit split parts as same-name entries when file has ≥2 parts
                         // System entries (e.g. __file_ UDF descriptors) use their own offset/size even if
-                        // they have SplitParts set — SplitParts on system entries refers to the target file, not the descriptor.
+                        // they have SplitParts set - SplitParts on system entries refers to the target file, not the descriptor.
                         if (!isSystem && fstFile.SplitParts != null && fstFile.SplitParts.Parts.Count >= 2)
                         {
                             foreach (IFsFilePart part in fstFile.SplitParts.Parts.OrderBy(p => p.Index))
@@ -1049,7 +1049,7 @@ namespace Nanook.NKit.Steps.Shared
             string parentPath = link.Parent?.Path ?? "";
             string name = link.EncodedChildName ?? "";
             if (string.IsNullOrEmpty(name))
-                return null; // invalid entry — callers must skip null paths
+                return null; // invalid entry - callers must skip null paths
             if (string.IsNullOrEmpty(parentPath))
                 return "/" + name;
             return parentPath + "/" + name;
@@ -1119,7 +1119,7 @@ namespace Nanook.NKit.Steps.Shared
             if (string.IsNullOrEmpty(sourceFolder))
                 return;
 
-            // Check if the source is archived — skip file validation for archived sources
+            // Check if the source is archived - skip file validation for archived sources
             if (_context.SourceFile?.IsArchived == true)
                 return;
 
@@ -1150,7 +1150,7 @@ namespace Nanook.NKit.Steps.Shared
                     // Attempt to open the file to verify it's readable
                     using (FileStream fs = File.Open(trackFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        // Just verify we can open it — don't need to read content
+                        // Just verify we can open it - don't need to read content
                     }
                 }
                 catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
@@ -1167,7 +1167,7 @@ namespace Nanook.NKit.Steps.Shared
         /// index file to copy). Behaviour depends on media type:
         /// <list type="bullet">
         /// <item>GD-ROM (Dreamcast): writes ONLY the authoritative <c>chd.meta.txt</c> (no synthesised
-        /// .cue), because a GD-ROM CHD has no inherent cue/gdi representation — cue vs gdi is an
+        /// .cue), because a GD-ROM CHD has no inherent cue/gdi representation - cue vs gdi is an
         /// output choice reconstructed on export from the CHD metadata.</item>
         /// <item>Non-GD multi-track CD (PS1/Saturn/etc., stored as CUE): writes a synthesised CUE
         /// index derived from the CHD tracks, which is the correct representation for those sources.</item>
@@ -1188,7 +1188,7 @@ namespace Nanook.NKit.Steps.Shared
                 string baseName = _context.SourceFile?.Name ?? "image";
                 SourceFileTrack[] ordered = tracks.OrderBy(t => t.TrackIndex).ToArray();
 
-                // A GD-ROM CHD has NO inherent CUE or GDI representation — it is raw tracks + CHGD
+                // A GD-ROM CHD has NO inherent CUE or GDI representation - it is raw tracks + CHGD
                 // metadata, and cue vs gdi is only a preservation/output CHOICE. Synthesising a .cue
                 // sidecar here would fabricate a provenance the source never had (and any stray
                 // .cue/.gdi in the source folder may belong to a different mastering). So for GD-ROM
@@ -1200,7 +1200,7 @@ namespace Nanook.NKit.Steps.Shared
                     return;
                 }
 
-                // Non-GD multi-track CD CHD (PS1/Saturn/SegaCD etc.) is stored as ImageFormat.Cue —
+                // Non-GD multi-track CD CHD (PS1/Saturn/SegaCD etc.) is stored as ImageFormat.Cue -
                 // these DID come from a standard redump CUE layout, so a synthesised CUE index is the
                 // correct representation and is required for reconstruction. (No GDI is ever generated
                 // here; GDI is a Dreamcast-only convert-to output.)
@@ -1241,7 +1241,7 @@ namespace Nanook.NKit.Steps.Shared
         /// <summary>
         /// Reconstructs and stores the CHD's raw track metadata lines (exactly the KEY:VALUE form
         /// ChdMetaData.Parse consumes) plus the CHD block size, as a loose chd.meta.txt file.
-        /// Field order is irrelevant — Parse reads via keyed regex lookups — but TAG is emitted
+        /// Field order is irrelevant - Parse reads via keyed regex lookups - but TAG is emitted
         /// first for readability. The bytes stored in the shard remain the unmodified CHD extraction.
         /// </summary>
         private void WriteChdMetaFile(SourceFileTrack[] tracks)
@@ -1271,7 +1271,7 @@ namespace Nanook.NKit.Steps.Shared
                     if (t.RawItems == null || t.RawItems.Count == 0)
                     {
                         _context.Log?.Info(() => $"CHD meta: track {t.TrackIndex} has no RawItems; skipping meta persistence.");
-                        return; // incomplete metadata — do not write a partial/misleading meta file
+                        return; // incomplete metadata - do not write a partial/misleading meta file
                     }
 
                     // Emit TAG first, then remaining keys. Values are single tokens (no spaces).
@@ -1306,7 +1306,7 @@ namespace Nanook.NKit.Steps.Shared
             IndexFile indexFile = _context.SourceFile?.IndexFile;
             if (indexFile == null)
             {
-                // CHD sources have no external index file — regenerate and store the .cue/.gdi
+                // CHD sources have no external index file - regenerate and store the .cue/.gdi
                 // index text from the CHD-carried tracks so the image reconstructs as a proper
                 // multi-track indexed image rather than a single flat file.
                 StoreChdGeneratedIndex();

@@ -235,7 +235,7 @@ namespace NKitDataStore.Tests
             }
 
             Assert.Equal(0, mismatchCount);
-            _output.WriteLine("All sectors match byte-for-byte — round-trip verified!");
+            _output.WriteLine("All sectors match byte-for-byte - round-trip verified!");
 
             // ── Assert: Verify per-block hashes match ─────────────────────
             // Compute hashes over the full reconstructed output and compare

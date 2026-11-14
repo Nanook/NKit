@@ -122,7 +122,7 @@ namespace NKit.Tests.NKDS
             MockDualWriter splitWriter = null;
             MockDataStore splitStore = null;
 
-            // Aux writer setup — independent try/catch
+            // Aux writer setup - independent try/catch
             if (auxOutcome != WriterSetupOutcome.NotRequested)
             {
                 try
@@ -143,7 +143,7 @@ namespace NKit.Tests.NKDS
                 }
             }
 
-            // Split writer setup — independent try/catch
+            // Split writer setup - independent try/catch
             if (splitOutcome != WriterSetupOutcome.NotRequested)
             {
                 try
@@ -222,7 +222,7 @@ namespace NKit.Tests.NKDS
                 if (!hasSplit)
                     return false.Label("HasSplit should be true when split setup succeeds");
 
-                // Split writer should be operational — perform writes
+                // Split writer should be operational - perform writes
                 Random rng = new Random(data.BaseSeed);
                 for (int i = 0; i < data.WriteCount; i++)
                 {
@@ -277,7 +277,7 @@ namespace NKit.Tests.NKDS
                 if (hasSplit)
                     return false.Label("HasSplit should be false when split setup fails");
 
-                // Aux writer should be operational — perform writes
+                // Aux writer should be operational - perform writes
                 Random rng = new Random(data.BaseSeed);
                 for (int i = 0; i < data.WriteCount; i++)
                 {
@@ -422,7 +422,7 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 18e: Both writers active — independent lifecycle operations.
+        /// Property 18e: Both writers active - independent lifecycle operations.
         ///
         /// When both writers are successfully constructed, operations on one writer
         /// do not affect the state of the other. Each writer maintains its own
@@ -476,7 +476,7 @@ namespace NKit.Tests.NKDS
                 if (data.AuxOpCount > 0 && data.SplitOpCount > 0)
                 {
                     // The operations lists should have different entries (different RNG seeds per writer)
-                    // unless by coincidence they share an offset — but counts must match independently
+                    // unless by coincidence they share an offset - but counts must match independently
                     bool auxHasOnlyAuxOps = auxWriter.Operations.All(op => op.StartsWith("Write@"));
                     bool splitHasOnlySplitOps = splitWriter.Operations.All(op => op.StartsWith("Write@"));
                     if (!auxHasOnlyAuxOps || !splitHasOnlySplitOps)

@@ -529,7 +529,7 @@ public class BackwardCompatibilityIntegrationTests
     [Fact]
     public void ReIngestion_ReplacesUnifiedWithPerType_LoadsAsMultiFilesystem()
     {
-        // Arrange: initial state — old unified filesystem.nkfs
+        // Arrange: initial state - old unified filesystem.nkfs
         byte[] unifiedData = CreateNkfsBytesWithFiles(
             ("GAME.BIN", 0x1000, 4096));
 
@@ -553,7 +553,7 @@ public class BackwardCompatibilityIntegrationTests
         Assert.NotNull(itemBefore.FileSystemNkfs);
         Assert.Null(itemBefore.FileSystemNkfsPerType);
 
-        // Act: simulate re-ingestion — remove unified, add per-type files
+        // Act: simulate re-ingestion - remove unified, add per-type files
         dataStore.RemoveFile("filesystem.nkfs");
 
         byte[] iso9660Data = CreateNkfsBytesWithFiles(
@@ -588,7 +588,7 @@ public class BackwardCompatibilityIntegrationTests
     [Fact]
     public void ReIngestion_PresentationChanges_FromDirectToSubfolders()
     {
-        // Arrange: initial state — unified filesystem.nkfs
+        // Arrange: initial state - unified filesystem.nkfs
         byte[] unifiedData = CreateNkfsBytesWithFiles(
             ("GAME.BIN", 0x1000, 4096),
             ("ICON.SYS", 0x2000, 128));

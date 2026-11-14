@@ -324,7 +324,7 @@ public class SystemFilesystemMergePropertyTests
             .ToList();
 
         if (nonSystemKeys.Count == 0)
-            return; // Only system exists — retain it for fallback presentation
+            return; // Only system exists - retain it for fallback presentation
 
         foreach (string key in nonSystemKeys)
         {

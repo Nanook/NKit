@@ -212,7 +212,7 @@ public class SortKeyRepositionPropertyTests
     /// <summary>
     /// **Validates: Requirements 3.4**
     ///
-    /// Property 6: Sort-Key Update Repositions Correctly — row is still in collection.
+    /// Property 6: Sort-Key Update Repositions Correctly - row is still in collection.
     /// After Reposition, the updated row SHALL still be present in the collection
     /// (it is moved, not removed).
     /// </summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -181,7 +181,7 @@ namespace Nanook.NKit.Nintendo.WiiU
             }
 
             bool creatable = false;
-            // Only validate hashes when the section was actually decrypted — calling IsValid on an
+            // Only validate hashes when the section was actually decrypted - calling IsValid on an
             // uninitialized WiiUSecurity (never Populate()d) for a plaintext partition corrupts
             // buffer.Decrypted with stale cipher state, producing wrong bytes and CRC mismatches.
             base.IsValid = (base.AreaInfo.IsEncryptionSupported && base.AreaInfo.IsEncrypted) ? _security.IsValid(false, out creatable) : false;

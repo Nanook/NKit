@@ -40,7 +40,7 @@ namespace Nanook.NKit
             string indent = evt.Level == LogLevel.Trace ? "  > " : "";
 
             // Live progress prefix: [NN%] on every line while a step is running, but only when the
-            // console is in Detail mode (same gating as tags — in Info mode the output stays clean).
+            // console is in Detail mode (same gating as tags - in Info mode the output stays clean).
             string pct = "";
             if ((int)_minimumLevel >= (int)LogLevel.Detail && _percent != null)
             {
@@ -60,7 +60,7 @@ namespace Nanook.NKit
         }
 
         // Build the "[tag] " prefix. Only ADDED when the console is running at Detail (or more
-        // verbose) — in Info mode our tags are simply not prepended, so the output stays clean and
+        // verbose) - in Info mode our tags are simply not prepended, so the output stays clean and
         // message text (e.g. "[External]", "[Verify/Wii]") is never touched. The tag comes from the
         // SCOPE prefix ([In]/[Core]/[Config]…); the bare root scope ("NKit") is not tagged.
         private string tagFor(LogEvent evt)

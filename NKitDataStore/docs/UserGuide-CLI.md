@@ -10,21 +10,21 @@ Command-line reference for `nkds`, the NKit DataStore filesystem and inspection 
 - [Installation and Invocation](#installation-and-invocation)
 - [Global Options](#global-options)
 - [Commands](#commands)
-  - [create](#create) — Create a new set
-  - [add](#add) — Import images through the NKit pipeline
-  - [adddir](#adddir) — Store directory contents directly
-  - [1gmr](#1gmr) — Batch import via regex routing
-  - [list](#list) — List images
-  - [sets](#sets) — List sets
-  - [stats](#stats) — Show statistics
-  - [export](#export) — Export images
-  - [verify](#verify) — Verify images
-  - [remove](#remove) — Mark images as removed
-  - [restore](#restore) — Restore removed images
-  - [compact](#compact) — Permanently delete removed data
-  - [rollback](#rollback) — Rollback to a specific image
-  - [mount](#mount) — Mount as virtual filesystem
-  - [version](#version) — Show version
+  - [create](#create) - Create a new set
+  - [add](#add) - Import images through the NKit pipeline
+  - [adddir](#adddir) - Store directory contents directly
+  - [1gmr](#1gmr) - Batch import via regex routing
+  - [list](#list) - List images
+  - [sets](#sets) - List sets
+  - [stats](#stats) - Show statistics
+  - [export](#export) - Export images
+  - [verify](#verify) - Verify images
+  - [remove](#remove) - Mark images as removed
+  - [restore](#restore) - Restore removed images
+  - [compact](#compact) - Permanently delete removed data
+  - [rollback](#rollback) - Rollback to a specific image
+  - [mount](#mount) - Mount as virtual filesystem
+  - [version](#version) - Show version
 - [Workflow Examples](#workflow-examples)
   - [New Collection Setup](#new-collection-setup)
   - [Redump Import](#redump-import)
@@ -44,7 +44,7 @@ Command-line reference for `nkds`, the NKit DataStore filesystem and inspection 
 |---------|-------------|
 | **DataStore** | A directory containing one or more sets. Pass a directory path to `--datastore` when working with multiple sets. |
 | **Set** | A `.nkds` index file and its associated shard files. Each set holds a collection of images. Pass a `.nkds` file path to `--datastore` when targeting a specific set. |
-| **Image** | A single logical file stored in a set — typically a disc image (ISO, NKit, etc.) or a folder archive. |
+| **Image** | A single logical file stored in a set - typically a disc image (ISO, NKit, etc.) or a folder archive. |
 
 A DataStore directory can contain multiple sets, each stored as a `.nkds` index file alongside numbered shard files (`_NNNN.nkds`). Images are deduplicated at the block level across a set, providing significant space savings for collections with shared content.
 
@@ -52,8 +52,8 @@ A DataStore directory can contain multiple sets, each stored as a `.nkds` index 
 
 The `--datastore` option accepts either:
 
-- **A directory path** — targets the DataStore as a whole; the tool resolves the appropriate set automatically.
-- **A `.nkds` file path** — targets that specific set directly.
+- **A directory path** - targets the DataStore as a whole; the tool resolves the appropriate set automatically.
+- **A `.nkds` file path** - targets that specific set directly.
 
 ---
 
@@ -209,7 +209,7 @@ nkds adddir --datastore D:\NKitData --set myfolders C:\Data
 **Notes:**
 
 - Each input directory becomes one Folder image named after the directory.
-- Files are stored directly via block deduplication — no NKit pipeline is used.
+- Files are stored directly via block deduplication - no NKit pipeline is used.
 - If `--set` is omitted, the set is resolved from the `.nkds` set path or defaults to `"folders"`.
 - Non-existent input directories are reported as errors; remaining directories are still processed.
 
@@ -217,7 +217,7 @@ nkds adddir --datastore D:\NKitData --set myfolders C:\Data
 
 ### 1gmr
 
-Batch import disc images routed by regex masks from a 1GMR YAML file. The name stands for "1 Game, Many ROMs" — each input file is matched against regex patterns to determine which per-game set it belongs to.
+Batch import disc images routed by regex masks from a 1GMR YAML file. The name stands for "1 Game, Many ROMs" - each input file is matched against regex patterns to determine which per-game set it belongs to.
 
 **Usage:**
 
@@ -566,7 +566,7 @@ nkds compact --datastore D:\NKitData\wii\redump.nkds
 **Notes:**
 
 - Only operates on images previously marked as removed.
-- This operation is irreversible — compacted data cannot be recovered.
+- This operation is irreversible - compacted data cannot be recovered.
 - Run `remove` first to mark images, then `compact` to reclaim space.
 
 ---

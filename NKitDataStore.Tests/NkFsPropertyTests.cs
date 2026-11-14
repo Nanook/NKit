@@ -119,7 +119,7 @@ namespace NKitDataStore.Tests
             if (entryCount != nkfs.EntryCount)
                 return false;
 
-            // No StringTableOffset field in header — it's computed: 12 + EntryCount * 12
+            // No StringTableOffset field in header - it's computed: 12 + EntryCount * 12
             int expectedStringTableOffset = 12 + (entryCount * 12);
 
             // Verify total size is at least header + entries
@@ -445,7 +445,7 @@ namespace NKitDataStore.Tests
         /// For any file entry (whether part of a multi-extent chain or not), the prefix byte
         /// SHALL encode bits 0 (has_checksums), 1-2 (size_width), and 3-4 (imageid_width)
         /// according to the entry's individual size value and checksum presence, and bits 6-7
-        /// SHALL always be 0 — regardless of whether bit 5 is set.
+        /// SHALL always be 0 - regardless of whether bit 5 is set.
         /// </summary>
         [Property(MaxTest = 100)]
         public bool PrefixByteFieldPreservation_UnderMultiExtentEncoding(
@@ -811,7 +811,7 @@ namespace NKitDataStore.Tests
                     continue;
                 }
 
-                // It's a file — identify the chain of consecutive same-name entries
+                // It's a file - identify the chain of consecutive same-name entries
                 string name = nkfs.GetEntryName(childIndex);
                 int chainStart = i;
 
@@ -1001,7 +1001,7 @@ namespace NKitDataStore.Tests
                     continue;
                 }
 
-                // It's a file — identify the chain of consecutive same-name entries
+                // It's a file - identify the chain of consecutive same-name entries
                 string name = nkfs.GetEntryName(childIndex);
                 List<int> chainIndices = new List<int> { childIndex };
                 int chainStart = i;
@@ -1019,7 +1019,7 @@ namespace NKitDataStore.Tests
                 }
 
                 // Property: chain entries must be at consecutive entry table indices
-                // (no gaps — they are immediate siblings in the entry table)
+                // (no gaps - they are immediate siblings in the entry table)
                 for (int j = 1; j < chainIndices.Count; j++)
                 {
                     if (chainIndices[j] != chainIndices[j - 1] + 1)
@@ -1130,7 +1130,7 @@ namespace NKitDataStore.Tests
                     continue;
                 }
 
-                // It's a file — identify the chain of consecutive same-name entries
+                // It's a file - identify the chain of consecutive same-name entries
                 string name = nkfs.GetEntryName(childIndex);
                 List<int> chainEntryIndices = new List<int> { childIndex };
 
@@ -1251,7 +1251,7 @@ namespace NKitDataStore.Tests
         /// For any NkFs containing multi-extent chains, parsing the entry table with the standard
         /// reader methods (GetEntry, GetChildren, GetFileSize, GetEntryName) without using GetExtents
         /// SHALL yield each extent as a valid independent file entry: each has a decodable name,
-        /// a valid individual size from its prefix, and a valid ImageOffset — meaning an older reader
+        /// a valid individual size from its prefix, and a valid ImageOffset - meaning an older reader
         /// ignoring bit 5 would still produce a parseable (though duplicated-name) file listing.
         /// </summary>
         [Property(MaxTest = 100)]
@@ -1271,7 +1271,7 @@ namespace NKitDataStore.Tests
             NkFs nkfs = NkFs.FromFsYaml(fsYaml);
 
             // Verify backward-compatible parsing for all entries using only
-            // standard methods (no GetExtents) — simulating an older reader
+            // standard methods (no GetExtents) - simulating an older reader
             return verifyBackwardCompatibleParsing(nkfs, 0);
         }
 
@@ -1299,7 +1299,7 @@ namespace NKitDataStore.Tests
                     continue;
                 }
 
-                // It's a file entry — verify it's independently parseable
+                // It's a file entry - verify it's independently parseable
 
                 // 1. GetEntry returns a valid file entry (not directory)
                 if (childEntry.IsFile != true)

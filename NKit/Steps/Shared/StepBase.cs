@@ -82,7 +82,7 @@ namespace Nanook.NKit.Steps.Shared
                     checksums = new List<ChecksumType> { ChecksumType.XxHash };
                 else
                 {
-                    // si.ReqChk is set by TaskContext from the _StepDetail table — true only for
+                    // si.ReqChk is set by TaskContext from the _StepDetail table - true only for
                     // steps that embed source checksums in their output header (RVZ/WBFS/CISO
                     // lossless, CSO/ZSO, nkit.iso). False for lossy formats, WUA, Loadiine,
                     // AppTmd, Extract, Wipe, WUX, etc., so those steps skip streaming MD5/SHA1/
@@ -276,7 +276,7 @@ namespace Nanook.NKit.Steps.Shared
         }
 
         // [Out] [<Step>] Detail: one identity/result line per step run (emitted once, from the
-        // single processResults finalise point — NOT the per-section Process hot path). Lets a log
+        // single processResults finalise point - NOT the per-section Process hot path). Lets a log
         // filtered on the step's tag show which step ran and what it produced. Gated on Detail so
         // there is no cost (and no string built) in Info mode.
         private void logCompletionSummary()
@@ -290,7 +290,7 @@ namespace Nanook.NKit.Steps.Shared
 
             // What the step is configured to do (reliable at this point). The final CRC and
             // VerifyResult are computed LATER by NKitVerify at task level (see the task-level
-            // [CRC …] / [Results] lines), so they are deliberately NOT shown here — this is the
+            // [CRC …] / [Results] lines), so they are deliberately NOT shown here - this is the
             // step's own identity/config line, not the verify outcome.
             string extra = "";
             if (writes) // name/parts only mean something when the step actually writes output

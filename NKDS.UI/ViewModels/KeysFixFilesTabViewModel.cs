@@ -31,9 +31,9 @@ public class KeysFixFilesTabViewModel : ViewModelBase
 
         _suppressPersist = true;
         LoadFromConfig();
-        // Keep persistence suppressed — the parent ViewModel commits on OK
+        // Keep persistence suppressed - the parent ViewModel commits on OK
 
-        // Browse commands — folder picker for keys and fix files directories, file picker for fix info files
+        // Browse commands - folder picker for keys and fix files directories, file picker for fix info files
         BrowseWiiUKeysCommand = ReactiveCommand.CreateFromTask(BrowseWiiUKeysAsync);
         BrowseWiiUKeysArchiveCommand = ReactiveCommand.CreateFromTask(BrowseWiiUKeysArchiveAsync);
         BrowsePs3KeysCommand = ReactiveCommand.CreateFromTask(BrowsePs3KeysAsync);

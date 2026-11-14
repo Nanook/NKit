@@ -303,7 +303,7 @@ public class Add1GmrDialogViewModel : ViewModelBase
     public ReactiveCommand<RxVoid, RxVoid> BrowseOutputFolderCommand { get; }
 
     /// <summary>
-    /// Command to confirm the dialog (OK). Always enabled — validates on click
+    /// Command to confirm the dialog (OK). Always enabled - validates on click
     /// and shows a message if conditions aren't met. Returns true if valid, null if not.
     /// </summary>
     public ReactiveCommand<RxVoid, bool?> ConfirmCommand { get; }
@@ -323,7 +323,7 @@ public class Add1GmrDialogViewModel : ViewModelBase
     {
         UpdateValidationMessage();
         if (ValidationMessage != null)
-            return null; // Don't close — validation failed
+            return null; // Don't close - validation failed
 
         return true;
     }
@@ -522,7 +522,7 @@ public class Add1GmrDialogViewModel : ViewModelBase
             return;
         }
 
-        // No aux found — default name to folder name + .aux.nkds
+        // No aux found - default name to folder name + .aux.nkds
         ExistingAuxName = null;
         string folderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         if (!string.IsNullOrWhiteSpace(folderName))

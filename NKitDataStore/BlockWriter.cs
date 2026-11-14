@@ -19,7 +19,7 @@ namespace NKitDataStore
     ///   but only AFTER releasing the per-key lockObj. This preserves the original backpressure
     ///   behaviour (caller waits when all slots are busy) while eliminating the original deadlock risk
     ///   (which was caused by waiting while still holding lockObj, preventing the slot from ever being freed).
-    ///   WaitAll uses a ManualResetEventSlim — no polling, no CPU burn.
+    ///   WaitAll uses a ManualResetEventSlim - no polling, no CPU burn.
     /// </summary>
     public class BlockWriter : IDisposable
     {
@@ -42,7 +42,7 @@ namespace NKitDataStore
         private readonly ConcurrentBag<byte[]> _dstBufferPool = new();
 
         // Semaphore limits concurrent compression operations.
-        // Acquired on the CALLER thread (after lockObj is released) to provide backpressure —
+        // Acquired on the CALLER thread (after lockObj is released) to provide backpressure -
         // the caller naturally throttles to the rate compression can consume without flooding the ThreadPool.
         private readonly SemaphoreSlim _bufferSemaphore;
         private readonly int _blockSize;
@@ -61,7 +61,7 @@ namespace NKitDataStore
             // Worst case: compressed size could be larger than input (rare but possible with incompressible data + header)
             _maxCompressedSize = blockSize + 1024;
 
-            // Pre-allocate buffers 1:1 with semaphore slots — every acquired slot has a buffer ready.
+            // Pre-allocate buffers 1:1 with semaphore slots - every acquired slot has a buffer ready.
             // The original 4× multiplier was intended to reduce stalls but is unnecessary when the
             // semaphore is acquired before TryTake, because a slot acquisition always precedes buffer use.
             for (int i = 0; i < compressionParallelism; i++)
@@ -84,7 +84,7 @@ namespace NKitDataStore
 
         /// <summary>
         /// Waits for all background work to complete.
-        /// Uses event signalling — no polling, no CPU burn.
+        /// Uses event signalling - no polling, no CPU burn.
         /// </summary>
         /// <param name="timeoutMs">Timeout in milliseconds, or -1 to wait indefinitely.</param>
         /// <returns>True if all work completed, false if timeout elapsed with work still pending.</returns>
@@ -174,7 +174,7 @@ namespace NKitDataStore
                 BeginWork();
                 shouldQueue = true;
 
-                // Release lockObj NOW — before any wait — so other callers on different keys
+                // Release lockObj NOW - before any wait - so other callers on different keys
                 // are not blocked, and so that in-flight tasks can release their semaphore slots
                 // without needing to acquire lockObj first. This is the key fix: the original code
                 // waited on the semaphore while still holding lockObj, which could deadlock if all
@@ -200,12 +200,12 @@ namespace NKitDataStore
             // bounded at compressionParallelism rather than growing without limit.
             _bufferSemaphore.Wait();
 
-            // Slot acquired — grab pre-allocated buffers (always available: 1:1 with slots)
+            // Slot acquired - grab pre-allocated buffers (always available: 1:1 with slots)
             if (!_srcBufferPool.TryTake(out byte[]? srcBuf) || !_dstBufferPool.TryTake(out byte[]? dstBuf))
             {
                 _bufferSemaphore.Release();
                 EndWork();
-                throw new InvalidOperationException("Buffer pool exhausted — pool size must match semaphore count");
+                throw new InvalidOperationException("Buffer pool exhausted - pool size must match semaphore count");
             }
 
             // Copy caller data into owned buffer before queuing (caller's buffer may be reused)

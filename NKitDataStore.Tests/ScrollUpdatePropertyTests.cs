@@ -17,7 +17,7 @@ namespace NKitDataStore.Tests;
 ///
 /// For any in-place property update on any row, the scroll offset SHALL remain unchanged.
 /// Neither ComputeScrollAfterInsertion nor ComputeScrollAfterRemoval should be called
-/// for property updates — the scroll position stays exactly where it was.
+/// for property updates - the scroll position stays exactly where it was.
 /// </summary>
 public class ScrollUpdatePropertyTests
 {

@@ -19,7 +19,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
         /// consuming thread. The block is a restricted read-only view: read its bytes with
         /// <see cref="IReadOnlySection.Read"/> / <see cref="IReadOnlySection.ReadBytes"/>, and its
         /// file list via <see cref="IReadOnlySection.AreaFileSystem"/>. Do NOT retain the block past
-        /// this call — the backing buffer is pooled and reused for the next block.
+        /// this call - the backing buffer is pooled and reused for the next block.
         /// </summary>
         void OnSection(IReadOnlySection block);
 

@@ -65,13 +65,13 @@ namespace Nanook.NKit.Container
             _dataOffset = _wuxHdr.Length + data.Length;
             _dataOffset += _dataOffset % _wuxSectorSize == 0 ? 0 : (_wuxSectorSize - (_dataOffset % _wuxSectorSize));
 
-            // Enable caching for deduplicated sectors — WUX maps multiple virtual sectors to
+            // Enable caching for deduplicated sectors - WUX maps multiple virtual sectors to
             // the same physical offset. With caching enabled, ImageBlockReader detects these
             // via RefIndex/RefLastIdx (built in CompletedAddItems) and serves re-reads from the
             // cached copy instead of seeking back to disk. The immediate eviction fix in
             // ImageBlockReader.cachedItem ensures Cached is released as soon as the last
             // reference is consumed, preventing unbounded accumulation across the image.
-            // EnableCaching is set by NKitInput based on StepInfo.FullScan — only true for
+            // EnableCaching is set by NKitInput based on StepInfo.FullScan - only true for
             // full sequential scans (Convert, Scan, Dedupe); false for Extract/Wipe/Verify
             // where each sector is read at most once and caching wastes memory.
             _blockReader = new ImageBlockReader<object>(true, this.EnableCaching, false, 10, 10);

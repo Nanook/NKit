@@ -51,7 +51,7 @@ namespace NKit.Ui.Views
             else
             {
                 // Windows / macOS: owner-drawn chrome, no OS title bar visible.
-                // Keep Title blank — the custom chrome is the visual identity.
+                // Keep Title blank - the custom chrome is the visual identity.
                 Title = "";
             }
 

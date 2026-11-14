@@ -464,7 +464,7 @@ namespace NKitDataStore.Tests
                     fs.Flush();
                 }
 
-                // Phase 3: Reopen the store — BinaryIndexFile.Open should fall back to secondary header
+                // Phase 3: Reopen the store - BinaryIndexFile.Open should fall back to secondary header
                 using (DataStore store = new DataStore(testDir))
                 {
                     // Phase 4: Verify the set opens successfully by listing images
@@ -618,7 +618,7 @@ namespace NKitDataStore.Tests
                     }
                 }
 
-                // Phase 4: Reopen the store — trigger RecoverIfNeeded → orphaned tail truncation
+                // Phase 4: Reopen the store - trigger RecoverIfNeeded → orphaned tail truncation
                 // EnsureSetExists calls RecoverIfNeeded before opening the set.
                 // For an existing set with orphaned tail data, we call EnsureSetExists directly
                 // (via the internal DataAccess property) to trigger recovery without CreateSet
@@ -836,7 +836,7 @@ namespace NKitDataStore.Tests
                     fs.Flush();
                 }
 
-                // Phase 5: Reopen again — dual-header recovery should use secondary header
+                // Phase 5: Reopen again - dual-header recovery should use secondary header
                 // The delete should still be visible
                 using (DataStore store = new DataStore(testDir))
                 {
@@ -979,7 +979,7 @@ namespace NKitDataStore.Tests
                         $"Failed to set up intermediate state (seed={seed})");
                 }
 
-                // Phase 3: Reopen the store — this should trigger RecoverIfNeeded
+                // Phase 3: Reopen the store - this should trigger RecoverIfNeeded
                 // We call CreateSet with the same parameters, which triggers EnsureSetExists
                 // which calls RecoverIfNeeded before checking file existence.
                 // RecoverIfNeeded will rename .compact.tmp back to the original path.
@@ -1065,7 +1065,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 14.1, 14.2, 14.3, 7.4, 12.1, 12.2, 12.3**
         ///
-        /// Property 1: Recovery Invariant — Last Committed State
+        /// Property 1: Recovery Invariant - Last Committed State
         ///
         /// For any sequence of operations (AddImage, DeleteImage, RestoreImage, RollbackImage,
         /// CompactSet) and for any crash point during any operation, after recovery the set SHALL
@@ -1161,7 +1161,7 @@ namespace NKitDataStore.Tests
                     // the operation was actually performed (secondary header is authoritative),
                     // so the "last committed state" is the POST-operation state.
                     // For AddImage and CompactSet, we never actually perform the operation in
-                    // the simulation — we just leave intermediate files.
+                    // the simulation - we just leave intermediate files.
                     bool isDirectoryOp = operationType == OperationType.DeleteImage ||
                                          operationType == OperationType.RestoreImage ||
                                          operationType == OperationType.RollbackImage;
@@ -1409,7 +1409,7 @@ namespace NKitDataStore.Tests
             switch (crashPoint)
             {
                 case CrashPoint.BeforeCommit:
-                    // Directory update appended but not committed — leave orphaned shard data
+                    // Directory update appended but not committed - leave orphaned shard data
                     string[] shards = Directory.GetFiles(testDir, $"{setName}_*.nkds");
                     if (shards.Length > 0)
                     {
@@ -1441,7 +1441,7 @@ namespace NKitDataStore.Tests
 
                 case CrashPoint.DuringCommitAfterPrimary:
                 case CrashPoint.AfterCommit:
-                    // The operation completed successfully — perform it
+                    // The operation completed successfully - perform it
                     using (DataStore store2 = new DataStore(testDir))
                     {
                         store2.DataAccess.EnsureSetExists(setName, shardSize, blockSize);
@@ -1508,7 +1508,7 @@ namespace NKitDataStore.Tests
                         }
                         else if (shardFiles.Length > 0)
                         {
-                            // Only _0000 shard exists — simulate as orphaned tail instead
+                            // Only _0000 shard exists - simulate as orphaned tail instead
                             string shard = shardFiles[0];
                             byte[] orphanedData = new byte[64];
                             new Random(setState.ImageCount + 20).NextBytes(orphanedData);
@@ -1538,7 +1538,7 @@ namespace NKitDataStore.Tests
         ///
         /// For any directory update operation (DeleteImage, RestoreImage, Rollback) that crashes
         /// before AtomicCommit completes, recovery SHALL restore the directory to its state before
-        /// the operation began — no partial updates are visible.
+        /// the operation began - no partial updates are visible.
         ///
         /// Strategy:
         /// 1. Create a DataStore set with N images (all live)
@@ -1640,7 +1640,7 @@ namespace NKitDataStore.Tests
                     store.DataAccess.EnsureSetExists(setName, shardSize, blockSize);
 
                     // Phase 5: Verify the directory state matches either pre-delete OR post-delete
-                    // (all-or-nothing semantics — no partial state)
+                    // (all-or-nothing semantics - no partial state)
                     List<ImageRecord> allImages = store.ListImagesInSetIncludingRemoved(setName);
                     List<long> recoveredLiveIds = allImages
                         .Where(img => !img.Removed)
@@ -1842,13 +1842,13 @@ namespace NKitDataStore.Tests
         /// 2. Close the store
         /// 3. Simulate crash scenarios during extraction/re-embed by leaving intermediate files:
         ///    - Scenario A: .tmp index file exists alongside main embedded file (crash during
-        ///      extraction before first rename — Req 15.3)
+        ///      extraction before first rename - Req 15.3)
         ///    - Scenario B: Both index and shard files exist (crash after first rename, in
-        ///      separate mode — Req 15.4)
+        ///      separate mode - Req 15.4)
         ///    - Scenario C: Shard .tmp file exists with footer magic (crash during re-embed
-        ///      after footer written but before rename — Req 15.2)
+        ///      after footer written but before rename - Req 15.2)
         ///    - Scenario D: Shard file has index appended but no footer (crash during re-embed
-        ///      before footer — Req 15.1)
+        ///      before footer - Req 15.1)
         /// 4. Reopen the set (which triggers RecoverIfNeeded → EmbeddedIndexCommitter.TryRecover)
         /// 5. Verify the set is in a valid state (either embedded or separated) and all
         ///    previously committed images are readable
@@ -2012,7 +2012,7 @@ namespace NKitDataStore.Tests
                         break;
                 }
 
-                // Phase 4: Reopen the store — this triggers RecoverIfNeeded which calls
+                // Phase 4: Reopen the store - this triggers RecoverIfNeeded which calls
                 // EmbeddedIndexCommitter.TryRecover and handles all intermediate states
                 using (DataStore store = new DataStore(testDir))
                 {
@@ -2069,7 +2069,7 @@ namespace NKitDataStore.Tests
 
                     if (scenario == 1)
                     {
-                        // Scenario B recovers to separate mode — the set is valid and usable
+                        // Scenario B recovers to separate mode - the set is valid and usable
                         // even if health reports NeedsRecovery (it just means re-embed is pending)
                         if (health.Status == SetHealthStatus.Unrecoverable)
                         {
@@ -2094,7 +2094,7 @@ namespace NKitDataStore.Tests
                     }
 
                     return true.ToProperty().Label(
-                        $"Scenario {scenario}: Embedded mode recovery successful — " +
+                        $"Scenario {scenario}: Embedded mode recovery successful - " +
                         $"{imageCount} images readable, health=Clean (seed={seed})");
                 }
             }
@@ -2247,7 +2247,7 @@ namespace NKitDataStore.Tests
 
                     case 2:
                         // Crash after Step 3 (Dispose done, before ReplaceFile):
-                        // Same file state as step 1 — both original and .compact.tmp exist.
+                        // Same file state as step 1 - both original and .compact.tmp exist.
                         // The old handle is closed but files are the same.
                         // Recovery should delete .compact.tmp and keep original.
                         File.Copy(indexPath, compactTmpPath, overwrite: true);
@@ -2265,7 +2265,7 @@ namespace NKitDataStore.Tests
                         // Crash after Step 4 (ReplaceFile done, before Reopen in Step 5):
                         // The replacement completed successfully. Only the new index exists
                         // at the original path. No .compact.tmp. This is essentially a clean
-                        // state — recovery has nothing to do. The set should open normally.
+                        // state - recovery has nothing to do. The set should open normally.
                         // Simulate by performing an actual compact (which completes step 4).
                         using (DataStore store = new DataStore(testDir))
                         {
@@ -2343,7 +2343,7 @@ namespace NKitDataStore.Tests
                     }
 
                     return true.ToProperty().Label(
-                        $"Step {stepBoundary}: CompactSetSeparate crash recovery successful — " +
+                        $"Step {stepBoundary}: CompactSetSeparate crash recovery successful - " +
                         $"{committedLiveImageIds.Count} live images preserved, health=Clean " +
                         $"(seed={seed}, images={imageCount}, removed={removedCount})");
                 }
@@ -2365,7 +2365,7 @@ namespace NKitDataStore.Tests
         /// 1. GatherReferencedKeys
         /// 2. BuildChunkList
         /// 3. GroupChunksByShard
-        /// 4. CompactShard (per shard) — crash during shard copy-on-write
+        /// 4. CompactShard (per shard) - crash during shard copy-on-write
         /// 5. DeleteEmptyShards
         /// 6. UpdateBlockIndex
         /// 7. UpdateBlockMaps
@@ -2533,7 +2533,7 @@ namespace NKitDataStore.Tests
                     }
 
                     return true.ToProperty().Label(
-                        $"Stage {crashStage}: Pipeline crash recovery successful — " +
+                        $"Stage {crashStage}: Pipeline crash recovery successful - " +
                         $"{committedLiveImageIds.Count} live images preserved, health=Clean (seed={seed})");
                 }
             }
@@ -2548,16 +2548,16 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Simulates a crash at a specific CompactShards pipeline stage boundary.
         ///
-        /// Stage 1 (GatherReferencedKeys): No file modifications — just reopen.
-        /// Stage 2 (BuildChunkList): No file modifications — just reopen.
-        /// Stage 3 (GroupChunksByShard): No file modifications — just reopen.
+        /// Stage 1 (GatherReferencedKeys): No file modifications - just reopen.
+        /// Stage 2 (BuildChunkList): No file modifications - just reopen.
+        /// Stage 3 (GroupChunksByShard): No file modifications - just reopen.
         /// Stage 4 (CompactShard): Shard .tmp files may exist → recovery deletes them.
         /// Stage 5 (DeleteEmptyShards): Shards compacted, some empty shards may be deleted,
         ///          but index not committed → orphaned tail or stale offsets.
         /// Stage 6 (UpdateBlockIndex): Shards compacted, index in memory but not committed
         ///          → orphaned tail data on shards.
-        /// Stage 7 (UpdateBlockMaps): Same as stage 6 — in-memory changes not committed.
-        /// Stage 8 (UpdateMetadataSections): Same as stage 6 — in-memory changes not committed.
+        /// Stage 7 (UpdateBlockMaps): Same as stage 6 - in-memory changes not committed.
+        /// Stage 8 (UpdateMetadataSections): Same as stage 6 - in-memory changes not committed.
         /// Stage 9 (AtomicCommit): Crash during dual-header write → corrupt primary header.
         /// </summary>
         private void simulateCompactShardsPipelineCrash(
@@ -2568,16 +2568,16 @@ namespace NKitDataStore.Tests
 
             switch (crashStage)
             {
-                case 1: // Crash after GatherReferencedKeys — no file modifications
-                case 2: // Crash after BuildChunkList — no file modifications
-                case 3: // Crash after GroupChunksByShard — no file modifications
+                case 1: // Crash after GatherReferencedKeys - no file modifications
+                case 2: // Crash after BuildChunkList - no file modifications
+                case 3: // Crash after GroupChunksByShard - no file modifications
                     // These stages are pure computation with no disk I/O.
                     // A crash here means the process dies before any files are touched.
                     // Recovery is trivial: just reopen the set (files are in committed state).
                     // No intermediate files to simulate.
                     break;
 
-                case 4: // Crash during CompactShard — shard .tmp files exist
+                case 4: // Crash during CompactShard - shard .tmp files exist
                     // CompactShard writes to a .tmp file then uses File.Replace.
                     // A crash during this stage leaves .tmp files alongside originals.
                     // Recovery deletes the .tmp files (shard compact did not complete).
@@ -2604,13 +2604,13 @@ namespace NKitDataStore.Tests
                             }
                         }
                         // If only _0000 exists, the crash simulation leaves no intermediate
-                        // files — recovery is trivial (just reopen). This is correct because
+                        // files - recovery is trivial (just reopen). This is correct because
                         // the recovery for _0000.nkds.tmp is handled by the embedded committer
                         // path, and for separate-mode sets the shard .tmp cleanup handles it.
                     }
                     break;
 
-                case 5: // Crash after DeleteEmptyShards — shards compacted but index not committed
+                case 5: // Crash after DeleteEmptyShards - shards compacted but index not committed
                     // At this point, shards have been replaced with compacted versions
                     // and empty shards deleted, but the index still has old offsets.
                     // Simulate by appending orphaned tail data to a shard (representing
@@ -2626,9 +2626,9 @@ namespace NKitDataStore.Tests
                     }
                     break;
 
-                case 6: // Crash after UpdateBlockIndex — in-memory only, not committed
-                case 7: // Crash after UpdateBlockMaps — in-memory only, not committed
-                case 8: // Crash after UpdateMetadataSections — in-memory only, not committed
+                case 6: // Crash after UpdateBlockIndex - in-memory only, not committed
+                case 7: // Crash after UpdateBlockMaps - in-memory only, not committed
+                case 8: // Crash after UpdateMetadataSections - in-memory only, not committed
                     // These stages modify the in-memory index file state but haven't called
                     // AtomicCommit yet. A crash here means the shard files may have been
                     // compacted (stage 4 completed) but the index was never committed.
@@ -2646,7 +2646,7 @@ namespace NKitDataStore.Tests
                     }
                     break;
 
-                case 9: // Crash during AtomicCommit — dual-header protocol
+                case 9: // Crash during AtomicCommit - dual-header protocol
                     // AtomicCommit writes SecondaryHeader first, then PrimaryHeader.
                     // A crash during this stage means the secondary header has the new state
                     // but the primary header is corrupt/stale.
@@ -2670,8 +2670,8 @@ namespace NKitDataStore.Tests
         ///
         /// Directory update operations (DeleteImage) follow this sequence:
         /// 1. Append new directory entry to index (marks image as removed)
-        /// 2. AtomicCommit — write secondary header
-        /// 3. AtomicCommit — write primary header
+        /// 2. AtomicCommit - write secondary header
+        /// 3. AtomicCommit - write primary header
         ///
         /// Crash scenarios:
         /// - After directory appended but before AtomicCommit: directory data is orphaned,
@@ -2697,8 +2697,8 @@ namespace NKitDataStore.Tests
         ///
         /// Directory update operations (RestoreImage) follow this sequence:
         /// 1. Append new directory entry to index (marks image as live)
-        /// 2. AtomicCommit — write secondary header
-        /// 3. AtomicCommit — write primary header
+        /// 2. AtomicCommit - write secondary header
+        /// 3. AtomicCommit - write primary header
         ///
         /// Crash scenarios:
         /// - After directory appended but before AtomicCommit: directory data is orphaned,
@@ -2723,7 +2723,7 @@ namespace NKitDataStore.Tests
         [Property(MaxTest = 10)]
         public Property RollbackImage_CrashAtEachPhase_RecoveryRestoresPreOperationState(PositiveInt seedWrapper)
         {
-            // Rollback is no longer a directory-update operation — it physically truncates shards.
+            // Rollback is no longer a directory-update operation - it physically truncates shards.
             // The old crash simulation (simulating crash during AtomicCommit of a directory update)
             // no longer applies. Instead, verify that a successful rollback leaves the set clean.
             int seed = seedWrapper.Get;
@@ -2793,10 +2793,10 @@ namespace NKitDataStore.Tests
         /// Shared implementation for Delete/Restore/Rollback crash simulation tests.
         /// Tests two crash scenarios:
         ///   Scenario 0: Crash after directory appended but before AtomicCommit
-        ///               (simulated via orphaned tail data on shard — the directory append
+        ///               (simulated via orphaned tail data on shard - the directory append
         ///                is uncommitted so recovery uses the pre-operation headers)
         ///   Scenario 1: Crash between secondary and primary header writes
-        ///               (simulated by corrupting the primary header — secondary is authoritative)
+        ///               (simulated by corrupting the primary header - secondary is authoritative)
         /// </summary>
         private Property deleteRestoreRollback_CrashSimulation_Impl(int seed, DirectoryOperation operation)
         {
@@ -3120,8 +3120,8 @@ namespace NKitDataStore.Tests
         /// ImageWriter commit phases:
         /// 1. Block writes to shard (appending block data)
         /// 2. Metadata section write (appending file records)
-        /// 3. AtomicCommit — write secondary header
-        /// 4. AtomicCommit — write primary header
+        /// 3. AtomicCommit - write secondary header
+        /// 4. AtomicCommit - write primary header
         /// 5. Release writer lock
         ///
         /// Crash scenarios tested:
@@ -3220,7 +3220,7 @@ namespace NKitDataStore.Tests
                         $"Failed to append orphaned data to shard (seed={seed})");
                 }
 
-                // Phase 4: Reopen the store — triggers RecoverIfNeeded → orphaned tail truncation
+                // Phase 4: Reopen the store - triggers RecoverIfNeeded → orphaned tail truncation
                 using (DataStore store = new DataStore(testDir))
                 {
                     store.DataAccess.EnsureSetExists(setName, shardSize, blockSize);
@@ -3393,7 +3393,7 @@ namespace NKitDataStore.Tests
                     fs.Flush();
                 }
 
-                // Phase 3: Reopen the store — dual-header recovery should use secondary header
+                // Phase 3: Reopen the store - dual-header recovery should use secondary header
                 using (DataStore store = new DataStore(testDir))
                 {
                     store.DataAccess.EnsureSetExists(setName, shardSize, blockSize);
@@ -3535,7 +3535,7 @@ namespace NKitDataStore.Tests
                 // Create a stale lock file to simulate the crash-after-commit scenario
                 File.WriteAllText(lockPath, $"PID={Environment.ProcessId + 99999}");
 
-                // Phase 3: Reopen the store — should detect stale lock and release it
+                // Phase 3: Reopen the store - should detect stale lock and release it
                 using (DataStore store = new DataStore(testDir))
                 {
                     store.DataAccess.EnsureSetExists(setName, shardSize, blockSize);
@@ -3688,7 +3688,7 @@ namespace NKitDataStore.Tests
                     embeddedPath, shardPath, indexTmpPath, compactTmpPath,
                     stepBoundary, rnd);
 
-                // Phase 3: Reopen the store — this triggers RecoverIfNeeded which calls
+                // Phase 3: Reopen the store - this triggers RecoverIfNeeded which calls
                 // EmbeddedIndexCommitter.TryRecover and handles all intermediate states
                 using (DataStore store = new DataStore(testDir))
                 {
@@ -3757,7 +3757,7 @@ namespace NKitDataStore.Tests
                     {
                         if (stepBoundary >= 2 && stepBoundary <= 4 && health.Status == SetHealthStatus.NeedsRecovery)
                         {
-                            // Acceptable — set recovered to separate mode
+                            // Acceptable - set recovered to separate mode
                         }
                         else
                         {
@@ -3772,7 +3772,7 @@ namespace NKitDataStore.Tests
                     }
 
                     return true.ToProperty().Label(
-                        $"Step {stepBoundary}: CompactSetEmbedded crash recovery successful — " +
+                        $"Step {stepBoundary}: CompactSetEmbedded crash recovery successful - " +
                         $"{committedLiveImageIds.Count} images readable, health={health.Status} (seed={seed})");
                 }
             }
@@ -3789,12 +3789,12 @@ namespace NKitDataStore.Tests
         /// Creates the intermediate file state that would exist if a crash occurred
         /// at that point during the compaction process.
         ///
-        /// Step 1: ExtractToSeparateMode — .tmp index written, embedded file still intact
-        /// Step 2: Open standalone index + CompactShards — fully extracted to separate mode
-        /// Step 3: CompactTo — .compact.tmp exists alongside standalone index
-        /// Step 4: AtomicFileOps.ReplaceFile — original may be deleted, .compact.tmp exists
-        /// Step 5: ReEmbed — index appended to shard (with or without footer), standalone index still exists
-        /// Step 6: Reopen as embedded — valid embedded file, no intermediate state
+        /// Step 1: ExtractToSeparateMode - .tmp index written, embedded file still intact
+        /// Step 2: Open standalone index + CompactShards - fully extracted to separate mode
+        /// Step 3: CompactTo - .compact.tmp exists alongside standalone index
+        /// Step 4: AtomicFileOps.ReplaceFile - original may be deleted, .compact.tmp exists
+        /// Step 5: ReEmbed - index appended to shard (with or without footer), standalone index still exists
+        /// Step 6: Reopen as embedded - valid embedded file, no intermediate state
         /// </summary>
         private void simulateEmbeddedCompactCrash(
             string embeddedPath, string shardPath, string indexTmpPath, string compactTmpPath,
@@ -3848,7 +3848,7 @@ namespace NKitDataStore.Tests
 
                 case 6:
                     // Crash during Step 6: Reopen as embedded
-                    // ReEmbed completed successfully — the file is a valid embedded file.
+                    // ReEmbed completed successfully - the file is a valid embedded file.
                     // The crash occurs during the reopen phase (reading footer, computing
                     // boundary, updating caches). The file state is clean.
                     // Recovery: Normal open of embedded file.
@@ -3933,7 +3933,7 @@ namespace NKitDataStore.Tests
             }
 
             File.WriteAllBytes(indexTmpPath, indexContent);
-            // Embedded file remains unchanged — crash happened before rename
+            // Embedded file remains unchanged - crash happened before rename
         }
 
         /// <summary>
@@ -4062,7 +4062,7 @@ namespace NKitDataStore.Tests
             // First, get to separate mode (same as step 2)
             simulateEmbeddedStep2Crash(embeddedPath, shardPath);
 
-            // Create .compact.tmp (the compacted index — copy of the standalone index)
+            // Create .compact.tmp (the compacted index - copy of the standalone index)
             File.Copy(embeddedPath, compactTmpPath);
 
             // Sub-scenario: 50% chance of each
@@ -4124,16 +4124,16 @@ namespace NKitDataStore.Tests
         }
 
         /// <summary>
-        /// Step 6 crash: ReEmbed completed successfully — the file is a valid embedded file.
+        /// Step 6 crash: ReEmbed completed successfully - the file is a valid embedded file.
         /// The crash occurs during the reopen phase (reading footer, computing boundary,
-        /// updating caches). The file state is clean — just a valid embedded file.
+        /// updating caches). The file state is clean - just a valid embedded file.
         /// Recovery: Normal open of embedded file (no intermediate state to recover from).
         /// </summary>
         private void simulateEmbeddedStep6Crash(string shardPath)
         {
             // The embedded file is already in its final state (from the initial setup).
             // For step 6, the ReEmbed completed but the in-memory reopen failed.
-            // The file is a valid embedded file — no manipulation needed.
+            // The file is a valid embedded file - no manipulation needed.
             // Just clean up any shard file that might exist from a previous step simulation.
             if (File.Exists(shardPath))
                 File.Delete(shardPath);

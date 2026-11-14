@@ -6,7 +6,7 @@ namespace Nanook.NKit.Vfs
 {
     /// <summary>
     /// Additive interactive front-end for nkds. Presents a scrolling command dropdown, then prompts
-    /// the inputs relevant to the chosen command, and assembles an <c>nkds</c> argv — the SAME argv
+    /// the inputs relevant to the chosen command, and assembles an <c>nkds</c> argv - the SAME argv
     /// the existing <see cref="NkdsCommandLine.Parse"/> consumes, so the current CLI is untouched and
     /// there is one execution path. All prompting goes through <see cref="IPrompter"/> so it is
     /// unit-testable with a scripted prompter.
@@ -137,14 +137,14 @@ namespace Nanook.NKit.Vfs
         // a natural follow-up once that model is relocated to the shared library.)
         private static readonly IReadOnlyList<(string value, string note)> _formatExamples = new[]
         {
-            ("rvz:zstd:19:128k:16", "Wii/GC — best compression"),
-            ("wbfs:y",              "Wii/GC — lossless WBFS"),
-            ("wux",                 "WiiU — lossless WUX"),
-            ("apptmd",              "WiiU — lossy app+tmd"),
-            ("loadiine",            "WiiU — lossy Loadiine folder"),
-            ("wua",                 "WiiU — lossy ZArchive (.wua)"),
+            ("rvz:zstd:19:128k:16", "Wii/GC - best compression"),
+            ("wbfs:y",              "Wii/GC - lossless WBFS"),
+            ("wux",                 "WiiU - lossless WUX"),
+            ("apptmd",              "WiiU - lossy app+tmd"),
+            ("loadiine",            "WiiU - lossy Loadiine folder"),
+            ("wua",                 "WiiU - lossy ZArchive (.wua)"),
             ("deciso",              "PS3 decrypted ISO"),
-            ("cso:9:16k:4/cue:split","PS2 — iso + cue"),
+            ("cso:9:16k:4/cue:split","PS2 - iso + cue"),
             ("cue",                 "redump cue/bin (PS1/Saturn/...)"),
         };
 
@@ -216,7 +216,7 @@ namespace Nanook.NKit.Vfs
         private void buildCompact(List<string> a)
         {
             datastore(a, "DataStore .nkds set path");
-            if (_p.Confirm("Reclaim shard disk space? (irreversible — runs full compact instead of fast compact)", false))
+            if (_p.Confirm("Reclaim shard disk space? (irreversible - runs full compact instead of fast compact)", false))
                 a.Add("--full");
         }
 
@@ -246,7 +246,7 @@ namespace Nanook.NKit.Vfs
             if (!string.IsNullOrWhiteSpace(defaultVal))
             {
                 a.Add("--datastore"); a.Add(defaultVal);
-                _p.InfoPair("DataStore", defaultVal); // seeded — no prompt line to collapse
+                _p.InfoPair("DataStore", defaultVal); // seeded - no prompt line to collapse
                 return;
             }
             string v = _p.Text(title, null, allowEmpty: false);

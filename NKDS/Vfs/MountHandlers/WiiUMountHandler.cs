@@ -70,7 +70,7 @@ namespace Nanook.NKit.Vfs
             List<MergedAreaEntry> result = new List<MergedAreaEntry>();
             List<ImageRecord> imageRecords = folderImage.MergedImageRecords ?? getImageRecordsForMergeGroup(folderImage);
 
-            // (displayName, xxhash, crc) → first entry already added — used for dedup
+            // (displayName, xxhash, crc) → first entry already added - used for dedup
             Dictionary<string, List<(ulong xx, uint crc, MergedAreaEntry entry)>> seen = new Dictionary<string, List<(ulong xx, uint crc, MergedAreaEntry entry)>>(StringComparer.OrdinalIgnoreCase);
 
             foreach (ImageRecord imgRec in imageRecords)
@@ -117,7 +117,7 @@ namespace Nanook.NKit.Vfs
                                     }
                                     if (!dup)
                                     {
-                                        // Different hash — add with index suffix
+                                        // Different hash - add with index suffix
                                         int idx = existing.Count + 1;
                                         string baseName = displayName;
                                         int dot = baseName.LastIndexOf('.');
@@ -218,13 +218,13 @@ namespace Nanook.NKit.Vfs
                 if (!string.IsNullOrEmpty(root))
                     continue; // images are mounted directly under system when root is empty
 
-                // In merged mode, skip secondary items — the primary represents the group
+                // In merged mode, skip secondary items - the primary represents the group
                 if (img.IsMergedSecondary)
                     continue;
 
                 if (img.ImageRecord?.Format == NKitDataStore.ImageFormat.TmdAppFolder)
                 {
-                    // TmdAppFolder is CDN-format content, not a disc image — only show it
+                    // TmdAppFolder is CDN-format content, not a disc image - only show it
                     // in the folder/filesystem view, never in the image (iso) view.
                     if (!Model.ShowFolderFlag)
                         continue;
@@ -235,7 +235,7 @@ namespace Nanook.NKit.Vfs
                 }
                 else if (img.ImageRecord?.Format == NKitDataStore.ImageFormat.App)
                 {
-                    // App is CDN-format content — only show it in the folder/filesystem view.
+                    // App is CDN-format content - only show it in the folder/filesystem view.
                     if (!Model.ShowFolderFlag)
                         continue;
 
@@ -293,7 +293,7 @@ namespace Nanook.NKit.Vfs
                 if (folderImage.ImageRecord.Format != NKitDataStore.ImageFormat.App)
                     return false;
 
-                // Only handle area files — stored files (title.tik, title.tmd etc.)
+                // Only handle area files - stored files (title.tik, title.tmd etc.)
                 // must be read via DataStore.ReadFile, not through ImageBuilderWiiUStream.
                 if (!(fsItem is FsImageAreaFile))
                     return false;
@@ -310,7 +310,7 @@ namespace Nanook.NKit.Vfs
                 IImageReader sharedReader = Model.Resources.AcquireReader(targetImageRecord.SetName, targetImageRecord.Id);
 
                 // Build ImageBuilderWiiUStream which reconstructs FS areas.
-                // APP-format .app files are encrypted content containers — encryption
+                // APP-format .app files are encrypted content containers - encryption
                 // must be applied so the output matches the original format.
                 int bufferSize = 0x200000; // 2MiB
                 ImageBufferCache cache = Model.Resources.AcquireBufferCache(targetImageRecord.Id, bufferSize, 16);
@@ -343,7 +343,7 @@ namespace Nanook.NKit.Vfs
 
                 try { builder.Position = off; } catch { }
                 stream = new BoundedStream(builder, off, Math.Max(0, len), ownsBaseStream: true);
-                reader = null; // Shared reader — caller must not dispose
+                reader = null; // Shared reader - caller must not dispose
                 return true;
             }
             catch

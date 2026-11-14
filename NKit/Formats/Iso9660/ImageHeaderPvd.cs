@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -160,7 +160,7 @@ namespace Nanook.NKit.Iso.Iso9660
                     return getName(Encoding.BigEndianUnicode.GetString(name));
                 case FsType.ElTorito:
                     // El Torito boot-catalog ID strings (Validation Entry ManufacId[24], Section Header
-                    // Id[28]) are ASCII per the El Torito 1.0 spec (a PC/BIOS format — no code-page or
+                    // Id[28]) are ASCII per the El Torito 1.0 spec (a PC/BIOS format - no code-page or
                     // Unicode concept; e.g. the "EL TORITO SPECIFICATION" system id is plain ASCII).
                     return Encoding.ASCII.GetString(name);
                 default:

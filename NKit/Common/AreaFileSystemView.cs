@@ -47,7 +47,7 @@ namespace Nanook.NKit
             // past the frozen count and never shift a published index. Primary surfaces them so the
             // preprocessor's GetFiles (single read thread) computes a FileEndIndex that reaches them
             // and the section processor's live-FST index read lands on the same entry.
-            // Primary (merged) and System are cross-FS projections — no single logical kind. The
+            // Primary (merged) and System are cross-FS projections - no single logical kind. The
             // area-level XDVDFS discriminator lives on Kind; per-FS kinds are set in buildFileSystemViews.
             FileSystemKind primaryKind = kind == FileSystemKind.XDvdFs ? FileSystemKind.XDvdFs : FileSystemKind.Unknown;
             _primary = new FileSystemListView(_files, root, primaryKind, this);
@@ -106,7 +106,7 @@ namespace Nanook.NKit
                 return;
 
             // Already in the frozen snapshot (discovered during the up-front parse)? Then it is
-            // part of Primary already — not a late discovery, so do not tail-append it.
+            // part of Primary already - not a late discovery, so do not tail-append it.
             for (int i = 0; i < _files.Count; i++)
             {
                 if (_files[i].FsOffset == file.FsOffset)
@@ -126,7 +126,7 @@ namespace Nanook.NKit
 
         // Group the snapshot by logical file system (ISO9660 / Joliet / UDF / XDVDFS via FstFile
         // links). Nintendo files carry no FsType, so they fall into a single default view. Each view
-        // is an index map over the shared snapshot — no file data is copied.
+        // is an index map over the shared snapshot - no file data is copied.
         private IReadOnlyList<IFileSystemView> buildFileSystemViews(IFsFolder root)
         {
             // Determine each file's primary FsType (highest-priority link) when available.
@@ -149,7 +149,7 @@ namespace Nanook.NKit
                 }
             }
 
-            // No per-FS typing available (Nintendo, or empty) — expose a single view over all files.
+            // No per-FS typing available (Nintendo, or empty) - expose a single view over all files.
             // Carry the area-level Kind (e.g. XDVDFS) so single-FS formats still name themselves.
             if (byType == null)
                 return new IFileSystemView[] { new FileSystemListView(_files, root, Kind) };

@@ -226,7 +226,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
         // Resolve the uncompressed size of the inner entry (named <paramref name="innerName"/>) of a
         // streamable archive recovery file, using the same scan/read primitives the DatManager uses
         // for dats inside archives. Returns 0 if the entry can't be found (the decorator then serves
-        // a zero-length/zero-filled region — no worse than a missing recovery file).
+        // a zero-length/zero-filled region - no worse than a missing recovery file).
         private static long getArchiveEntrySize(FileInfo archive, string innerName)
         {
             try

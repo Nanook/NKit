@@ -147,7 +147,7 @@ public class RdXmlPreservationTests
 
     /// <summary>
     /// Property 2c: Each existing assembly directive must have exactly
-    /// Dynamic="Required All" — no attribute modifications allowed.
+    /// Dynamic="Required All" - no attribute modifications allowed.
     /// 
     /// This uses property-based testing to verify that for any randomly selected
     /// assembly from the expected set, its directive is correctly preserved.
@@ -184,7 +184,7 @@ public class RdXmlPreservationTests
     /// and reference rd.xml as a TrimmerRootDescriptor.
     /// 
     /// This verifies the project configuration that enables compiled bindings
-    /// remains intact — if this changes, compiled bindings would stop working.
+    /// remains intact - if this changes, compiled bindings would stop working.
     /// 
     /// **Validates: Requirements 3.1, 3.2**
     /// </summary>
@@ -211,7 +211,7 @@ public class RdXmlPreservationTests
     /// Property 2e: ToolbarControl.axaml must use compiled bindings for display properties.
     /// 
     /// Verifies that the compiled bindings for IsEnabled, Label, IconName, Tooltip,
-    /// ShowDividerBefore, and IsChecked are present in the XAML — these must continue
+    /// ShowDividerBefore, and IsChecked are present in the XAML - these must continue
     /// to work after the fix.
     /// 
     /// **Validates: Requirements 3.1**

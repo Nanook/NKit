@@ -76,7 +76,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.2, 1.4, 1.5, 1.8**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — FsType correctness.
+        /// Property 4: Xbox Area Metadata Completeness - FsType correctness.
         ///
         /// For any Xbox area (FileSystem or Other), BuildAreaMetadata SHALL produce
         /// metadata with FsType set to the area's AreaType name.
@@ -113,7 +113,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.2, 1.4, 1.5, 1.8**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — BlockSize always 0x800.
+        /// Property 4: Xbox Area Metadata Completeness - BlockSize always 0x800.
         ///
         /// For any Xbox area (FileSystem or Other), BuildAreaMetadata SHALL produce
         /// metadata with BlockSize set to 0x800 (cooked sectors).
@@ -149,7 +149,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.2, 1.4, 1.5, 1.8**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — AreaOffsetBase correctness.
+        /// Property 4: Xbox Area Metadata Completeness - AreaOffsetBase correctness.
         ///
         /// For any Xbox area (FileSystem or Other), BuildAreaMetadata SHALL produce
         /// metadata with AreaOffsetBase set to the area's absolute image offset.
@@ -185,7 +185,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.4, 1.5**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — KeyCrc present when key available.
+        /// Property 4: Xbox Area Metadata Completeness - KeyCrc present when key available.
         ///
         /// For any Xbox FileSystem area where an encryption key is present,
         /// BuildAreaMetadata SHALL produce metadata with KeyCrc equal to the CRC32 of that key.
@@ -223,7 +223,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.5**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — TitleKeyMissing when no key.
+        /// Property 4: Xbox Area Metadata Completeness - TitleKeyMissing when no key.
         ///
         /// For any Xbox FileSystem area where no encryption key is available,
         /// BuildAreaMetadata SHALL produce metadata with TitleKeyMissing set to "true".
@@ -265,7 +265,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.8**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — Video partition HeaderCrc/HeaderSize.
+        /// Property 4: Xbox Area Metadata Completeness - Video partition HeaderCrc/HeaderSize.
         ///
         /// For any Xbox FileSystem area with video partition properties (HeaderCrc, HeaderSize),
         /// BuildAreaMetadata SHALL store HeaderCrc and HeaderSize in the metadata.
@@ -302,7 +302,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.2, 1.4, 1.5, 1.8**
         ///
-        /// Property 4: Xbox Area Metadata Completeness — Full multi-area image.
+        /// Property 4: Xbox Area Metadata Completeness - Full multi-area image.
         ///
         /// For any Xbox image scan with N areas (mix of video partitions and game partition),
         /// BuildAreaMetadata produces correct metadata for every area:

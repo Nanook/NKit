@@ -34,7 +34,7 @@ namespace Nanook.NKit.Microsoft.XBox
 
         // After the directory tree is walked, ONE final pass over the partition's leading
         // volume/header region is fed through the gap scan (Fst.SetFsData with the tree already
-        // parsed) to discover the system markers that are not directory entries — the XBox
+        // parsed) to discover the system markers that are not directory entries - the XBox
         // layout-tool signature (__xbox_hdr_) and the __volume_ marker. These live just before the
         // first content file. Doing this up front (before the view is published) keeps the FST
         // build linear: nothing mutates the file system once section processing begins.
@@ -50,7 +50,7 @@ namespace Nanook.NKit.Microsoft.XBox
             _blockSize = blockSize;
             _imageSize = imageSize;
 
-            // Seed with the root FST directory (the last non-volume system entry — same selection
+            // Seed with the root FST directory (the last non-volume system entry - same selection
             // the original readFs used: Files.Where(FsOffset != Volume.FsOffet).LastOrDefault()).
             FstFile root = (FstFile)_fst.Files
                 .Where(a => a.FsOffset != fsInfo.Header.Volume.FsOffet)
@@ -59,7 +59,7 @@ namespace Nanook.NKit.Microsoft.XBox
                 _queue.Add(root);
             else
             {
-                // Nothing to walk — no tree, so no leading-region gap scan either. Mark both phases
+                // Nothing to walk - no tree, so no leading-region gap scan either. Mark both phases
                 // done so Complete is true immediately (mirrors the original readFs no-op case).
                 _complete = true;
                 _gapScanDone = true;

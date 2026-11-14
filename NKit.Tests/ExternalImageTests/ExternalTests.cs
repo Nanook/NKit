@@ -8,7 +8,7 @@ namespace NKit.Tests.Full.External
     [Trait("Group", "External")]
     public class ExternalTests : ProcessingTestBase
     {
-        // Input files are on a read-only mount in Docker — redirect test output to a writable temp dir.
+        // Input files are on a read-only mount in Docker - redirect test output to a writable temp dir.
         // NKIT_TEST_OUTPUT defaults to /tmp/NKitTestOutput (writable in any environment).
         private static readonly string _outputPath =
             System.Environment.GetEnvironmentVariable("NKIT_TEST_OUTPUT")

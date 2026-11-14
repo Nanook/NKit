@@ -157,7 +157,7 @@ namespace NKitDataStore.Tests
 
             // If by chance they're identical, skip (extremely unlikely with different seeds)
             if (block1.SequenceEqual(block2))
-                return true; // vacuously true — identical blocks would deduplicate correctly
+                return true; // vacuously true - identical blocks would deduplicate correctly
 
             string runDir = Path.Combine(_testDirectory, $"distinct_{Guid.NewGuid():N}");
             Directory.CreateDirectory(runDir);
@@ -249,7 +249,7 @@ namespace NKitDataStore.Tests
             if (key1.XxHash64 != key2.XxHash64) return false;
             if (key1.Crc32 != key2.Crc32) return false;
 
-            // Make a copy of the data and compute again — must still match
+            // Make a copy of the data and compute again - must still match
             byte[] dataCopy = new byte[data.Length];
             Array.Copy(data, dataCopy, data.Length);
             BlockKey key3 = ComputeBlockKey(dataCopy);

@@ -1,7 +1,7 @@
 namespace Nanook.NKit
 {
     /// <summary>
-    /// Status of a scope node in the task tree — used by progress tracking and UI rendering.
+    /// Status of a scope node in the task tree - used by progress tracking and UI rendering.
     /// </summary>
     public enum ScopeStatus
     {
@@ -17,7 +17,7 @@ namespace Nanook.NKit
         /// <summary>Completed with errors.</summary>
         Error,
 
-        /// <summary>Skipped — not applicable or cancelled.</summary>
+        /// <summary>Skipped - not applicable or cancelled.</summary>
         Skipped,
     }
 }

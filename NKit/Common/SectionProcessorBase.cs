@@ -54,7 +54,7 @@ namespace Nanook.NKit
         protected virtual string SectionTag => Nanook.NKit.LogScopes.Section;
 
         // Whether THIS section carries verifiable integrity data whose validity (hashOk/creatable)
-        // is meaningful — Wii/WiiU partition hashes, or an ISO9660 CD sector mode with Reed-Solomon
+        // is meaningful - Wii/WiiU partition hashes, or an ISO9660 CD sector mode with Reed-Solomon
         // EDC/ECC (Mode1 / Mode2 Form1). NOT true for GameCube, PS3 (plain AES, no hashes), audio,
         // etc. Encryption-supported is NOT the same thing (PS3 is encrypted but unverifiable), so
         // the per-section log only shows hashOk/creatable when this is true. Default: false.
@@ -85,7 +85,7 @@ namespace Nanook.NKit
             logSection();
         }
 
-        // Trace (debug level): one line per section summarising what this processor did — area type,
+        // Trace (debug level): one line per section summarising what this processor did - area type,
         // offset/size, encryption state, hash validity, scrub/patch/fix markers, and the checksums
         // known at completion. Tagged per format via SectionTag ([WiiGc]/[ISO9660]/[WiiU]/[XDVDFS]),
         // like the IImage readers. Trace so it never floods Detail; only visible at debug level.
@@ -100,7 +100,7 @@ namespace Nanook.NKit
             sb.Append($"section [{this.Type}] off 0x{this.ImageOffset:X} size 0x{this.Size:X}");
             sb.Append($" enc:{(this.IsEncrypted ? "y" : "n")}");
             // Only meaningful for sections with verifiable integrity data (Wii/WiiU hashes, ISO
-            // EDC/ECC) — omitted for PS3/GameCube/audio where IsValid/IsCreatable are not derived.
+            // EDC/ECC) - omitted for PS3/GameCube/audio where IsValid/IsCreatable are not derived.
             if (this.SectionHasVerifiableHashes)
                 sb.Append($" hashOk:{(this.IsValid ? "y" : "n")} creatable:{(this.IsCreatable ? "y" : "n")}");
             if (this.PatchInfo != null)
@@ -109,7 +109,7 @@ namespace Nanook.NKit
                 if (this.PatchInfo.MarkForPatching) sb.Append(" patch");
                 if (this.PatchInfo.MarkForCalculatedData) sb.Append(" calc");
             }
-            // State bitmask (e.g. Wii per-block scrubbing flags) — only when non-empty. Rendered
+            // State bitmask (e.g. Wii per-block scrubbing flags) - only when non-empty. Rendered
             // the SAME way the scan output does (BitState.ToString() = hex bytes), so the log and
             // the scan file agree. The bits ARE the information; ASCII of a flag mask is just dots.
             if (this.State != null && !this.State.IsClear())

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Nanook.NKit.Steps.Shared
     //
     // Fix: ItemCount dedicated Thread instances are created at construction. Each thread waits
     // on its own slot semaphore, processes its item, then signals the in-order completer.
-    // No thread-pool involvement — no starvation risk.
+    // No thread-pool involvement - no starvation risk.
     internal class CircularSequenceQueue<T>
     {
         private class Slot

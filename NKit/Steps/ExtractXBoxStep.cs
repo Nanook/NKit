@@ -124,7 +124,7 @@ namespace Nanook.NKit
 
             // AreaFileSystem is only published once the area's file system is fully parsed. For
             // ISO9660 this may not happen until the end of the image. The XDVDFS game partition is
-            // identified by the view's Kind (== XDvdFs) — no cast to the internal Microsoft.XBox.Fst.
+            // identified by the view's Kind (== XDvdFs) - no cast to the internal Microsoft.XBox.Fst.
             IAreaFileSystemView areaFs = section.AreaFileSystem;
             bool isXdvdFs = areaFs != null && areaFs.Kind == FileSystemKind.XDvdFs;
             if (!_isIso9660 && (section.Type == AreaType.Other || (areaFs != null && !isXdvdFs)))
@@ -391,7 +391,7 @@ namespace Nanook.NKit
             }
             else
             {
-                // No fidelity list available — identify overlaps from _candidates
+                // No fidelity list available - identify overlaps from _candidates
                 // Files sharing FsOffset with a larger file (excluding same-size FstLink merges)
                 IEnumerable<IGrouping<long, IFsFile>> offsetGroups = _candidates.GroupBy(f => f.FsOffset).Where(g => g.Count() > 1);
                 List<IFsFile> overlapCandidates = new List<IFsFile>();

@@ -116,7 +116,7 @@ public class ScrollPositionIntegrationTests
         int result = ScrollPositionAdjuster.ComputeScrollAfterRemoval(
             currentFirstVisible, removalIndex, removedCount, newTotalCount);
 
-        // Assert — only 2 items (indices 8, 9) are above viewport (< 10)
+        // Assert - only 2 items (indices 8, 9) are above viewport (< 10)
         Assert.Equal(8, result);
     }
 

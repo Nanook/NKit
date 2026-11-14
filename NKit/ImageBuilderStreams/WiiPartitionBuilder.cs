@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Nintendo.WiiGc;
+using Nanook.NKit.Nintendo.WiiGc;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -139,7 +139,7 @@ namespace Nanook.NKit.Builder
             Key = titleKey;
             Aes.Key = Key;
 
-            // Store output for SetDataHeader to use — _stream must be created AFTER the
+            // Store output for SetDataHeader to use - _stream must be created AFTER the
             // partition header is written (in SetDataHeader) so that _areaOffset == data_area_start,
             // not partition_start. Creating it here would put _areaOffset at partition_start and
             // every data write would land inside the cert chain (wrong by partitionHeaderSize bytes).

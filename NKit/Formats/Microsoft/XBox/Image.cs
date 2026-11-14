@@ -370,7 +370,7 @@ namespace Nanook.NKit.Microsoft.XBox
 
                             // The second video partition reuses video1's FST but its tail holds
                             // UDF backup-anchor markers (__ufdAvdpBackup_) that only appear here.
-                            // Discover them into the (shared) video1 FST now — the core processes
+                            // Discover them into the (shared) video1 FST now - the core processes
                             // areas in order and waits for each to complete, so video1's sections are
                             // all done and video2's have not started: a safe single-threaded window to
                             // append the tail markers before video2's sections are emitted. Feed the
@@ -379,7 +379,7 @@ namespace Nanook.NKit.Microsoft.XBox
                             if (_fsInfo != null && !_fsInfo.InvalidFileSystem && _fsInfo.FileSystem != null)
                             {
                                 // The UDF backup markers sit at a FIXED offset within the (small) L1
-                                // video partition — NOT at the image's very end — so scan the WHOLE
+                                // video partition - NOT at the image's very end - so scan the WHOLE
                                 // video2 area, not just a trailing window. The area is the last FS
                                 // area [ImageOffset, this.Size); the L1 video partition is small so
                                 // this is bounded and cheap. The gap scan detects markers by
@@ -427,7 +427,7 @@ namespace Nanook.NKit.Microsoft.XBox
                     // split partition). The game/video FS size is derived from the PVD
                     // (PvdSectorCount * BlockSize) rather than by seeking to the physical end; the FST
                     // walk seeks only WITHIN a partition, bounded to its own extent and cache-released
-                    // after — no full-image buffering. Tracked in NKitVault/10 Refactor/Warning Cleanup.md.
+                    // after - no full-image buffering. Tracked in NKitVault/10 Refactor/Warning Cleanup.md.
                     _nextArea = AreaInfo.NextArea(_area.ImageOffset, _fsInfo == null ? -1 : fsOffset, _fsInfo == null ? -1 : fsSize, _info.ImageSize, -1, AreaType.None, _areas, ++_areaNumber);
                     if ((this.SystemType == SystemType.XBox || this.SystemType == SystemType.XBox360) && _nextArea.AreaNo == _areas.Count - 2)
                         _nextArea.FsAddressMode = AddressMode.Relative;
@@ -465,13 +465,13 @@ namespace Nanook.NKit.Microsoft.XBox
                 skip(); //after providing current data check if we can skip some of the current filesystem
 
                 // Bound the shared cache: release cached blocks below the returned-data mark on
-                // both layers. Layer-B (this _stream, wrapping the decoder) — the FST re-read above
+                // both layers. Layer-B (this _stream, wrapping the decoder) - the FST re-read above
                 // walks records at arbitrary offsets within the partition and then seeks back to
                 // the read cursor; while it runs it brackets itself with Retain(_area.ImageOffset)
                 // .. Retain(long.MaxValue), so this end-of-read ReleaseTo can never drop a region
                 // the walk (or a subsequent backward seek) still needs. Layer-A (the raw source the
                 // decoder reads from, for a pass-through container over an archive entry) via
-                // IReleasable — without it the raw-source cache grows to hold the whole image. For a
+                // IReleasable - without it the raw-source cache grows to hold the whole image. For a
                 // seekable source nothing is cached, so both are no-ops.
                 _stream.ReleaseTo(_position);
                 (_iso as IReleasable)?.ReleaseTo(_position);

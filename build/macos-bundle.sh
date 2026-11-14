@@ -50,7 +50,7 @@ create_nkit_macos_bundle() {
     done
 
     # Place GUI config NEXT TO the .app bundle (portable mode trigger).
-    # Read from the publish output — nkit-ui.yaml is placed there by NKit.UI.csproj
+    # Read from the publish output - nkit-ui.yaml is placed there by NKit.UI.csproj
     # via CopyToPublishDirectory, so the publish dir is the authoritative source.
     local bundle_parent="publish/bundle/$runtime"
     if [ -f "publish/gui/$runtime/nkit-ui.yaml" ]; then

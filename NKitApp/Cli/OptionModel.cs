@@ -6,7 +6,7 @@ namespace Nanook.NKit.App.Cli
     /// <summary>The kind of value an option carries (drives parsing, help, and interactive widget).</summary>
     public enum OptionKind
     {
-        /// <summary>Presence switch — no value (e.g. --recursive).</summary>
+        /// <summary>Presence switch - no value (e.g. --recursive).</summary>
         Switch,
         /// <summary>Free value.</summary>
         Value,
@@ -14,7 +14,7 @@ namespace Nanook.NKit.App.Cli
         Enum,
         /// <summary>A filesystem path.</summary>
         Path,
-        /// <summary>A file mask / selection spec (preserved verbatim — see FileMask).</summary>
+        /// <summary>A file mask / selection spec (preserved verbatim - see FileMask).</summary>
         Mask,
         /// <summary>A convert-format spec (e.g. rvz:zstd:19:128k:16).</summary>
         Format,
@@ -52,7 +52,7 @@ namespace Nanook.NKit.App.Cli
     /// <summary>
     /// Declarative description of a single CLI/config option. The canonical name is the CLI long
     /// form (hyphenated) and is also the config key; aliases include the legacy config/CLI names.
-    /// Static data only — no reflection — so it is AOT-safe. This is the single source of truth
+    /// Static data only - no reflection - so it is AOT-safe. This is the single source of truth
     /// consumed by the parser, help renderer and interactive builder.
     /// </summary>
     public sealed class CliOption
@@ -161,7 +161,7 @@ namespace Nanook.NKit.App.Cli
 
         public static readonly CliOption[] Options =
         {
-            // ── Global (root) options — never system-scoped ────────────────────────────
+            // ── Global (root) options - never system-scoped ────────────────────────────
             new CliOption("input", "in", new[] { "in" }, OptionKind.Path, root: true, prefixable: false,
                 verbs: null, enumValues: null, configKey: "in", help: "Input file, folder or mask (* and ? supported). Positional or repeatable."),
             new CliOption("output", "out", new[] { "out" }, OptionKind.Path, true, false,
@@ -209,7 +209,7 @@ namespace Nanook.NKit.App.Cli
 
             // ── Per-system (prefixable) options ─────────────────────────────────────────
             new CliOption("format", "f", new[] { "convert" }, OptionKind.Format, false, true,
-                new[] { "convert" }, null, "convert", "Convert format (system-scopable). The parameters differ per format — see below.",
+                new[] { "convert" }, null, "convert", "Convert format (system-scopable). The parameters differ per format - see below.",
                 longHelp:
                     "A ':'-separated string whose parameters DIFFER PER FORMAT. Trailing parts are optional and\n" +
                     "fall back to per-system config defaults. Pick the format for the input's system:\n" +
@@ -232,9 +232,9 @@ namespace Nanook.NKit.App.Cli
                     "  cue    Redump cue/bin.           cue:split | cue:joined   e.g. cue  |  cue:joined\n" +
                     "  gdi    Dreamcast TOSEC.          gdi (no parameters)\n" +
                     "\n" +
-                    "DUAL FORMAT (all ISO9660/CD systems — PS1, PS2, PS3, Saturn, SegaCD, CD-i, PC Engine,\n" +
+                    "DUAL FORMAT (all ISO9660/CD systems - PS1, PS2, PS3, Saturn, SegaCD, CD-i, PC Engine,\n" +
                     "and generic ISO): a single iso-family format and a cue joined by '/', so the right\n" +
-                    "output is used whether the source is a plain image or a cue/bin — e.g. cso:9:16k:4/cue:split.\n" +
+                    "output is used whether the source is a plain image or a cue/bin - e.g. cso:9:16k:4/cue:split.\n" +
                     "blockSize is a size like 128k/16k/2k; parallelism is a thread count.",
                 examples: new[]
                 {
@@ -250,8 +250,8 @@ namespace Nanook.NKit.App.Cli
                     new OptionExample("wua",                 "WiiU ZArchive (lossy)",   "wiiu"),
                     new OptionExample("deciso",              "PS3 decrypted ISO",       "ps3"),
                     new OptionExample("cso:9:16k:4",         "CSO (compressed ISO)",    "ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
-                    new OptionExample("cso:9:16k:4/cue:split","iso + cue (split) — dual","ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
-                    new OptionExample("zso::16k:4/cue:split","ZSO + cue — dual",        "ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
+                    new OptionExample("cso:9:16k:4/cue:split","iso + cue (split) - dual","ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
+                    new OptionExample("zso::16k:4/cue:split","ZSO + cue - dual",        "ps1", "ps2", "ps3", "saturn", "segacd", "cdi", "pcengine"),
                     new OptionExample("cso:9:2k:4",          "PSP CSO",                 "psp"),
                     new OptionExample("iso",                 "XBox ISO",                "xbox", "xbox360"),
                     new OptionExample("xiso",                "XBox rewritten ISO",      "xbox"),
@@ -261,7 +261,7 @@ namespace Nanook.NKit.App.Cli
                 }),
             new CliOption("mask", "m", new[] { "extract" }, OptionKind.Mask, false, true,
                 new[] { "extract", "fixextract" }, null, "extract", "Extract selection: flags:pattern, e.g. mi:* or ri:^(.*)$ (system-scopable).",
-                longHelp: "flags:pattern — flags: m=mask (wildcards * ?), r=regex, i=case-insensitive (case-sensitive if omitted). Use --forensic to also extract image parts with addresses.",
+                longHelp: "flags:pattern - flags: m=mask (wildcards * ?), r=regex, i=case-insensitive (case-sensitive if omitted). Use --forensic to also extract image parts with addresses.",
                 examples: new[]
                 {
                     new OptionExample("mi:*",             "all files (mask, case-insensitive)"),
@@ -323,7 +323,7 @@ namespace Nanook.NKit.App.Cli
                 new[] { "fix", "fixextract" }, null, "fixFiles", "Path to NKit recovery files (system-scopable)."),
             new CliOption("dedupe", "dd", Array.Empty<string>(), OptionKind.Value, false, true,
                 new[] { "dedupe", "ogmr" }, null, "dedupe", "Dedupe config: setName:shard:block:aux (system-scopable).",
-                longHelp: "setName:shardSize:blockSize:auxMode — all parts optional. Append :y as the 4th part to auto-create an aux store. Blank uses all defaults (system name, 50GiB shards, 64KiB blocks).",
+                longHelp: "setName:shardSize:blockSize:auxMode - all parts optional. Append :y as the 4th part to auto-create an aux store. Blank uses all defaults (system name, 50GiB shards, 64KiB blocks).",
                 examples: new[]
                 {
                     new OptionExample("",                "all defaults"),
@@ -335,7 +335,7 @@ namespace Nanook.NKit.App.Cli
                 null, null, "baseInPath", "Per-system base path for input routing (system-scopable)."),
             new CliOption("scan-out", "so", new[] { "scanOut" }, OptionKind.Path, false, true,
                 new[] { "scan", "convert", "expand", "extract", "dedupe", "fix" }, null, "scanOut", "Directory to save full image scans (system-scopable)."),
-            // Scan output format — exposed for the SCAN VERB ONLY. The documented choices are the
+            // Scan output format - exposed for the SCAN VERB ONLY. The documented choices are the
             // two query-friendly YAML modes; the legacy "Xml" value is intentionally omitted from
             // the advertised set (undocumented) but is still accepted if typed or set in config, and
             // is honoured only for the scan task (see SystemSettings / NKitTask).

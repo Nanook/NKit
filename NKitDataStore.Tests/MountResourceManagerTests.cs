@@ -5,7 +5,7 @@ namespace NKitDataStore.Tests
 {
     /// <summary>
     /// Unit tests for MountResourceManager ref-counting, TTL disposal, and buffer cache pooling.
-    /// Uses manual mock implementations — no real SQLite needed.
+    /// Uses manual mock implementations - no real SQLite needed.
     /// </summary>
     public class MountResourceManagerTests
     {
@@ -111,13 +111,13 @@ namespace NKitDataStore.Tests
             manager.AcquireReader("set1", 42);
             manager.AcquireReader("set1", 42);
 
-            // Act — release once (ref count = 1)
+            // Act - release once (ref count = 1)
             manager.ReleaseReader("set1", 42);
 
             // Wait longer than TTL to ensure no premature disposal
             Thread.Sleep(_TestTtlMs + 50);
 
-            // Assert — reader should NOT be disposed (ref count still > 0)
+            // Assert - reader should NOT be disposed (ref count still > 0)
             Assert.False(mockReader.IsDisposed);
         }
 
@@ -135,13 +135,13 @@ namespace NKitDataStore.Tests
             // Release (ref count = 0, TTL timer starts)
             manager.ReleaseReader("set1", 42);
 
-            // Assert — not disposed immediately
+            // Assert - not disposed immediately
             Assert.False(mockReader.IsDisposed);
 
             // Wait for TTL to expire
             Thread.Sleep(_TestTtlMs + 100);
 
-            // Assert — disposed after TTL
+            // Assert - disposed after TTL
             Assert.True(mockReader.IsDisposed);
         }
 
@@ -166,7 +166,7 @@ namespace NKitDataStore.Tests
             // Wait for original TTL to have expired
             Thread.Sleep(_TestTtlMs + 50);
 
-            // Assert — same instance returned, not disposed
+            // Assert - same instance returned, not disposed
             Assert.Same(mockReader, reacquired);
             Assert.False(mockReader.IsDisposed);
             Assert.Equal(1, dataStore.OpenImageReaderCallCount);
@@ -210,7 +210,7 @@ namespace NKitDataStore.Tests
             // Wait longer than TTL
             Thread.Sleep(_TestTtlMs + 100);
 
-            // Assert — cache should still be alive (ref count = 1, no TTL started)
+            // Assert - cache should still be alive (ref count = 1, no TTL started)
             ImageBufferCache cacheAgain = manager.AcquireBufferCache(100, 4096, 16);
             Assert.Same(cache, cacheAgain);
         }
@@ -229,7 +229,7 @@ namespace NKitDataStore.Tests
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
             SemaphoreSlim barrier = new SemaphoreSlim(0, threadCount);
 
-            // Act — all threads acquire the same reader concurrently
+            // Act - all threads acquire the same reader concurrently
             Task<IImageReader>[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -239,7 +239,7 @@ namespace NKitDataStore.Tests
             barrier.Release(threadCount);
             IImageReader[] results = await Task.WhenAll(tasks);
 
-            // Assert — all got the same instance, factory called exactly once
+            // Assert - all got the same instance, factory called exactly once
             Assert.All(results, r => Assert.Same(mockReader, r));
             Assert.Equal(1, dataStore.OpenImageReaderCallCount);
         }
@@ -253,7 +253,7 @@ namespace NKitDataStore.Tests
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
             SemaphoreSlim barrier = new SemaphoreSlim(0, threadCount);
 
-            // Act — all threads acquire the same buffer cache concurrently
+            // Act - all threads acquire the same buffer cache concurrently
             Task<ImageBufferCache>[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -263,7 +263,7 @@ namespace NKitDataStore.Tests
             barrier.Release(threadCount);
             ImageBufferCache[] results = await Task.WhenAll(tasks);
 
-            // Assert — all got the same instance
+            // Assert - all got the same instance
             ImageBufferCache firstCache = results[0];
             Assert.All(results, r => Assert.Same(firstCache, r));
         }
@@ -282,7 +282,7 @@ namespace NKitDataStore.Tests
             // Pre-acquire once to keep the reader alive throughout the test
             manager.AcquireReader("set1", 42);
 
-            // Act — threads interleave acquire/release rapidly
+            // Act - threads interleave acquire/release rapidly
             Task[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -302,7 +302,7 @@ namespace NKitDataStore.Tests
             // Wait for TTL to expire
             Thread.Sleep(_TestTtlMs + 100);
 
-            // Assert — reader disposed exactly once (no double-dispose)
+            // Assert - reader disposed exactly once (no double-dispose)
             Assert.Equal(1, mockReader.DisposeCount);
         }
 
@@ -324,7 +324,7 @@ namespace NKitDataStore.Tests
             for (int i = 0; i < threadCount - 1; i++)
                 manager.ReleaseReader("set1", 42);
 
-            // Act — all threads try to release the last reference concurrently
+            // Act - all threads try to release the last reference concurrently
             Task[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -337,7 +337,7 @@ namespace NKitDataStore.Tests
             // Wait for TTL to expire
             Thread.Sleep(_TestTtlMs + 100);
 
-            // Assert — exactly one disposal occurred (no race causing double-dispose)
+            // Assert - exactly one disposal occurred (no race causing double-dispose)
             Assert.Equal(1, mockReader.DisposeCount);
         }
 
@@ -348,7 +348,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void ExceedingCapacity_EvictsOldestZeroRefEntry()
         {
-            // Arrange — capacity of 3
+            // Arrange - capacity of 3
             Dictionary<long, MockImageReader> readers = new Dictionary<long, MockImageReader>();
             MockDataStore dataStore = new MockDataStore(key =>
             {
@@ -368,10 +368,10 @@ namespace NKitDataStore.Tests
             manager.ReleaseReader("set1", 2);
             manager.ReleaseReader("set1", 3);
 
-            // Act — acquire a 4th reader, exceeding capacity
+            // Act - acquire a 4th reader, exceeding capacity
             manager.AcquireReader("set1", 4);
 
-            // Assert — oldest zero-ref entry (imageId=1) should be evicted and disposed
+            // Assert - oldest zero-ref entry (imageId=1) should be evicted and disposed
             Assert.True(readers[1].IsDisposed, "Oldest zero-ref entry (imageId=1) should be evicted");
             Assert.False(readers[2].IsDisposed, "Second entry should not be evicted yet");
             Assert.False(readers[3].IsDisposed, "Third entry should not be evicted yet");
@@ -381,7 +381,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void ActiveEntries_NeverEvicted_EvenWhenOverCapacity()
         {
-            // Arrange — capacity of 3
+            // Arrange - capacity of 3
             Dictionary<long, MockImageReader> readers = new Dictionary<long, MockImageReader>();
             MockDataStore dataStore = new MockDataStore(key =>
             {
@@ -396,11 +396,11 @@ namespace NKitDataStore.Tests
             manager.AcquireReader("set1", 2);
             manager.AcquireReader("set1", 3);
 
-            // Act — acquire a 4th reader, exceeding capacity
+            // Act - acquire a 4th reader, exceeding capacity
             // All existing entries have ref > 0, so none can be evicted
             manager.AcquireReader("set1", 4);
 
-            // Assert — no entries evicted because all have ref count > 0
+            // Assert - no entries evicted because all have ref count > 0
             Assert.False(readers[1].IsDisposed, "Active entry (imageId=1) should never be evicted");
             Assert.False(readers[2].IsDisposed, "Active entry (imageId=2) should never be evicted");
             Assert.False(readers[3].IsDisposed, "Active entry (imageId=3) should never be evicted");
@@ -410,7 +410,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void Access_PromotesEntry_ToMruPosition()
         {
-            // Arrange — capacity of 3
+            // Arrange - capacity of 3
             Dictionary<long, MockImageReader> readers = new Dictionary<long, MockImageReader>();
             MockDataStore dataStore = new MockDataStore(key =>
             {
@@ -430,19 +430,19 @@ namespace NKitDataStore.Tests
             manager.ReleaseReader("set1", 2);
             manager.ReleaseReader("set1", 3);
 
-            // Re-acquire A — this promotes A to MRU position
+            // Re-acquire A - this promotes A to MRU position
             manager.AcquireReader("set1", 1);
             // Release A again so it's eligible for eviction but at MRU position
             manager.ReleaseReader("set1", 1);
 
-            // Act — acquire D, exceeding capacity
+            // Act - acquire D, exceeding capacity
             // LRU order should now be: B (oldest), C, A (most recent)
             // So B should be evicted, not A
             manager.AcquireReader("set1", 4);
 
-            // Assert — B (imageId=2) evicted as the oldest, A was promoted
+            // Assert - B (imageId=2) evicted as the oldest, A was promoted
             Assert.True(readers[2].IsDisposed, "B (imageId=2) should be evicted as oldest LRU entry");
-            Assert.False(readers[1].IsDisposed, "A (imageId=1) should NOT be evicted — it was promoted to MRU");
+            Assert.False(readers[1].IsDisposed, "A (imageId=1) should NOT be evicted - it was promoted to MRU");
             Assert.False(readers[3].IsDisposed, "C (imageId=3) should not be evicted yet");
             Assert.False(readers[4].IsDisposed, "D (imageId=4) should not be evicted");
         }
@@ -450,7 +450,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void EvictedReader_IsProperlyDisposed()
         {
-            // Arrange — capacity of 3
+            // Arrange - capacity of 3
             Dictionary<long, MockImageReader> readers = new Dictionary<long, MockImageReader>();
             MockDataStore dataStore = new MockDataStore(key =>
             {
@@ -468,11 +468,11 @@ namespace NKitDataStore.Tests
             manager.ReleaseReader("set1", 2);
             manager.ReleaseReader("set1", 3);
 
-            // Act — acquire 4th and 5th to trigger multiple evictions
+            // Act - acquire 4th and 5th to trigger multiple evictions
             manager.AcquireReader("set1", 4);
             manager.AcquireReader("set1", 5);
 
-            // Assert — evicted readers are properly disposed (Dispose called exactly once)
+            // Assert - evicted readers are properly disposed (Dispose called exactly once)
             Assert.True(readers[1].IsDisposed, "Evicted reader (imageId=1) should be disposed");
             Assert.Equal(1, readers[1].DisposeCount);
             Assert.True(readers[2].IsDisposed, "Evicted reader (imageId=2) should be disposed");
@@ -509,7 +509,7 @@ namespace NKitDataStore.Tests
             // Act
             manager.Shutdown();
 
-            // Assert — both readers disposed regardless of ref count
+            // Assert - both readers disposed regardless of ref count
             Assert.True(reader1.IsDisposed);
             Assert.True(reader2.IsDisposed);
         }
@@ -535,7 +535,7 @@ namespace NKitDataStore.Tests
             // Act
             manager.Shutdown();
 
-            // Assert — buffer caches are disposed (cleared)
+            // Assert - buffer caches are disposed (cleared)
             Assert.Equal(0, cache1.Count);
             Assert.Equal(0, cache2.Count);
         }
@@ -607,10 +607,10 @@ namespace NKitDataStore.Tests
             waitingThreadStarted.Wait(TimeSpan.FromSeconds(5));
             Thread.Sleep(50); // Give it time to enter WaitReady()
 
-            // Act — Shutdown should dispose the cache, which signals all entries via SetFailed()
+            // Act - Shutdown should dispose the cache, which signals all entries via SetFailed()
             manager.Shutdown();
 
-            // Assert — the waiting thread should unblock within a reasonable timeout (not hang)
+            // Assert - the waiting thread should unblock within a reasonable timeout (not hang)
             bool completed = waitingThreadCompleted.Wait(TimeSpan.FromSeconds(5));
             Assert.True(completed, "Waiting thread should have unblocked after Shutdown, but it hung.");
         }
@@ -625,11 +625,11 @@ namespace NKitDataStore.Tests
 
             manager.AcquireReader("set1", 42);
 
-            // Act — call Shutdown twice
+            // Act - call Shutdown twice
             manager.Shutdown();
             Exception exception = Record.Exception(() => manager.Shutdown());
 
-            // Assert — no exception on second call, reader disposed exactly once
+            // Assert - no exception on second call, reader disposed exactly once
             Assert.Null(exception);
             Assert.Equal(1, mockReader.DisposeCount);
         }
@@ -661,7 +661,7 @@ namespace NKitDataStore.Tests
             BufferCacheEntry result1 = null;
             BufferCacheEntry result2 = null;
 
-            // Act — two threads request the same key simultaneously
+            // Act - two threads request the same key simultaneously
             Thread thread1 = new Thread(() =>
             {
                 barrier.Wait();
@@ -682,7 +682,7 @@ namespace NKitDataStore.Tests
             thread1.Join(TimeSpan.FromSeconds(5));
             thread2.Join(TimeSpan.FromSeconds(5));
 
-            // Assert — factory called exactly once, both threads got the same entry
+            // Assert - factory called exactly once, both threads got the same entry
             Assert.NotNull(result1);
             Assert.NotNull(result2);
             Assert.Same(result1, result2);
@@ -700,7 +700,7 @@ namespace NKitDataStore.Tests
             ImageBufferCache cache = new ImageBufferCache(imageId: 1, bufferSize: 4096, maxSize: 16);
             int factoryCallCount = 0;
 
-            // Act — first call throws (exception propagates to caller)
+            // Act - first call throws (exception propagates to caller)
             InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
             {
                 cache.GetOrCreate(42, () =>
@@ -712,7 +712,7 @@ namespace NKitDataStore.Tests
             Assert.Equal("Simulated factory failure", ex.Message);
             Assert.Equal(1, factoryCallCount);
 
-            // Second call succeeds — the failed entry was never inserted, so factory is called again
+            // Second call succeeds - the failed entry was never inserted, so factory is called again
             BufferCacheEntry result = cache.GetOrCreate(42, () =>
             {
                 Interlocked.Increment(ref factoryCallCount);
@@ -721,7 +721,7 @@ namespace NKitDataStore.Tests
                 return entry;
             });
 
-            // Assert — factory was called twice total (first threw, second succeeded)
+            // Assert - factory was called twice total (first threw, second succeeded)
             Assert.NotNull(result);
             Assert.True(result.IsReady);
             Assert.Equal(2, factoryCallCount);
@@ -749,7 +749,7 @@ namespace NKitDataStore.Tests
                 {
                     Interlocked.Increment(ref factoryCallCount);
                     BufferCacheEntry entry = new BufferCacheEntry(4096, null!);
-                    // Deliberately NOT calling entry.SetReady() — simulates stuck population
+                    // Deliberately NOT calling entry.SetReady() - simulates stuck population
                     firstEntryCreated.Set();
                     return entry;
                 });
@@ -758,7 +758,7 @@ namespace NKitDataStore.Tests
             thread1.Join(TimeSpan.FromSeconds(5));
             firstEntryCreated.Wait(TimeSpan.FromSeconds(5));
 
-            // Thread 2: requests the same key — will find the not-ready entry, wait, timeout,
+            // Thread 2: requests the same key - will find the not-ready entry, wait, timeout,
             // remove it, and retry with a new factory call that succeeds
             BufferCacheEntry retryResult = null;
             Thread thread2 = new Thread(() =>
@@ -805,7 +805,7 @@ namespace NKitDataStore.Tests
                 {
                     Interlocked.Increment(ref factoryCallCount);
                     BufferCacheEntry entry = new BufferCacheEntry(4096, null!);
-                    // Don't call SetReady — we'll call SetFailed later
+                    // Don't call SetReady - we'll call SetFailed later
                     firstEntryCreated.Set();
                     return entry;
                 });
@@ -814,7 +814,7 @@ namespace NKitDataStore.Tests
             thread1.Join(TimeSpan.FromSeconds(5));
             firstEntryCreated.Wait(TimeSpan.FromSeconds(5));
 
-            // Thread 2: requests the same key — will find the not-ready entry and block in WaitReady
+            // Thread 2: requests the same key - will find the not-ready entry and block in WaitReady
             BufferCacheEntry retryResult = null;
             Thread thread2 = new Thread(() =>
             {
@@ -833,10 +833,10 @@ namespace NKitDataStore.Tests
             waitingThreadStarted.Wait(TimeSpan.FromSeconds(5));
             Thread.Sleep(100); // Give thread 2 time to enter WaitReady()
 
-            // Act — signal failure on the first entry, which should unblock thread 2
+            // Act - signal failure on the first entry, which should unblock thread 2
             failedEntry!.SetFailed();
 
-            // Assert — thread 2 should unblock quickly, retry, and get a new entry
+            // Assert - thread 2 should unblock quickly, retry, and get a new entry
             bool completed = thread2.Join(TimeSpan.FromSeconds(5));
             Assert.True(completed, "Waiting thread should have unblocked after SetFailed and retried");
             Assert.NotNull(retryResult);

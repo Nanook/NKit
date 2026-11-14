@@ -9,7 +9,7 @@ namespace Nanook.NKit
     /// <summary>
     /// Stream-based access to Xbox/Xbox360 disc images from the NKit DataStore.
     /// Extends ImageBuilder to provide Xbox-specific gap filling (null bytes or aux filler restoration)
-    /// and BlockPadding restoration. Xbox discs do not use data-level encryption — security is
+    /// and BlockPadding restoration. Xbox discs do not use data-level encryption - security is
     /// handled at the drive firmware/authentication level.
     /// </summary>
     public class ImageBuilderXboxStream : ImageBuilder
@@ -85,7 +85,7 @@ namespace Nanook.NKit
             // For Xbox, gap regions are always filled with null bytes (0x00).
             // The aux block provider handles filler restoration through the normal block resolution
             // chain (AuxBlockProvider resolves blocks from primary first, then aux).
-            // Gap fill itself always writes zeros — the actual filler data is served as blocks
+            // Gap fill itself always writes zeros - the actual filler data is served as blocks
             // by the AuxBlockProvider when it exists.
             base.OnGapFill(offsetInGap, cleanAreaOffset, cleanBufferOffset, size, context);
         }

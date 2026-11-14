@@ -8,8 +8,8 @@ namespace Nanook.NKit.App.Cli
     /// <summary>
     /// Guided command builder. Flow: task → input images → output dir (unless the task has none) →
     /// an editable options TABLE the user navigates and edits until Done. Drives an
-    /// <see cref="IPrompter"/> from the <see cref="OptionModel"/> and assembles an argv — the SAME
-    /// shape <see cref="CliParser"/> consumes — so interactive and direct modes share one path.
+    /// <see cref="IPrompter"/> from the <see cref="OptionModel"/> and assembles an argv - the SAME
+    /// shape <see cref="CliParser"/> consumes - so interactive and direct modes share one path.
     /// No console access here (all via the prompter), so it is unit-testable.
     /// </summary>
     public sealed class InteractiveBuilder
@@ -46,7 +46,7 @@ namespace Nanook.NKit.App.Cli
                     foreach ((string s, string v) in Scoped) parts.Add($"{s}:{v}");
                     return string.Join("  ", parts);
                 }
-                // Blank means "fall back to the config" — for a prefixable option that is resolved
+                // Blank means "fall back to the config" - for a prefixable option that is resolved
                 // per detected system, so show that rather than a bare "(not set)".
                 if (string.IsNullOrEmpty(Value))
                     return Option.Prefixable ? "(from config)" : "(not set)";
@@ -94,7 +94,7 @@ namespace Nanook.NKit.App.Cli
                         continue; // back to the task list
                     }
                     if (chosenVerb == TaskQuitChoice || chosenVerb == null)
-                        return null; // user quit — same as declining to run
+                        return null; // user quit - same as declining to run
                     break;
                 }
             }
@@ -116,7 +116,7 @@ namespace Nanook.NKit.App.Cli
             if (inputs.Count != 0 && seed != null && seed.Inputs.Count != 0)
                 _p.InfoPair("Input", string.Join(", ", inputs)); // seeded (no prompt to collapse)
 
-            // 3. output directory — only for tasks that write one
+            // 3. output directory - only for tasks that write one
             string outputDir = null;
             if (verb != null && verb.HasOutputDir)
             {
@@ -229,8 +229,8 @@ namespace Nanook.NKit.App.Cli
         // Whether an option is worth showing once a single system is chosen. Returns true for every
         // option while no system is set (auto-detect spans systems). When a system IS set, hide
         // options that can never apply to it:
-        //   • keys   — only WiiU/PS3/XBox/XBox360 consume key files.
-        //   • fix-*  — only where the fix task has a real processing path for that system.
+        //   • keys   - only WiiU/PS3/XBox/XBox360 consume key files.
+        //   • fix-*  - only where the fix task has a real processing path for that system.
         // All other options remain visible (their per-system relevance is resolved at run time).
         private static bool AppliesToSystem(CliOption o, string system, string verb)
         {
@@ -300,7 +300,7 @@ namespace Nanook.NKit.App.Cli
                 && !string.IsNullOrEmpty(chosenSystem)
                 && Enum.TryParse(chosenSystem, ignoreCase: true, out SystemType fmtSys))
             {
-                // Show the (system-scoped) help panel first — same reference the free-text path gives.
+                // Show the (system-scoped) help panel first - same reference the free-text path gives.
                 ShowOptionHelp(_p, o, chosenSystem);
                 string composed = pickConvertFormat(fmtSys);
                 if (composed != null) // null = user backed out; leave the current value untouched
@@ -308,7 +308,7 @@ namespace Nanook.NKit.App.Cli
                 return;
             }
 
-            // Context-sensitive help for rich options — examples filtered by the chosen system.
+            // Context-sensitive help for rich options - examples filtered by the chosen system.
             ShowOptionHelp(_p, o, chosenSystem);
 
             // Prefixable value → offer all-systems vs per-system editing.
@@ -341,7 +341,7 @@ namespace Nanook.NKit.App.Cli
             string title = system != null ? $"{o.Canonical}  ({system})" : o.Canonical;
             string desc = o.LongHelp ?? o.Help;
             // System-optional guidance: with no system chosen, leaving this blank lets the config
-            // decide per detected system — so all systems' examples are shown as a reference.
+            // decide per detected system - so all systems' examples are shown as a reference.
             if (system == null && o.Prefixable)
                 desc += "  (Leave blank to use the config for each detected system; a value here applies to all.)";
             p.ShowHelp(title, desc, examples);
@@ -352,10 +352,10 @@ namespace Nanook.NKit.App.Cli
         // that one system. The default is therefore always "(all / auto-detect)".
         private string pickSystem(string verb)
         {
-            List<string> choices = new List<string> { "(all / auto-detect — use config per system)" };
+            List<string> choices = new List<string> { "(all / auto-detect - use config per system)" };
             IReadOnlyList<SystemType> systems = capabilitySystems(verb);
             foreach (SystemType s in systems) choices.Add(s.ToString());
-            string chosen = _p.Select("Narrow to one system? (optional — auto-detect uses the config for every system)",
+            string chosen = _p.Select("Narrow to one system? (optional - auto-detect uses the config for every system)",
                 choices, choices[0]);
             return (chosen == null || chosen.StartsWith("(all")) ? null : chosen;
         }
@@ -379,7 +379,7 @@ namespace Nanook.NKit.App.Cli
         // or both. When both exist the result is "single/indexed". Sub-options are gated by the same
         // ConfigSettings* predicates the UI uses, so the CLI only ever offers valid combinations.
         // Returns the composed ':'-string (with optional '/'), or null if the user backed out.
-        private const string BackChoice = "(back — leave unchanged)";
+        private const string BackChoice = "(back - leave unchanged)";
 
         private string pickConvertFormat(SystemType system)
         {
@@ -584,7 +584,7 @@ namespace Nanook.NKit.App.Cli
             => assemble(verb, inputs, outputDir, table, onlyUserSet: false);
 
         // When onlyUserSet is true, emit ONLY the mandatory items (verb + inputs + a chosen output)
-        // plus options the user SPECIFICALLY set — i.e. values they changed from the config seed,
+        // plus options the user SPECIFICALLY set - i.e. values they changed from the config seed,
         // per-system scoped edits, and switches they turned on. Untouched config-seeded defaults are
         // omitted (they still apply at run time via the config). Used for the reproducible command
         // display so it shows the user's intent, not the whole resolved config.

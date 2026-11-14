@@ -79,7 +79,7 @@ namespace NKit.Tests.NKDS
             bool auxReused;
             if (existingAuxSetName != null)
             {
-                // Shared aux store already exists — reuse without modification (Req 2.5)
+                // Shared aux store already exists - reuse without modification (Req 2.5)
                 auxSetName = existingAuxSetName;
                 auxReused = true;
             }
@@ -97,7 +97,7 @@ namespace NKit.Tests.NKDS
             bool splitReused;
             if (existingSplitSetName != null)
             {
-                // Split store already exists — reuse without modification (Req 2.4)
+                // Split store already exists - reuse without modification (Req 2.4)
                 splitSetName = existingSplitSetName;
                 splitReused = true;
             }
@@ -126,7 +126,7 @@ namespace NKit.Tests.NKDS
         #region Property Tests
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — Both stores always present
+        /// Property 17: Xbox Dual Mode Creates Both Stores - Both stores always present
         ///
         /// For any Xbox/Xbox360 system type and any set name, when AUX mode is enabled,
         /// the dual mode creation logic SHALL produce non-null names for BOTH the shared
@@ -158,11 +158,11 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — Shared aux name derives from system type
+        /// Property 17: Xbox Dual Mode Creates Both Stores - Shared aux name derives from system type
         ///
         /// For any Xbox/Xbox360 system type, the shared aux store name SHALL be
         /// "{systemType}.aux" (e.g., "xbox.aux" or "xbox360.aux"), derived from the
-        /// system type name — NOT from the game set name or user-supplied Aux_Filename.
+        /// system type name - NOT from the game set name or user-supplied Aux_Filename.
         ///
         /// **Validates: Requirements 2.1, 2.5**
         /// </summary>
@@ -180,7 +180,7 @@ namespace NKit.Tests.NKDS
             string auxFilename = auxFilenameRaw.Get.Trim();
             string expectedAuxName = systemType.ToString().ToLower() + ".aux";
 
-            // When no existing aux store — creates new with system-type-based name
+            // When no existing aux store - creates new with system-type-based name
             DualModeCreationResult result = ModelXboxDualModeCreation(
                 systemType, setName, auxFilename, existingAuxSetName: null, existingSplitSetName: null);
 
@@ -190,10 +190,10 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — Split name derives from game set name
+        /// Property 17: Xbox Dual Mode Creates Both Stores - Split name derives from game set name
         ///
         /// For any Xbox/Xbox360 game with any set name, the split store name SHALL be
-        /// "{setName}.split" — always derived from the per-game set name.
+        /// "{setName}.split" - always derived from the per-game set name.
         ///
         /// **Validates: Requirements 2.1, 2.4**
         /// </summary>
@@ -209,7 +209,7 @@ namespace NKit.Tests.NKDS
 
             string expectedSplitName = setName + ".split";
 
-            // When no existing split store — creates new with setName-based name
+            // When no existing split store - creates new with setName-based name
             DualModeCreationResult result = ModelXboxDualModeCreation(
                 systemType, setName, auxFilename: null, existingAuxSetName: null, existingSplitSetName: null);
 
@@ -217,7 +217,7 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — Existing stores reused without modification
+        /// Property 17: Xbox Dual Mode Creates Both Stores - Existing stores reused without modification
         ///
         /// For any Xbox/Xbox360 game where both stores already exist, the dual mode creation
         /// logic SHALL reuse both stores without modification (idempotent behavior).
@@ -247,7 +247,7 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — User-supplied Aux_Filename ignored
+        /// Property 17: Xbox Dual Mode Creates Both Stores - User-supplied Aux_Filename ignored
         ///
         /// For any Xbox/Xbox360 game, even when a user supplies an Aux_Filename value,
         /// the shared aux name SHALL still be derived from the system type name, and
@@ -280,7 +280,7 @@ namespace NKit.Tests.NKDS
         }
 
         /// <summary>
-        /// Property 17: Xbox Dual Mode Creates Both Stores — Correct shard sizes
+        /// Property 17: Xbox Dual Mode Creates Both Stores - Correct shard sizes
         ///
         /// For any Xbox/Xbox360 dual mode creation, the shared aux store SHALL use
         /// standard sharding (50GB) and the split store SHALL use embedded mode (shardSize=0).

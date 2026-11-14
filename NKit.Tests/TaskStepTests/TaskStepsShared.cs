@@ -148,7 +148,7 @@ namespace NKit.Tests
             // A real WUA file (.wua) keeps ImageFiles; a Loadiine synthetic has neither.
             if (isFolderFormat && srcFormat != ".wua")
             {
-                // Loadiine synthetic — mirrors what SyntheticSourceFactory produces for LoadiineFolder
+                // Loadiine synthetic - mirrors what SyntheticSourceFactory produces for LoadiineFolder
                 file = new SourceFile();
                 file.IsSyntheticFolder = true;
                 var group = new FolderGroupInfo
@@ -164,7 +164,7 @@ namespace NKit.Tests
             }
             else if (isFolderFormat && srcFormat == ".wua")
             {
-                // Real WUA file — ImageType is set via Initialised(), SyntheticFolderGroup is null
+                // Real WUA file - ImageType is set via Initialised(), SyntheticFolderGroup is null
                 file = new SourceFile();
                 file.ImageFiles = new[] { new SourceFileItem("", "Game.wua", ".wua", ".wua", 0, 0x1000, 0, false, false) };
                 file.Initialised();

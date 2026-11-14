@@ -34,7 +34,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — OffsetToClean is identity.
+        /// Property 8: Audio Track Data Preservation - OffsetToClean is identity.
         ///
         /// For any valid offset within audio track data, OffsetToClean returns the
         /// same offset unchanged, confirming that no data is stripped during ingestion.
@@ -53,7 +53,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — CleanToOffset is identity.
+        /// Property 8: Audio Track Data Preservation - CleanToOffset is identity.
         ///
         /// For any valid clean offset, CleanToOffset returns the same offset unchanged,
         /// confirming that reconstruction produces data at the same positions as the original.
@@ -71,7 +71,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — Round-trip identity.
+        /// Property 8: Audio Track Data Preservation - Round-trip identity.
         ///
         /// For any offset, applying OffsetToClean followed by CleanToOffset (and vice versa)
         /// produces the original offset, confirming lossless round-trip for audio data.
@@ -98,7 +98,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — GetCleanSize preserves full sector size.
+        /// Property 8: Audio Track Data Preservation - GetCleanSize preserves full sector size.
         ///
         /// For any number of audio sectors, the clean size equals the strided size
         /// (no data is removed), confirming that the full 2352 bytes per sector are preserved.
@@ -117,7 +117,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — GetStridedSize preserves full sector size.
+        /// Property 8: Audio Track Data Preservation - GetStridedSize preserves full sector size.
         ///
         /// For any clean data size (multiple of sector size), the strided size equals
         /// the clean size (no padding is added), confirming byte-identical output.
@@ -136,7 +136,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — Zero padding overhead.
+        /// Property 8: Audio Track Data Preservation - Zero padding overhead.
         ///
         /// For any audio track data size, the padding overhead is zero, confirming
         /// that no bytes are added or removed during the stride transformation.
@@ -155,7 +155,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — Efficiency is 1.0.
+        /// Property 8: Audio Track Data Preservation - Efficiency is 1.0.
         ///
         /// The audio stride has 100% efficiency (DataLength == SourceBlockSize),
         /// meaning all bytes in the sector are preserved as clean data.
@@ -171,7 +171,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.4, 7.5**
         ///
-        /// Property 8: Audio Track Data Preservation — Arbitrary sector data round-trips.
+        /// Property 8: Audio Track Data Preservation - Arbitrary sector data round-trips.
         ///
         /// For any arbitrary 2352-byte audio sector data, the stride transformation
         /// preserves byte positions exactly: data at position P in the source maps to

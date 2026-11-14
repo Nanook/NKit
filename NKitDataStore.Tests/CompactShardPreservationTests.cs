@@ -10,7 +10,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.6, 3.7**
     ///
-    /// Property 2: Preservation — Unmodified Sets and Shared Blocks Remain Unchanged
+    /// Property 2: Preservation - Unmodified Sets and Shared Blocks Remain Unchanged
     ///
     /// These tests are EXPECTED TO PASS on unfixed code. They confirm baseline behavior
     /// that must be preserved after the fix is applied:

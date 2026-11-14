@@ -37,7 +37,7 @@ public class FormatRowDirFormatTests
             }
             catch (InvalidOperationException)
             {
-                // Already initialized — safe to ignore
+                // Already initialized - safe to ignore
             }
             _initialized = true;
         }

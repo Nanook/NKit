@@ -122,7 +122,7 @@ namespace NKit.Tests.NKDS.Aux
                     // Write game data to primary as BlockType.FileSystem
                     primaryWriter.WriteData(gameDataOffset, gameData, BlockType.FileSystem);
 
-                    // The filler region in primary has no data written — it will be a gap.
+                    // The filler region in primary has no data written - it will be a gap.
                     // The ImageBuilder will look for BlockType.Other offset records to overlay
                     // onto gap regions. Those records exist in the aux store.
 

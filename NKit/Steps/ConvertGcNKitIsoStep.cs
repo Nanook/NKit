@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Configuration;
+using Nanook.NKit.Configuration;
 using Nanook.NKit.Nintendo.WiiGc;
 using Nanook.NKit.Steps.Shared;
 using System;
@@ -10,7 +10,7 @@ namespace Nanook.NKit
 {
     /// <summary>
     /// Converts any GameCube source image to NKit v01 (.nkit.iso) format.
-    /// GameCube only — direct port of NkitWriterGc (v1).
+    /// GameCube only - direct port of NkitWriterGc (v1).
     ///
     /// Sections arrive as sequential 2MB raw disc chunks. The carry buffer accumulates
     /// them and the state machine drives through header, gap, and file phases. Gap
@@ -20,7 +20,7 @@ namespace Nanook.NKit
     internal sealed class ConvertGcNKitIsoStep : StepBase, IStep
     {
         private string _outName;
-        private const string _OutExt = "nkit.iso"; // file extension — distinct from the format name "nkitiso"
+        private const string _OutExt = "nkit.iso"; // file extension - distinct from the format name "nkitiso"
         private const int _JunkProbe = 0x30;
 
         private const int _NkitHdrPos    = WiiConsts.NKitHeaderPos;
@@ -187,7 +187,7 @@ namespace Nanook.NKit
             if (section.ImageOffset == 0)
                 base.OutStream.NewPart(_outName, _OutExt, true);
 
-            // Build disc-offset classification map from section.Items — lets the gap encoder
+            // Build disc-offset classification map from section.Items - lets the gap encoder
             // skip NJunk.Fill for regions the SectionProcessor has already verified.
             _sectionJunkMap.Clear();
             if (section.Items != null)
@@ -242,7 +242,7 @@ namespace Nanook.NKit
             drive();
 
             // If this is the last section and the trailing gap encoder is still open,
-            // complete it now — the disc ends here, remaining bytes are junk/zeros.
+            // complete it now - the disc ends here, remaining bytes are junk/zeros.
             if (section.ImageOffset + section.Size >= _imageSize && _gapEncoder.InProgress)
                 completeTrailingGap();
         }
@@ -258,7 +258,7 @@ namespace Nanook.NKit
         private void completeTrailingGap()
         {
             // Feed remaining carry blocks, then complete. Any bytes beyond the carry
-            // (i.e. beyond the image end) are treated as junk — Complete() will emit
+            // (i.e. beyond the image end) are treated as junk - Complete() will emit
             // the correct AllJunk or Mixed header based on blocks seen so far.
             // Pre-fill junk blocks for remaining carry data in parallel.
             long firstTrailingOff = _gapEncoder.GapDiscStart + (_gapEncoder.GapLength - _gapEncoder.Remaining);
@@ -353,7 +353,7 @@ namespace Nanook.NKit
                     {
                         long dolCarryOff = _mainDolAddr - _srcPos;
                         if (dolCarryOff < 0 || dolCarryOff + 0xD8 > _carryLen)
-                            return; // DOL header not in carry yet — wait
+                            return; // DOL header not in carry yet - wait
 
                         long dolSize = 0;
                         for (int di = 0; di < 18; di++)
@@ -415,7 +415,7 @@ namespace Nanook.NKit
                             _dstPos += pad;
                         }
 
-                        // Update FST offset — skip for synthetic DOL (not in FST).
+                        // Update FST offset - skip for synthetic DOL (not in FST).
                         if (e.FstFile.FstAddrOffset >= 0)
                             _fst.WriteUInt32B(e.FstFile.FstAddrOffset, (uint)_dstPos);
                         if (e.FstFile.DataOffset == _mainDolAddr)
@@ -425,7 +425,7 @@ namespace Nanook.NKit
                         {
                             if (e.FstFile.Length <= _JunkProbe)
                             {
-                                // Small file: probe covers the whole file — junk confirmed.
+                                // Small file: probe covers the whole file - junk confirmed.
                                 _fst.WriteUInt32B(e.FstFile.FstAddrOffset + 4, 0);
                                 if (_eIdx + 1 < _entries.Count)
                                 {
@@ -450,13 +450,13 @@ namespace Nanook.NKit
                             else
                             {
                                 // Large file: probe passed but defer full-file verify to Phase 2.
-                                // Nothing is consumed here — carry still starts at byte 0 of the file.
+                                // Nothing is consumed here - carry still starts at byte 0 of the file.
                                 e.JunkProbePass = true;
                                 _entries[_eIdx] = e;
                                 return;
                             }
                         }
-                        // Probe failed — treat as data and fall through to streaming.
+                        // Probe failed - treat as data and fall through to streaming.
                     }
 
                     // ── Phase 2: full junk verify for large files ───────────────────────────────────
@@ -491,7 +491,7 @@ namespace Nanook.NKit
                             continue;
                         }
 
-                        // Full check failed (probe false positive) — stream as data.
+                        // Full check failed (probe false positive) - stream as data.
                         // FileWritten == 0 and fileSzPadded bytes are in carry; streaming handles it.
                         e.JunkProbePass = false;
                         _entries[_eIdx] = e;
@@ -513,7 +513,7 @@ namespace Nanook.NKit
                     if (e.FileWritten < fileSzPadded)
                     {
                         // If we've consumed up to or past the image end, the remaining bytes are
-                        // alignment padding zeros that don't exist in the source — generate them.
+                        // alignment padding zeros that don't exist in the source - generate them.
                         if (_srcPos >= _imageSize && e.FileWritten >= e.FstFile.Length)
                         {
                             long pad = fileSzPadded - e.FileWritten;
@@ -553,13 +553,13 @@ namespace Nanook.NKit
                     if (e.GapLength == 0)
                     {
                         // V1 always writes a gap header even for zero-length gaps following
-                        // a JunkFile — it adds an empty Junk block, producing a 4-byte AllJunk
+                        // a JunkFile - it adds an empty Junk block, producing a 4-byte AllJunk
                         // header with length 0.
                         _dstPos += writeUInt32BE(0x00000000u); // AllJunk, length=0
                         return true;
                     }
 
-                    // Reset the nulls window — matches v1 NkitFormat.ProcessGap and the
+                    // Reset the nulls window - matches v1 NkitFormat.ProcessGap and the
                     // NKitAsIso decoder, both of which treat JunkFile as an implicit nullsPos clamp.
                     _nullsPos = Math.Min(_nullsPos, _srcPos);
                 }
@@ -589,7 +589,7 @@ namespace Nanook.NKit
                 // When the entire gap sits within the nullsPos window (leadNulls == GapLength),
                 // count ACTUAL leading zeros from the carry rather than trusting the window.
                 // Some discs have junk generator values in the last few
-                // bytes of a small inter-FST gap — blindly treating all of them as null causes
+                // bytes of a small inter-FST gap - blindly treating all of them as null causes
                 // zeros to be decoded where the source disc has non-zero junk, breaking the CRC.
                 if (leadNulls > 0 && e.GapLength <= leadNulls && e.GapLength <= _carryLen)
                 {
@@ -625,7 +625,7 @@ namespace Nanook.NKit
                             }
                             // Sanity check: dolSize must be within the disc image.
                             // On discs where files have been relocated, the boot header DOL pointer
-                            // may reference a different file's data — reading DOL section headers
+                            // may reference a different file's data - reading DOL section headers
                             // from that position produces garbage sizes. Clamp to image size.
                             if (dolSize > _imageSize - _mainDolAddr)
                                 dolSize = 0;
@@ -641,7 +641,7 @@ namespace Nanook.NKit
                 _gapBytesWritten = 0;
             }
 
-            // Pre-fill junk blocks for this carry section in parallel — eliminates
+            // Pre-fill junk blocks for this carry section in parallel - eliminates
             // synchronous NJunk.Fill calls during the per-block classification loop.
             // Skipped in DirectScanMode (v1-equivalent path does per-block NJunk.Fill inline).
             int  carryIdx       = 0;
@@ -670,7 +670,7 @@ namespace Nanook.NKit
             if (_gapEncoder.Remaining > 0)
                 return false;
 
-            // Gap complete — all bytes already written to outWrite by the encoder.
+            // Gap complete - all bytes already written to outWrite by the encoder.
             _gapEncoder.Complete();
             _dstPos += _gapBytesWritten;
             if (e.JunkFstAddrOffset >= 0 && e.JunkFileLength == 0)
@@ -682,7 +682,7 @@ namespace Nanook.NKit
         // ── File junk check ───────────────────────────────────────────────────────────
 
         // Phase 1 probe: checks the first _JunkProbe bytes only.
-        // Returns true when the probe window matches the junk pattern — for large files,
+        // Returns true when the probe window matches the junk pattern - for large files,
         // full-file verification is handled by isFileJunkFull (Phase 2).
         private bool isFileJunk(byte[] carry, int offset, GcFstFile file, long srcPos)
         {
@@ -691,7 +691,7 @@ namespace Nanook.NKit
 
             int nullsInFile = (int)Math.Max(0, _nullsPos - srcPos);
             // Use PaddedLength (not just file.Length) so the alignment padding bytes
-            // are included in the junk comparison — matching v1's CopyFile which reads
+            // are included in the junk comparison - matching v1's CopyFile which reads
             // and checks the full padded size before classifying a file as junk.
             int probeLen    = (int)Math.Min(_JunkProbe, file.PaddedLength);
 
@@ -708,7 +708,7 @@ namespace Nanook.NKit
 
             // V1 skips the junk test entirely when all probe bytes are null: an all-zero file
             // is kept as data, not classified as junk (even if junk at that position is also zero).
-            // Mirrors v1's: if (countNulls < f.Length) — only test junk if at least one non-null.
+            // Mirrors v1's: if (countNulls < f.Length) - only test junk if at least one non-null.
             if (actualLeadNulls >= probeLen) return false;
 
             return isJunkBytes(carry, offset, probeLen, file.DataOffset, actualLeadNulls);
@@ -885,7 +885,7 @@ namespace Nanook.NKit
             // The synthetic entry lets the File phase track _dstMainDolAddr so finalise()
             // updates DolPtrOffset to the compacted nkit source position, and ensures the DOL
             // bytes are encoded as Data rather than anonymous gap Other.
-            // Only skip injection when the DOL is in the tail (no FST files after it) — those
+            // Only skip injection when the DOL is in the tail (no FST files after it) - those
             // discs encode the DOL naturally as trailing gap data.
             if (_mainDolAddr >= fstEnd && !files.Any(f => f.DataOffset == _mainDolAddr)
                                        && files.Any(f => f.DataOffset > _mainDolAddr))
@@ -898,7 +898,7 @@ namespace Nanook.NKit
                 return c != 0 ? c : a.Length.CompareTo(b.Length);
             });
 
-            // Compute per-file alignment — mirrors v1 NkitFormat.GetConvertFstFiles.
+            // Compute per-file alignment - mirrors v1 NkitFormat.GetConvertFstFiles.
             string[] _AlignExts = { ".tgc" };
 
             foreach (GcFstFile f in files)
@@ -920,7 +920,7 @@ namespace Nanook.NKit
             // V1 NkitFormat.GetConvertFstFiles returns null when any inter-file gap is negative
             // (disc where files have been relocated with mismatched boot header). In that case
             // NkitWriterGc falls back to a single ProcessGap
-            // covering imageSize - srcPos as one big gap — no per-file processing.
+            // covering imageSize - srcPos as one big gap - no per-file processing.
             // Replicate that: if any gap is negative, return a single tail entry.
             for (int i = 0; i < files.Count; i++)
             {
@@ -928,7 +928,7 @@ namespace Nanook.NKit
                 long gap = files[i].DataOffset - end;
                 if (gap < 0)
                 {
-                    // Bad image — single gap covering rest of disc, no files
+                    // Bad image - single gap covering rest of disc, no files
                     long tailGap = _imageSize - prevEnd;
                     result.Add(new GcEntry
                     {
@@ -996,7 +996,7 @@ namespace Nanook.NKit
     /// <summary>
     /// Faithful port of v1 CrcForce.cs (Nayuki algorithm).
     /// Uses the extended Euclidean algorithm for reciprocalMod and the correct
-    /// bit-32 polynomial-reduction check — matching v1's output exactly.
+    /// bit-32 polynomial-reduction check - matching v1's output exactly.
     /// </summary>
     internal static class GcCrcForce
     {
@@ -1055,7 +1055,7 @@ namespace Nanook.NKit
             return z;
         }
 
-        // Extended Euclidean algorithm — v1 exact, avoids powMod overflow.
+        // Extended Euclidean algorithm - v1 exact, avoids powMod overflow.
         private static long reciprocalMod(long x)
         {
             long y = x;

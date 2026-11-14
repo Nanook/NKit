@@ -48,7 +48,7 @@ namespace Nanook.NKit.Configuration
         {
             // WiiU is special: "app" is both a valid single format (convert a disc image to an
             // AppTmd folder) and a valid indexed format (re-encrypt an existing AppTmd folder).
-            // Loadiine and WUA are also valid single formats — the engine's Convert-WiiU-Loadiine
+            // Loadiine and WUA are also valid single formats - the engine's Convert-WiiU-Loadiine
             // and Convert-WiiU-Wua steps both declare srcType=image/folderindex, so WUX/ISO disc
             // image sources can be converted to either. Return the full set explicitly here.
             if (systemType == SystemType.WiiU)

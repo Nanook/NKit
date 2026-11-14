@@ -56,7 +56,7 @@ public class NkFsMergerUnitTests
     /// <summary>
     /// Merging a system NkFs into an empty target produces a result containing
     /// only the system entries (all marked with IsSystem=true).
-    /// Validates: Requirements 3.1 (empty target preserved — nothing to preserve)
+    /// Validates: Requirements 3.1 (empty target preserved - nothing to preserve)
     /// </summary>
     [Fact]
     public void MergeSystemInto_EmptyTarget_ResultContainsOnlySystemEntries()
@@ -112,7 +112,7 @@ public class NkFsMergerUnitTests
     /// <summary>
     /// When a system directory name differs in case from a target directory,
     /// the merge reuses the existing target directory (no duplicate created).
-    /// E.g., system has "SYSTEM" and target has "system" — they should merge.
+    /// E.g., system has "SYSTEM" and target has "system" - they should merge.
     /// Validates: Requirement 3.4
     /// </summary>
     [Fact]
@@ -164,7 +164,7 @@ public class NkFsMergerUnitTests
     }
 
     /// <summary>
-    /// Mixed case scenario: "System" in target, "sYsTEM" in system — should still merge.
+    /// Mixed case scenario: "System" in target, "sYsTEM" in system - should still merge.
     /// Validates: Requirement 3.4
     /// </summary>
     [Fact]

@@ -131,7 +131,7 @@ namespace Nanook.NKit.Container
             return seg.Type == SegmentType.WiiPartition && (seg.Map?.IsGroupPreserved(areaOffset) ?? false);
         }
 
-        // Cached source data — read once from stream, never re-read.
+        // Cached source data - read once from stream, never re-read.
         // _src is the byte[] used for parse-time control reads (gap words, header fields);
         // the compact NKit source is well under 2 GiB in practice so a single array is safe.
         private byte[] _src;
@@ -176,7 +176,7 @@ namespace Nanook.NKit.Container
         }
 
         // Rebuilt output segments: header (with NKit fields cleared) + patched FST
-        private byte[] _hdr;            // 0x440 bytes — output disc header
+        private byte[] _hdr;            // 0x440 bytes - output disc header
         private byte[] _hdrToFst;       // bi2, apploader, dol, padding up to FST
         private byte[] _fst;            // patched FST with correct output offsets
 
@@ -337,7 +337,7 @@ namespace Nanook.NKit.Container
             // an NKit-encoded image ALSO has an NKit disc-header copy at 0x200 (e.g. an NKit
             // GameCube image reads "NKITGC" there), but the file is a WBFS container and must be
             // decoded by WbfsAsIso (which reconstructs the NKit junk internally). Do NOT claim a
-            // WBFS here — "WBFS" magic at offset 0 takes precedence over the 0x200 NKit marker.
+            // WBFS here - "WBFS" magic at offset 0 takes precedence over the 0x200 NKit marker.
             if (header.ReadString(0, 4) != "WBFS")
             {
                 // Check for raw NKit: "NKIT" at offset 0x200 in disc header
@@ -426,7 +426,7 @@ namespace Nanook.NKit.Container
             _imageSize = _nkitImageSize * (_isWii ? 4L : 1L);
 
             // Expose the stored source (original full-disc) CRC and size the way RVZ/CISO/CSO
-            // sources do — via Checksums / CustomChecksums() / NKitHeader — so Verify can compare
+            // sources do - via Checksums / CustomChecksums() / NKitHeader - so Verify can compare
             // the decoded output against them (InChecksums) without relying on the IsNkit flag.
             this.Checksums = new Checksums { Size = _imageSize };
             this.Checksums.Crc = _nkitCrc;
@@ -441,7 +441,7 @@ namespace Nanook.NKit.Container
             return 0;
         }
 
-        #region Parsing — Cache Source and Build Offset Map
+        #region Parsing - Cache Source and Build Offset Map
 
         /// <summary>
         /// Cache the source stream and parse the NKit structure to build the offset map.
@@ -453,9 +453,9 @@ namespace Nanook.NKit.Container
 
             if (_isGameCube)
             {
-                // GameCube compact sources are well under 2 GiB — a single byte[] cache is fine
+                // GameCube compact sources are well under 2 GiB - a single byte[] cache is fine
                 // and the GC parse/Read paths index it directly. EnsureGameCubeHeader may already
-                // have allocated _src and read its front (header region) — read only the REMAINDER
+                // have allocated _src and read its front (header region) - read only the REMAINDER
                 // forward (the source is forward-only; it cannot be rewound). When the header fast
                 // path was not used, read the whole source from 0 as before.
                 if (_src == null)
@@ -516,7 +516,7 @@ namespace Nanook.NKit.Container
             _sImageEnd = _imageSize;
             _sourceStream.Position = 0;
 
-            // 1. Disc header (0x440) — read sequentially, clear NKit fields
+            // 1. Disc header (0x440) - read sequentially, clear NKit fields
             _hdr = readSeq(WiiConsts.BootBinSize);
             Array.Clear(_hdr, 0x200, WiiConsts.NKitHeaderSize);
 
@@ -875,7 +875,7 @@ namespace Nanook.NKit.Container
         }
 
         // Phase A (cheap, header only). Builds the decoded disc header (_hdr), hdrToFst and FST and
-        // emits the three header segments — enough to serve the IImage's construction-time header
+        // emits the three header segments - enough to serve the IImage's construction-time header
         // read (0x440) WITHOUT the full file/gap walk (ParseGameCube) that reads the whole compact
         // source. The FST offsets and the main.dol pointer are patched later by ParseGameCube (the
         // walk); the IImage only reads identification fields (Id/Title/Region/DiscNo) from this
@@ -888,7 +888,7 @@ namespace Nanook.NKit.Container
 
             _segments = new List<Segment>();
 
-            // 1. Disc header (0x440) — copy, clear NKit fields
+            // 1. Disc header (0x440) - copy, clear NKit fields
             _hdr = new byte[WiiConsts.BootBinSize];
             Array.Copy(_src, 0, _hdr, 0, _hdr.Length);
             int srcPos = _hdr.Length;
@@ -912,7 +912,7 @@ namespace Nanook.NKit.Container
             Array.Copy(_src, srcPos, _hdrToFst, 0, hdrToFstSize);
             srcPos += hdrToFstSize;
 
-            // 3. FST — will be patched with correct output offsets by ParseGameCube
+            // 3. FST - will be patched with correct output offsets by ParseGameCube
             _fst = new byte[fstSizeAligned];
             Array.Copy(_src, srcPos, _fst, 0, fstSizeAligned);
             srcPos += fstSizeAligned;
@@ -1057,7 +1057,7 @@ namespace Nanook.NKit.Container
                     dolSize = Math.Max(dolSize, secOff + secSize);
             }
             if (dolSize <= 0)
-                return dstPos; // can't determine DOL size — leave as gap data
+                return dstPos; // can't determine DOL size - leave as gap data
 
             long dolAligned = dolSize + (dolSize % 4 == 0 ? 0 : 4 - dolSize % 4);
             dolAligned = Math.Min(dolAligned, _imageSize - dstPos);
@@ -1116,7 +1116,7 @@ namespace Nanook.NKit.Container
             // JunkFile: zero-byte file whose data was disc junk
             if (gt == GapType.JunkFile)
             {
-                // v1: nullsPos = Math.Min(nullsPos - dstPos, 0) — effectively nullsPos = dstPos
+                // v1: nullsPos = Math.Min(nullsPos - dstPos, 0) - effectively nullsPos = dstPos
                 nullsPos = dstPos + Math.Min(nullsPos - dstPos, 0);
 
                 long nulls = (size & 0xFC) >> 2;
@@ -1145,7 +1145,7 @@ namespace Nanook.NKit.Container
                     }
                 }
 
-                // v1: if (file.GapLength <= 8) return — only the junk file encoding, no following gap
+                // v1: if (file.GapLength <= 8) return - only the junk file encoding, no following gap
                 if (nkitGapLen <= 8)
                     return dstPos;
 
@@ -1268,7 +1268,7 @@ namespace Nanook.NKit.Container
 
         #endregion
 
-        #region Stream Implementation — Offset-Mapped Reads
+        #region Stream Implementation - Offset-Mapped Reads
 
         public override int Read(byte[] buffer, int offset, int count)
         {
@@ -1279,7 +1279,7 @@ namespace Nanook.NKit.Container
             {
                 // GameCube fast path: a read that stays within the decoded header region (0x440 +
                 // hdrToFst + FST) is served after a CHEAP header-only parse that reads just the
-                // front of the source — NOT the whole-source read + file/gap walk. The IImage's
+                // front of the source - NOT the whole-source read + file/gap walk. The IImage's
                 // construction read (0x440) hits this, so it no longer forces the full decode at
                 // Open. The full parse runs on the first read that reaches file data (below), which
                 // rebuilds _segments with the full map; the header segments are identical either way.
@@ -1310,7 +1310,7 @@ namespace Nanook.NKit.Container
                 int segIdx = findSegment(readPos);
                 if (segIdx < 0)
                 {
-                    // Past all segments — fill with zeros
+                    // Past all segments - fill with zeros
                     Array.Clear(buffer, offset + totalCopied, remaining);
                     totalCopied += remaining;
                     break;
@@ -1475,7 +1475,7 @@ namespace Nanook.NKit.Container
                 else
                     return mid;
             }
-            return -1; // not found — past all segments
+            return -1; // not found - past all segments
         }
 
         /// <summary>
@@ -1487,7 +1487,7 @@ namespace Nanook.NKit.Container
             // Resolve the junk context for this segment. Disc-level filler defaults to the disc id
             // and startOffset 0. But the trailing filler AFTER a Game partition must use that
             // partition's boot JunkId and its JunkStartFsOffset (matching
-            // SectionProcessor.createJunk's post-Game 'Other' rule) — supplied here as overrides.
+            // SectionProcessor.createJunk's post-Game 'Other' rule) - supplied here as overrides.
             byte[] junkId = junkIdOverride ?? _junkIdBytes;
             long startOffset = junkStartOverride;
 
@@ -1564,11 +1564,11 @@ namespace Nanook.NKit.Container
         public Checksums Checksums { get; private set; }
         public NKitHeader NKitHeader { get; private set; }
 
-        // The NKit header's stored CRC is the EXPECTED (source) checksum — it is surfaced via
+        // The NKit header's stored CRC is the EXPECTED (source) checksum - it is surfaced via
         // Checksums (like RVZ/CISO) and flows to SrcParts for verification. It is NOT a calculated
         // value, so CustomChecksums() must return null: the pipeline computes the calculated CRC
         // from the actual decoded read (InChkStream) and Verify compares calculated-vs-expected.
-        // (Only ChdAsIso returns a non-null CustomChecksums — it is the unique case that can only
+        // (Only ChdAsIso returns a non-null CustomChecksums - it is the unique case that can only
         // calculate a checksum over the full decoded file via a live verify pass.)
         public Checksums CustomChecksums() => null;
 

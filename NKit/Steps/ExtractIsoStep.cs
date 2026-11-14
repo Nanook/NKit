@@ -242,7 +242,7 @@ namespace Nanook.NKit
                                 string path = getPath(section, si.FsFile.Path);
                                 string imagePath = Path.Combine(path, si.FsFile.Name);
 
-                                // Skip writeFs for containing files — ProcessOverlaps handles all their data
+                                // Skip writeFs for containing files - ProcessOverlaps handles all their data
                                 if (_overlapWritePaths == null || !_overlapWritePaths.Contains(imagePath))
                                 {
                                     base.ExtractHandler.CreateDirectory(_context.WritePath, path);
@@ -461,7 +461,7 @@ namespace Nanook.NKit
                 overlapCandidates.Add(f);
             }
 
-            // Add containing candidates — their section items only cover partial data because
+            // Add containing candidates - their section items only cover partial data because
             // the buffer preprocessor skips them once the next file's offset is reached.
             // ProcessOverlaps collects all data within their extent range. writeFs is skipped.
             if (containingCandidateNames.Count > 0)
@@ -499,7 +499,7 @@ namespace Nanook.NKit
                 pos = l;
             }
 
-            // For split files, never replace — overlap data may have been written before writeFs
+            // For split files, never replace - overlap data may have been written before writeFs
             bool replace = isSplit ? false : newFile;
 
             if (base.ExtractHandler.WriteFs(new ReadOnlySectionView(section), rootPath, imagePath, pos, fsOffset, sizeFs, fsFullSize, replace))

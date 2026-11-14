@@ -85,7 +85,7 @@ namespace NKitDataStore.Tests
             // --- Exact replica of MountRegistry.LoadFsYaml() logic ---
             if (item == null || item.FileSystemYamlLoaded)
             {
-                // Already loaded — just touch the LRU cache to keep it fresh
+                // Already loaded - just touch the LRU cache to keep it fresh
                 if (item?.FileSystemYamlLoaded == true && item.ImageRecord != null)
                     cache.TouchFsYamlCache(item.ImageRecord.Id);
                 return;
@@ -126,7 +126,7 @@ namespace NKitDataStore.Tests
 
                     if (fsYamlData != null)
                     {
-                        item.FileSystemYaml = fsYamlData; // Simplified — real code parses FsYaml
+                        item.FileSystemYaml = fsYamlData; // Simplified - real code parses FsYaml
                     }
                 }
                 catch
@@ -166,7 +166,7 @@ namespace NKitDataStore.Tests
             AtomicCountingDataStoreMock dataStore = new AtomicCountingDataStoreMock();
             ThreadSafeCacheMock cache = new ThreadSafeCacheMock();
 
-            // Single shared unloaded item — all threads target this same item
+            // Single shared unloaded item - all threads target this same item
             TestVfsModelItem item = new TestVfsModelItem
             {
                 ImageRecord = new ImageRecord

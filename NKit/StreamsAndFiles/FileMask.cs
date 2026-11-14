@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -112,7 +112,7 @@ namespace Nanook.NKit
 
         public static string SanitisePath(string path)
         {
-            // Always normalise backslashes to forward slashes — all internal paths and masks use
+            // Always normalise backslashes to forward slashes - all internal paths and masks use
             // forward slashes on every platform. The Windows-only guard was an oversight; on Linux
             // user-supplied masks like "temp3\*.zip" were never normalised, breaking regex matching.
             path = path.Replace("\\", "/");
@@ -191,7 +191,7 @@ namespace Nanook.NKit
 
         private bool isMatch(string path, Regex rx)
         {
-            // Always normalise backslashes to forward slashes — the internal contract is forward-slash
+            // Always normalise backslashes to forward slashes - the internal contract is forward-slash
             // paths on all platforms. On Linux the guard was previously skipped, so Windows-style
             // paths passed in (e.g. from test data or user input) never matched the regex.
             path = path.Replace("\\", "/");

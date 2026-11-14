@@ -52,7 +52,7 @@ public sealed class SingleInstanceGuard : IDisposable
             }
             catch
             {
-                // Pipe not ready yet — wait and retry
+                // Pipe not ready yet - wait and retry
                 Thread.Sleep(200);
             }
         }

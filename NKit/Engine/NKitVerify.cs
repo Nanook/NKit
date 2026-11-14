@@ -19,7 +19,7 @@ namespace Nanook.NKit
             _log = log;
         }
 
-        // Scoped [Out] [Verify] logger, or null when Detail is off / no log — lets every decision
+        // Scoped [Out] [Verify] logger, or null when Detail is off / no log - lets every decision
         // point cheaply guard with `if (vlog != null)` before building any string.
         private ILogScope verifyLog()
         {
@@ -29,7 +29,7 @@ namespace Nanook.NKit
 
         // Every verify line leads with the STEP being evaluated (e.g. "Verify-Image", "Fix-WiiGc")
         // so, in a multi-step chain where Verify runs once per step, each line is attributable to
-        // the step that produced it — one step reporting "no checksums" and another reporting a
+        // the step that produced it - one step reporting "no checksums" and another reporting a
         // compare is then unambiguous.
         private static void vLog(ILogScope scope, string subject, string message)
         {
@@ -83,7 +83,7 @@ namespace Nanook.NKit
         }
 
         // Render the actual values of the compared checksum types across all parts, e.g.
-        // "{Crc32=9A2C5CC5,XxHash=1C41F7E359B73D2F}" — Detail-only diagnostics of what a compare saw.
+        // "{Crc32=9A2C5CC5,XxHash=1C41F7E359B73D2F}" - Detail-only diagnostics of what a compare saw.
         private static string describeValues(IParts parts, ChecksumType[] types)
         {
             if (parts == null || types == null)
@@ -251,11 +251,11 @@ namespace Nanook.NKit
                 vr = compareParts(srcParts, parts, compared, out skipped) ? VerifyResult.VerifySuccess : VerifyResult.VerifyFailed;
                 if (vlog != null)
                 {
-                    // Distinguish a genuine mismatch from "no produced checksums" — the latter is the
+                    // Distinguish a genuine mismatch from "no produced checksums" - the latter is the
                     // deliberate CPU-saving path (checksums not always computed) and the step's real
                     // outcome is resolved elsewhere (scan/dat), NOT a verify failure of this compare.
                     string note = parts == null
-                        ? "no produced checksums (not computed — outcome resolved via scan/dat)"
+                        ? "no produced checksums (not computed - outcome resolved via scan/dat)"
                         : $"compared [{(compared == null ? "" : string.Join("+", compared.Select(a => a.ToString())))}]{(skipped != null ? $" skipped {skipped}" : "")}";
                     vLog(vlog, lastSi.Name, $"verify: {note} -> compareParts {(vr == VerifyResult.VerifySuccess ? "match" : "no-match")}");
                 }

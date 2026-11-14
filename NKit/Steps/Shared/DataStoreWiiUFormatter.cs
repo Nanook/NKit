@@ -31,7 +31,7 @@ namespace Nanook.NKit.Steps.Shared
         public string RestoreBaseName(string disambiguatedName) => RestoreBaseNameStatic(disambiguatedName);
 
         /// <summary>
-        /// Static convenience for RestoreBaseName — can be called without
+        /// Static convenience for RestoreBaseName - can be called without
         /// constructing a full DataStoreWiiUFormatter instance.
         /// </summary>
         internal static string RestoreBaseNameStatic(string disambiguatedName)
@@ -39,7 +39,7 @@ namespace Nanook.NKit.Steps.Shared
             if (string.IsNullOrEmpty(disambiguatedName))
                 return disambiguatedName;
 
-            // Find the last " [" — the disambiguation suffix is always at the end
+            // Find the last " [" - the disambiguation suffix is always at the end
             int bracketStart = disambiguatedName.LastIndexOf(" [", global::System.StringComparison.Ordinal);
             if (bracketStart < 0 || disambiguatedName[disambiguatedName.Length - 1] != ']')
                 return disambiguatedName;
@@ -151,8 +151,8 @@ namespace Nanook.NKit.Steps.Shared
                 imageName = DisambiguateImageName(imageName, indexFileName);
 
             // Choose image format based on the IndexFile. WiiU content with a TMD
-            // index file is CDN app content (ImageFormat.App). Everything else — WUD,
-            // WUX, ISO disc images that have no index file — is ImageFormat.Iso.
+            // index file is CDN app content (ImageFormat.App). Everything else - WUD,
+            // WUX, ISO disc images that have no index file - is ImageFormat.Iso.
             // We check IndexFile directly rather than IsFolderMode or ImageType because
             // those derived properties can be stale when context is reused across batch items.
             ImageFileName = imageName;
@@ -169,7 +169,7 @@ namespace Nanook.NKit.Steps.Shared
             _imageWriter = _dataStore.AddImage(resolvedSetName, imageName, context.SystemType.ToString(), chosenFormat);
             _imageWriter.CompressionParallelism = 16;
 
-            // Aux writer setup — aux set discovered by convention in DedupeStep
+            // Aux writer setup - aux set discovered by convention in DedupeStep
             if (!string.IsNullOrEmpty(auxSetName))
             {
                 _auxDataStore = new DataStore(dedupePath);
@@ -617,7 +617,7 @@ namespace Nanook.NKit.Steps.Shared
                 }
             }
 
-            // Identify the main game partition — VolumeId starts with GameTitlePrefix ("GM00050000")
+            // Identify the main game partition - VolumeId starts with GameTitlePrefix ("GM00050000")
             int mainGamePartitionIdx = -1;
             foreach (KeyValuePair<int, (string VolumeId, string PartitionType, string TitleId)> kvp in partitionInfo)
             {
@@ -680,7 +680,7 @@ namespace Nanook.NKit.Steps.Shared
                 return aOrder.CompareTo(bOrder);
             });
 
-            // Determine strip prefix per SI content area — each area may have its own
+            // Determine strip prefix per SI content area - each area may have its own
             // root directory (e.g. "02", "03") representing the content index that should
             // be stripped so the SI files (title.cert, title.tik, title.tmd) appear directly
             // under their target partition root.
@@ -790,7 +790,7 @@ namespace Nanook.NKit.Steps.Shared
                         ? $"/{fileName}"
                         : $"/{dirPath}/{fileName}";
 
-                    // Files are never individually marked as system — system visibility is
+                    // Files are never individually marked as system - system visibility is
                     // controlled at the directory level via the '/' prefix in the YAML
                     partitionNode.AddFileByPath(fullPath, imageOffset, file.FsSize, file.XxHash, file.Crc);
 
@@ -863,7 +863,7 @@ namespace Nanook.NKit.Steps.Shared
                             auxFiles.Add((si.FileTmd, $"tmd.{tmdVer}"));
                             if (si.FileCetk != null)
                             {
-                                // Source had a combined cetk (ticket+cert) — store as-is
+                                // Source had a combined cetk (ticket+cert) - store as-is
                                 auxFiles.Add((si.FileCetk, $"cetk.{tmdVer}"));
                             }
                             else
@@ -917,7 +917,7 @@ namespace Nanook.NKit.Steps.Shared
                     }
 
                     // Persist .h3 hash data from FstBlock content headers to the data store.
-                    // .app and .h3 entries are NOT added to filesystem.yaml — .app files are
+                    // .app and .h3 entries are NOT added to filesystem.yaml - .app files are
                     // structural content areas exposed in Image mode via area records and the
                     // FileName metadata property, not filesystem entries.
                     if (fsInfo?.FstBlock?.ContentHeaders != null)
@@ -927,7 +927,7 @@ namespace Nanook.NKit.Steps.Shared
                             if (ch?.Content == null)
                                 continue;
 
-                            // .h3 data — only for hashed content with hash data
+                            // .h3 data - only for hashed content with hash data
                             if (ch.HasHashes && ch.H3Hashes != null && ch.H3Hashes.Length > 0)
                             {
                                 string h3Name = $"{ch.Content.ContentId:x8}.h3";
@@ -1067,7 +1067,7 @@ namespace Nanook.NKit.Steps.Shared
                 {
                     if (srcArea.AreaType == AreaType.PartitionHeader)
                     {
-                        // SourceAreas don't have Properties directly — skip
+                        // SourceAreas don't have Properties directly - skip
                     }
                 }
             }
@@ -1169,7 +1169,7 @@ namespace Nanook.NKit.Steps.Shared
 
         public void ProcessSection(ISection section)
         {
-            // Determine if this section belongs to an update partition — used by BeginFileWrite
+            // Determine if this section belongs to an update partition - used by BeginFileWrite
             // to route file writes from saveFileData to the aux writer.
             if (_auxWriter != null)
             {
@@ -1297,7 +1297,7 @@ namespace Nanook.NKit.Steps.Shared
             }
 
             // Raw CDN binary areas (no FST, EncryptedNoKeyMode): write the encrypted bytes verbatim.
-            // No stride, no gap analysis, no dedup — each section maps directly at its ImageOffset.
+            // No stride, no gap analysis, no dedup - each section maps directly at its ImageOffset.
             if (section.Type == AreaType.RawKeyMissing)
             {
                 _imageWriter.WriteData(section.ImageOffset, section.Decrypted, 0, (int)section.Size, BlockType.Other);
@@ -1378,7 +1378,7 @@ namespace Nanook.NKit.Steps.Shared
             }
             else if (section.Type == AreaType.Other)
             {
-                // Unencrypted Other areas always store every section — their content may differ
+                // Unencrypted Other areas always store every section - their content may differ
                 // from the canonical FileSystem area and cannot be recovered via the fold.
                 // Encrypted Other areas use CRC dedup; the fold correctly re-derives any skipped sections.
                 bool skipDedup = !section.AreaInfo.IsEncrypted;

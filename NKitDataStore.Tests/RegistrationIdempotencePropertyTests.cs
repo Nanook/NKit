@@ -47,7 +47,7 @@ public sealed class RegistrationIdempotencePropertyTests : IDisposable
 
         protected override void RunUpdateDatabases()
         {
-            // No-op in tests — don't run system commands
+            // No-op in tests - don't run system commands
         }
     }
 
@@ -94,7 +94,7 @@ public sealed class RegistrationIdempotencePropertyTests : IDisposable
 
         TestableLinuxFileAssociationService service = new TestableLinuxFileAssociationService(localSharePath, exePath);
 
-        // First registration — establishes the "already registered" state
+        // First registration - establishes the "already registered" state
         AssociationOperationResult firstResult = service.RegisterAsync(entry).GetAwaiter().GetResult();
         if (!firstResult.Success)
             return false;
@@ -110,7 +110,7 @@ public sealed class RegistrationIdempotencePropertyTests : IDisposable
         // Small delay to ensure filesystem timestamp would differ if file is rewritten
         // (not strictly needed since we compare content, but adds confidence)
 
-        // Second registration — should be idempotent
+        // Second registration - should be idempotent
         AssociationOperationResult secondResult = service.RegisterAsync(entry).GetAwaiter().GetResult();
 
         // (a) Second call returns success

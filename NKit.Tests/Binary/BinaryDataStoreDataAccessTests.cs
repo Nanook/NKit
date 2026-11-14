@@ -56,7 +56,7 @@ namespace NKit.Tests.NKDS.Binary
         ///
         /// EnsureSetExists creates the file and returns an InfoRecord with correct configuration.
         /// Calling EnsureSetExists again with the same set name returns the same InfoRecord
-        /// (idempotent — does not reinitialize the file).
+        /// (idempotent - does not reinitialize the file).
         /// </summary>
         [Fact]
         public void EnsureSetExists_Idempotent_ReturnsSameInfoRecord()
@@ -684,7 +684,7 @@ namespace NKit.Tests.NKDS.Binary
         /// **Validates: Requirements 12.1**
         ///
         /// *For any* image inserted with known metadata, calling UpdateImageName with a new name
-        /// SHALL change only the Name field — all other fields (Size, Crc32, XxHash64, System,
+        /// SHALL change only the Name field - all other fields (Size, Crc32, XxHash64, System,
         /// Format, Removed) remain identical.
         /// </summary>
         [Fact]

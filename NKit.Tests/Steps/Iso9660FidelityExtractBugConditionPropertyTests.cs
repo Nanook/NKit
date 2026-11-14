@@ -62,7 +62,7 @@ namespace NKit.Tests.Engine.Output
         /// Models the CURRENT (buggy) behavior of ExtractIsoStep.saveFileData.
         ///
         /// The current code:
-        /// 1. Builds _candidates from FullAreaFileSystem.Files (OrderedList only — largest at each offset)
+        /// 1. Builds _candidates from FullAreaFileSystem.Files (OrderedList only - largest at each offset)
         /// 2. Iterates section.Items, finds matching candidate (si.FsFile), calls writeFs for it
         /// 3. Never queries FidelityFileList for displaced same-offset entries
         /// 4. Displaced entries are never written, never counted
@@ -219,7 +219,7 @@ namespace NKit.Tests.Engine.Output
 
                 List<MockFsFile> fidelityEntries = new List<MockFsFile> { candidateFile, displacedFile };
 
-                // Run the EXPECTED (fixed) model — this matches the fixed ExtractIsoStep behavior
+                // Run the EXPECTED (fixed) model - this matches the fixed ExtractIsoStep behavior
                 (List<ExtractResult> expectedResults, int expectedExtracted, int expectedFsExtracted) =
                     ModelExpectedSaveFileData(candidateFile, offsetInItem: 0, fidelityEntries);
 

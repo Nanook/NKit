@@ -1,7 +1,7 @@
 namespace NKitDataStore.Binary
 {
     /// <summary>
-    /// Represents a Block_Index_Delta — an append-only fragment containing
+    /// Represents a Block_Index_Delta - an append-only fragment containing
     /// newly added blocks from a single write operation.
     /// Deltas form a linked list via NextDeltaOffset, pointing to the previous delta.
     /// </summary>

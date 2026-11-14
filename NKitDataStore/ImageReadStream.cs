@@ -38,7 +38,7 @@ namespace NKitDataStore
 
         // Sequential read-ahead cache: one large I/O call reads a run of shard-adjacent blocks.
         // Dedupe writes each image's unique blocks contiguously, so consecutive blocks within
-        // the same OffsetRecord are typically adjacent in the shard — one read covers many blocks.
+        // the same OffsetRecord are typically adjacent in the shard - one read covers many blocks.
         private byte[]? _rawRunBuffer;           // raw bytes for the current run
         private OffsetRecord? _rawRunOffset;     // OffsetRecord that owns this run
         private int _rawRunStartBlockIdx = -1;   // block index of the first block in the run
@@ -225,7 +225,7 @@ namespace NKitDataStore
                 {
                     int expectedBlockLength = (int)Math.Min(_blockSize, offsetRecord.Size - ((long)blockIndex * _blockSize));
 
-                    // Step 1 — ensure the run cache covers this block.
+                    // Step 1 - ensure the run cache covers this block.
                     // If not, attempt to fetch a new run (one syscall for many blocks).
                     bool inRun = object.ReferenceEquals(_rawRunOffset, offsetRecord)
                         && blockIndex >= _rawRunStartBlockIdx
@@ -246,7 +246,7 @@ namespace NKitDataStore
                         }
                     }
 
-                    // Step 2 — get raw bytes: slice from run buffer or fall back to single-block read.
+                    // Step 2 - get raw bytes: slice from run buffer or fall back to single-block read.
                     byte[] rawSource;
                     int srcOffset, srcLength;
 
@@ -267,18 +267,18 @@ namespace NKitDataStore
                         srcLength = single.Length;
                     }
 
-                    // Step 3 — decompress into this stream's own buffer (zero-copy when uncompressed).
+                    // Step 3 - decompress into this stream's own buffer (zero-copy when uncompressed).
                     //
                     // Fast path: when reading from the block start with enough room remaining,
                     // decompress directly into the caller's output buffer using the decompressor's
-                    // destinationOffset support — no _decompressionBuffer intermediate, no Array.Copy.
+                    // destinationOffset support - no _decompressionBuffer intermediate, no Array.Copy.
                     // buffer.Length - bufferOffset >= count >= expectedBlockLength is guaranteed by
                     // the invariants upheld in Read(), so no explicit bounds check is required.
                     if (srcLength != expectedBlockLength && positionInBlock == 0 && count >= expectedBlockLength)
                     {
                         int decompressedSize = _reader.DecompressBlockDirect(
                             rawSource, srcOffset, srcLength, expectedBlockLength, buffer, bufferOffset);
-                        _currentBlockKey = null; // data lives in caller's transient buffer — cannot cache
+                        _currentBlockKey = null; // data lives in caller's transient buffer - cannot cache
                         positionInOffset += decompressedSize;
                         bufferOffset += decompressedSize;
                         totalBytesRead += decompressedSize;

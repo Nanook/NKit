@@ -16,7 +16,7 @@ namespace Nanook.NKit
     /// need random access into the source. When that source is an archive entry it is forward-only
     /// and cannot be seeked backwards. This manager bridges the two: it reads the forward-only
     /// source once, caches it in large blocks, and serves any offset at or above the released
-    /// floor to any number of views — each view keeps its own position but shares this one cache.
+    /// floor to any number of views - each view keeps its own position but shares this one cache.
     /// </para>
     ///
     /// <para>
@@ -42,7 +42,7 @@ namespace Nanook.NKit
     {
         // 10 MiB cache blocks rented from the shared array pool. Small blocks keep memory tracking
         // fine-grained (a ReleaseTo frees promptly) and let the pool recycle buffers across the
-        // pipeline instead of re-allocating. Block arrays are NOT cleared on rent or return —
+        // pipeline instead of re-allocating. Block arrays are NOT cleared on rent or return -
         // stream data overwrites the region actually read, and reads are bounded by Valid, so
         // stale bytes are never observed.
         // Section-size buffer / cache block size. Central value: Engine.Core.NKitCoreConsts.
@@ -120,19 +120,19 @@ namespace Nanook.NKit
         /// Emit a Detail log line for a view Seek. <paramref name="id"/> is the per-view id (leads
         /// the message as "N: ...") so nested/cloned streams are distinguishable. One line per Seek
         /// call so a log filtered on <c>[BufferStream]</c> shows every reposition (useful when
-        /// diagnosing where a reader jumped before a crash). Gated on Detail being enabled so there is no cost — and no
-        /// string built — in Info mode. The large forward cache-fill Info line (the ~100MiB
+        /// diagnosing where a reader jumped before a crash). Gated on Detail being enabled so there is no cost - and no
+        /// string built - in Info mode. The large forward cache-fill Info line (the ~100MiB
         /// "Caching…" message) is emitted separately by <c>ensureCached</c> and is unaffected.
         /// </summary>
         public void LogSeek(int id, long from, long to, SeekOrigin origin)
         {
             if (to == from)
-                return; // no-op reposition (cursor already there) — nothing to diagnose, don't flood
+                return; // no-op reposition (cursor already there) - nothing to diagnose, don't flood
             long delta = to - from;
             long absDelta = delta >= 0 ? delta : -delta;
             // Only NOTABLE repositions are worth a line: a backward seek (unusual for a forward
             // reader) or a large forward jump (>= threshold). The small few-byte forward
-            // padding/alignment seeks happen on almost every read and are pure noise — they are NOT
+            // padding/alignment seeks happen on almost every read and are pure noise - they are NOT
             // logged at all (even at Trace), which was flooding the debug output. Notable seeks log
             // at Detail so they surface without needing debug level.
             bool notable = delta < 0 || absDelta >= Engine.Core.NKitCoreConsts.SeekLogDetailThreshold;
@@ -149,7 +149,7 @@ namespace Nanook.NKit
         /// Whether a consumer should seek to <paramref name="absOffset"/>. For a genuinely seekable
         /// source the seek is cheap, so this is always true. For a forward-only (cached) source it
         /// is true only when reaching the offset would not force the cache to hold more than
-        /// <see cref="SeekReachLimit"/> beyond the retained floor — i.e. the span from the released
+        /// <see cref="SeekReachLimit"/> beyond the retained floor - i.e. the span from the released
         /// floor up to the target. This measures against the floor (not the frontier) so a consumer
         /// cannot defeat the guard by nudging forward repeatedly without releasing: everything it
         /// keeps counts against the limit. When it returns false the consumer must fall back to a
@@ -163,7 +163,7 @@ namespace Nanook.NKit
             {
                 long floor = _floor;
                 if (absOffset <= floor)
-                    return true; // backward into (or below) the retained window — served from cache
+                    return true; // backward into (or below) the retained window - served from cache
                 return absOffset - floor <= SeekReachLimit;
             }
         }
@@ -200,7 +200,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Read up to <paramref name="count"/> bytes at absolute <paramref name="absOffset"/> into
         /// <paramref name="buffer"/>. Returns the number of bytes read (0 at/after EOF, or a short
-        /// read near EOF). Never advances any view's position — the caller owns position.
+        /// read near EOF). Never advances any view's position - the caller owns position.
         /// </summary>
         public int ReadAt(long absOffset, byte[] buffer, int offset, int count)
         {
@@ -248,7 +248,7 @@ namespace Nanook.NKit
         // consumer's declared seek-back region is never freed. Assumes _sync held.
         private void releaseToInternal(long absOffset)
         {
-            // Never release below the retain floor — a consumer (e.g. XBox re-reading the FST)
+            // Never release below the retain floor - a consumer (e.g. XBox re-reading the FST)
             // has declared it may seek back to there.
             if (absOffset > _retainFloor)
                 absOffset = _retainFloor;
@@ -293,7 +293,7 @@ namespace Nanook.NKit
             if (need > _length)
                 need = _length;
 
-            // Report a large forward cache fill (a big Read, or a forward Seek over a span — both
+            // Report a large forward cache fill (a big Read, or a forward Seek over a span - both
             // pull the source from _frontier up to 'need'). Measured once, before the fill loop.
             long fill = need - _frontier;
             if (fill >= CacheLogThreshold)
@@ -327,8 +327,8 @@ namespace Nanook.NKit
             long blockNumber = absOffset / BlockSize;
 
             // Re-anchor when there are no retained blocks. ReleaseTo can advance the floor (and so
-            // _firstBlockNumber) PAST the current frontier — a decoder's output position can run
-            // ahead of the raw bytes fetched — leaving the list empty with a stale anchor. Anchor
+            // _firstBlockNumber) PAST the current frontier - a decoder's output position can run
+            // ahead of the raw bytes fetched - leaving the list empty with a stale anchor. Anchor
             // to the requested block so its list index is 0.
             if (_blocks.Count == 0)
                 _firstBlockNumber = blockNumber;
@@ -347,7 +347,7 @@ namespace Nanook.NKit
                 if (size <= 0)
                     size = 0; // defensive; frontier never advances past _length
                 // Rent from the shared pool. The pool returns an array of at least 'size' bytes
-                // (often larger) — Size tracks the logical block extent, Data.Length is the pooled
+                // (often larger) - Size tracks the logical block extent, Data.Length is the pooled
                 // capacity. Not cleared: reads overwrite what they use and Valid bounds copies.
                 byte[] data = size > 0 ? ArrayPool<byte>.Shared.Rent(size) : Array.Empty<byte>();
                 _blocks.Add(new Block { Start = start, Data = data, Size = size, Valid = 0 });

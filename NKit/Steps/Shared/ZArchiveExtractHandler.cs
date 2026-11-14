@@ -13,7 +13,7 @@ namespace Nanook.NKit.Steps.Shared
     /// <see cref="SetTitleFolder"/> before any files are written. The path structure inside
     /// the archive is: titleFolder/code|content|meta/filename
     ///
-    /// Non-game partitions (SI, Update) are skipped — call <see cref="SetSkip"/> to suppress
+    /// Non-game partitions (SI, Update) are skipped - call <see cref="SetSkip"/> to suppress
     /// all writes until the next <see cref="SetTitleFolder"/> call.
     /// </summary>
     internal class ZArchiveExtractHandler : IExtractFileHandler
@@ -48,7 +48,7 @@ namespace Nanook.NKit.Steps.Shared
         }
 
         /// <summary>
-        /// Marks the current partition as skipped — all writes are suppressed until
+        /// Marks the current partition as skipped - all writes are suppressed until
         /// the next <see cref="SetTitleFolder"/> call.
         /// </summary>
         public void SetSkip()

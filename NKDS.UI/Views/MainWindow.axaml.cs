@@ -23,7 +23,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
     /// <summary>
     /// Parameterless constructor required by Avalonia XAML loader / designer.
-    /// Not used at runtime — the ServiceRegistry overload is called from App.axaml.cs.
+    /// Not used at runtime - the ServiceRegistry overload is called from App.axaml.cs.
     /// </summary>
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     public MainWindow() : this(null)
@@ -35,7 +35,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         InitializeComponent();
 
-        // Designer/XAML loader path — no services available
+        // Designer/XAML loader path - no services available
         if (services == null) return;
 
         // On Linux, set window decorations based on persisted preference
@@ -67,7 +67,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         else
         {
             // Windows / macOS: owner-drawn chrome, no OS title bar visible.
-            // Keep Title blank — the custom chrome is the visual identity.
+            // Keep Title blank - the custom chrome is the visual identity.
             Title = "";
         }
 
@@ -124,7 +124,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                             suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(Path.GetDirectoryName(lastPath)!);
                     }
                 }
-                catch { /* Ignore — open picker without suggested location */ }
+                catch { /* Ignore - open picker without suggested location */ }
 
                 IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
                 {
@@ -151,7 +151,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                             suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(dir);
                     }
                 }
-                catch { /* Ignore — open picker without suggested location */ }
+                catch { /* Ignore - open picker without suggested location */ }
 
                 IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
                 {
@@ -299,7 +299,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
                 if (_groupingWindow != null && _groupingWindow.DataContext == vm)
                 {
-                    // Window already open with same VM — bring to front
+                    // Window already open with same VM - bring to front
                     _groupingWindow.Activate();
                 }
                 else
@@ -323,7 +323,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
                 if (_datVerificationWindow != null && _datVerificationWindow.DataContext == vm)
                 {
-                    // Window already open with same VM — bring to front
+                    // Window already open with same VM - bring to front
                     _datVerificationWindow.Activate();
                 }
                 else

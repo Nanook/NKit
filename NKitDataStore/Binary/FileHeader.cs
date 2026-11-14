@@ -47,7 +47,7 @@ namespace NKitDataStore.Binary
         // Offset 0x18: Block_Index file offset (8 bytes)
         public long BlockIndexOffset;
 
-        // Offset 0x20: Block_Index total size in bytes (8 bytes) — supports > 4 GB block indexes
+        // Offset 0x20: Block_Index total size in bytes (8 bytes) - supports > 4 GB block indexes
         public long BlockIndexSize;
 
         // Offset 0x28: Number of Block_Index_Deltas (4 bytes)

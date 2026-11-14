@@ -15,7 +15,7 @@ namespace NKitDataStore.Tests;
 ///
 /// For any selection set and any filter change, the resulting selection set SHALL equal
 /// the intersection of the original selection set and the rows that pass the new filter.
-/// Since SelectionTracker isn't implemented yet, this tests at the collection level —
+/// Since SelectionTracker isn't implemented yet, this tests at the collection level -
 /// verifying that selected rows which pass the new filter remain in the collection
 /// (and thus can be re-selected), while selected rows that don't pass the filter are removed.
 /// </summary>

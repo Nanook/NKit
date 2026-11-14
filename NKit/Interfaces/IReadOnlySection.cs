@@ -69,7 +69,7 @@ namespace Nanook.NKit
     }
 
     /// <summary>
-    /// A read-only view of one file's contribution within an <see cref="IReadOnlySection"/> — the
+    /// A read-only view of one file's contribution within an <see cref="IReadOnlySection"/> - the
     /// file it belongs to and where its data sits in the block. The mutable/parse members of the
     /// internal <c>ISectionItem</c>/<c>ISectionData</c> are not exposed.
     /// </summary>

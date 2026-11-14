@@ -54,7 +54,7 @@ create_archives() {
             # macOS: archive the .app bundles using ditto for proper resource fork handling.
             # Do NOT use --keepParent here: source is the bundle parent directory (contains
             # NKit.app, NKDS.app, sign scripts, yaml), so we want its *contents* at the zip
-            # root — not the osx-x64/ folder itself as an extra wrapping level.
+            # root - not the osx-x64/ folder itself as an extra wrapping level.
             local bundle_dir="publish/bundle/$runtime"
             if [ -d "$bundle_dir" ]; then
                 if command -v ditto >/dev/null 2>&1; then

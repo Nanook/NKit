@@ -28,7 +28,7 @@ namespace NKitCore
 
             // Marginal-utility brake: after a scale-up, if throughput did not improve by at least this
             // fraction AND proc is no longer saturated, stop adding workers (the added worker isn't
-            // helping — the bottleneck is a serial pre/out stage or I/O). Throughput is only ever a
+            // helping - the bottleneck is a serial pre/out stage or I/O). Throughput is only ever a
             // BRAKE here, never the primary scale-up trigger (per-sample throughput is too noisy on
             // real workloads). Scale-UP is driven by the proc-saturation signal; scale-DOWN by the
             // live-section pressure dropping below LowWater.
@@ -41,7 +41,7 @@ namespace NKitCore
             public double ThroughputImprovementRatio { get; set; } = 0.05;
 
             // Scale-DOWN trigger: when live-section pressure (waiting + processing) falls below this,
-            // there isn't enough work to keep the current pool busy — shed a worker. Scale-UP pressure
+            // there isn't enough work to keep the current pool busy - shed a worker. Scale-UP pressure
             // trigger (in addition to the saturation latch) is HighWater.
             public int LowWater { get; set; } = 1;
             public int HighWater { get; set; } = int.MaxValue; // saturation latch is the real trigger

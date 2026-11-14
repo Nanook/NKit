@@ -67,7 +67,7 @@ namespace NKitDataStore.Tests
                 return _blocks.TryGetValue(key, out BlockRecord record) ? record : null;
             }
 
-            // Unused members — AuxBlockProvider only calls GetBlock(BlockKey)
+            // Unused members - AuxBlockProvider only calls GetBlock(BlockKey)
             public ImageRecord Image => throw new NotImplementedException();
             public InfoRecord Info => throw new NotImplementedException();
             public Stream OpenStream(long offsetStart) => throw new NotImplementedException();
@@ -447,7 +447,7 @@ namespace NKitDataStore.Tests
                 if (result.Key != key) return false;
             }
 
-            // Verify absent keys via async path — must return null, no exception
+            // Verify absent keys via async path - must return null, no exception
             foreach (BlockKey key in absentKeys)
             {
                 BlockRecord result = provider.GetBlockAsync(key).GetAwaiter().GetResult();

@@ -58,7 +58,7 @@ public class CommandEnablementTests : IDisposable
         using SessionManager sessionManager = new SessionManager(new FakeDataStoreService());
         using ToolbarViewModel vm = new ToolbarViewModel(sessionManager, new SharedObservableState());
 
-        // CreateSet is always enabled — it shows a folder picker if no session is open
+        // CreateSet is always enabled - it shows a folder picker if no session is open
         Assert.True(await vm.CreateSetCommand.CanExecute.FirstAsync());
     }
 
@@ -108,7 +108,7 @@ public class CommandEnablementTests : IDisposable
         Assert.False(await vm.CloseSetCommand.CanExecute.FirstAsync());
     }
 
-    // --- AddCommand Tests (Requirements 4.1, 5.4 — requires session AND active set) ---
+    // --- AddCommand Tests (Requirements 4.1, 5.4 - requires session AND active set) ---
 
     [Fact]
     public async Task AddCommand_IsEnabled_WhenSessionOpen_AndHasActiveSet()
@@ -146,7 +146,7 @@ public class CommandEnablementTests : IDisposable
         vm.UpdateAvailableSetNames(new[] { "TestSet" });
         vm.SelectedSetName = "TestSet";
 
-        // Simulate an active operation — disables all mutating commands
+        // Simulate an active operation - disables all mutating commands
         vm.IsOperationActive = true;
 
         Assert.False(await vm.AddCommand.CanExecute.FirstAsync());

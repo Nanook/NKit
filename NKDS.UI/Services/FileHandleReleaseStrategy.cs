@@ -23,7 +23,7 @@ public class FileHandleReleaseStrategy
     /// <returns>True if handles were confirmed released; false if max wait exceeded.</returns>
     public async Task<bool> ReleaseHandlesAsync(string databaseFilePath)
     {
-        // Immediate check — no delay in the nominal path
+        // Immediate check - no delay in the nominal path
         if (canAcquireExclusiveLock(databaseFilePath))
             return true;
 
@@ -49,7 +49,7 @@ public class FileHandleReleaseStrategy
 
     /// <summary>
     /// Probes whether the file can be opened with exclusive access.
-    /// Does not hold the lock — opens and immediately closes.
+    /// Does not hold the lock - opens and immediately closes.
     /// </summary>
     private static bool canAcquireExclusiveLock(string filePath)
     {

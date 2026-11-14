@@ -88,7 +88,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -98,7 +98,7 @@
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
                                                     <!-- Stale warning -->
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
@@ -142,7 +142,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -150,7 +150,7 @@
                                                               Content="{Binding Label}"
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
@@ -192,7 +192,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -200,7 +200,7 @@
                                                               Content="{Binding Label}"
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
