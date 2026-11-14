@@ -238,6 +238,12 @@ for dir in "publish/console/$PUBLISH_RID" "publish/gui/$PUBLISH_RID" "publish/nk
         # Also remove the static lib itself — injected into the NuGet cache for the AOT linker,
         # it may get copied to publish output but is already baked into the native binary.
         rm -f "$dir"/libGrindCore.a "$dir"/GrindCore.lib 2>/dev/null || true
+        # Remove runtime-created directories. These appear when the app is run in
+        # portable mode from the publish dir (EnsureConfiguration creates them).
+        # The publish dir is not cleaned between builds so they persist across runs.
+        for runtimeDir in dats keys fix out scans temp logs dedupe; do
+            rm -rf "$dir/$runtimeDir" 2>/dev/null || true
+        done
     fi
 done
 

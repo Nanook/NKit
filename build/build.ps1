@@ -170,6 +170,12 @@ foreach ($appType in @("console", "gui", "nkds", "nkds-ui")) {
         # it may get copied to publish output but is already baked into the native binary.
         Remove-Item "$dir/GrindCore.lib" -ErrorAction SilentlyContinue
         Remove-Item "$dir/libGrindCore.a" -ErrorAction SilentlyContinue
+        # Remove runtime-created directories. These appear when the app is run in
+        # portable mode from the publish dir (EnsureConfiguration creates them).
+        # The publish dir is not cleaned between builds so they persist across runs.
+        foreach ($runtimeDir in @("dats", "keys", "fix", "out", "scans", "temp", "logs", "dedupe")) {
+            if (Test-Path "$dir/$runtimeDir") { Remove-Item "$dir/$runtimeDir" -Recurse -Force -ErrorAction SilentlyContinue }
+        }
     }
 }
 
