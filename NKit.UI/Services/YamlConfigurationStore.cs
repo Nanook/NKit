@@ -116,21 +116,71 @@ namespace NKit.Ui.Services
 
 
         /// <summary>
-        /// Gets the appropriate configuration directory using the same logic as ConfigurationManager
+        /// Gets the appropriate configuration directory using the same logic as ConfigurationManager.
+        /// Falls back to the platform user config directory if the resolved path is not writable -
+        /// which can happen silently when the ConfigurationManager's internal exception handler fires
+        /// and sets configDirectory to the executable directory (e.g. /usr/bin on a system install).
         /// </summary>
         private string GetConfigurationDirectory()
         {
+            using ConfigurationManager configManager = new Nanook.NKit.Configuration.ConfigurationManager();
+            string configDir = configManager.Context.ConfigDirectory;
+
+            // The ConfigurationManager constructor catches all exceptions internally and falls
+            // back to the executable directory when path resolution fails. On a system install
+            // that executable dir (e.g. /usr/bin) is not user-writable, so saves would fail
+            // silently. Guard: if the returned directory is not writable or creatable, fall
+            // back to the platform-appropriate user config directory.
+            if (!isConfigDirectoryUsable(configDir))
+                return resolveUserConfigDirectory();
+
+            return configDir;
+        }
+
+        /// <summary>
+        /// Returns true if the given directory exists and is user-writable, or if it does not
+        /// yet exist but its nearest existing ancestor is writable so it can be created.
+        /// Returns false for read-only system paths such as /usr/bin.
+        /// </summary>
+        private static bool isConfigDirectoryUsable(string directory)
+        {
             try
             {
-                using ConfigurationManager configManager = new Nanook.NKit.Configuration.ConfigurationManager();
-                ConfigurationContext context = configManager.Context;
-                return context.ConfigDirectory;
+                if (!Directory.Exists(directory))
+                {
+                    string parent = Path.GetDirectoryName(directory);
+                    return !string.IsNullOrEmpty(parent) && isConfigDirectoryUsable(parent);
+                }
+
+                string testFile = Path.Combine(directory, Guid.NewGuid().ToString("N") + ".tmp");
+                File.WriteAllText(testFile, string.Empty);
+                File.Delete(testFile);
+                return true;
             }
             catch
             {
-                // Fallback to executable directory
-                return AppDomain.CurrentDomain.BaseDirectory;
+                return false;
             }
+        }
+
+        /// <summary>
+        /// Returns the platform-appropriate user config directory (~/.config/nkit on Linux,
+        /// %APPDATA%\nkit on Windows, ~/Documents/nkit on macOS). Used as a fallback when
+        /// ConfigurationManager cannot resolve the config directory through its normal channel.
+        /// </summary>
+        private static string resolveUserConfigDirectory()
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                string xdg = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+                string baseDir = string.IsNullOrEmpty(xdg)
+                    ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config")
+                    : xdg;
+                return Path.Combine(baseDir, "nkit");
+            }
+            if (OperatingSystem.IsMacOS())
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Documents", "nkit");
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "nkit");
         }
 
         /// <summary>
@@ -622,23 +672,26 @@ namespace NKit.Ui.Services
             // Integrate UiSettings into the global.ui section
             if (_uiSettings != null)
             {
-                config.Global.Ui = new UiConfiguration.UiOnlySettings
-                {
-                    ShowQueued = _uiSettings.ShowQueued,
-                    ShowSkipped = _uiSettings.ShowSkipped,
-                    ShowProcessing = _uiSettings.ShowProcessing,
-                    ShowCompleted = _uiSettings.ShowCompleted,
-                    ShowFailed = _uiSettings.ShowFailed,
-                    ShowCancelled = _uiSettings.ShowCancelled,
-                    ConsoleOutputAutoScroll = _uiSettings.ConsoleOutputAutoScroll,
-                    ConsoleOutputBuffer = _uiSettings.ConsoleOutputBuffer,
-                    ConsoleOutputWrapText = _uiSettings.ConsoleOutputWrapText,
-                    ReprocessCompletedFiles = _uiSettings.ReprocessCompletedFiles,
-                    ReprocessFailedFiles = _uiSettings.ReprocessFailedFiles,
-                    ReprocessSkippedFiles = _uiSettings.ReprocessSkippedFiles,
-                    PersistFileQueue = _uiSettings.PersistFileQueue,
-                    ShowTooltips = _uiSettings.ShowTooltips,
-                };
+                // Update properties on the existing Ui object rather than replacing it.
+                // Replacing with new UiOnlySettings() would lose WindowDecorationMode and any
+                // other persisted fields not driven by _uiSettings.
+                config.Global.Ui ??= new UiConfiguration.UiOnlySettings();
+                config.Global.Ui.ShowQueued = _uiSettings.ShowQueued;
+                config.Global.Ui.ShowSkipped = _uiSettings.ShowSkipped;
+                config.Global.Ui.ShowProcessing = _uiSettings.ShowProcessing;
+                config.Global.Ui.ShowCompleted = _uiSettings.ShowCompleted;
+                config.Global.Ui.ShowFailed = _uiSettings.ShowFailed;
+                config.Global.Ui.ShowCancelled = _uiSettings.ShowCancelled;
+                config.Global.Ui.ConsoleOutputAutoScroll = _uiSettings.ConsoleOutputAutoScroll;
+                config.Global.Ui.ConsoleOutputBuffer = _uiSettings.ConsoleOutputBuffer;
+                config.Global.Ui.ConsoleOutputWrapText = _uiSettings.ConsoleOutputWrapText;
+                config.Global.Ui.ReprocessCompletedFiles = _uiSettings.ReprocessCompletedFiles;
+                config.Global.Ui.ReprocessFailedFiles = _uiSettings.ReprocessFailedFiles;
+                config.Global.Ui.ReprocessSkippedFiles = _uiSettings.ReprocessSkippedFiles;
+                config.Global.Ui.PersistFileQueue = _uiSettings.PersistFileQueue;
+                config.Global.Ui.ShowTooltips = _uiSettings.ShowTooltips;
+                // WindowDecorationMode is intentionally left untouched - managed exclusively
+                // by SetWindowDecorationMode() / GetWindowDecorationMode().
             }
         }
 
@@ -1226,23 +1279,27 @@ namespace NKit.Ui.Services
             {
                 UiConfiguration config = LoadOrCreateConfiguration();
                 config.Global ??= new UiConfiguration.GlobalSettings();
-                config.Global.Ui = new UiConfiguration.UiOnlySettings
-                {
-                    ShowQueued = _uiSettings.ShowQueued,
-                    ShowSkipped = _uiSettings.ShowSkipped,
-                    ShowProcessing = _uiSettings.ShowProcessing,
-                    ShowCompleted = _uiSettings.ShowCompleted,
-                    ShowFailed = _uiSettings.ShowFailed,
-                    ShowCancelled = _uiSettings.ShowCancelled,
-                    ConsoleOutputAutoScroll = _uiSettings.ConsoleOutputAutoScroll,
-                    ConsoleOutputBuffer = _uiSettings.ConsoleOutputBuffer,
-                    ConsoleOutputWrapText = _uiSettings.ConsoleOutputWrapText,
-                    ReprocessCompletedFiles = _uiSettings.ReprocessCompletedFiles,
-                    ReprocessFailedFiles = _uiSettings.ReprocessFailedFiles,
-                    ReprocessSkippedFiles = _uiSettings.ReprocessSkippedFiles,
-                    PersistFileQueue = _uiSettings.PersistFileQueue,
-                    ShowTooltips = _uiSettings.ShowTooltips,
-                };
+
+                // Update fields on the existing Ui object rather than replacing it.
+                // Replacing with new UiOnlySettings() would lose WindowDecorationMode and any
+                // other persisted fields that are not driven by _uiSettings.
+                config.Global.Ui ??= new UiConfiguration.UiOnlySettings();
+                config.Global.Ui.ShowQueued = _uiSettings.ShowQueued;
+                config.Global.Ui.ShowSkipped = _uiSettings.ShowSkipped;
+                config.Global.Ui.ShowProcessing = _uiSettings.ShowProcessing;
+                config.Global.Ui.ShowCompleted = _uiSettings.ShowCompleted;
+                config.Global.Ui.ShowFailed = _uiSettings.ShowFailed;
+                config.Global.Ui.ShowCancelled = _uiSettings.ShowCancelled;
+                config.Global.Ui.ConsoleOutputAutoScroll = _uiSettings.ConsoleOutputAutoScroll;
+                config.Global.Ui.ConsoleOutputBuffer = _uiSettings.ConsoleOutputBuffer;
+                config.Global.Ui.ConsoleOutputWrapText = _uiSettings.ConsoleOutputWrapText;
+                config.Global.Ui.ReprocessCompletedFiles = _uiSettings.ReprocessCompletedFiles;
+                config.Global.Ui.ReprocessFailedFiles = _uiSettings.ReprocessFailedFiles;
+                config.Global.Ui.ReprocessSkippedFiles = _uiSettings.ReprocessSkippedFiles;
+                config.Global.Ui.PersistFileQueue = _uiSettings.PersistFileQueue;
+                config.Global.Ui.ShowTooltips = _uiSettings.ShowTooltips;
+                // WindowDecorationMode is intentionally left untouched here - it is managed
+                // exclusively by SetWindowDecorationMode() / GetWindowDecorationMode().
 
                 // Save the updated configuration
                 SaveConfiguration(config);

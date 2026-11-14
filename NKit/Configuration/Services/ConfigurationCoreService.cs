@@ -138,11 +138,12 @@ namespace Nanook.NKit.Configuration.Services
             if (platformContext.IsBundle)
                 return hasLocalConfig && isDirectoryWritable(portableConfigDirectory, fileSystem);
 
-            // **CORE FIX**: Only use portable mode when config file explicitly exists.
-            // This ensures UI defaults to system mode and creates config in the system config directory.
-            // Previously: return hasLocalConfig || canWriteLocally
-            // Now: only portable if config file exists
-            return hasLocalConfig;
+            // **CORE FIX**: Only use portable mode when config file explicitly exists AND the
+            // directory is writable. Without the writeability check, a system install that
+            // includes the yaml file in a read-only directory (e.g. /usr/bin on Arch Linux)
+            // triggers portable mode but then fails to save any UI state changes back to that
+            // directory. The bundle path already requires both; apply the same guard here.
+            return hasLocalConfig && isDirectoryWritable(portableConfigDirectory, fileSystem);
         }
 
         private static string getPortableConfigDirectory(PlatformContext platformContext, IFileSystemService fileSystem)

@@ -26,7 +26,8 @@ namespace NKit.Ui.Views
                 YamlConfigurationStore settingsStore = Locator.Current.GetService<ISettingsStore>() as Services.YamlConfigurationStore;
                 string mode = settingsStore?.GetWindowDecorationMode() ?? "csd";
 
-                if (string.Equals(mode, "native", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mode, "native", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(mode, "ssd", StringComparison.OrdinalIgnoreCase))
                 {
                     // Native title bar: let the WM provide decorations
                     WindowDecorations = Avalonia.Controls.WindowDecorations.Full;
@@ -43,9 +44,10 @@ namespace NKit.Ui.Views
                 else
                 {
                     // CSD mode: owner-drawn chrome provides the visual identity.
-                    // Keep Title blank so Avalonia doesn't render it over the logo.
+                    // Set the title for the WM taskbar/Alt-Tab switcher - the AXAML chrome
+                    // has no binding to Window.Title so it will not appear over the logo.
                     WindowDecorations = Avalonia.Controls.WindowDecorations.None;
-                    Title = "";
+                    Title = $"NKit v{Nanook.NKit.AppSettings.GetVersion()}";
                 }
             }
             else

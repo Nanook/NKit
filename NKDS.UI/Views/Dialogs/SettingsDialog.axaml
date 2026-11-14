@@ -350,8 +350,7 @@
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
                                    Margin="0,6,0,0"/>
-                        <!-- Wii Fix Info - hidden (not currently used by NKDS) -->
-                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
+                        <Grid ColumnDefinitions="*, 40">
                             <TextBox Grid.Column="0" Text="{Binding WiiFixInfoPath}"
                                      PlaceholderText="fix/fix_wii.yaml"
                                      ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixInfoTooltip}"/>
@@ -360,7 +359,8 @@
                                 <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
                             </Button>
                         </Grid>
-                        <Grid ColumnDefinitions="*, 40">
+                        <!-- Wii Fix Files - hidden (not currently used by NKDS) -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
                             <TextBox Grid.Column="0" Text="{Binding WiiFixFilesPath}"
                                      PlaceholderText="fix/wii"
                                      ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixFilesTooltip}"/>

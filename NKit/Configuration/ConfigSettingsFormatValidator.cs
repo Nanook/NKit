@@ -306,7 +306,9 @@ namespace Nanook.NKit.Configuration
                 ConfigSettingsConstants.FormatCiso => ValidateCisoFormat(formatString),
                 ConfigSettingsConstants.FormatIso or ConfigSettingsConstants.FormatApp or ConfigSettingsConstants.FormatTmd or
                 "apptmd" or  // CLI alias for app (NUS CDN AppTmd folder)
-                ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatDecIso => ValidationResult.Success(),
+                ConfigSettingsConstants.FormatWux or ConfigSettingsConstants.FormatGdi or ConfigSettingsConstants.FormatDecIso or
+                ConfigSettingsConstants.FormatWua or ConfigSettingsConstants.FormatLoadiine or  // WiiU indexed formats (parameter-free)
+                ConfigSettingsConstants.FormatXiso => ValidationResult.Success(),
                 ConfigSettingsConstants.FormatNkitIso or ConfigSettingsConstants.FormatNkitIsoAlias => ValidateNkitIsoFormat(formatString),
                 _ => ValidationResult.Error($"Unknown format '{format}'. Supported formats: {string.Join(", ", ConfigSettingsRanges.GetAllSupportedFormats())}")
             };

@@ -58,10 +58,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             else
             {
                 // CSD mode: owner-drawn chrome provides the visual identity.
-                // Keep Title blank so Avalonia doesn't render it over the logo.
+                // Set the title for the WM taskbar/Alt-Tab switcher - TitleBarControl
+                // shows Open/Set status and has no binding to Window.Title, so this
+                // will not appear over the chrome content.
                 WindowDecorations = Avalonia.Controls.WindowDecorations.None;
                 ExtendClientAreaToDecorationsHint = false;
-                Title = "";
+                Title = $"NKDS v{Nanook.NKit.AppSettings.GetVersion()}";
             }
         }
         else

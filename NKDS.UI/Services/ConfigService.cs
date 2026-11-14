@@ -5,15 +5,22 @@ namespace NkdsUi.Services;
 
 /// <summary>
 /// Unified configuration persistence service that consolidates all user preferences
-/// into a single nkds-ui.json file stored next to the application executable.
+/// into a single nkds-ui.json file. The file location respects portable vs system mode:
+///   Portable mode (nkds-ui.yaml next to exe, directory writable): saved next to the executable.
+///   System mode (Arch Linux, etc.): saved to the platform config directory (~/.config/nkds/).
+/// PathResolver.AppDirectory handles this distinction via the NKit ConfigurationManager.
 /// </summary>
 public sealed class ConfigService : IConfigService
 {
-    internal static readonly string ConfigPath = Path.Combine(
-        AppContext.BaseDirectory, "nkds-ui.json");
+    // Use PathResolver.AppDirectory (not AppContext.BaseDirectory) so the JSON config goes to
+    // the correct location in both portable mode and system mode installations.
+    // AppContext.BaseDirectory is always the exe directory (/usr/bin on Arch), which causes
+    // "access denied" errors on system installs where /usr/bin is not user-writable.
+    internal static string ConfigPath => Path.Combine(
+        PathResolver.AppDirectory, "nkds-ui.json");
 
-    internal static readonly string LegacyPreferencesPath = Path.Combine(
-        AppContext.BaseDirectory, "export-format-preferences.json");
+    internal static string LegacyPreferencesPath => Path.Combine(
+        PathResolver.AppDirectory, "export-format-preferences.json");
 
     private readonly string _configPath;
     private readonly string _legacyPath;
@@ -283,6 +290,12 @@ public sealed class ConfigService : IConfigService
     {
         try
         {
+            // Ensure the directory exists - required when saving to a system-mode config
+            // directory (~/.config/nkds/) that may not have been created yet on first run.
+            string dir = Path.GetDirectoryName(_configPath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
             string json = JsonSerializer.Serialize(_config, ConfigJsonContext.Default.AppConfig);
             string tempPath = _configPath + ".tmp";
             File.WriteAllText(tempPath, json);
