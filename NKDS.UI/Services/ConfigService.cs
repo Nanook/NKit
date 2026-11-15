@@ -19,28 +19,22 @@ public sealed class ConfigService : IConfigService
     internal static string ConfigPath => Path.Combine(
         PathResolver.AppDirectory, "nkds-ui.json");
 
-    internal static string LegacyPreferencesPath => Path.Combine(
-        PathResolver.AppDirectory, "export-format-preferences.json");
-
     private readonly string _configPath;
-    private readonly string _legacyPath;
     private AppConfig _config;
     private ErrorNotificationService? _errorNotification;
 
     public ConfigService()
-        : this(ConfigPath, LegacyPreferencesPath)
+        : this(ConfigPath)
     {
     }
 
     /// <summary>
     /// Internal constructor for testing with isolated file paths.
     /// </summary>
-    internal ConfigService(string configPath, string legacyPath)
+    internal ConfigService(string configPath)
     {
         _configPath = configPath;
-        _legacyPath = legacyPath;
         _config = Load();
-        MigrateLegacyPreferences();
     }
 
     /// <summary>
@@ -307,34 +301,4 @@ public sealed class ConfigService : IConfigService
         }
     }
 
-    /// <summary>
-    /// Migrates legacy export-format-preferences.json into the unified config.
-    /// Merges entries without overwriting existing keys, saves, then deletes the legacy file.
-    /// On any failure, logs the error and leaves the legacy file in place.
-    /// </summary>
-    private void MigrateLegacyPreferences()
-    {
-        if (!File.Exists(_legacyPath))
-            return;
-
-        try
-        {
-            string json = File.ReadAllText(_legacyPath);
-            Dictionary<string, string>? legacy = JsonSerializer.Deserialize(json, FormatPreferencesJsonContext.Default.DictionaryStringString);
-            if (legacy != null)
-            {
-                foreach (KeyValuePair<string, string> kvp in legacy)
-                {
-                    if (!_config.ExportFormatDefaults.ContainsKey(kvp.Key))
-                        _config.ExportFormatDefaults[kvp.Key] = kvp.Value;
-                }
-                Save();
-            }
-            File.Delete(_legacyPath);
-        }
-        catch (Exception ex)
-        {
-            _errorNotification?.PublishOperationError($"Failed to migrate legacy preferences: {ex.Message}");
-        }
-    }
 }

@@ -45,7 +45,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
             return true; // Skip valid values - property is vacuously true for them
 
         string configPath = Path.Combine(_tempDir, $"cfg-invalid-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-invalid-{Guid.NewGuid():N}.json");
 
         try
         {
@@ -53,7 +52,7 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
             string json = $"{{\"windowDecorationMode\": {JsonSerializer.Serialize(value)}}}";
             File.WriteAllText(configPath, json);
 
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             WindowDecorationMode result = service.GetWindowDecorationMode();
 
             return result == WindowDecorationMode.ClientSideDecorations;
@@ -62,8 +61,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -78,14 +75,13 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     public void NullWindowDecorationMode_ReturnsClientSideDecorations()
     {
         string configPath = Path.Combine(_tempDir, $"cfg-null-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-null-{Guid.NewGuid():N}.json");
 
         try
         {
             string json = "{\"windowDecorationMode\": null}";
             File.WriteAllText(configPath, json);
 
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             WindowDecorationMode result = service.GetWindowDecorationMode();
 
             Assert.Equal(WindowDecorationMode.ClientSideDecorations, result);
@@ -94,8 +90,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -110,14 +104,13 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     public void EmptyStringWindowDecorationMode_ReturnsClientSideDecorations()
     {
         string configPath = Path.Combine(_tempDir, $"cfg-empty-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-empty-{Guid.NewGuid():N}.json");
 
         try
         {
             string json = "{\"windowDecorationMode\": \"\"}";
             File.WriteAllText(configPath, json);
 
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             WindowDecorationMode result = service.GetWindowDecorationMode();
 
             Assert.Equal(WindowDecorationMode.ClientSideDecorations, result);
@@ -126,8 +119,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -142,14 +133,13 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     public bool CorruptedJson_ReturnsClientSideDecorations(byte[] randomBytes)
     {
         string configPath = Path.Combine(_tempDir, $"cfg-corrupt-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-corrupt-{Guid.NewGuid():N}.json");
 
         try
         {
             byte[] content = randomBytes ?? Array.Empty<byte>();
             File.WriteAllBytes(configPath, content);
 
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             WindowDecorationMode result = service.GetWindowDecorationMode();
 
             return result == WindowDecorationMode.ClientSideDecorations;
@@ -158,8 +148,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -174,10 +162,9 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     public void MissingConfigFile_ReturnsClientSideDecorations()
     {
         string configPath = Path.Combine(_tempDir, $"cfg-missing-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-missing-{Guid.NewGuid():N}.json");
 
         // Don't create the file - it should not exist
-        ConfigService service = new ConfigService(configPath, legacyPath);
+        ConfigService service = new ConfigService(configPath);
         WindowDecorationMode result = service.GetWindowDecorationMode();
 
         Assert.Equal(WindowDecorationMode.ClientSideDecorations, result);
@@ -194,7 +181,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
     public bool WhitespaceOnlyValue_ReturnsClientSideDecorations(PositiveInt lengthSeed)
     {
         string configPath = Path.Combine(_tempDir, $"cfg-ws-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-ws-{Guid.NewGuid():N}.json");
 
         try
         {
@@ -209,7 +195,7 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
             string json = $"{{\"windowDecorationMode\": {JsonSerializer.Serialize(wsValue)}}}";
             File.WriteAllText(configPath, json);
 
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             WindowDecorationMode result = service.GetWindowDecorationMode();
 
             return result == WindowDecorationMode.ClientSideDecorations;
@@ -218,8 +204,6 @@ public sealed class WindowDecorationInvalidDefaultsPropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 }
