@@ -88,7 +88,7 @@ namespace NKitCore
         /// <summary>
         /// Returns a one-line diagnostic string describing current area outstanding-section counts.
         /// Used by the pipeline hang watchdog to identify which area is blocked.
-        /// Format: "Area[0]=0 Area[1]=3 Area[2]=0" — a non-zero entry is the stuck area.
+        /// Format: "Area[0]=0 Area[1]=3 Area[2]=0" - a non-zero entry is the stuck area.
         /// </summary>
         public string GetAreaDiagnostics()
         {

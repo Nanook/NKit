@@ -51,7 +51,7 @@ namespace NKitDataStore.Tests
                 dst[i] = src[srcOffset + i];
         }
 
-        // Deterministic unique block data for index i — avoids the shared TestDataFactory.Rng
+        // Deterministic unique block data for index i - avoids the shared TestDataFactory.Rng
         // which is not thread-safe and gets corrupted when concurrent tests run in parallel,
         // causing all blocks after the first to look identical (hash collision in _existsCache).
         private static byte[] BlockData(int index, int size)
@@ -120,7 +120,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Saturate the compression semaphore (all slots busy) then insert more blocks.
-        /// Every block must complete eventually — no blocks must be lost or cause a deadlock.
+        /// Every block must complete eventually - no blocks must be lost or cause a deadlock.
         /// </summary>
         [Fact]
         public void InsertBlock_SaturationThenMore_AllBlocksWritten()
@@ -166,7 +166,7 @@ namespace NKitDataStore.Tests
         /// catch block to keep WaitAll()/Shutdown() correct when cancellation fires.
         /// </summary>
         [Fact]
-        public void InsertBlock_SlotsFullThenCancel_CallerReturnsPromptlyOnCancellation()
+        public async Task InsertBlock_SlotsFullThenCancel_CallerReturnsPromptlyOnCancellation()
         {
             int parallelism = 2;
             int blockSize = 1024;
@@ -174,8 +174,8 @@ namespace NKitDataStore.Tests
             // Gate keeps compression tasks blocked so slots stay occupied throughout the test.
             using ManualResetEventSlim releaseGate = new ManualResetEventSlim(false);
 
-            BlockWriter? writer = null;
-            Task? insertTask = null;
+            BlockWriter writer = null;
+            Task insertTask = null;
 
             try
             {
@@ -207,7 +207,7 @@ namespace NKitDataStore.Tests
 
                 // This call should return promptly because the token is already cancelled.
                 // WITHOUT FIX: it blocks on _bufferSemaphore.Wait() (no CT) until a slot
-                //              is freed — which won't happen until releaseGate is set.
+                //              is freed - which won't happen until releaseGate is set.
                 Stopwatch sw = Stopwatch.StartNew();
 
                 insertTask = Task.Run(() =>
@@ -226,7 +226,7 @@ namespace NKitDataStore.Tests
                 // With a correct implementation, the cancelled CT causes InsertBlockWithCompression
                 // to throw OperationCanceledException immediately. Task.Wait(500) would rethrow it
                 // as AggregateException, so use Task.WhenAny to check completion without throwing.
-                bool completedQuickly = Task.WhenAny(insertTask, Task.Delay(500)).GetAwaiter().GetResult() == insertTask;
+                bool completedQuickly = await Task.WhenAny(insertTask, Task.Delay(500)) == insertTask;
 
                 sw.Stop();
                 Trace.TraceInformation($"insertTask completed: {completedQuickly}, elapsed: {sw.ElapsedMilliseconds}ms");
@@ -234,7 +234,7 @@ namespace NKitDataStore.Tests
                 // Release the gate so the blocked compression tasks can drain and
                 // BlockWriter.Dispose() doesn't hang during test cleanup.
                 releaseGate.Set();
-                try { insertTask.Wait(10_000); } catch { } // OperationCanceledException expected
+                try { await insertTask.WaitAsync(TimeSpan.FromSeconds(10)); } catch { } // OperationCanceledException expected
 
                 // The key assertion: the call with a cancelled token must return
                 // well within the gated-compression window (which is >> 500ms).
@@ -248,7 +248,7 @@ namespace NKitDataStore.Tests
             {
                 // Always release the gate so compression tasks can complete and Dispose() returns.
                 releaseGate.Set();
-                try { insertTask?.Wait(10_000); } catch { } // OperationCanceledException expected
+                try { await (insertTask ?? Task.CompletedTask).WaitAsync(TimeSpan.FromSeconds(10)); } catch { } // OperationCanceledException expected
                 writer?.Shutdown(10_000);
                 writer?.Dispose();
             }
@@ -262,7 +262,7 @@ namespace NKitDataStore.Tests
         /// BeginWork increments _pendingWorkCount atomically but calls _idleEvent.Reset()
         /// in a separate (non-atomic) step.  Between the increment and the Reset, WaitAll
         /// can observe _pendingWorkCount > 0, fall through to _idleEvent.Wait(), find the
-        /// event still Set (from the previous idle period), and return 'true' — signalling
+        /// event still Set (from the previous idle period), and return 'true' - signalling
         /// "all work done" before compression/write tasks have actually run.
         ///
         /// In the pipeline this means BinaryTransaction.Commit() can run before all block
@@ -325,7 +325,7 @@ namespace NKitDataStore.Tests
         /// does not deadlock when all callers are themselves thread-pool threads.
         ///
         /// This is the overnight-batch scenario in miniature: N Task.Run tasks
-        /// each calling InsertBlockWithCompression — equivalent to N pipeline writer
+        /// each calling InsertBlockWithCompression - equivalent to N pipeline writer
         /// tasks running in parallel across multiple NKDS add operations.
         /// </summary>
         [Fact]
@@ -368,9 +368,9 @@ namespace NKitDataStore.Tests
             int actual = Volatile.Read(ref writeCalls);
 
             Assert.Empty(errors);
-            Assert.True(done, $"WaitAll timed out with {actual}/{callerCount} writes — possible thread-pool deadlock");
+            Assert.True(done, $"WaitAll timed out with {actual}/{callerCount} writes - possible thread-pool deadlock");
             Assert.True(actual == callerCount,
-                $"Only {actual}/{callerCount} blocks written — some may have been lost");
+                $"Only {actual}/{callerCount} blocks written - some may have been lost");
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace NKitDataStore.Tests
             writer.WaitAll(10_000);
 
             Assert.True(Volatile.Read(ref writeCalls) <= 1,
-                $"Block written {Volatile.Read(ref writeCalls)} times — deduplication failed under concurrency");        }
+                $"Block written {Volatile.Read(ref writeCalls)} times - deduplication failed under concurrency");        }
 
         // ---- Shutdown correctness ---------------------------------------------------
 

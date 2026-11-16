@@ -286,7 +286,7 @@ public sealed class ConfigService : IConfigService
         {
             // Ensure the directory exists - required when saving to a system-mode config
             // directory (~/.config/nkds/) that may not have been created yet on first run.
-            string dir = Path.GetDirectoryName(_configPath);
+            string? dir = Path.GetDirectoryName(_configPath);
             if (!string.IsNullOrEmpty(dir))
                 Directory.CreateDirectory(dir);
 
