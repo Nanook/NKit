@@ -613,6 +613,12 @@ namespace NKitCore
             if (firstError != null)
                 System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(firstError).Throw();
 
+            // Ensure the final completion notification runs on a real thread pool thread rather
+            // than being inlined on a GC worker thread. Without this, background GC compaction
+            // can intercept the continuation and inline ProcessAsync.MoveNext() on the GC thread;
+            // if GC cycles again before the notification propagates, the run task's finally block
+            // (which calls completed.CompleteAdding()) never fires and the consumer stalls.
+            await Task.Yield();
             await completer.FinalizeAsync(context, token).ConfigureAwait(false);
         }
 
