@@ -882,7 +882,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
             // Skip for NKit sources - on a nkit.iso the DOL is at its compacted source position,
             // not at MainDolOffset; NKitAsIso handles reconstruction via emitRelocatedDol.
             if (_fsInfo != null && _fsInfo.MainDolOffset > _fsInfo.FstOffset + _fsInfo.FstSize
-                && _fsInfo.NkitVersion == 0)
+                && _fsInfo.NkitVersion == 0 && !_info.IsNkitDecoded)
             {
                 long dolStreamPos = dataAreaStart + _fsInfo.MainDolOffset;
                 byte[] dolHdr = new byte[0x90 + 18 * 4]; // offsets 0x00-0x47 + sizes 0x90-0xD7

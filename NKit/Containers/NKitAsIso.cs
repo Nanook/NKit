@@ -969,7 +969,7 @@ namespace Nanook.NKit.Container
                 // emit it as raw data and decode the post-DOL gap up to the first FST file.
                 // This handles the case where the DOL sits between the FST area and the first
                 // FST file (the only known layout for discs with a relocated DOL).
-                dstPos = emitRelocatedDol(mainDolAddr, ref mainDolPatched, ref srcPos, dstPos, ref nullsPos, (int)((FstFile)files[0]).FsOffset);
+                dstPos = emitRelocatedDol(mainDolAddr, ref mainDolPatched, ref srcPos, dstPos, ref nullsPos, (int)((FstFile)files[0]).FsOffset, files);
             }
 
             // Then process each file sequentially: copy data, parse gap after
@@ -1040,12 +1040,26 @@ namespace Nanook.NKit.Container
         /// the post-DOL gap encoding that follows it. Patches DolPtrOffset in the header.
         /// Returns the updated dstPos (unchanged if the DOL is not here).
         /// </summary>
-        private long emitRelocatedDol(long mainDolAddr, ref bool mainDolPatched, ref int srcPos, long dstPos, ref long nullsPos, int nextFstSrcOffset)
+        private long emitRelocatedDol(long mainDolAddr, ref bool mainDolPatched, ref int srcPos, long dstPos, ref long nullsPos, int nextFstSrcOffset, System.Collections.Generic.List<IFsFile> fstFiles)
         {
             // mainDolAddr is the nkit SOURCE position of the DOL (written by finalise()).
             // After decoding the pre-DOL gap, srcPos should be at the DOL in the nkit source.
             if (mainDolPatched || (long)srcPos != mainDolAddr || srcPos + 0xD8 > _src.Length)
                 return dstPos;
+
+            // If a FST file starts at the same compact-source position as mainDolAddr, it is a
+            // junk-encoded FST file (e.g. default.dol on some discs) whose compact DOL-pointer
+            // coincides with this position. It is NOT a relocated DOL - the normal file loop will
+            // handle it. Without this guard, emitRelocatedDol would mis-read gap-encoding bytes
+            // as a DOL header and corrupt the entire decoded layout.
+            if (fstFiles != null)
+            {
+                foreach (IFsFile f in fstFiles)
+                {
+                    if ((long)((FstFile)f).FsOffset == mainDolAddr)
+                        return dstPos;
+                }
+            }
 
             // Read DOL header to compute size (18 section offsets + sizes).
             long dolSize = 0;
