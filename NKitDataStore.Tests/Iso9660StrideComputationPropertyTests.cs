@@ -36,7 +36,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — CleanToOffset then OffsetToClean
+        /// Property 3: ISO9660 Stride Computation Correctness - CleanToOffset then OffsetToClean
         /// is identity for all valid clean offsets.
         ///
         /// For any valid clean offset (aligned to data within blocks), converting to a strided
@@ -71,7 +71,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — OffsetToClean then CleanToOffset
+        /// Property 3: ISO9660 Stride Computation Correctness - OffsetToClean then CleanToOffset
         /// is identity for offsets within the data region of each block.
         ///
         /// For any strided offset that falls within the data region of a block
@@ -108,7 +108,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — Block-aligned clean offsets
+        /// Property 3: ISO9660 Stride Computation Correctness - Block-aligned clean offsets
         /// round-trip correctly.
         ///
         /// For any clean offset that is exactly at a block boundary (multiple of DataLength),
@@ -143,7 +143,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — SourceBlockSize * N bytes
+        /// Property 3: ISO9660 Stride Computation Correctness - SourceBlockSize * N bytes
         /// of raw sector data contains exactly DataLength * N bytes of user data.
         ///
         /// For N complete sectors, the clean size computed from the strided size SHALL equal
@@ -172,7 +172,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — Mode1Raw specific configuration.
+        /// Property 3: ISO9660 Stride Computation Correctness - Mode1Raw specific configuration.
         ///
         /// For Mode1Raw stride (SourceBlockSize=0x930, DataOffset=0x10, DataLength=0x800),
         /// OffsetToClean and CleanToOffset are mutual inverses for all valid offsets.
@@ -192,7 +192,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — Mode2/Mode2Form1 specific configuration.
+        /// Property 3: ISO9660 Stride Computation Correctness - Mode2/Mode2Form1 specific configuration.
         ///
         /// For Mode2/Mode2Form1 stride (SourceBlockSize=0x930, DataOffset=0x18, DataLength=0x800),
         /// OffsetToClean and CleanToOffset are mutual inverses for all valid offsets.
@@ -212,7 +212,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — Mode2Form2 specific configuration.
+        /// Property 3: ISO9660 Stride Computation Correctness - Mode2Form2 specific configuration.
         ///
         /// For Mode2Form2 stride (SourceBlockSize=0x930, DataOffset=0x18, DataLength=0x914),
         /// OffsetToClean and CleanToOffset are mutual inverses for all valid offsets.
@@ -232,7 +232,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4**
         ///
-        /// Property 3: ISO9660 Stride Computation Correctness — Audio stride (identity).
+        /// Property 3: ISO9660 Stride Computation Correctness - Audio stride (identity).
         ///
         /// For Audio stride (SourceBlockSize=0x930, DataOffset=0, DataLength=0x930),
         /// OffsetToClean and CleanToOffset are identity functions (no striding occurs).

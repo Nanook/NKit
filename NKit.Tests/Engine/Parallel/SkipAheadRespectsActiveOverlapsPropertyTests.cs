@@ -27,7 +27,7 @@ namespace NKit.Tests.Engine.Parallel
         /// </summary>
         private enum SkipDecision
         {
-            /// <summary>No skip occurs — data is still needed by active overlaps or candidates.</summary>
+            /// <summary>No skip occurs - data is still needed by active overlaps or candidates.</summary>
             NoSkip,
             /// <summary>Skip to the next area (all candidates done, no active overlaps).</summary>
             SkipToNextArea,

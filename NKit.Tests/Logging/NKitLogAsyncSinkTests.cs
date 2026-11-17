@@ -40,7 +40,7 @@ namespace NKit.Tests.Logging
         [Fact]
         public void DrainsAndFlushesAllEvents()
         {
-            using ManualResetEventSlim gate = new ManualResetEventSlim(true); // open — writes proceed
+            using ManualResetEventSlim gate = new ManualResetEventSlim(true); // open - writes proceed
             using LogBus bus = new LogBus(LogLevel.Trace);
             GatedAsyncSink sink = new GatedAsyncSink(gate, 1024);
             bus.AddSink(sink);
@@ -74,7 +74,7 @@ namespace NKit.Tests.Logging
             producer.Start();
             bool finished = producer.Join(TimeSpan.FromSeconds(5));
 
-            Assert.True(finished, "producer blocked — logging applied backpressure (must never happen)");
+            Assert.True(finished, "producer blocked - logging applied backpressure (must never happen)");
 
             // Release the drain thread and flush; a dropped-count marker must have been recorded.
             gate.Set();

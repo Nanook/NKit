@@ -35,7 +35,7 @@ public partial class AddImagesDialog : ReactiveWindow<AddImagesDialogViewModel>
                             suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastDir);
                     }
                 }
-                catch { /* Ignore — open picker without suggested location */ }
+                catch { /* Ignore - open picker without suggested location */ }
 
                 IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
                 {
@@ -82,7 +82,7 @@ public partial class AddImagesDialog : ReactiveWindow<AddImagesDialogViewModel>
                             suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(lastDir);
                     }
                 }
-                catch { /* Ignore — open picker without suggested location */ }
+                catch { /* Ignore - open picker without suggested location */ }
 
                 IReadOnlyList<IStorageFolder> folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
                 {

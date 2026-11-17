@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Nintendo;
+using Nanook.NKit.Nintendo;
 using Nanook.NKit.Nintendo.WiiU;
 using NKitDataStore; // for DataStride, OffsetRecord, etc.
 using NKitDataStore.Interfaces;
@@ -491,7 +491,7 @@ namespace Nanook.NKit
             // canonical area (as the non-persisted repeats already do) reconstructs them correctly.
             //
             // For unencrypted canonical areas, the Other area's stored bytes (if any) may differ
-            // from the canonical content — use stored data when it exists, fold only when nothing
+            // from the canonical content - use stored data when it exists, fold only when nothing
             // was stored (CRC-dedup skipped an identical section).
             if (!ctx.IsEncrypted)
             {
@@ -509,7 +509,7 @@ namespace Nanook.NKit
                     }
                 }
                 catch { }
-                // No stored data — fall through to fold from canonical
+                // No stored data - fall through to fold from canonical
             }
 
             // Encrypted ContentRepeat (or unencrypted with no stored data): fold to canonical.
@@ -560,7 +560,7 @@ namespace Nanook.NKit
             }
 
             // Other (repeater) areas that are encrypted go through WiiUSecurity like
-            // FileSystem areas — they represent content data that needs per-sector
+            // FileSystem areas - they represent content data that needs per-sector
             // encryption.  Skip hash restoration below (no BlockPadding for Other).
             if (areaContext.IsOther)
             {
@@ -748,7 +748,7 @@ namespace Nanook.NKit
             //    (CreateSeekIv returns null when the computed IV matches the initial IV)
             //    so we must also check the synthetic flag.
             // Non-Game hashless content on WUD discs (SI, Update) uses per-sector
-            // encryption with offset-based IVs — those areas have real ContentHeaders
+            // encryption with offset-based IVs - those areas have real ContentHeaders
             // (isSynthetic=false) and no SeekIvs, so they fall through to the
             // WiiUSecurity path below.
             bool isFlat = _imageReader.Image.Format != ImageFormat.Iso && _imageReader.Image.Format != ImageFormat.Bin;

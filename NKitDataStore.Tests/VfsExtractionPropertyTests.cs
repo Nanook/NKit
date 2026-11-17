@@ -295,7 +295,7 @@ namespace NKitDataStore.Tests
             {
                 MockResourceManager mgr = model.GetResourcesByIndex(i);
                 if (!managers.Add(mgr))
-                    return false; // duplicate reference found — aliasing
+                    return false; // duplicate reference found - aliasing
             }
 
             return managers.Count == n;
@@ -493,7 +493,7 @@ namespace NKitDataStore.Tests
         ///
         /// Property 3: Directories system type exclusion.
         /// The count of items in the Image-kind listing equals the total count minus
-        /// the count of "Directories" items — no items are lost or duplicated.
+        /// the count of "Directories" items - no items are lost or duplicated.
         /// </summary>
         [Property(MaxTest = 100)]
         public bool FilteredCount_EqualsTotal_MinusDirectoriesCount(NonNegativeInt countSeed, NonNegativeInt typeSeed)
@@ -860,7 +860,7 @@ namespace NKitDataStore.Tests
             NkfsLruCache cache = new NkfsLruCache(TestCacheCapacity);
             long startId = (startIdSeed.Get % 1000) + 1;
 
-            // Add exactly capacity items — no eviction should occur
+            // Add exactly capacity items - no eviction should occur
             for (int i = 0; i < TestCacheCapacity; i++)
             {
                 cache.TrackNkfsLoaded(startId + i);
@@ -871,7 +871,7 @@ namespace NKitDataStore.Tests
             if (cache.EvictionLog.Count != 0)
                 return false;
 
-            // Add one more — should evict the first item (startId)
+            // Add one more - should evict the first item (startId)
             cache.TrackNkfsLoaded(startId + TestCacheCapacity);
 
             if (cache.CacheOrder.Count != TestCacheCapacity)
@@ -896,7 +896,7 @@ namespace NKitDataStore.Tests
     /// lock instance.
     ///
     /// Since VfsModel requires real DataStore paths to construct, this test validates the
-    /// ConcurrentDictionary.GetOrAdd pattern used by GetNkfsLoadLock directly — the same
+    /// ConcurrentDictionary.GetOrAdd pattern used by GetNkfsLoadLock directly - the same
     /// algorithm that guarantees lock identity stability.
     /// </summary>
     public class PerItemLockIdentityStabilityPropertyTests
@@ -1073,7 +1073,7 @@ namespace NKitDataStore.Tests
                         if (line.Contains(pattern))
                         {
                             string relativePath = Path.GetRelativePath(nkdsProjectDir, filePath);
-                            violations.Add($"  {relativePath}:{lineNum + 1} — {pattern} found: {line.Trim()}");
+                            violations.Add($"  {relativePath}:{lineNum + 1} - {pattern} found: {line.Trim()}");
                             break; // Only report once per line
                         }
                     }
@@ -1117,7 +1117,7 @@ namespace NKitDataStore.Tests
     ///
     /// For any .cs source file within the NKDS/Vfs/ directory (excluding VfsConstants.cs),
     /// the file SHALL contain zero inline string literals matching known magic values
-    /// ("Directories", "WiiU", "Images", "Filesystems") — all such comparisons SHALL
+    /// ("Directories", "WiiU", "Images", "Filesystems") - all such comparisons SHALL
     /// reference VfsConstants members.
     /// </summary>
     public class NoInlineMagicStringsPropertyTests
@@ -1180,7 +1180,7 @@ namespace NKitDataStore.Tests
                         if (line.Contains(magicString))
                         {
                             string relativePath = Path.GetRelativePath(vfsDir, filePath);
-                            violations.Add($"  {relativePath}:{lineNum + 1} — {magicString} found: {line.Trim()}");
+                            violations.Add($"  {relativePath}:{lineNum + 1} - {magicString} found: {line.Trim()}");
                             break; // Only report once per line
                         }
                     }

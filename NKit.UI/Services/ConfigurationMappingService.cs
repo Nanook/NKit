@@ -86,7 +86,7 @@ namespace NKit.Ui.Services
                     }
                     else
                     {
-                        // Always reset to the system's default indexed format — this ensures that
+                        // Always reset to the system's default indexed format - this ensures that
                         // switching from PS3 (indexed="cue") to WiiU (indexed="app") correctly
                         // resets the indexed slot rather than inheriting an incompatible format.
                         settings.ConvertIndexedFormat = ConfigSettingsDefaults.GetDefaultIndexedFormat(settings.System);
@@ -294,7 +294,7 @@ namespace NKit.Ui.Services
                     ConfigSettingsDefaults.GetDefaultSubExtension());
             }
 
-            // WiiU indexed formats (app, wua, loadiine) are parameter-free — pass through as-is.
+            // WiiU indexed formats (app, wua, loadiine) are parameter-free - pass through as-is.
             if (baseFormat == ConfigSettingsConstants.FormatApp
              || baseFormat == ConfigSettingsConstants.FormatWua
              || baseFormat == ConfigSettingsConstants.FormatLoadiine)

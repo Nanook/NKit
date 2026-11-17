@@ -11,7 +11,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 1.1, 1.2, 1.3, 2.1, 2.2, 2.3**
     ///
-    /// Property 1: Bug Condition — VFS CDN Title Key Discovery Failure
+    /// Property 1: Bug Condition - VFS CDN Title Key Discovery Failure
     ///
     /// The actual bug is that CodePagesEncodingProvider is not registered in the
     /// NKitDataStore/NKDS library, causing Encoding.GetEncoding("Shift-JIS") to throw
@@ -256,7 +256,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.1, 2.2, 2.3**
         ///
-        /// Property 1: Bug Condition — For any WiiU CDN image read through the VFS path
+        /// Property 1: Bug Condition - For any WiiU CDN image read through the VFS path
         /// (with cachedOffsets and sharedBufferCache) where readAreaBytes fails for metadata
         /// areas but AreaValueType.TitleKey exists in area metadata:
         /// 1. The Key property SHALL NOT be null after construction
@@ -426,7 +426,7 @@ namespace NKitDataStore.Tests
 
             Assert.True(bytesRead > 0, "Should read data from FileSystem area");
 
-            // Verify output is NOT plaintext — encryption must have been applied
+            // Verify output is NOT plaintext - encryption must have been applied
             byte[] plaintextPattern = reader.PlaintextPattern;
             bool isPlaintext = true;
             for (int i = 0; i < Math.Min(bytesRead, plaintextPattern.Length); i++)

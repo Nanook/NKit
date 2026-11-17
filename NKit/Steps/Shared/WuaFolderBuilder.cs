@@ -15,7 +15,7 @@ namespace Nanook.NKit.Steps.Shared
     /// in a subfolder named &lt;16-digit-titleId&gt;_v&lt;version&gt;. Each title subfolder contains the
     /// game filesystem directly (code/, content/, meta/) with no .app / tmd / cetk structure.
     ///
-    /// The ZArchive is transparent — the title folder is treated exactly as a Loadiine folder on
+    /// The ZArchive is transparent - the title folder is treated exactly as a Loadiine folder on
     /// disk would be, and its files are stored via DataStoreFolderFormatter in the same way
     /// `nkds adddir` stores a folder.
     /// </summary>

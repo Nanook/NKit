@@ -323,7 +323,15 @@ jobs:
         retention-days: 1
 
   create-release:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !cancelled() && (needs.build-console.result != 'failure' && needs.build-gui.result != 'failure')
+    # Only run for v* tag pushes - skip entirely for workflow_dispatch and branch builds.
+    # A versioned release must always succeed; non-tag builds produce no release artifact.
+    if: >-
+      github.event_name == 'push' &&
+      github.ref_type == 'tag' &&
+      startsWith(github.ref_name, 'v') &&
+      !cancelled() &&
+      needs.build-console.result != 'failure' &&
+      needs.build-gui.result != 'failure'
     needs: [build-console, build-gui]
     runs-on: ubuntu-latest
     permissions:
@@ -333,7 +341,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref || github.ref }}
-        sparse-checkout: RELEASE_NOTES.md
+        sparse-checkout: |
+          RELEASE_NOTES.md
+          DEV_RELEASE_NOTES.md
         sparse-checkout-cone-mode: false
 
     - name: Download all artifacts

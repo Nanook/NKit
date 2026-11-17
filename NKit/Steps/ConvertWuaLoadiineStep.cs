@@ -13,9 +13,9 @@ namespace Nanook.NKit
     /// Output:  Flat folder tree matching the WUA's internal directory layout.
     ///
     /// Each section carries:
-    ///   <c>section.AreaInfo.Properties["FileName"]</c> — relative file path
-    ///   <c>section.AreaOffset</c> — byte offset within the current file (0 = file start)
-    ///   <c>section.Decrypted</c>  — raw file bytes for this section
+    ///   <c>section.AreaInfo.Properties["FileName"]</c> - relative file path
+    ///   <c>section.AreaOffset</c> - byte offset within the current file (0 = file start)
+    ///   <c>section.Decrypted</c>  - raw file bytes for this section
     /// </summary>
     internal class ConvertWuaLoadiineStep : StepBase, IStep
     {

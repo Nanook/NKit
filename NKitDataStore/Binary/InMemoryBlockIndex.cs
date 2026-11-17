@@ -6,28 +6,28 @@ namespace NKitDataStore.Binary
     /// <summary>
     /// Flat sorted-array block index for O(log N) deduplication lookups during writes.
     ///
-    /// Memory design — 28 bytes per loaded entry, zero per-entry overhead:
+    /// Memory design - 28 bytes per loaded entry, zero per-entry overhead:
     /// The loaded-from-disk portion is a contiguous sorted <see cref="BlockIndexEntry"/> struct
     /// array. A small <see cref="ConcurrentDictionary{TKey,TValue}"/> holds only blocks added
     /// in the current write session (typically thousands of entries, not millions).
     ///
     /// This replaces the previous design that loaded everything into a single
-    /// ConcurrentDictionary (~72 bytes per entry) — a ~60 % reduction for large stores.
+    /// ConcurrentDictionary (~72 bytes per entry) - a ~60 % reduction for large stores.
     ///
     /// Lookup strategy:
-    ///   1. Session entries (O(1) hash lookup) — checked first, wins over sorted array.
-    ///   2. Sorted loaded array (O(log N) binary search) — the main index loaded from disk.
+    ///   1. Session entries (O(1) hash lookup) - checked first, wins over sorted array.
+    ///   2. Sorted loaded array (O(log N) binary search) - the main index loaded from disk.
     ///
     /// The Block_Index is loaded only during write operations; readers never access it.
     /// </summary>
     internal class InMemoryBlockIndex
     {
-        // Fully merged sorted array — main block index + all persisted deltas merged in.
+        // Fully merged sorted array - main block index + all persisted deltas merged in.
         // Immutable after construction. 28 bytes per entry, no per-entry overhead.
         private readonly BlockIndexEntry[] _sortedEntries;
 
         // Only blocks written in the current write session.
-        // Stays small — cleared/serialized as a delta on commit and not accumulated cross-session.
+        // Stays small - cleared/serialized as a delta on commit and not accumulated cross-session.
         private readonly ConcurrentDictionary<BlockKey, BlockIndexEntry> _sessionEntries;
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace NKitDataStore.Binary
 
         /// <summary>
         /// Adds a block written in the current write session. Session entries win over the sorted
-        /// array on lookup. Thread-safe — called concurrently during parallel block compression.
+        /// array on lookup. Thread-safe - called concurrently during parallel block compression.
         /// </summary>
         public void AddEntry(BlockIndexEntry entry) => this._sessionEntries[entry.Key] = entry;
 
@@ -120,7 +120,7 @@ namespace NKitDataStore.Binary
             if (deltaRunsNewestFirst == null || deltaRunsNewestFirst.Count == 0)
                 return this;
 
-            // Deduplicate across all delta runs — first occurrence wins (newest run first).
+            // Deduplicate across all delta runs - first occurrence wins (newest run first).
             HashSet<BlockKey> seen = new HashSet<BlockKey>();
             List<BlockIndexEntry> allDeltaEntries = new List<BlockIndexEntry>();
 
@@ -266,7 +266,7 @@ namespace NKitDataStore.Binary
                 }
                 else
                 {
-                    // Same key — override (delta / session) wins
+                    // Same key - override (delta / session) wins
                     result.Add(overrides[oi++]);
                     si++; // skip the sorted entry
                 }

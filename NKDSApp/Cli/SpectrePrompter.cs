@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Nanook.NKit.Cli
 {
     /// <summary>
-    /// Spectre.Console implementation of the shared <see cref="IPrompter"/> — the single class that
+    /// Spectre.Console implementation of the shared <see cref="IPrompter"/> - the single class that
     /// touches Spectre prompt widgets for BOTH console apps (nkit and nkds). AOT-safe: concrete
     /// string prompts, no reflection.
     /// <para>
@@ -34,7 +34,7 @@ namespace Nanook.NKit.Cli
                 .HighlightStyle(HighlightStyle)
                 .AddChoices(choices);
             string result = AnsiConsole.Prompt(prompt);
-            // Restore the cursor — Spectre hides it (ESC[?25l) during interactive selection and, on
+            // Restore the cursor - Spectre hides it (ESC[?25l) during interactive selection and, on
             // Linux, may not restore it cleanly, leaving the terminal cursor invisible afterwards.
             // SelectionPrompt has no visible text caret, so it is the main offender.
             try { if (!Console.IsOutputRedirected) Console.CursorVisible = true; } catch { }
@@ -110,7 +110,7 @@ namespace Nanook.NKit.Cli
                     Console.SetCursorPosition(0, Console.CursorTop);
                 }
             }
-            catch { /* not addressable — just write the line below */ }
+            catch { /* not addressable - just write the line below */ }
         }
 
         public void ShowHelp(string title, string description, IReadOnlyList<(string value, string note)> examples)
@@ -128,7 +128,7 @@ namespace Nanook.NKit.Cli
                 foreach ((string value, string note) in examples)
                 {
                     string v = value.Length == 0 ? "(blank)" : value;
-                    // Example values in cyan, notes in grey — matches the cyan/yellow scheme.
+                    // Example values in cyan, notes in grey - matches the cyan/yellow scheme.
                     sb.Append("\n  [cyan]").Append(Markup.Escape(v.PadRight(pad))).Append("[/]");
                     if (!string.IsNullOrEmpty(note))
                         sb.Append("  [grey]").Append(Markup.Escape(note)).Append("[/]");

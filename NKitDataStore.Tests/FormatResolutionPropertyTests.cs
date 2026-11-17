@@ -173,10 +173,10 @@ public class FormatResolutionPropertyTests
         FormatRowViewModel isoRow = vm.FormatRows.First(r => r.System == "WiiU" && r.SourceFormat == "iso");
         FormatRowViewModel appRow = vm.FormatRows.First(r => r.System == "WiiU" && r.SourceFormat == "app");
 
-        // WiiU/iso has options: iso, wux, app — select "wux"
+        // WiiU/iso has options: iso, wux, app - select "wux"
         isoRow.SelectedTargetFormat = "wux";
 
-        // WiiU/app has only: app — stays as "app"
+        // WiiU/app has only: app - stays as "app"
         Assert.Equal("wux", vm.ResolveFormatForImage(wiiuIsoImage));
         Assert.Equal("app", vm.ResolveFormatForImage(wiiuAppImage));
     }

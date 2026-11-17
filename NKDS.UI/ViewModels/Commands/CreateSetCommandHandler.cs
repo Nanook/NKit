@@ -19,7 +19,7 @@ public class CreateSetCommandHandler : ICommandHandler
     {
         return Signal.FromAsync<RxVoid>(async () =>
         {
-            // 1. Resolve session path (if any) — folder selection happens inside the dialog
+            // 1. Resolve session path (if any) - folder selection happens inside the dialog
             IReadOnlyList<ImageSessionModel> sessions;
             try
             {
@@ -64,7 +64,7 @@ public class CreateSetCommandHandler : ICommandHandler
 
             try
             {
-                // 4. Create the set (no exclusive access needed — creates new files)
+                // 4. Create the set (no exclusive access needed - creates new files)
                 using NkdsOperations ops = new NkdsOperations();
                 OperationResult result = ops.CreateSet(dataStorePath, dialogVm.SetName, dialogVm.ParsedShardSize, dialogVm.ParsedBlockSize);
 

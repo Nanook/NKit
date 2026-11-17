@@ -227,7 +227,7 @@ namespace NKit.Tests.Configuration.ConfigurationManager
         [Fact(DisplayName = "Linux CLI in system mode with defaults: config is created at ~/.config/nkit/nkit.yaml")]
         public void Linux_CLI_WithDefaults_SystemMode_CreatesConfigAtCorrectLocation()
         {
-            // Arrange — Linux CLI, system install: no nkit.yaml next to binary, but defaults/nkit.yaml present
+            // Arrange - Linux CLI, system install: no nkit.yaml next to binary, but defaults/nkit.yaml present
             MockPlatformService mockPlatform = new MockPlatformService(
                 PlatformModeDetectionTests.Platform.Linux,
                 PlatformModeDetectionTests.AppType.CLI,

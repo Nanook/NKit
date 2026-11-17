@@ -123,7 +123,7 @@ public class MainWindowViewModelPostRefactorTests : IDisposable
     public void All18ToolbarCommands_HaveSubscribers()
     {
         // Verify that each toolbar command has at least one subscriber wired by MainWindowViewModel.
-        // ReactiveCommand tracks subscriptions internally — we verify the commands are non-null
+        // ReactiveCommand tracks subscriptions internally - we verify the commands are non-null
         // and that the ViewModel's wireToolbarCommands() connected them by checking the handler
         // fields exist via reflection.
         Type vmType = typeof(MainWindowViewModel);
@@ -325,7 +325,7 @@ public class MainWindowViewModelPostRefactorTests : IDisposable
     [Fact]
     public void AllInteractions_AreNonNull_AndCorrectTypes()
     {
-        // Verify all interactions are instantiated (not null) — this confirms
+        // Verify all interactions are instantiated (not null) - this confirms
         // the Interaction-based dialog pattern is preserved post-refactor.
         (object interaction, string name)[] interactions = new (object interaction, string name)[]
         {

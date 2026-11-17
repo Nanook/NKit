@@ -4,7 +4,7 @@ using System.Text;
 namespace NKitDataStore.Tests
 {
     /// <summary>
-    /// Unit tests for SyntheticSourceDetector.DetectFolderGroups() — CueFolder group detection.
+    /// Unit tests for SyntheticSourceDetector.DetectFolderGroups() - CueFolder group detection.
     ///
     /// **Validates: Requirements 10.1, 10.2**
     /// </summary>
@@ -183,7 +183,7 @@ namespace NKitDataStore.Tests
                 {
                     new SourceFileItem(dirPath, fileName, Path.GetExtension(fileName), "", 0, 1024, 0, false, false)
                 },
-                // No IndexFile — not a disc image
+                // No IndexFile - not a disc image
             };
             return sf;
         }

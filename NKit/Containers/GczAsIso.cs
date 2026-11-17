@@ -97,7 +97,7 @@ namespace Nanook.NKit.Container
             try { _zlib?.Dispose(disposing); } catch { }
             // Release the per-image block reader's buffers (per-block Items + cached decompressed
             // blocks + per-thread temp/result buffers). It is not IDisposable and GczAsIso.Dispose
-            // previously left it rooted, so a .gcz image's block buffers lingered until GC — a large
+            // previously left it rooted, so a .gcz image's block buffers lingered until GC - a large
             // native/LOH residual that never dropped between images in a long-lived process (the UI).
             try { _blockReader?.Release(); } catch { }
             _blockReader = null;

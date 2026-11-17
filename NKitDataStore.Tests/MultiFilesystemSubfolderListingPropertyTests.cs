@@ -82,10 +82,10 @@ public class MultiFilesystemSubfolderListingPropertyTests
 
             bool subfoldersMatch = presentedSubfolders.SetEquals(expectedSubfolders);
 
-            // Assert 3: Count matches — exactly N folder entries for N types
+            // Assert 3: Count matches - exactly N folder entries for N types
             bool countMatches = item.FileSystemNkfsPerType.Count == typeNames.Count;
 
-            // Assert 4: No file entries at root level — the dictionary contains only
+            // Assert 4: No file entries at root level - the dictionary contains only
             // NkFs instances (folders), not file data. The FilesystemMountHandler.ListFolder
             // yields only FsFolder entries (one per key) when IsMultiFilesystem is true.
             // At the model level, this is guaranteed by the fact that dictionary keys

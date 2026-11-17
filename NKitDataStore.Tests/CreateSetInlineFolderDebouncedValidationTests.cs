@@ -53,7 +53,7 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
     [Fact]
     public void TypedInput_TriggersValidation_After300msDebounce()
     {
-        // Arrange — use TestScheduler to control time
+        // Arrange - use TestScheduler to control time
         var testScheduler = new TestScheduler();
         NkdsUi.RxSchedulers.SetSchedulerForTest(testScheduler);
 
@@ -63,18 +63,18 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
         // Advance past initial subscription setup
         testScheduler.AdvanceBy(TimeSpan.FromMilliseconds(1).Ticks);
 
-        // Act — simulate typing a non-existent path
+        // Act - simulate typing a non-existent path
         vm.FolderPath = @"Z:\NonExistent\Path\For\Testing";
 
-        // Assert — before 300ms, the debounced validation has NOT fired
+        // Assert - before 300ms, the debounced validation has NOT fired
         // FolderPathError should still be null (initial state)
         testScheduler.AdvanceBy(TimeSpan.FromMilliseconds(299).Ticks);
         Assert.Null(vm.FolderPathError);
 
-        // Act — advance past the 300ms threshold
+        // Act - advance past the 300ms threshold
         testScheduler.AdvanceBy(TimeSpan.FromMilliseconds(2).Ticks);
 
-        // Assert — now validation has fired and set the error for the non-existent path
+        // Assert - now validation has fired and set the error for the non-existent path
         Assert.NotNull(vm.FolderPathError);
         Assert.Equal("Path must be an existing directory", vm.FolderPathError);
     }
@@ -86,7 +86,7 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
     [Fact]
     public async Task BrowseCommand_TriggersImmediateValidation_NoDebounce()
     {
-        // Arrange — use TestScheduler so the debounced path does NOT fire
+        // Arrange - use TestScheduler so the debounced path does NOT fire
         var testScheduler = new TestScheduler();
         NkdsUi.RxSchedulers.SetSchedulerForTest(testScheduler);
 
@@ -103,10 +103,10 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
             interaction.SetOutput(nonExistentPath);
         });
 
-        // Act — execute BrowseCommand (which calls ValidateFolderPath directly)
+        // Act - execute BrowseCommand (which calls ValidateFolderPath directly)
         await vm.BrowseCommand.Execute();
 
-        // Assert — validation error is set IMMEDIATELY, without advancing the scheduler
+        // Assert - validation error is set IMMEDIATELY, without advancing the scheduler
         // (no debounce wait needed for browse selection)
         Assert.Equal(nonExistentPath, vm.FolderPath);
         Assert.NotNull(vm.FolderPathError);
@@ -119,7 +119,7 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
     [Fact]
     public async Task BrowseCommand_ValidDirectory_ClearsErrorImmediately()
     {
-        // Arrange — use TestScheduler so debounced path doesn't fire
+        // Arrange - use TestScheduler so debounced path doesn't fire
         var testScheduler = new TestScheduler();
         NkdsUi.RxSchedulers.SetSchedulerForTest(testScheduler);
 
@@ -141,10 +141,10 @@ public class CreateSetInlineFolderDebouncedValidationTests : IDisposable
             interaction.SetOutput(validDir);
         });
 
-        // Act — browse selects a valid directory
+        // Act - browse selects a valid directory
         await vm.BrowseCommand.Execute();
 
-        // Assert — error is cleared immediately (no scheduler advance needed)
+        // Assert - error is cleared immediately (no scheduler advance needed)
         Assert.Null(vm.FolderPathError);
     }
 

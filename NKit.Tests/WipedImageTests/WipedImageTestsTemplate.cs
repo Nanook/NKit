@@ -165,7 +165,7 @@ namespace NKit.Tests.Full.Wiped
             foreach (ScanArea a in s.Areas)
             {
                 // An area's Properties can legitimately be null (an area type not populated by the
-                // reader's SetProperties, e.g. a key-missing/default area) — the real serializer
+                // reader's SetProperties, e.g. a key-missing/default area) - the real serializer
                 // (ScanParser) guards this the same way, so mirror it here rather than NRE.
                 if (a.AreaInfo?.Properties != null)
                     foreach (string k in a.AreaInfo.Properties.Keys)

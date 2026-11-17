@@ -749,7 +749,7 @@ namespace NKit.Tests.NKDS.Binary
             // Assert
             using BinaryIndexFile compactedFile = BinaryIndexFile.Open(compactedPath);
             InMemoryBlockIndex compactedIndex = compactedFile.LoadBlockIndex();
-            // All entries should be pruned — no live images reference them
+            // All entries should be pruned - no live images reference them
             Assert.Equal(0, compactedIndex.GetEntries().Length);
             Assert.False(compactedIndex.TryGetBlock(blockX, out _, out _, out _),
                 "Block X should be pruned (no live image references it).");

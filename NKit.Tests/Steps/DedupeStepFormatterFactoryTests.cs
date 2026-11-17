@@ -469,7 +469,7 @@ namespace NKit.Tests.Engine.Output
         [InlineData(SystemType.GameCube)]
         public void FormatterFactory_SelectionDependsOnlyOnSystemType(SystemType systemType)
         {
-            // Different parameters, same system type — should produce same formatter type
+            // Different parameters, same system type - should produce same formatter type
             (FormatterType type1, FormatterConstructorParams _) = ModelFormatterFactory(systemType, @"C:\path1", "Image1", 100, 0x8000, "set1", null);
             (FormatterType type2, FormatterConstructorParams _) = ModelFormatterFactory(systemType, @"D:\path2", "Image2", 200, 0x4000, "set2", "some.aux");
 
@@ -604,7 +604,7 @@ namespace NKit.Tests.Engine.Output
                 50L * 1024 * 1024 * 1024,
                 0x8000,
                 systemType.ToString().ToLower(),
-                "test.aux"); // Provide aux to all — only aux-capable formatters should keep it
+                "test.aux"); // Provide aux to all - only aux-capable formatters should keep it
 
             Assert.Equal(expectsAuxSetName, parms.HasAuxSetName);
         }

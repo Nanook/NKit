@@ -35,7 +35,8 @@ namespace NKit.Ui.ViewModels
             // Initialize from persisted setting
             YamlConfigurationStore yamlStore = settingsStore as YamlConfigurationStore;
             string mode = yamlStore?.GetWindowDecorationMode() ?? "csd";
-            _useNativeTitleBar = string.Equals(mode, "native", StringComparison.OrdinalIgnoreCase);
+            _useNativeTitleBar = string.Equals(mode, "native", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(mode, "ssd", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

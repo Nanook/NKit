@@ -523,7 +523,7 @@ namespace NKitDataStore
         {
             if (StrideBlockSize <= 0)
             {
-                // No striding — return a passthrough stride where SourceBlockSize == DataLength
+                // No striding - return a passthrough stride where SourceBlockSize == DataLength
                 // This triggers the early-return path in OffsetToClean/CleanToOffset (return o)
                 return new DataStride
                 {

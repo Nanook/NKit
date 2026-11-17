@@ -6,7 +6,7 @@ using NkdsUi.Models;
 namespace NKitDataStore.Tests;
 
 /// <summary>
-/// Property-based tests for FormatMappings.GetTargetFormats — correct target formats for all defined pairs.
+/// Property-based tests for FormatMappings.GetTargetFormats - correct target formats for all defined pairs.
 ///
 /// Feature: full-format-processing-parity
 /// Property 1: FormatMappings Returns Correct Target Formats for All Defined Pairs

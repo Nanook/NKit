@@ -122,7 +122,7 @@ namespace NKit.Tests.NKDS.Binary
         }
 
         /// <summary>
-        /// Test: compaction in embedded mode — write images, compact, verify block data intact.
+        /// Test: compaction in embedded mode - write images, compact, verify block data intact.
         /// **Validates: Requirements 7.1, 7.2**
         ///
         /// Tests the extract→compact→re-embed cycle preserves all block data and images.
@@ -161,7 +161,7 @@ namespace NKit.Tests.NKDS.Binary
             using (IDataStoreTransaction tx = dataAccess.BeginTransaction(setName))
             {
                 long imageId = dataAccess.InsertImage(setName, tx, "img2.iso", "GC", ImageFormat.Iso);
-                dataAccess.InsertBlock(setName, tx, key2, block2Data); // deduped — already exists
+                dataAccess.InsertBlock(setName, tx, key2, block2Data); // deduped - already exists
                 dataAccess.InsertBlock(setName, tx, key3, block3Data);
                 dataAccess.InsertOffset(setName, tx, imageId, 0, 0x20000, BlockType.File,
                     new List<BlockKey> { key2, key3 }, offsetStart: 0);
@@ -208,7 +208,7 @@ namespace NKit.Tests.NKDS.Binary
         }
 
         /// <summary>
-        /// Test: crash recovery — both test.nkds + test_0000.nkds exist → treated as separate mode, can continue.
+        /// Test: crash recovery - both test.nkds + test_0000.nkds exist → treated as separate mode, can continue.
         /// **Validates: Requirements 3.4, 3.5**
         /// </summary>
         [Fact]
@@ -252,13 +252,13 @@ namespace NKit.Tests.NKDS.Binary
                 Array.Copy(embeddedBytes, 0, shardBytes, 0, boundary);
             File.WriteAllBytes(shardPath, shardBytes);
 
-            // Act: open the set — recovery should detect both files and treat as separate mode
+            // Act: open the set - recovery should detect both files and treat as separate mode
             using (BinaryDataStoreDataAccess dataAccess = new BinaryDataStoreDataAccess(_tempDir))
             {
                 // EnsureSetExists triggers recovery
                 InfoRecord info = dataAccess.EnsureSetExists(setName, shardSize: 0, blockSize: 0x10000);
 
-                // Assert: set is usable — can read the image
+                // Assert: set is usable - can read the image
                 List<ImageRecord> images = dataAccess.GetAllImagesInSet(setName).ToList();
                 Assert.Single(images);
                 Assert.Equal("test.iso", images[0].Name);
@@ -266,7 +266,7 @@ namespace NKit.Tests.NKDS.Binary
         }
 
         /// <summary>
-        /// Test: crash recovery — test_0000.nkds.tmp with Footer_Magic → rename to test.nkds.
+        /// Test: crash recovery - test_0000.nkds.tmp with Footer_Magic → rename to test.nkds.
         /// **Validates: Requirements 3.4, 3.5**
         /// </summary>
         [Fact]
@@ -308,7 +308,7 @@ namespace NKit.Tests.NKDS.Binary
             Array.Copy(embeddedBytes, boundary, indexBytes, 0, indexSize);
             File.WriteAllBytes(embeddedPath, indexBytes);
 
-            // Act: open the set — recovery should detect .tmp with footer magic and rename it
+            // Act: open the set - recovery should detect .tmp with footer magic and rename it
             using (BinaryDataStoreDataAccess dataAccess = new BinaryDataStoreDataAccess(_tempDir))
             {
                 InfoRecord info = dataAccess.EnsureSetExists(setName, shardSize: 0, blockSize: 0x10000);
@@ -327,7 +327,7 @@ namespace NKit.Tests.NKDS.Binary
         }
 
         /// <summary>
-        /// Test: crash recovery — test_0000.nkds.tmp without Footer_Magic → re-append index from test.nkds.
+        /// Test: crash recovery - test_0000.nkds.tmp without Footer_Magic → re-append index from test.nkds.
         /// **Validates: Requirements 3.4, 3.5**
         /// </summary>
         [Fact]
@@ -378,7 +378,7 @@ namespace NKit.Tests.NKDS.Binary
             Array.Copy(embeddedBytes, boundary, indexBytes, 0, indexSize);
             File.WriteAllBytes(embeddedPath, indexBytes);
 
-            // Act: open the set — recovery should re-append index from test.nkds to .tmp
+            // Act: open the set - recovery should re-append index from test.nkds to .tmp
             using (BinaryDataStoreDataAccess dataAccess = new BinaryDataStoreDataAccess(_tempDir))
             {
                 InfoRecord info = dataAccess.EnsureSetExists(setName, shardSize: 0, blockSize: 0x10000);
@@ -389,7 +389,7 @@ namespace NKit.Tests.NKDS.Binary
                 // Assert: embedded file exists
                 Assert.True(File.Exists(embeddedPath));
 
-                // Assert: data is readable — image and block data intact
+                // Assert: data is readable - image and block data intact
                 List<ImageRecord> images = dataAccess.GetAllImagesInSet(setName).ToList();
                 Assert.Single(images);
                 Assert.Equal("nomagic.iso", images[0].Name);
@@ -401,7 +401,7 @@ namespace NKit.Tests.NKDS.Binary
         }
 
         /// <summary>
-        /// Test: crash recovery — test.nkds.tmp exists → delete it (extraction interrupted).
+        /// Test: crash recovery - test.nkds.tmp exists → delete it (extraction interrupted).
         /// **Validates: Requirements 3.4, 3.5**
         /// </summary>
         [Fact]
@@ -429,7 +429,7 @@ namespace NKit.Tests.NKDS.Binary
             // Simulate crash: create a leftover .tmp file (partial extraction)
             File.WriteAllBytes(indexTmpPath, new byte[] { 0x01, 0x02, 0x03, 0x04 });
 
-            // Act: open the set — recovery should delete the .tmp and proceed normally
+            // Act: open the set - recovery should delete the .tmp and proceed normally
             using (BinaryDataStoreDataAccess dataAccess = new BinaryDataStoreDataAccess(_tempDir))
             {
                 InfoRecord info = dataAccess.EnsureSetExists(setName, shardSize: 0, blockSize: 0x10000);

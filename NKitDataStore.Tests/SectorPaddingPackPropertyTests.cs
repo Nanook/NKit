@@ -496,7 +496,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.4, 2.2, 2.9, 3.3**
         ///
-        /// Property 4: Conforming Sectors Produce Zero Storage — single sector minimal pack.
+        /// Property 4: Conforming Sectors Produce Zero Storage - single sector minimal pack.
         ///
         /// For a single fully conforming Mode1 sector, the pack SHALL be exactly
         /// 4 bytes: 1 (version) + 2 (count=1) + 1 (bitmap with bit 0 clear).
@@ -538,7 +538,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.4, 2.2, 2.9, 3.3**
         ///
-        /// Property 4: Conforming Sectors Produce Zero Storage — 16 sectors produce 5-byte pack.
+        /// Property 4: Conforming Sectors Produce Zero Storage - 16 sectors produce 5-byte pack.
         ///
         /// For exactly 16 fully conforming Mode1 sectors, the pack SHALL be exactly
         /// 5 bytes: 1 (version) + 2 (count=16) + 2 (bitmap with all bits clear).
@@ -600,7 +600,7 @@ namespace NKitDataStore.Tests
         {
             // Only test version bytes that are NOT the supported version (0x01)
             if (versionByte == 0x01)
-                return true; // Skip the supported version — not under test
+                return true; // Skip the supported version - not under test
 
             // Build a minimal pack data array with the invalid version byte
             // followed by valid-looking header data (sector count = 1, bitmap = 0x00)
@@ -614,7 +614,7 @@ namespace NKitDataStore.Tests
             try
             {
                 SectorPaddingUnpacker.ReadHeader(packData, out _, out _);
-                // If we get here, the method did NOT throw — property violated
+                // If we get here, the method did NOT throw - property violated
                 return false;
             }
             catch (InvalidDataException)
@@ -638,7 +638,7 @@ namespace NKitDataStore.Tests
         {
             // Only test version bytes that are NOT the supported version (0x01)
             if (versionByte == 0x01)
-                return true; // Skip the supported version — not under test
+                return true; // Skip the supported version - not under test
 
             // Build a minimal pack data array with the invalid version byte
             // followed by valid-looking header data (sector count = 1, bitmap = 0x00)
@@ -655,7 +655,7 @@ namespace NKitDataStore.Tests
             try
             {
                 SectorPaddingUnpacker.Unpack(packData, buffer, 0, 1);
-                // If we get here, the method did NOT throw — property violated
+                // If we get here, the method did NOT throw - property violated
                 return false;
             }
             catch (InvalidDataException)
@@ -760,7 +760,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.5, 6.2**
         ///
-        /// Property 1: Pack/Unpack Round-Trip Integrity — All conforming Mode1 sectors.
+        /// Property 1: Pack/Unpack Round-Trip Integrity - All conforming Mode1 sectors.
         ///
         /// For any valid section of conforming Mode1 sectors at any valid starting LBA,
         /// packing then unpacking onto a buffer pre-filled with deterministically
@@ -797,7 +797,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.5, 6.2**
         ///
-        /// Property 1: Pack/Unpack Round-Trip Integrity — All Mode2Form1 sectors.
+        /// Property 1: Pack/Unpack Round-Trip Integrity - All Mode2Form1 sectors.
         ///
         /// For any valid section of Mode2Form1 sectors with arbitrary subheaders,
         /// packing then unpacking onto a regenerated buffer SHALL produce bytes
@@ -838,7 +838,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.5, 6.2**
         ///
-        /// Property 1: Pack/Unpack Round-Trip Integrity — All Mode2Form2 sectors.
+        /// Property 1: Pack/Unpack Round-Trip Integrity - All Mode2Form2 sectors.
         ///
         /// For any valid section of Mode2Form2 sectors with arbitrary subheaders and
         /// extended user data, packing then unpacking onto a regenerated buffer SHALL
@@ -890,7 +890,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.5, 6.2**
         ///
-        /// Property 1: Pack/Unpack Round-Trip Integrity — Sectors with corrupted components.
+        /// Property 1: Pack/Unpack Round-Trip Integrity - Sectors with corrupted components.
         ///
         /// For any Mode1 sector with selectively corrupted sync, MSF, EDC, or ECC,
         /// packing then unpacking onto a regenerated buffer SHALL produce bytes
@@ -926,7 +926,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5.5, 6.2**
         ///
-        /// Property 1: Pack/Unpack Round-Trip Integrity — Mixed multi-sector sections.
+        /// Property 1: Pack/Unpack Round-Trip Integrity - Mixed multi-sector sections.
         ///
         /// For any section containing a mix of Mode1, Mode2Form1, and Mode2Form2 sectors
         /// (some conforming, some with corrupted components), packing then unpacking onto

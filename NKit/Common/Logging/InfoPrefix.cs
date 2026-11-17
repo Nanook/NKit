@@ -2,7 +2,7 @@ namespace Nanook.NKit
 {
     /// <summary>
     /// Machine-readable leading prefixes for the Info-level SUMMARY lines a task emits
-    /// (image title, input params, output params). These are NOT logging scopes — they are
+    /// (image title, input params, output params). These are NOT logging scopes - they are
     /// literal leading tokens baked into the message TEXT (e.g. <c>"[Title] ..."</c>).
     /// <para>
     /// Their only purpose is to let a host console CLASSIFY a summary line so it can colour it.
@@ -12,7 +12,7 @@ namespace Nanook.NKit
     /// <item>At <b>Info</b> verbosity the host recognises the prefix, removes it from the
     /// displayed text, and colours the line by which prefix it was.</item>
     /// <item>At <b>Detail</b>/<b>Debug</b> verbosity the host leaves the prefix in place and does
-    /// not recolour — the raw tagged text is shown alongside the stage tags.</item>
+    /// not recolour - the raw tagged text is shown alongside the stage tags.</item>
     /// <item>A line WITHOUT one of these exact prefixes is passed through unchanged and uncoloured.</item>
     /// </list>
     /// <para>
@@ -23,7 +23,7 @@ namespace Nanook.NKit
     /// </summary>
     public static class InfoPrefix
     {
-        /// <summary>The image title line — carries the <c>[Task/System]  Name</c> title (and, when
+        /// <summary>The image title line - carries the <c>[Task/System]  Name</c> title (and, when
         /// known, the <c>X/Y</c> image counter). Kept in the exact current title format after the
         /// prefix is stripped, so a host can further sub-colour the title parts.</summary>
         public const string Title = "[Title]";

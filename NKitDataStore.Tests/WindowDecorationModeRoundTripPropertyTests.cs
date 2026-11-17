@@ -41,11 +41,10 @@ public sealed class WindowDecorationModeRoundTripPropertyTests : IDisposable
         WindowDecorationMode mode = validModes[Math.Abs(modeSeed) % validModes.Length];
 
         string configPath = Path.Combine(_tempDir, $"cfg-wdm-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-wdm-{Guid.NewGuid():N}.json");
 
         try
         {
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
 
             // Set the mode
             service.SetWindowDecorationMode(mode);
@@ -80,16 +79,15 @@ public sealed class WindowDecorationModeRoundTripPropertyTests : IDisposable
         WindowDecorationMode mode = validModes[Math.Abs(modeSeed) % validModes.Length];
 
         string configPath = Path.Combine(_tempDir, $"cfg-wdm-reload-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-wdm-reload-{Guid.NewGuid():N}.json");
 
         try
         {
             // First service instance: set the mode
-            ConfigService service1 = new ConfigService(configPath, legacyPath);
+            ConfigService service1 = new ConfigService(configPath);
             service1.SetWindowDecorationMode(mode);
 
             // Second service instance: load from the same file
-            ConfigService service2 = new ConfigService(configPath, legacyPath);
+            ConfigService service2 = new ConfigService(configPath);
             WindowDecorationMode retrieved = service2.GetWindowDecorationMode();
 
             return retrieved == mode;

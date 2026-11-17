@@ -2038,7 +2038,7 @@ namespace NKit.Tests.Engine.Output
         {
             string taskType = "expand";
             // ReqPatch (Expand-Image-Patch) is set by the WiiGc reader for a raw nkit Expand on any
-            // system — expanding a legacy raw NKit to a full ISO IS the patch operation.
+            // system - expanding a legacy raw NKit to a full ISO IS the patch operation.
             bool reqPatch = srcFormat == ".nkit.iso" || srcFormat == ".nkit.gcz";
             bool nkitHeader = srcInfo.Contains("nkit");
             bool srcCrcHash = nkitHeader;

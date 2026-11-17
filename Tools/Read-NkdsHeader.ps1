@@ -61,7 +61,7 @@ if ($isEmbedded) {
     $baseOffset = $fileSize - $FOOTER_SIZE - $footerIndexSize
     Write-Host "`nMode:  EMBEDDED  (IndexSize=$("{0:N0}" -f $footerIndexSize), ShardData=$("{0:F3}" -f ($baseOffset / 1GB)) GiB)"
     if ($baseOffset -lt 0) {
-        Write-Warning "Computed base offset is negative — footer is corrupted."
+        Write-Warning "Computed base offset is negative - footer is corrupted."
         $fs.Close(); exit 1
     }
 } else {
@@ -95,7 +95,7 @@ $maxOff  = Read-BE-Int32   $hdr 0x48
 $imgCnt  = Read-BE-Int32   $hdr 0x4C
 $dirCap  = Read-BE-Int32   $hdr 0x50
 
-# Checksum stored as 8 bytes at 0x54 — print as hex
+# Checksum stored as 8 bytes at 0x54 - print as hex
 $chkHi   = Read-BE-UInt32  $hdr 0x54
 $chkLo   = Read-BE-UInt32  $hdr 0x58
 $chkHex  = "0x{0:X8}{1:X8}" -f $chkHi, $chkLo
@@ -105,7 +105,7 @@ $indexRegionSize = if ($isEmbedded) { $fileSize - $FOOTER_SIZE - $baseOffset } e
 
 $magicOk = ($magic -eq $HEADER_MAGIC)
 
-Write-Host ("Magic:                     0x{0:X8}  ({1})" -f $magic, $(if ($magicOk) {"OK"} else {"BAD — expected 0x4E4B4453"}))
+Write-Host ("Magic:                     0x{0:X8}  ({1})" -f $magic, $(if ($magicOk) {"OK"} else {"BAD - expected 0x4E4B4453"}))
 Write-Host ("Version:                   {0}.{1}  (expected 1.0)" -f $mjv, $mnv)
 Write-Host ("ImageDirectory:            offset={0:N0}  compressedSize={1:N0}  uncompressedSize={2:N0}" -f $dirOff, $dirSz, $dirUSz)
 Write-Host ("BlockIndex:                offset={0:N0}  size={1:N0}  ({2:F1} MiB)" -f $biOff, $biSz, ($biSz / 1MB))
@@ -145,10 +145,10 @@ if ($maxOff -le 0)                                          { $issues += "MaxOff
 if ($dirCap -lt 0)                                          { $issues += "DirectoryRegionCapacity < 0" }
 if ($imgCnt -lt 0)                                          { $issues += "ImageCount < 0" }
 
-if ($dcnt -ne 0)                                            { $warns  += "BlockIndexDeltaCount is $dcnt (should be 0 after compact — index needs CompactSetFast)" }
-if ($dirCap -eq 0)                                          { $warns  += "DirectoryRegionCapacity is 0 — every directory update overflows to end of file (may fragment index rapidly)" }
-if ($dirUSz -eq 0)                                          { $warns  += "ImageDirectoryUncompressedSize is 0 — directory treated as uncompressed on open" }
-if ($shSz -ne 0 -and -not $isEmbedded)                     { $warns  += "ShardSize=$shSz but file has no embedded footer — separate-mode set" }
+if ($dcnt -ne 0)                                            { $warns  += "BlockIndexDeltaCount is $dcnt (should be 0 after compact - index needs CompactSetFast)" }
+if ($dirCap -eq 0)                                          { $warns  += "DirectoryRegionCapacity is 0 - every directory update overflows to end of file (may fragment index rapidly)" }
+if ($dirUSz -eq 0)                                          { $warns  += "ImageDirectoryUncompressedSize is 0 - directory treated as uncompressed on open" }
+if ($shSz -ne 0 -and -not $isEmbedded)                     { $warns  += "ShardSize=$shSz but file has no embedded footer - separate-mode set" }
 
 foreach ($i in $issues) { Write-Host "  ERROR: $i" -ForegroundColor Red }
 foreach ($w in $warns)  { Write-Host "  WARN:  $w" -ForegroundColor Yellow }
@@ -177,7 +177,7 @@ for ($i = 0; $i -lt $HEADER_SIZE; $i++) {
 if ($same) {
     Write-Host "  Primary and secondary headers are identical." -ForegroundColor Green
 } else {
-    Write-Host "  Headers DIFFER — possible crash mid-AtomicCommit." -ForegroundColor Yellow
+    Write-Host "  Headers DIFFER - possible crash mid-AtomicCommit." -ForegroundColor Yellow
     for ($i = 0; $i -lt $HEADER_SIZE; $i++) {
         if ($hdr[$i] -ne $hdr2[$i]) {
             Write-Host ("  First diff at byte 0x{0:X2}: primary=0x{1:X2}  secondary=0x{2:X2}" -f $i, $hdr[$i], $hdr2[$i])

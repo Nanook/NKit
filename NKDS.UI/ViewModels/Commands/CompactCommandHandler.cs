@@ -27,7 +27,7 @@ public class CompactCommandHandler : ICommandHandler
             ImageSessionModel session = sessions[0];
             (string? dataStorePath, string? originalPath) = SessionResolver.ResolveDataStorePath(session);
 
-            // 2. Show CompactDialog — user chooses Fast Compact, Full Compact, or Cancel
+            // 2. Show CompactDialog - user chooses Fast Compact, Full Compact, or Cancel
             List<string> availableSetNames = ctx.Toolbar.AvailableSetNames.ToList();
             CompactDialogViewModel dialogVm = new CompactDialogViewModel(availableSetNames, ctx.Toolbar.SelectedSetName);
             CompactDialogResult dialogResult = await ctx.ShowCompactDialog.Handle(dialogVm);

@@ -633,7 +633,7 @@ namespace NKitDataStore.Tests
             switch (stateType)
             {
                 case IntermediateStateType.Clean:
-                    // No injection needed — set is already clean
+                    // No injection needed - set is already clean
                     break;
 
                 case IntermediateStateType.CompactTmpAlongsideOriginal:

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -116,7 +116,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
 
         // Scan a fed buffer (typically the volume TAIL) sector-by-sector for the known system-marker
-        // byte signatures and insert any matches into the FST — WITHOUT the file-relative gap-walk
+        // byte signatures and insert any matches into the FST - WITHOUT the file-relative gap-walk
         // navigation of processFileGaps. The gap-walk positions itself with _lastFile and bounds each
         // scan to the space BETWEEN two known files; at the volume tail the last real file's post-gap
         // "covers" the trailing region, so the gap-walk never scans it. The UDF backup structures

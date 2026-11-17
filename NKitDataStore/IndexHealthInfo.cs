@@ -2,7 +2,7 @@ namespace NKitDataStore
 {
     /// <summary>
     /// Lightweight snapshot of an index file's health. All fields are read from the in-memory
-    /// header — no disk I/O is performed. Returned by <see cref="DataStore.GetIndexHealth"/>.
+    /// header - no disk I/O is performed. Returned by <see cref="DataStore.GetIndexHealth"/>.
     /// </summary>
     public class IndexHealthInfo
     {

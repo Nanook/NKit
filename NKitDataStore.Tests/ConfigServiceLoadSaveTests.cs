@@ -11,14 +11,12 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
 {
     private readonly string _tempDir;
     private readonly string _configPath;
-    private readonly string _legacyPath;
 
     public ConfigServiceLoadSaveTests()
     {
         _tempDir = Path.Combine(Path.GetTempPath(), $"ConfigServiceTests_{Guid.NewGuid():N}");
         Directory.CreateDirectory(_tempDir);
         _configPath = Path.Combine(_tempDir, "nkds-ui.json");
-        _legacyPath = Path.Combine(_tempDir, "export-format-preferences.json");
     }
 
     public void Dispose()
@@ -37,7 +35,7 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
         // Arrange: no config file exists at _configPath
 
         // Act
-        ConfigService service = new ConfigService(_configPath, _legacyPath);
+        ConfigService service = new ConfigService(_configPath);
 
         // Assert
         Assert.Empty(service.MountPathHistory);
@@ -69,7 +67,7 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
         File.WriteAllText(_configPath, json);
 
         // Act
-        ConfigService service = new ConfigService(_configPath, _legacyPath);
+        ConfigService service = new ConfigService(_configPath);
 
         // Assert
         Assert.Equal(2, service.MountPathHistory.Count);
@@ -100,7 +98,7 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
         File.WriteAllText(_configPath, "this is not valid json {{{");
 
         // Act
-        ConfigService service = new ConfigService(_configPath, _legacyPath);
+        ConfigService service = new ConfigService(_configPath);
 
         // Assert: defaults
         Assert.Empty(service.MountPathHistory);
@@ -117,7 +115,7 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
     public void Save_AtomicWrite_NoTmpFileRemains()
     {
         // Arrange
-        ConfigService service = new ConfigService(_configPath, _legacyPath);
+        ConfigService service = new ConfigService(_configPath);
 
         // Act: trigger a save by mutating state
         service.AddMountPath(@"C:\TestPath");
@@ -135,14 +133,14 @@ public sealed class ConfigServiceLoadSaveTests : IDisposable
     public void Save_PersistsData_LoadableByNewInstance()
     {
         // Arrange: create first instance and populate it
-        ConfigService service1 = new ConfigService(_configPath, _legacyPath);
+        ConfigService service1 = new ConfigService(_configPath);
         service1.AddMountPath(@"D:\Games\Wii\Mount");
         service1.AddDataStorePath(@"D:\Games\Wii\DataStore");
         service1.SetExportFormat("Wii", "NKit", "ISO");
         service1.SetWindowState(1200, 800, 50, 25);
 
         // Act: create a second instance from the same file
-        ConfigService service2 = new ConfigService(_configPath, _legacyPath);
+        ConfigService service2 = new ConfigService(_configPath);
 
         // Assert: all values persisted and restored
         Assert.Single(service2.MountPathHistory);

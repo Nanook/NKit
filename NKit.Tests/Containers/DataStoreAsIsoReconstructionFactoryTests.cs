@@ -214,7 +214,7 @@ namespace NKit.Tests.NKDS
         [Fact]
         public void XboxSystemType_PassesNullAuxBlockProvider_WhenNoAuxSet()
         {
-            // Arrange: Create a plain block provider (not AuxBlockProvider — no aux discovered)
+            // Arrange: Create a plain block provider (not AuxBlockProvider - no aux discovered)
             AreaRecord area = new AreaRecord
             {
                 Id = 1,
@@ -426,7 +426,7 @@ namespace NKit.Tests.NKDS
             MockBlockProvider primaryProvider = new MockBlockProvider();
             AuxBlockProvider auxProvider = new AuxBlockProvider(primaryProvider, auxReader: null);
 
-            // Act: Model the factory behavior — ISO9660 systems only pass blockProvider, not auxBlockProvider
+            // Act: Model the factory behavior - ISO9660 systems only pass blockProvider, not auxBlockProvider
             string expectedType = ModelExpectedStreamType(systemType);
 
             // Assert: ISO9660 systems use ImageBuilderIso9660Stream (no aux parameter in constructor)

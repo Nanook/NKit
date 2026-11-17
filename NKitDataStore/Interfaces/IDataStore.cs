@@ -82,7 +82,7 @@ namespace NKitDataStore.Interfaces
         ///
         /// Removes removed-image sections, merges all Block_Index deltas into one consolidated
         /// block index, and produces a clean sequential file layout with delta count zero.
-        /// Block index entries for blocks from removed images are retained — those blocks remain
+        /// Block index entries for blocks from removed images are retained - those blocks remain
         /// physically present in shards and are valid dedup targets until a full CompactSet runs.
         ///
         /// Call this whenever <see cref="GetIndexHealth"/> returns <c>NeedsCompaction = true</c>
@@ -93,7 +93,7 @@ namespace NKitDataStore.Interfaces
 
         /// <summary>
         /// Returns a lightweight snapshot of the index file health for the specified set.
-        /// All fields are read from the in-memory header — no disk I/O is performed.
+        /// All fields are read from the in-memory header - no disk I/O is performed.
         /// Use this to check whether CompactSetFast is needed and to surface recommendations
         /// in CLI output or UI indicators.
         /// </summary>

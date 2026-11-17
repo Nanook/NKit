@@ -30,7 +30,7 @@ namespace Nanook.NKit.Vfs
                 // Dispose the filesystem/model HERE, on the mount (host) thread, AFTER the Dokan
                 // instance has been torn down by Mount() returning. Disposing from Dispose() on the
                 // caller thread instead would run concurrently with Dokan still delivering
-                // Cleanup/CloseFile/ReadFile callbacks into the same VfsModel — a data race that
+                // Cleanup/CloseFile/ReadFile callbacks into the same VfsModel - a data race that
                 // crashed or hung the close. Single-thread ownership of teardown removes that race.
                 try { _fs?.Dispose(); } catch { }
                 _fs = null;
@@ -48,7 +48,7 @@ namespace Nanook.NKit.Vfs
         {
             // Signal the mount thread to exit. The model/filesystem is disposed by the mount thread
             // itself once Run()'s Mount loop returns (see Run's finally), so we must NOT dispose it
-            // here — doing so would race the still-running Dokan callbacks. The orchestrator joins
+            // here - doing so would race the still-running Dokan callbacks. The orchestrator joins
             // the mount thread after calling Dispose() to guarantee teardown has completed.
             _unmountSignal.Set();
         }

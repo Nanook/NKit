@@ -136,21 +136,21 @@ namespace NKit.Tests.Engine.Parallel
                     continue;
                 }
 
-                // Not in candidates — check for duplicate/overlap conditions
+                // Not in candidates - check for duplicate/overlap conditions
                 int offsetIdx = candidateOffsets.BinarySearch(f.FsOffset);
                 if (offsetIdx >= 0)
                 {
                     // There IS a candidate at this offset
                     if (candidateFullNames.Contains(f.FullName))
                     {
-                        // Same name and same offset as a candidate — skip (duplicate)
+                        // Same name and same offset as a candidate - skip (duplicate)
                         if (f.SplitParts == null)
                             continue;
                         // Fall through for displaced split extents
                     }
                     else
                     {
-                        // Different name at same offset — lower-priority filesystem duplicate — skip
+                        // Different name at same offset - lower-priority filesystem duplicate - skip
                         continue;
                     }
                 }
@@ -159,7 +159,7 @@ namespace NKit.Tests.Engine.Parallel
                     // Not at a candidate offset, but same name as a candidate.
                     if (f.SplitParts == null)
                         continue;
-                    // Fall through — add as overlap candidate (displaced split extent)
+                    // Fall through - add as overlap candidate (displaced split extent)
                 }
 
                 overlapCandidates.Add(f);
@@ -334,7 +334,7 @@ namespace NKit.Tests.Engine.Parallel
                 ClassificationResult result = SimulateBuildOverlapCandidates(candidates, fidelityEntries, mask);
 
                 // Verify: ALL secondary files appear in _overlapCandidates
-                // (the real code adds all non-duplicate non-candidate files — overlap is checked at activation time)
+                // (the real code adds all non-duplicate non-candidate files - overlap is checked at activation time)
                 foreach (IFsFile sec in secondaryFiles)
                 {
                     bool inList = result.OverlapCandidates.Contains(sec);
@@ -466,7 +466,7 @@ namespace NKit.Tests.Engine.Parallel
                 ClassificationResult result = SimulateBuildOverlapCandidates(candidates, fidelityEntries, mask);
 
                 // Verify: None of the candidates are in _overlapCandidates
-                // (because none contains another — small sizes, large spacing)
+                // (because none contains another - small sizes, large spacing)
                 bool noneInList = result.OverlapCandidates.Count == 0;
                 if (!noneInList)
                     return false.Label(
@@ -481,7 +481,7 @@ namespace NKit.Tests.Engine.Parallel
         }
 
         /// <summary>
-        /// Property 1e: Combined scenario — containing, secondary, zero-byte, and
+        /// Property 1e: Combined scenario - containing, secondary, zero-byte, and
         /// non-containing candidates are all classified correctly in a single invocation.
         ///
         /// Generates a realistic mixed scenario with all classification categories
@@ -619,7 +619,7 @@ namespace NKit.Tests.Engine.Parallel
 
                 return true.Label(
                     $"Mixed scenario: containing=1, contained={containedFiles.Count}, " +
-                    $"secondary={secondaryFiles.Count}, zeroByte={data.ZeroCount} — all classified correctly");
+                    $"secondary={secondaryFiles.Count}, zeroByte={data.ZeroCount} - all classified correctly");
             });
         }
 

@@ -8,7 +8,7 @@ namespace Nanook.NKit
     /// config file (or override) written with new names resolves to the existing params. The legacy
     /// names remain the primary keys; this only adds forward-compatibility for the new spelling.
     /// <para>
-    /// Static data — AOT-safe. Legacy names are what the <c>Param</c> enum already uses, so only the
+    /// Static data - AOT-safe. Legacy names are what the <c>Param</c> enum already uses, so only the
     /// NEW → legacy direction is needed here.
     /// </para>
     /// </summary>

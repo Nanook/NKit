@@ -89,7 +89,7 @@ namespace NKit.Tests.Engine.Output
         /// </summary>
         private static DataStride ModelGetStrideUnrecognized(int blockSize, out bool warningLogged)
         {
-            // Unrecognized block size — skip stride computation and log warning
+            // Unrecognized block size - skip stride computation and log warning
             warningLogged = blockSize != 0x930 && blockSize != 0x800;
             return null;
         }

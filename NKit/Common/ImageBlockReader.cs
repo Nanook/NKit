@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -171,7 +171,7 @@ namespace Nanook.NKit
             int readIdx;
             // _currentIndex is a forward-sequential fast-path hint only: when the next expected
             // block matches the requested offset, use it directly. For ANY other offset (a backward
-            // or random re-read — e.g. an up-front FST peek followed by the real sequential read of
+            // or random re-read - e.g. an up-front FST peek followed by the real sequential read of
             // the same group) fall through to the offset lookup. The old code short-circuited to
             // null whenever _currentIndex had reached the end, which broke re-reads after a peek had
             // consumed all blocks (GetItem returned null -> a 0-byte read -> stale buffer bytes).
@@ -287,12 +287,12 @@ namespace Nanook.NKit
             {
                 lock (cacheItem)
                 {
-                    // Both null means the primary has not yet set RefSrcBuff — wait for it.
+                    // Both null means the primary has not yet set RefSrcBuff - wait for it.
                     // RefSrcBuff is always set by the Read() loop BEFORE _queue.Add(), so a
                     // PulseAll will come once the primary worker decodes and sets Cached.
                     while (cacheItem.RefSrcBuff == null && cacheItem.Cached == null)
                         Monitor.Wait(cacheItem);
-                    if (cacheItem.Cached == null) //primary not yet decoded — this worker decodes
+                    if (cacheItem.Cached == null) //primary not yet decoded - this worker decodes
                     {
                         byte[] temp = buff.Buff;
                         buff.Buff = cacheItem.RefSrcBuff;
@@ -309,7 +309,7 @@ namespace Nanook.NKit
             byte[] cached = cacheItem.Cached;
             Array.Copy(cached, buff.Result, buff.Info.FullSize);
             // Eviction is handled by the end-of-batch sequential cleanup in Read() which runs
-            // after processing.Wait() — i.e. after all workers have finished. The immediate
+            // after processing.Wait() - i.e. after all workers have finished. The immediate
             // CAS eviction here was unsafe: the "last secondary by index" could fire the CAS
             // from a parallel worker before lower-indexed secondaries had run, leaving them
             // to find (null, null) in the lock with no PulseAll ever coming.
@@ -364,7 +364,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Release the large per-image buffers this reader holds so they are freed at image
         /// completion rather than lingering until GC. For a .gcz source there is one reader per
-        /// image holding: the per-block Items list (one ImageBlockInfo per GCZ block — tens to
+        /// image holding: the per-block Items list (one ImageBlockInfo per GCZ block - tens to
         /// hundreds of thousands for a large image, each potentially caching a decompressed block
         /// via Cached/RefSrcBuff), the per-thread temp/result block buffers, and the encoded-buffer
         /// list. None of this is needed once the image is done. Idempotent.
@@ -373,7 +373,7 @@ namespace Nanook.NKit
         {
             // Shut down the BlockingThreadQueue's dedicated worker threads before releasing buffers.
             // Without this, the MaxParallel background threads created at ImageBlockReader construction
-            // block forever on Monitor.Wait and are never reclaimed — leaking ~10 threads + handles per
+            // block forever on Monitor.Wait and are never reclaimed - leaking ~10 threads + handles per
             // image across a long-lived host (the UI, or a batch CLI run).
             try { _queue?.Shutdown(); } catch { }
 

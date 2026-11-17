@@ -16,7 +16,7 @@ namespace NKit.Tests.NKDS
     /// Unit tests for ImageBuilderXboxStream.
     /// Uses model-based testing where the ImageBuilder requires complex constructor dependencies.
     /// Tests gap fill behavior, aux filler restoration, and block padding restoration.
-    /// Xbox does not use data-level encryption — that's PS3 only.
+    /// Xbox does not use data-level encryption - that's PS3 only.
     ///
     /// Validates Requirements: 4.1-4.3, 4.6, 4.8, 4.9, 10.8, 10.9
     /// </summary>
@@ -264,7 +264,7 @@ namespace NKit.Tests.NKDS
             AreaRecord area = createFileSystemArea(offset: 0, size: areaSize, id: 1);
             MockImageReader reader = new MockImageReader(new List<AreaRecord> { area }, blockSize: 0x800, imageSize: areaSize);
             MockBlockProvider blockProvider = new MockBlockProvider();
-            // No blocks added — simulates no data available
+            // No blocks added - simulates no data available
 
             // Act: Create the stream without aux block provider
             using ImageBuilderXboxStream stream = new ImageBuilderXboxStream(reader, blockProvider: blockProvider, auxBlockProvider: null);

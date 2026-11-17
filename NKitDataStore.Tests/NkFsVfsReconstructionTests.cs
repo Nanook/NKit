@@ -169,7 +169,7 @@ namespace NKitDataStore.Tests
             // Seek to position 40 (within extent 0, 10 bytes from its end)
             stream.Position = 40;
 
-            // Read 20 bytes — spanning the boundary between extent 0 and extent 1
+            // Read 20 bytes - spanning the boundary between extent 0 and extent 1
             byte[] buffer = new byte[20];
             int bytesRead = stream.Read(buffer, 0, 20);
             Assert.Equal(20, bytesRead);
@@ -227,7 +227,7 @@ namespace NKitDataStore.Tests
             int udfRead = udfStream.Read(udfBuffer, 0, 0x5000);
             Assert.Equal(0x5000, udfRead);
 
-            // Both streams read successfully without error — the UDF file uses its
+            // Both streams read successfully without error - the UDF file uses its
             // recorded offset (0x1000) and reads 0x5000 bytes contiguously.
             // Verify UDF stream data comes from offset 0x1000, positions 0..0x4FFF
             Assert.Equal(computeExpectedByte(0x1000, 0), udfBuffer[0]);

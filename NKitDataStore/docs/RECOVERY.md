@@ -49,10 +49,10 @@ The `BinaryIndexFile` uses a dual-header commit protocol to ensure atomicity of 
 
 | PrimaryHeader | SecondaryHeader | Action |
 |---------------|-----------------|--------|
-| Valid | Valid (agrees) | Use PrimaryHeader — commit completed normally |
-| Valid | Valid (disagrees) | Use PrimaryHeader — it was written last and is authoritative |
-| Invalid/corrupt | Valid | Use SecondaryHeader — crash occurred between step 2 and step 3 |
-| Invalid/corrupt | Invalid/corrupt | **Unrecoverable** — file is corrupt |
+| Valid | Valid (agrees) | Use PrimaryHeader - commit completed normally |
+| Valid | Valid (disagrees) | Use PrimaryHeader - it was written last and is authoritative |
+| Invalid/corrupt | Valid | Use SecondaryHeader - crash occurred between step 2 and step 3 |
+| Invalid/corrupt | Invalid/corrupt | **Unrecoverable** - file is corrupt |
 
 The dual-header protocol guarantees that at least one valid header exists after any single crash during AtomicCommit, because the headers are written sequentially with flushes between them.
 
@@ -62,11 +62,11 @@ The dual-header protocol guarantees that at least one valid header exists after 
 
 When a set is opened, `RecoverIfNeeded` executes recovery operations in strict order:
 
-1. **File-level recovery** — Handle `.compact.tmp` files, shard `.tmp` files, embedded intermediate states
-2. **Dual-header recovery** — `BinaryIndexFile.Open` selects the valid header (primary or secondary)
-3. **Orphaned tail detection** — Compute expected shard sizes from committed block index, truncate excess
-4. **Header validation** — Verify the recovered index passes structural validation
-5. **Set available** — Return the set for reads/writes
+1. **File-level recovery** - Handle `.compact.tmp` files, shard `.tmp` files, embedded intermediate states
+2. **Dual-header recovery** - `BinaryIndexFile.Open` selects the valid header (primary or secondary)
+3. **Orphaned tail detection** - Compute expected shard sizes from committed block index, truncate excess
+4. **Header validation** - Verify the recovered index passes structural validation
+5. **Set available** - Return the set for reads/writes
 
 This ordering ensures that file-level issues are resolved before the index is opened, and orphaned data is cleaned up before the set becomes available.
 
@@ -119,7 +119,7 @@ The ImageWriter appends blocks to shard files, appends metadata sections, then p
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
 | Before SecondaryHeader write | Shard has new data; index headers unchanged | Orphaned tail detection (shard larger than committed offset) | Truncate shard to committed offset | All previously committed images | New image's blocks and metadata |
-| After SecondaryHeader write, before PrimaryHeader write | SecondaryHeader has new state; PrimaryHeader has old state | Dual-header recovery: PrimaryHeader invalid or disagrees → use SecondaryHeader | Use SecondaryHeader as authoritative state | All images including the new one (commit succeeded via secondary) | Nothing — the new image is preserved |
+| After SecondaryHeader write, before PrimaryHeader write | SecondaryHeader has new state; PrimaryHeader has old state | Dual-header recovery: PrimaryHeader invalid or disagrees → use SecondaryHeader | Use SecondaryHeader as authoritative state | All images including the new one (commit succeeded via secondary) | Nothing - the new image is preserved |
 | After PrimaryHeader write (commit complete) | Both headers valid with new state | No recovery needed | None | All images including the new one | Nothing |
 
 #### Step 4: After AtomicCommit, before lock release
@@ -128,7 +128,7 @@ The ImageWriter appends blocks to shard files, appends metadata sections, then p
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| After commit, before lock release | Stale writer lock file exists; index is fully committed | Detect stale lock (no active writer process) | Release stale lock on next open | All images including the new one | Nothing — commit was successful |
+| After commit, before lock release | Stale writer lock file exists; index is fully committed | Detect stale lock (no active writer process) | Release stale lock on next open | All images including the new one | Nothing - commit was successful |
 
 ---
 
@@ -148,8 +148,8 @@ DeleteImage updates the image directory to mark an image as removed, then perfor
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| Before SecondaryHeader write | Directory appended but headers unchanged | Headers point to old directory offset | Use existing headers — old state is authoritative | Image remains live (delete not applied) | The appended directory bytes (unreferenced) |
-| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references new directory; PrimaryHeader references old | Dual-header protocol | Use SecondaryHeader — delete is applied | Image is marked as removed | Nothing — operation completed via secondary |
+| Before SecondaryHeader write | Directory appended but headers unchanged | Headers point to old directory offset | Use existing headers - old state is authoritative | Image remains live (delete not applied) | The appended directory bytes (unreferenced) |
+| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references new directory; PrimaryHeader references old | Dual-header protocol | Use SecondaryHeader - delete is applied | Image is marked as removed | Nothing - operation completed via secondary |
 | After PrimaryHeader (complete) | Both headers reference new directory | No recovery needed | None | Image is marked as removed | Nothing |
 
 ---
@@ -169,14 +169,14 @@ RestoreImage updates the image directory to mark a removed image as live, then p
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
 | Before SecondaryHeader write | Directory appended but headers unchanged | Headers point to old directory offset | Use existing headers | Image remains removed | Appended directory bytes |
-| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references new directory | Dual-header protocol | Use SecondaryHeader — restore is applied | Image is marked as live | Nothing |
+| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references new directory | Dual-header protocol | Use SecondaryHeader - restore is applied | Image is marked as live | Nothing |
 | After PrimaryHeader (complete) | Both headers reference new directory | No recovery needed | None | Image is marked as live | Nothing |
 
 ---
 
 ### RollbackImage
 
-RollbackImage updates the directory to restore all images to their prior removed/live status, then performs AtomicCommit. The failure pattern is identical to DeleteImage/RestoreImage — all-or-nothing semantics via AtomicCommit.
+RollbackImage updates the directory to restore all images to their prior removed/live status, then performs AtomicCommit. The failure pattern is identical to DeleteImage/RestoreImage - all-or-nothing semantics via AtomicCommit.
 
 #### Step 1: Directory update (rollback all statuses)
 
@@ -189,7 +189,7 @@ RollbackImage updates the directory to restore all images to their prior removed
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
 | Before SecondaryHeader write | Directory appended but headers unchanged | Headers point to old directory offset | Use existing headers | All images retain current status | Appended directory bytes |
-| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references rolled-back directory | Dual-header protocol | Use SecondaryHeader — rollback is applied | All images have rolled-back status | Nothing |
+| After SecondaryHeader, before PrimaryHeader | SecondaryHeader references rolled-back directory | Dual-header protocol | Use SecondaryHeader - rollback is applied | All images have rolled-back status | Nothing |
 | After PrimaryHeader (complete) | Both headers reference rolled-back directory | No recovery needed | None | All images have rolled-back status | Nothing |
 
 ---
@@ -228,7 +228,7 @@ CompactSetSeparate compacts the index by removing entries for deleted images, th
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During `File.Replace` (atomic) | Either original or `.compact.tmp` exists (OS guarantees at least one) | Check which files exist | If both exist: delete `.compact.tmp`. If only `.compact.tmp`: rename to original, validate | Whichever file survived | Nothing — at least one valid index exists |
+| During `File.Replace` (atomic) | Either original or `.compact.tmp` exists (OS guarantees at least one) | Check which files exist | If both exist: delete `.compact.tmp`. If only `.compact.tmp`: rename to original, validate | Whichever file survived | Nothing - at least one valid index exists |
 | During fallback: after `File.Delete`, before `File.Move` | Original deleted; `.compact.tmp` still at temp path | Only `.compact.tmp` exists (original missing) | Rename `.compact.tmp` → original path, validate header | Compacted index (all live images preserved) | Removed image entries (intended to be discarded by compact) |
 
 #### Step 5: Reopen index
@@ -237,7 +237,7 @@ CompactSetSeparate compacts the index by removing entries for deleted images, th
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During reopen | Valid index file at original path (replacement completed) | Normal file exists | Open normally | All live images | Nothing — compact completed |
+| During reopen | Valid index file at original path (replacement completed) | Normal file exists | Open normally | All live images | Nothing - compact completed |
 
 ---
 
@@ -294,7 +294,7 @@ CompactSetEmbedded extracts an embedded index to separate mode, compacts it, the
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| After index appended to shard, before footer written | Shard has index bytes but no footer magic | `EmbeddedIndexCommitter.TryRecover` detects missing footer | Re-append footer to complete embedding | All data (index is in shard) | Nothing — footer is re-written |
+| After index appended to shard, before footer written | Shard has index bytes but no footer magic | `EmbeddedIndexCommitter.TryRecover` detects missing footer | Re-append footer to complete embedding | All data (index is in shard) | Nothing - footer is re-written |
 | After footer written, before rename | Shard has valid footer magic; rename not yet done | `EmbeddedIndexCommitter.TryRecover` detects completed shard | Complete the rename | All data | Nothing |
 | After rename (complete) | Fully embedded set | No recovery needed | None | All data | Nothing |
 
@@ -310,7 +310,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During scan | No file changes (read-only operation) | No intermediate state on disk | None needed — restart from beginning | All data unchanged | Nothing |
+| During scan | No file changes (read-only operation) | No intermediate state on disk | None needed - restart from beginning | All data unchanged | Nothing |
 
 #### Stage 2: BuildChunkList
 
@@ -318,7 +318,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During classification | No file changes (in-memory operation) | No intermediate state on disk | None needed — restart from beginning | All data unchanged | Nothing |
+| During classification | No file changes (in-memory operation) | No intermediate state on disk | None needed - restart from beginning | All data unchanged | Nothing |
 
 #### Stage 3: GroupChunksByShard
 
@@ -326,7 +326,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During grouping | No file changes (in-memory operation) | No intermediate state on disk | None needed — restart from beginning | All data unchanged | Nothing |
+| During grouping | No file changes (in-memory operation) | No intermediate state on disk | None needed - restart from beginning | All data unchanged | Nothing |
 
 #### Stage 4: CompactShard (per shard)
 
@@ -336,7 +336,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
 | During `.tmp` write (partial) | Partial shard `.tmp` + intact original shard | Shard `.tmp` exists alongside original | Delete shard `.tmp` file | Original shard (all blocks intact) | Partial `.tmp` |
 | During `File.Replace` of shard | Either original shard or `.tmp` exists | Check which files exist | If both: delete `.tmp`. If only `.tmp`: rename to original | At least one valid shard | Nothing critical |
-| After replace of one shard, before next shard | Some shards compacted, others not; no AtomicCommit yet | Block index still references old offsets; compacted shards have new layout | On recovery: orphaned tail detection handles size mismatches; next compact will re-process | All block data (offsets may be stale until next compact) | Nothing — data is preserved |
+| After replace of one shard, before next shard | Some shards compacted, others not; no AtomicCommit yet | Block index still references old offsets; compacted shards have new layout | On recovery: orphaned tail detection handles size mismatches; next compact will re-process | All block data (offsets may be stale until next compact) | Nothing - data is preserved |
 
 #### Stage 5: DeleteEmptyShards
 
@@ -344,7 +344,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| After deleting some empty shards | Some empty shards deleted, others remain; no AtomicCommit yet | Block index references no blocks in deleted shards | No action needed — shards were empty | All referenced data | Empty shard files (contained only dead blocks) |
+| After deleting some empty shards | Some empty shards deleted, others remain; no AtomicCommit yet | Block index references no blocks in deleted shards | No action needed - shards were empty | All referenced data | Empty shard files (contained only dead blocks) |
 
 #### Stage 6: UpdateBlockIndex
 
@@ -352,7 +352,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed — restart pipeline | All data unchanged on disk | Nothing |
+| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed - restart pipeline | All data unchanged on disk | Nothing |
 
 #### Stage 7: UpdateBlockMaps
 
@@ -360,7 +360,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed — restart pipeline | All data unchanged on disk | Nothing |
+| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed - restart pipeline | All data unchanged on disk | Nothing |
 
 #### Stage 8: UpdateMetadataSections
 
@@ -368,7 +368,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
-| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed — restart pipeline | All data unchanged on disk | Nothing |
+| During update | In-memory operation; no disk changes until AtomicCommit | No intermediate state on disk | None needed - restart pipeline | All data unchanged on disk | Nothing |
 
 #### Stage 9: AtomicCommit
 
@@ -377,7 +377,7 @@ The CompactShards pipeline processes shard files to remove unreferenced blocks. 
 | Crash Point | Intermediate File State | Detection Method | Recovery Action | Data Preserved | Data Discarded |
 |-------------|------------------------|------------------|-----------------|----------------|----------------|
 | Before SecondaryHeader write | Shards may be compacted but index still has old offsets | Dual-header: both headers valid with old state | Use old headers; shards have compacted layout but old offsets still work (data at old offsets was preserved or shard was replaced atomically) | All data accessible via old index | Compact progress (will be re-done on next compact) |
-| After SecondaryHeader, before PrimaryHeader | SecondaryHeader has new offsets; PrimaryHeader has old | Dual-header protocol | Use SecondaryHeader — new offsets are authoritative | All data with updated offsets | Nothing |
+| After SecondaryHeader, before PrimaryHeader | SecondaryHeader has new offsets; PrimaryHeader has old | Dual-header protocol | Use SecondaryHeader - new offsets are authoritative | All data with updated offsets | Nothing |
 | After PrimaryHeader (complete) | Both headers have new offsets | No recovery needed | None | All data with updated offsets | Nothing |
 
 ---
@@ -493,4 +493,4 @@ This document must be kept in sync with the implementation. When recovery logic 
 3. Verify the recovery state detection matrix is still accurate
 4. Run the crash-recovery property tests to confirm all scenarios are covered
 
-The crash-recovery property tests (`CrashRecoveryPropertyTests.cs`) serve as the executable specification for this document — if a scenario described here is not covered by a test, it should be added.
+The crash-recovery property tests (`CrashRecoveryPropertyTests.cs`) serve as the executable specification for this document - if a scenario described here is not covered by a test, it should be added.

@@ -277,7 +277,7 @@ namespace Nanook.NKit.Vfs
                     {
                         NKitProcessor processor = new NKitProcessor(settings, file, (message, level) => Console.Write(message));
                         NKitTaskResults result = processor.Process(cancel.Token);
-                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             errors++;
                             Console.WriteLine(result.ErrorMsg);
@@ -313,7 +313,7 @@ namespace Nanook.NKit.Vfs
 
         public static void ExecuteOgmr(NkdsCommandRequest request)
         {
-            // 1. Parse YAML — validates structure and compiles all regexes upfront
+            // 1. Parse YAML - validates structure and compiles all regexes upfront
             List<GameEntry> games;
             try
             {
@@ -403,7 +403,7 @@ namespace Nanook.NKit.Vfs
                         NKitProcessor processor = new NKitProcessor(perFileSettings, file, (message, level) => Console.Write(message));
                         NKitTaskResults result = processor.Process(cancel.Token);
 
-                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg))
+                        if (!string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error)
                         {
                             failed++;
                             Console.WriteLine(result.ErrorMsg);
@@ -791,7 +791,7 @@ namespace Nanook.NKit.Vfs
 
             if (triggered == 0)
             {
-                // User pressed Enter — initiate unmount
+                // User pressed Enter - initiate unmount
                 Console.WriteLine("Unmounting...");
                 orchestrator.Unmount(request.MountPoint);
 
@@ -1146,7 +1146,7 @@ namespace Nanook.NKit.Vfs
         public static void ExecuteExport(NkdsCommandRequest request)
         {
             executeMaskedTask(createExportAppSettings(request),
-                result => !string.IsNullOrWhiteSpace(result.ErrorMsg),
+                result => !string.IsNullOrWhiteSpace(result.ErrorMsg) || result.VerifyResult == VerifyResult.VerifyFailed || result.VerifyResult == VerifyResult.Error,
                 "export",
                 "Exported");
         }

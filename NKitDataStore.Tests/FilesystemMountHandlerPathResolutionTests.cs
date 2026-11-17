@@ -82,7 +82,7 @@ public class FilesystemMountHandlerPathResolutionTests
                 };
             }
 
-            // Type name not found in per-type dictionary — not found
+            // Type name not found in per-type dictionary - not found
             return null;
         }
 
@@ -188,7 +188,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_TypeSubfolderWithFile_ResolvesFileInCorrectNkFs()
     {
-        // Arrange: path "iso9660/README.TXT" — file in iso9660 filesystem
+        // Arrange: path "iso9660/README.TXT" - file in iso9660 filesystem
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "iso9660", "README.TXT" };
 
@@ -205,7 +205,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_TypeSubfolderWithDirectory_ResolvesDirectory()
     {
-        // Arrange: path "iso9660/DATA" — directory in iso9660 filesystem
+        // Arrange: path "iso9660/DATA" - directory in iso9660 filesystem
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "iso9660", "DATA" };
 
@@ -222,7 +222,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_TypeSubfolderWithNestedPath_ResolvesNestedFile()
     {
-        // Arrange: path "iso9660/DATA/FILE1.DAT" — nested file
+        // Arrange: path "iso9660/DATA/FILE1.DAT" - nested file
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "iso9660", "DATA", "FILE1.DAT" };
 
@@ -238,7 +238,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_JolietType_ResolvesInJolietNkFs()
     {
-        // Arrange: path "joliet/ReadMe.txt" — file in joliet filesystem
+        // Arrange: path "joliet/ReadMe.txt" - file in joliet filesystem
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "joliet", "ReadMe.txt" };
 
@@ -254,7 +254,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_CaseInsensitiveTypeLookup_Resolves()
     {
-        // Arrange: path "ISO9660/README.TXT" — uppercase type name
+        // Arrange: path "ISO9660/README.TXT" - uppercase type name
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "ISO9660", "README.TXT" };
 
@@ -269,7 +269,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_NonExistentFileInValidType_ReturnsNull()
     {
-        // Arrange: path "iso9660/MISSING.TXT" — file doesn't exist in iso9660 NkFs
+        // Arrange: path "iso9660/MISSING.TXT" - file doesn't exist in iso9660 NkFs
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "iso9660", "MISSING.TXT" };
 
@@ -287,7 +287,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_SingleFs_DirectFileResolution_NoTypeSegment()
     {
-        // Arrange: path "game.bin" — direct file access without type subfolder
+        // Arrange: path "game.bin" - direct file access without type subfolder
         TestVfsModelItem item = CreateSingleFilesystemItem();
         string[] pth = new[] { "game.bin" };
 
@@ -304,7 +304,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_SingleFs_DirectDirectoryResolution()
     {
-        // Arrange: path "system" — directory access
+        // Arrange: path "system" - directory access
         TestVfsModelItem item = CreateSingleFilesystemItem();
         string[] pth = new[] { "system" };
 
@@ -320,7 +320,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_SingleFs_NestedPathResolution()
     {
-        // Arrange: path "system/icon.sys" — nested file
+        // Arrange: path "system/icon.sys" - nested file
         TestVfsModelItem item = CreateSingleFilesystemItem();
         string[] pth = new[] { "system", "icon.sys" };
 
@@ -336,7 +336,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_SingleFs_NonExistentFile_ReturnsNull()
     {
-        // Arrange: path "missing.dat" — file doesn't exist
+        // Arrange: path "missing.dat" - file doesn't exist
         TestVfsModelItem item = CreateSingleFilesystemItem();
         string[] pth = new[] { "missing.dat" };
 
@@ -372,7 +372,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_InvalidTypeName_ReturnsNull()
     {
-        // Arrange: path "udf/somefile.txt" — "udf" is not in the per-type dictionary
+        // Arrange: path "udf/somefile.txt" - "udf" is not in the per-type dictionary
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "udf", "somefile.txt" };
 
@@ -400,7 +400,7 @@ public class FilesystemMountHandlerPathResolutionTests
     [Fact]
     public void FindInFolder_MultiFs_CompletelyBogusTypeName_ReturnsNull()
     {
-        // Arrange: path "nonexistent/file.txt" — completely invalid type
+        // Arrange: path "nonexistent/file.txt" - completely invalid type
         TestVfsModelItem item = CreateMultiFilesystemItem();
         string[] pth = new[] { "nonexistent", "file.txt" };
 

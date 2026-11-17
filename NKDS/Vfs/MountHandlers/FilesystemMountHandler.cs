@@ -262,7 +262,7 @@ namespace Nanook.NKit.Vfs
                             return new NkFsFileItem(perTypeNkfs, entryIndex, entry) { Parent = imageRootFolder2 };
                     }
 
-                    // Type name not found in per-type dictionary — not found
+                    // Type name not found in per-type dictionary - not found
                     return null;
                 }
                 else
@@ -378,7 +378,7 @@ namespace Nanook.NKit.Vfs
                     return nkfs;
             }
 
-            // Unknown type — return the first entry
+            // Unknown type - return the first entry
             return perType.Values.First();
         }
     }

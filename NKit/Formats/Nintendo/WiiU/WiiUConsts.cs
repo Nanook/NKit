@@ -1,4 +1,4 @@
-﻿namespace Nanook.NKit.Nintendo.WiiU
+namespace Nanook.NKit.Nintendo.WiiU
 {
     internal class WiiUConsts
     {
@@ -54,7 +54,7 @@
         public const int HashedChunkSize = 0x10000; // full hashed chunk: hash area + data area
         public const int HashedDataSize  = 0xFC00;  // plaintext data bytes per hashed chunk
         public const int FstRecordSize   = 0x20;    // NUS FST header and content record length
-        public const uint FstMagic       = 0x46535400u; // 'FST\0' — NUS FST binary header magic
+        public const uint FstMagic       = 0x46535400u; // 'FST\0' - NUS FST binary header magic
         public const int TmdContentInfoHashOffset = 0x1e4; // offset in TMD where content-info SHA-256 is stored
 
         public static byte[] KeyCommon = new byte[] { 0x0B, 0x6C, 0xD8, 0xDE, 0xB9, 0x47, 0x7E, 0x77, 0x0E, 0x17, 0xD1, 0x6E, 0xA3, 0x7E, 0x6A, 0x8A };
@@ -278,7 +278,7 @@
         public const string ExtCert = ".cert";
 
         // NOTE: Disc-area FsType string values and the per-buffer context-item keys moved to the
-        // system-neutral Nanook.NKit.AreaFsType / AreaContextItem (NKit/Common/AreaFsType.cs) —
+        // system-neutral Nanook.NKit.AreaFsType / AreaContextItem (NKit/Common/AreaFsType.cs) -
         // they are shared by every system's formatter/ImageBuilder, not WiiU-specific.
     }
 }

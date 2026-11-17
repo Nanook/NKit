@@ -113,7 +113,7 @@ namespace Nanook.NKit.Steps.Shared
                 if (trackExtensions.Contains(fi.Extension))
                     continue;
 
-                // Skip index files (CUE/GDI) — stored as loose files on child images
+                // Skip index files (CUE/GDI) - stored as loose files on child images
                 if (indexExtensions.Contains(fi.Extension))
                     continue;
 

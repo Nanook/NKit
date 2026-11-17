@@ -45,7 +45,7 @@ namespace NKitDataStore.Tests
 
             if (current == null)
             {
-                // No named root matched — search within inline "." roots for a matching child
+                // No named root matched - search within inline "." roots for a matching child
                 foreach (FsYamlNode inlineRoot in fsYaml.FileSystems.Where(fs => fs.Name == "."))
                 {
                     if (inlineRoot.Children != null)

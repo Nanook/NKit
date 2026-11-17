@@ -18,7 +18,7 @@ namespace Nanook.NKit
     {
         private readonly IImageReader _imageReader;
 
-        // Current area state — updated in OnAreaChanged when crossing track boundaries
+        // Current area state - updated in OnAreaChanged when crossing track boundaries
         private int _currentBlockSize;
         private long _currentPhysicalOffset; // base LBA for the current area
         private string _currentTrackType;    // "Mode1", "Mode2", "Audio", etc.
@@ -183,7 +183,7 @@ namespace Nanook.NKit
                 byte[] packData = packObj as byte[];
 
                 // Pre-pass: read the pack to get sector types (needed before ReconstructPrefix
-                // so we know Form1 vs Form2 for each sector). Do NOT apply subheader yet —
+                // so we know Form1 vs Form2 for each sector). Do NOT apply subheader yet -
                 // ReconstructPrefix overwrites [0x10-0x13] by mirroring [0x14-0x17], so we must
                 // apply the subheader AFTER ReconstructPrefix but BEFORE ReconstructEcc.
                 SectorFlags?[] sectorTypes = null;
@@ -375,7 +375,7 @@ namespace Nanook.NKit
             if (size <= 0)
                 return;
 
-            // Fill gap regions with null bytes (0x00) — the base implementation already does this
+            // Fill gap regions with null bytes (0x00) - the base implementation already does this
             base.OnGapFill(offsetInGap, cleanAreaOffset, cleanBufferOffset, size, context);
         }
 
@@ -526,7 +526,7 @@ namespace Nanook.NKit
                 if (!_disposed)
                 {
                     _disposed = true;
-                    // Do not dispose _builder — it is owned by the caller
+                    // Do not dispose _builder - it is owned by the caller
                 }
                 base.Dispose(disposing);
             }
@@ -604,7 +604,7 @@ namespace Nanook.NKit
                 if (!_disposed)
                 {
                     _disposed = true;
-                    // Do not dispose _builder — it is owned by the caller
+                    // Do not dispose _builder - it is owned by the caller
                 }
                 base.Dispose(disposing);
             }

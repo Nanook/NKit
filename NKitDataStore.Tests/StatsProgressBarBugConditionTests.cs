@@ -15,7 +15,7 @@ namespace NKitDataStore.Tests;
 ///
 /// **Validates: Requirements 1.1, 1.2, 1.3, 2.1, 2.2**
 ///
-/// Property 1: Bug Condition — Stats Button Missing Progress Bar
+/// Property 1: Bug Condition - Stats Button Missing Progress Bar
 ///
 /// This test is EXPECTED TO FAIL on unfixed code. Failure confirms the bug exists:
 /// when the Stats toolbar button is clicked and CanCalculate is true, the system
@@ -49,7 +49,7 @@ public class StatsProgressBarBugConditionTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 1.1, 1.2, 1.3, 2.1, 2.2**
     ///
-    /// Property 1: Bug Condition — For any Stats toolbar button click where CanCalculate
+    /// Property 1: Bug Condition - For any Stats toolbar button click where CanCalculate
     /// is true, ActiveOperations SHALL contain an OperationProgressViewModel with
     /// OperationName == "Stats" during calculation, with Percentage and ItemsProcessed
     /// updated, and the progress VM SHALL be removed after completion.
@@ -61,7 +61,7 @@ public class StatsProgressBarBugConditionTests : IDisposable
     /// Bug Condition: input.source == "StatsToolbarButton" AND CanCalculate == true
     /// AND ActiveOperations does NOT contain an OperationProgressViewModel for "Stats"
     ///
-    /// Scoped PBT Approach: We scope the property to the concrete failing case —
+    /// Scoped PBT Approach: We scope the property to the concrete failing case -
     /// Stats toolbar button click when CanCalculate is true. We directly test the
     /// MainWindowViewModel's behavior by simulating the Stats button click path and
     /// observing whether ActiveOperations is populated with a progress VM.
@@ -94,7 +94,7 @@ public class StatsProgressBarBugConditionTests : IDisposable
             _output.WriteLine($"SKIP: CanCalculate is false with {imageCount} images. Precondition not met.");
             statsCalc.Dispose();
             imageList.Dispose();
-            return true; // Skip — precondition not met
+            return true; // Skip - precondition not met
         }
 
         // Track whether ActiveOperations ever contained a "Stats" progress VM
@@ -167,7 +167,7 @@ public class StatsProgressBarBugConditionTests : IDisposable
                 $"Found 'Stats' OperationProgressViewModel: {foundStatsProgressVm}. " +
                 $"Percentage updated: {percentageUpdated}. " +
                 $"ItemsProcessed updated: {itemsProcessedUpdated}. " +
-                $"Bug confirmed: ActiveOperations remains empty during Stats calculation — " +
+                $"Bug confirmed: ActiveOperations remains empty during Stats calculation - " +
                 $"no OperationProgressViewModel is created for the Stats toolbar button path. " +
                 $"The direct CalculateStatsCommand.Execute() call bypasses progress VM creation.");
         }

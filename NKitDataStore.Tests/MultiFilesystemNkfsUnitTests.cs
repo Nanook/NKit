@@ -246,7 +246,7 @@ public class MultiFilesystemNkfsUnitTests
     [Fact]
     public void SelectBestFsYaml_OnlySystem_ReturnsFallbackToSystem()
     {
-        // Arrange: dictionary has ONLY "system" — no other types exist
+        // Arrange: dictionary has ONLY "system" - no other types exist
         FsYaml system = createSimpleFsYaml("systemroot");
         Dictionary<string, FsYaml> dict = new Dictionary<string, FsYaml>
         {

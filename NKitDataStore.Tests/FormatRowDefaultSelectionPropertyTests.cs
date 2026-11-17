@@ -79,7 +79,7 @@ public class FormatRowDefaultSelectionPropertyTests
 
         // Only test when the generated string is NOT in the target formats list
         if (targetFormats.Contains(invalidDefault.Get))
-            return true; // vacuously true — skip known-valid values
+            return true; // vacuously true - skip known-valid values
 
         FormatRowViewModel row = new FormatRowViewModel(system, sourceFormat, targetFormats, defaultSelection: invalidDefault.Get);
 

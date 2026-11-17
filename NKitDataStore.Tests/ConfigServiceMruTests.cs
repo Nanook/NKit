@@ -84,7 +84,7 @@ public class ConfigServiceMruTests
     {
         List<string> list = new List<string> { @"C:\Path", @"D:\Other" };
 
-        // Add same path with different casing — should deduplicate
+        // Add same path with different casing - should deduplicate
         ConfigService.AddToMruList(list, @"c:\path", maxEntries: 10);
 
         Assert.Equal(2, list.Count);

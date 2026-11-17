@@ -77,7 +77,7 @@ namespace Nanook.NKit.Vfs
                 }
             }
 
-            // List entries from NkFs (skip for CUE/GDI — they use area-based listing below)
+            // List entries from NkFs (skip for CUE/GDI - they use area-based listing below)
             NkFs nkfs = (folderImage.ImageRecord.Format == ImageFormat.Cue || folderImage.ImageRecord.Format == ImageFormat.Gdi)
                 ? null : folderImage.FileSystemNkfs;
             if (nkfs != null)
@@ -434,10 +434,10 @@ namespace Nanook.NKit.Vfs
                 if (folderImage?.ImageRecord == null || fsItem == null)
                     return false;
 
-                // Case 1: fs entries — files stored directly in this image's blocks
+                // Case 1: fs entries - files stored directly in this image's blocks
                 if (fsItem is NkFsFileItem)
                 {
-                    // 0-byte files have no offset records — return an empty stream
+                    // 0-byte files have no offset records - return an empty stream
                     if (fsItem.FsSize == 0)
                     {
                         stream = new MemoryStream(Array.Empty<byte>(), false);
@@ -462,7 +462,7 @@ namespace Nanook.NKit.Vfs
                     return true;
                 }
 
-                // Case 1b: CUE/GDI area files — track data stored as areas with FileName metadata
+                // Case 1b: CUE/GDI area files - track data stored as areas with FileName metadata
                 if (fsItem is FsImageAreaFile areaFile
                     && (folderImage.ImageRecord.Format == ImageFormat.Cue || folderImage.ImageRecord.Format == ImageFormat.Gdi))
                 {
@@ -500,7 +500,7 @@ namespace Nanook.NKit.Vfs
                     return true;
                 }
 
-                // Case 2: ifs entries — files in child images referenced by imageId
+                // Case 2: ifs entries - files in child images referenced by imageId
                 if (fsItem is FsIfsFileItem ifsItem)
                 {
                     string setName = folderImage.ImageRecord.SetName;
@@ -564,7 +564,7 @@ namespace Nanook.NKit.Vfs
                     try { builder.Position = matchingArea.Offset; } catch { }
                     stream = new BoundedStream(builder, matchingArea.Offset,
                         matchingArea.Size, ownsBaseStream: true);
-                    reader = null; // Shared reader — caller must not dispose
+                    reader = null; // Shared reader - caller must not dispose
                     return true;
                 }
             }

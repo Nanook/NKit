@@ -52,7 +52,7 @@ namespace Nanook.NKit.Steps.Shared
         /// <summary>
         /// Initialises the shared extraction engine.
         /// </summary>
-        /// <param name="mask">File-match mask — extract steps pass a user-configured mask;
+        /// <param name="mask">File-match mask - extract steps pass a user-configured mask;
         /// convert steps pass a match-all mask (<c>new FileMask(".*", false)</c>).</param>
         /// <param name="outName">Proposed output name (source image name).</param>
         protected WiiUFileExtractBase(FileMask mask, string outName)
@@ -200,7 +200,7 @@ namespace Nanook.NKit.Steps.Shared
 
         /// <summary>
         /// Called when the game title is first identified (title ID and version are known).
-        /// Subclasses can override — e.g. to set the WUA archive title folder name.
+        /// Subclasses can override - e.g. to set the WUA archive title folder name.
         /// </summary>
         protected virtual void OnTitleIdentified(string titleId, string version) { }
 

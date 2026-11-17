@@ -12,7 +12,7 @@ namespace NKitCore
     ///
     /// The pool free-list is bounded by <paramref name="maxPoolFree"/> so returned sections are
     /// reused rather than re-allocated (large per-section buffers), but the free list never grows
-    /// without bound. There is deliberately no aggressive "shrink to 2" trim — the live section
+    /// without bound. There is deliberately no aggressive "shrink to 2" trim - the live section
     /// count is already bounded by the core's admission control, so keeping up to maxPoolFree shells
     /// warm avoids re-allocating large byte[] buffers as the pipeline breathes.
     /// </summary>
@@ -83,6 +83,30 @@ namespace NKitCore
         {
             lock (_areas) { _areas.Add(area); }
             _areaStates.GetOrAdd(area.Index, _ => new AreaState());
+        }
+
+        /// <summary>
+        /// Returns a one-line diagnostic string describing current area outstanding-section counts.
+        /// Used by the pipeline hang watchdog to identify which area is blocked.
+        /// Format: "Area[0]=0 Area[1]=3 Area[2]=0" - a non-zero entry is the stuck area.
+        /// </summary>
+        public string GetAreaDiagnostics()
+        {
+            try
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                foreach (System.Collections.Generic.KeyValuePair<int, AreaState> kvp in _areaStates)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    sb.Append($"Area[{kvp.Key}]={Volatile.Read(ref kvp.Value.Outstanding)} TcsDone={kvp.Value.Tcs?.Task.IsCompleted}");
+                }
+                return sb.Length > 0 ? sb.ToString() : "(no areas registered)";
+            }
+            catch
+            {
+                return "(error reading area states)";
+            }
         }
 
         public Task WaitForAreaCompletionAsync(int areaIndex, CancellationToken ct)

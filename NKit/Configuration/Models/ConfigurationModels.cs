@@ -274,8 +274,8 @@ namespace Nanook.NKit.Configuration
         /// <summary>
         /// Optional user-supplied aux filename (without extension/suffix).
         /// For Wii/WiiU: used as the shared aux store name when provided (e.g., "MyCollection" → "MyCollection.aux.nkds").
-        /// For Xbox/Xbox360: ignored — split filename is always derived from the game set name.
-        /// For other systems: ignored — no aux store is created.
+        /// For Xbox/Xbox360: ignored - split filename is always derived from the game set name.
+        /// For other systems: ignored - no aux store is created.
         /// Null or empty means use system-type-based defaults.
         /// </summary>
         public string AuxFilename { get; set; }

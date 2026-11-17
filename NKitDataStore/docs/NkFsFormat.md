@@ -7,7 +7,7 @@ NkFs is a compact binary representation of filesystem trees for the NKit DataSto
 Key characteristics:
 
 - **Constant-time entry access**: 12-byte fixed entries allow O(1) index-based lookup.
-- **Flat navigation**: Directory listing and path resolution operate directly on the flat entry table using parent/next-entry indices — no in-memory tree is built.
+- **Flat navigation**: Directory listing and path resolution operate directly on the flat entry table using parent/next-entry indices - no in-memory tree is built.
 - **Compact representation**: Binary encoding with directory name deduplication and variable-width string table prefixes produces smaller output than UTF-8 YAML for non-trivial trees (100+ entries).
 - **Round-trip fidelity**: Full bidirectional conversion with `FsYaml` ensures backward compatibility.
 
@@ -42,7 +42,7 @@ The string table offset is computed: `12 + EntryCount × 12` (no field in header
 
 | Offset | Size (bytes) | Field | Type | Description |
 |--------|-------------|-------|------|-------------|
-| 0x00 | 4 | Magic | uint32 | `0x4E4B4653` — ASCII "NKFS". Identifies the format. |
+| 0x00 | 4 | Magic | uint32 | `0x4E4B4653` - ASCII "NKFS". Identifies the format. |
 | 0x04 | 2 | Version | uint16 | Format version. Currently `1`. |
 | 0x06 | 2 | Reserved | uint16 | Reserved for future use. Must be `0`. |
 | 0x08 | 4 | EntryCount | int32 | Total number of entries in the entry table, including the root entry at index 0. |
@@ -63,7 +63,7 @@ Each entry in the entry table occupies exactly 12 bytes. Entries are ordered in 
 | Offset | Size (bytes) | Field | Type | Description |
 |--------|-------------|-------|------|-------------|
 | 0x00 | 4 | FlagsAndNameOffset | uint32 | High 3 bits = Flags, low 29 bits = NameOffset (×2 for actual byte offset) |
-| 0x04 | 8 | (varies) | — | **File**: image offset (int64). **Directory**: parent index (int32) + next-entry index (int32). |
+| 0x04 | 8 | (varies) | - | **File**: image offset (int64). **Directory**: parent index (int32) + next-entry index (int32). |
 
 ### Flags (3 bits)
 
@@ -72,7 +72,7 @@ The flags occupy the high 3 bits of the first 4 bytes (bits 31–29):
 | Bit | Mask | Name | Description |
 |-----|------|------|-------------|
 | 0 | `0x01` | is_directory | `1` = directory, `0` = file |
-| 1 | `0x02` | system_flag | System marker — the `system_flag` flag is the sole indicator of system status |
+| 1 | `0x02` | system_flag | System marker - the `system_flag` flag is the sole indicator of system status |
 | 2 | `0x04` | image_file | Entry is an image file system reference |
 
 ### NameOffset Encoding
@@ -115,7 +115,7 @@ The string table is a packed byte region following the entry table. All entries 
 
 ### Directory String Table Entries
 
-Directories have no prefix byte — just the null-terminated name:
+Directories have no prefix byte - just the null-terminated name:
 
 ```
 [name\0] + optional pad byte for 2-byte alignment
@@ -147,10 +147,10 @@ Files have a 1-byte prefix followed by variable-width fields:
 Bit:  7   6   5   4   3   2   1   0
      [res][res][HME][iw1][iw0][sw1][sw0][chk]
 
-chk  (bit 0):    has_checksums — 1 = xxHash64+CRC32 present after size field
-sw   (bits 1-2): size_width — 0/1/2/3 → 0/2/4/8 bytes
-iw   (bits 3-4): imageid_width — 0/1/2/3 → 0/2/4/8 bytes
-HME  (bit 5):   has_more_extents — 1 = this entry has a continuation extent
+chk  (bit 0):    has_checksums - 1 = xxHash64+CRC32 present after size field
+sw   (bits 1-2): size_width - 0/1/2/3 → 0/2/4/8 bytes
+iw   (bits 3-4): imageid_width - 0/1/2/3 → 0/2/4/8 bytes
+HME  (bit 5):   has_more_extents - 1 = this entry has a continuation extent
 res  (bits 6-7): reserved, must be 0
 ```
 
@@ -166,7 +166,7 @@ EncodeWidth(value):
 
 ### System Node Names
 
-When the `system_flag` flag (bit 1) is set, the entry is a system node. The flag alone indicates system status — names are stored plain (without any `/` prefix) in the string table.
+When the `system_flag` flag (bit 1) is set, the entry is a system node. The flag alone indicates system status - names are stored plain (without any `/` prefix) in the string table.
 
 ## Directory Navigation
 
@@ -216,12 +216,12 @@ NkFs supports files whose data spans multiple non-contiguous disc regions (multi
 
 ### Chaining Rule
 
-When the `has_more_extents` flag (bit 5) is set to `1` on a file entry's prefix byte, the immediately next sibling file entry in the same parent directory with the same decoded filename is the **continuation extent** of this file. The chain continues until an entry with `has_more_extents` = `0` is reached — that entry is the final extent.
+When the `has_more_extents` flag (bit 5) is set to `1` on a file entry's prefix byte, the immediately next sibling file entry in the same parent directory with the same decoded filename is the **continuation extent** of this file. The chain continues until an entry with `has_more_extents` = `0` is reached - that entry is the final extent.
 
 ### Chain Properties
 
 - All entries in a multi-extent chain share the **same decoded filename** (byte-exact string comparison).
-- All extent entries are **consecutive siblings** within their parent directory — no other entries are interleaved between chain members.
+- All extent entries are **consecutive siblings** within their parent directory - no other entries are interleaved between chain members.
 - Extents are ordered by ascending byte-offset position within the original file (first extent covers the lowest file offset, last extent covers the highest).
 - Each extent entry has its **own string table prefix byte**, encoding that extent's individual `size_width`, `has_checksums`, and `imageid_width` values independently.
 - Each extent entry stores its own **individual disc offset** in the entry table's `ImageOffset` field.
@@ -249,10 +249,10 @@ Total logical size = 0x8000 + 0x6000 + 0x4000 = 0x12000 bytes.
 
 The format version remains `1`. Readers unaware of the `has_more_extents` flag (bit 5) will see each extent as an **independent file entry** with the same name. This preserves structural backward compatibility:
 
-- The entry table remains valid — each extent is a standard 12-byte entry with its own `ImageOffset`.
-- The string table remains valid — each extent has a decodable prefix byte (bits 0–4 encode size and checksums correctly regardless of bit 5), a valid size field, and a null-terminated name.
+- The entry table remains valid - each extent is a standard 12-byte entry with its own `ImageOffset`.
+- The string table remains valid - each extent has a decodable prefix byte (bits 0–4 encode size and checksums correctly regardless of bit 5), a valid size field, and a null-terminated name.
 - The parent directory's `NextEntryIndex` accounts for all extent entries as distinct children.
-- Older readers will produce a file listing with duplicate filenames, one per extent, each showing that extent's individual size — a degraded but non-crashing interpretation.
+- Older readers will produce a file listing with duplicate filenames, one per extent, each showing that extent's individual size - a degraded but non-crashing interpretation.
 
 ## Public API Reference
 

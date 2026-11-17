@@ -6,7 +6,7 @@ namespace NKitDataStore.Tests
     /// <summary>
     /// Unit tests for the OffsetsManager cache in MountResourceManager.
     /// Tests cover ref-counting, TTL lifecycle, concurrency, shutdown, and ImageBuilder integration.
-    /// Uses manual mock implementations — no real SQLite needed.
+    /// Uses manual mock implementations - no real SQLite needed.
     /// </summary>
     public class OffsetsManagerCacheTests
     {
@@ -184,7 +184,7 @@ namespace NKitDataStore.Tests
         #endregion
 
 
-        #region 10.1 — Property 1: Cache acquire idempotency
+        #region 10.1 - Property 1: Cache acquire idempotency
 
         /// <summary>
         /// Validates: Requirements 1.1, 1.2
@@ -206,7 +206,7 @@ namespace NKitDataStore.Tests
             OffsetsManagerCacheResult result2 = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             OffsetsManagerCacheResult result3 = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Assert — all return the same instance
+            // Assert - all return the same instance
             Assert.Same(result1, result2);
             Assert.Same(result2, result3);
         }
@@ -225,13 +225,13 @@ namespace NKitDataStore.Tests
             MockDataStore dataStore = new MockDataStore(_ => mockReader);
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
 
-            // Act — acquire multiple times
+            // Act - acquire multiple times
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Assert — GetAreas and GetOffsets called exactly once per construction
+            // Assert - GetAreas and GetOffsets called exactly once per construction
             // (AcquireOffsetsManager calls GetAreas+GetOffsets, and OffsetsManager constructor
             //  calls BuildIndex which also calls GetAreas+GetOffsets = 2 each total)
             Assert.Equal(2, mockReader.GetAreasCallCount);
@@ -261,7 +261,7 @@ namespace NKitDataStore.Tests
             });
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
 
-            // Act & Assert — for 20 random image IDs, verify idempotency
+            // Act & Assert - for 20 random image IDs, verify idempotency
             for (int iteration = 0; iteration < 20; iteration++)
             {
                 long imageId = random.Next(1, 100);
@@ -273,7 +273,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 10.2 — Property 2: Cache result completeness and structure
+        #region 10.2 - Property 2: Cache result completeness and structure
 
         /// <summary>
         /// Validates: Requirements 2.1, 2.3, 3.1, 3.3, 9.3
@@ -293,20 +293,20 @@ namespace NKitDataStore.Tests
             // Act
             OffsetsManagerCacheResult result = manager.AcquireOffsetsManager("set1", 1, 0x200000, 0x10000);
 
-            // Assert — non-null components
+            // Assert - non-null components
             Assert.NotNull(result);
             Assert.NotNull(result.OffsetsManager);
             Assert.NotNull(result.Areas);
             Assert.NotNull(result.OffsetsByPosition);
 
-            // Assert — areas count matches
+            // Assert - areas count matches
             Assert.Equal(4, result.Areas.Count);
 
-            // Assert — areas are sorted by offset
+            // Assert - areas are sorted by offset
             for (int i = 1; i < result.Areas.Count; i++)
                 Assert.True(result.Areas[i].Offset >= result.Areas[i - 1].Offset);
 
-            // Assert — offsets dictionary size ≤ M (may be less due to dedup by offset key)
+            // Assert - offsets dictionary size ≤ M (may be less due to dedup by offset key)
             Assert.True(result.OffsetsByPosition.Count <= 12);
         }
 
@@ -333,16 +333,16 @@ namespace NKitDataStore.Tests
                 // Act
                 OffsetsManagerCacheResult result = manager.AcquireOffsetsManager("set1", 1, 0x200000, 0x10000);
 
-                // Assert — structure invariants
+                // Assert - structure invariants
                 Assert.NotNull(result.OffsetsManager);
                 Assert.Equal(areaCount, result.Areas.Count);
                 Assert.True(result.OffsetsByPosition.Count <= offsetCount);
 
-                // Assert — areas sorted by offset
+                // Assert - areas sorted by offset
                 for (int i = 1; i < result.Areas.Count; i++)
                     Assert.True(result.Areas[i].Offset >= result.Areas[i - 1].Offset);
 
-                // Assert — dictionary keys match offset values
+                // Assert - dictionary keys match offset values
                 foreach (KeyValuePair<long, OffsetRecord> kvp in result.OffsetsByPosition)
                     Assert.Equal(kvp.Key, kvp.Value.Offset);
             }
@@ -355,7 +355,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void AcquireOffsetsManager_AreasSortedByOffset_EvenIfReaderReturnsUnsorted()
         {
-            // Arrange — areas in reverse order
+            // Arrange - areas in reverse order
             List<AreaRecord> areas = new List<AreaRecord>
             {
                 new AreaRecord { Id = 3, Offset = 0x600000, Size = 0x200000, SectionSize = 0x200000 },
@@ -369,7 +369,7 @@ namespace NKitDataStore.Tests
             // Act
             OffsetsManagerCacheResult result = manager.AcquireOffsetsManager("set1", 1, 0x200000, 0x10000);
 
-            // Assert — sorted by offset
+            // Assert - sorted by offset
             Assert.Equal(0x000000, result.Areas[0].Offset);
             Assert.Equal(0x300000, result.Areas[1].Offset);
             Assert.Equal(0x600000, result.Areas[2].Offset);
@@ -377,7 +377,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 10.3 — Property 3: ImageBuilder bypasses reader queries with cached data
+        #region 10.3 - Property 3: ImageBuilder bypasses reader queries with cached data
 
         /// <summary>
         /// Validates: Requirements 2.2, 3.2, 4.1
@@ -386,7 +386,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void ImageBuilder_WithCachedOffsets_DoesNotCallGetAreasOrGetOffsets()
         {
-            // Arrange — create a valid cache result using a normal reader
+            // Arrange - create a valid cache result using a normal reader
             List<AreaRecord> areas = createAreas(2);
             List<OffsetRecord> offsets = createOffsets(5);
             MockImageReader buildReader = new MockImageReader(areas, offsets);
@@ -394,16 +394,16 @@ namespace NKitDataStore.Tests
             Dictionary<long, OffsetRecord> offsetsByPosition = offsets.ToDictionary(o => o.Offset);
             OffsetsManagerCacheResult cachedResult = new OffsetsManagerCacheResult(offsetsManager, areas, offsetsByPosition);
 
-            // Use a throwing reader — if GetAreas/GetOffsets are called, the test fails
+            // Use a throwing reader - if GetAreas/GetOffsets are called, the test fails
             ThrowingImageReader throwingReader = new ThrowingImageReader();
 
-            // Act — construct ImageBuilder with cached data; should NOT throw
+            // Act - construct ImageBuilder with cached data; should NOT throw
             Exception exception = Record.Exception(() =>
             {
                 using ImageBuilder builder = new ImageBuilder(throwingReader, cachedOffsets: cachedResult);
             });
 
-            // Assert — no exception means GetAreas/GetOffsets were not called
+            // Assert - no exception means GetAreas/GetOffsets were not called
             Assert.Null(exception);
         }
 
@@ -430,7 +430,7 @@ namespace NKitDataStore.Tests
 
                 ThrowingImageReader throwingReader = new ThrowingImageReader();
 
-                // Act & Assert — no exception
+                // Act & Assert - no exception
                 Exception exception = Record.Exception(() =>
                 {
                     using ImageBuilder builder = new ImageBuilder(throwingReader, cachedOffsets: cachedResult);
@@ -441,7 +441,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 10.4 — Property 6: Ref-count arithmetic
+        #region 10.4 - Property 6: Ref-count arithmetic
 
         /// <summary>
         /// Validates: Requirements 6.1, 6.2, 1.4
@@ -468,10 +468,10 @@ namespace NKitDataStore.Tests
             // Wait longer than TTL
             Thread.Sleep(_TestTtlMs + 50);
 
-            // Act — acquire again should return same instance (entry was not removed)
+            // Act - acquire again should return same instance (entry was not removed)
             OffsetsManagerCacheResult result = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Assert — still the same cached instance, construction happened only once
+            // Assert - still the same cached instance, construction happened only once
             Assert.NotNull(result);
             Assert.Equal(2, mockReader.GetAreasCallCount);
         }
@@ -511,7 +511,7 @@ namespace NKitDataStore.Tests
                 // Wait longer than TTL
                 Thread.Sleep(_TestTtlMs + 50);
 
-                // Assert — entry still exists (ref count > 0, no TTL started)
+                // Assert - entry still exists (ref count > 0, no TTL started)
                 OffsetsManagerCacheResult laterResult = manager.AcquireOffsetsManager("set1", 1, 0x200000, 0x10000);
                 Assert.Same(firstResult, laterResult);
                 Assert.Equal(2, mockReader.GetAreasCallCount);
@@ -525,7 +525,7 @@ namespace NKitDataStore.Tests
         [Fact]
         public void RefCount_AllReleased_EntryRemovedAfterTtl()
         {
-            // Arrange — use a longer TTL to reduce timing sensitivity
+            // Arrange - use a longer TTL to reduce timing sensitivity
             const int ttlMs = 200;
             List<AreaRecord> areas = createAreas(1);
             List<OffsetRecord> offsets = createOffsets(2);
@@ -544,17 +544,17 @@ namespace NKitDataStore.Tests
             // Wait well beyond TTL to ensure expiry fires
             Thread.Sleep(ttlMs + 500);
 
-            // Act — acquire again should create a new instance (entry was removed)
+            // Act - acquire again should create a new instance (entry was removed)
             OffsetsManagerCacheResult second = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Assert — reader was queried again (new construction = 2 calls each per construction)
+            // Assert - reader was queried again (new construction = 2 calls each per construction)
             Assert.Equal(4, mockReader.GetAreasCallCount);
         }
 
         #endregion
 
 
-        #region 10.5 — Property 8: Single creation under concurrency
+        #region 10.5 - Property 8: Single creation under concurrency
 
         /// <summary>
         /// Validates: Requirements 7.1, 7.2
@@ -573,7 +573,7 @@ namespace NKitDataStore.Tests
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
             SemaphoreSlim barrier = new SemaphoreSlim(0, threadCount);
 
-            // Act — all threads acquire the same offsets manager concurrently
+            // Act - all threads acquire the same offsets manager concurrently
             Task<OffsetsManagerCacheResult>[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -583,10 +583,10 @@ namespace NKitDataStore.Tests
             barrier.Release(threadCount);
             OffsetsManagerCacheResult[] results = await Task.WhenAll(tasks);
 
-            // Assert — all got the same instance
+            // Assert - all got the same instance
             Assert.All(results, r => Assert.Same(results[0], r));
 
-            // Assert — construction happened exactly once (2 calls each due to OffsetsManager.BuildIndex)
+            // Assert - construction happened exactly once (2 calls each due to OffsetsManager.BuildIndex)
             Assert.Equal(2, mockReader.GetAreasCallCount);
             Assert.Equal(2, mockReader.GetOffsetsCallCount);
         }
@@ -647,7 +647,7 @@ namespace NKitDataStore.Tests
             // Pre-acquire to keep entry alive throughout
             OffsetsManagerCacheResult initial = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Act — threads interleave acquire/release rapidly
+            // Act - threads interleave acquire/release rapidly
             Task[] tasks = Enumerable.Range(0, threadCount).Select(_ => Task.Run(() =>
             {
                 barrier.Wait();
@@ -665,13 +665,13 @@ namespace NKitDataStore.Tests
             // Release the initial acquire
             manager.ReleaseOffsetsManager("set1", 42);
 
-            // Assert — construction happened only once despite all the concurrency
+            // Assert - construction happened only once despite all the concurrency
             Assert.Equal(2, mockReader.GetAreasCallCount);
         }
 
         #endregion
 
-        #region 10.6 — Property 9: Shutdown disposes all entries
+        #region 10.6 - Property 9: Shutdown disposes all entries
 
         /// <summary>
         /// Validates: Requirements 8.1, 8.2, 8.3
@@ -699,7 +699,7 @@ namespace NKitDataStore.Tests
             // Act
             manager.Shutdown();
 
-            // Assert — all entries removed (acquire after shutdown throws)
+            // Assert - all entries removed (acquire after shutdown throws)
             Assert.Throws<ObjectDisposedException>(() =>
                 manager.AcquireOffsetsManager("set1", 1, 0x200000, 0x10000));
             Assert.Throws<ObjectDisposedException>(() =>
@@ -742,7 +742,7 @@ namespace NKitDataStore.Tests
                 // Act
                 manager.Shutdown();
 
-                // Assert — all entries gone
+                // Assert - all entries gone
                 for (int i = 0; i < entryCount; i++)
                 {
                     Assert.Throws<ObjectDisposedException>(() =>
@@ -769,13 +769,13 @@ namespace NKitDataStore.Tests
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.ReleaseOffsetsManager("set1", 42);
 
-            // Act — shutdown before TTL expires
+            // Act - shutdown before TTL expires
             manager.Shutdown();
 
             // Wait for what would have been the TTL expiry
             Thread.Sleep(_TestTtlMs + 50);
 
-            // Assert — no crash, shutdown was clean (TTL callback doesn't fire on disposed state)
+            // Assert - no crash, shutdown was clean (TTL callback doesn't fire on disposed state)
             // The fact that we get here without exception means timers were properly cancelled
             Assert.Throws<ObjectDisposedException>(() =>
                 manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000));
@@ -783,7 +783,7 @@ namespace NKitDataStore.Tests
 
         #endregion
 
-        #region 10.7 — Property 11: No acquisition after shutdown
+        #region 10.7 - Property 11: No acquisition after shutdown
 
         /// <summary>
         /// Validates: Requirements 8.1
@@ -826,7 +826,7 @@ namespace NKitDataStore.Tests
             // Act
             manager2.Shutdown();
 
-            // Assert — various image IDs all throw
+            // Assert - various image IDs all throw
             Random random = new Random(11111);
             for (int i = 0; i < 20; i++)
             {
@@ -852,18 +852,18 @@ namespace NKitDataStore.Tests
 
             manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Act — call Shutdown twice
+            // Act - call Shutdown twice
             manager.Shutdown();
             Exception exception = Record.Exception(() => manager.Shutdown());
 
-            // Assert — no exception on second call
+            // Assert - no exception on second call
             Assert.Null(exception);
         }
 
         #endregion
 
 
-        #region 10.8 — Example-based tests
+        #region 10.8 - Example-based tests
 
         /// <summary>
         /// Validates: Requirements 6.3, 6.4, 6.5
@@ -892,7 +892,7 @@ namespace NKitDataStore.Tests
             // Wait for original TTL to have expired
             Thread.Sleep(_TestTtlMs + 50);
 
-            // Assert — same instance returned, entry not removed
+            // Assert - same instance returned, entry not removed
             Assert.Same(first, reacquired);
             Assert.Equal(2, mockReader.GetAreasCallCount);
         }
@@ -916,13 +916,13 @@ namespace NKitDataStore.Tests
             OffsetsManagerCacheResult first = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             manager.ReleaseOffsetsManager("set1", 42);
 
-            // Force expiry synchronously — no wall-clock dependency
+            // Force expiry synchronously - no wall-clock dependency
             manager.ForceOffsetsManagerExpiry("set1:42");
 
-            // Act — acquire again should create a new instance
+            // Act - acquire again should create a new instance
             OffsetsManagerCacheResult second = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
 
-            // Assert — new construction occurred (2 calls per construction × 2 constructions = 4)
+            // Assert - new construction occurred (2 calls per construction × 2 constructions = 4)
             Assert.Equal(4, mockReader.GetAreasCallCount);
             Assert.Equal(4, mockReader.GetOffsetsCallCount);
         }
@@ -939,10 +939,10 @@ namespace NKitDataStore.Tests
             List<OffsetRecord> offsets = createOffsets(5);
             MockImageReader mockReader = new MockImageReader(areas, offsets);
 
-            // Act — construct with null cachedOffsets
+            // Act - construct with null cachedOffsets
             using ImageBuilder builder = new ImageBuilder(mockReader, cachedOffsets: null);
 
-            // Assert — reader was queried for areas and offsets
+            // Assert - reader was queried for areas and offsets
             // (ImageBuilder calls GetAreas+GetOffsets, then OffsetsManager.BuildIndex calls them again = 2 each)
             Assert.Equal(2, mockReader.GetAreasCallCount);
             Assert.Equal(2, mockReader.GetOffsetsCallCount);
@@ -962,11 +962,11 @@ namespace NKitDataStore.Tests
             List<OffsetRecord> offsets = createOffsets(8);
             MockImageReader mockReader = new MockImageReader(areas, offsets);
 
-            // Act — explicitly pass null
+            // Act - explicitly pass null
             OffsetsManagerCacheResult nullCache = null;
             using ImageBuilder builder = new ImageBuilder(mockReader, cachedOffsets: nullCache);
 
-            // Assert — full construction occurred
+            // Assert - full construction occurred
             Assert.Equal(2, mockReader.GetAreasCallCount);
             Assert.Equal(2, mockReader.GetOffsetsCallCount);
         }
@@ -1012,10 +1012,10 @@ namespace NKitDataStore.Tests
             // Act
             manager.Shutdown();
 
-            // Assert — reader was disposed (shutdown completed the full sequence)
+            // Assert - reader was disposed (shutdown completed the full sequence)
             Assert.True(mockReader.IsDisposed);
 
-            // Assert — offsets cache is empty (throws on acquire)
+            // Assert - offsets cache is empty (throws on acquire)
             Assert.Throws<ObjectDisposedException>(() =>
                 manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000));
         }
@@ -1027,17 +1027,17 @@ namespace NKitDataStore.Tests
         [Fact]
         public void ImageBuilder_NonMountConstruction_WorksIndependently()
         {
-            // Arrange — two independent ImageBuilders for the same image data
+            // Arrange - two independent ImageBuilders for the same image data
             List<AreaRecord> areas = createAreas(2);
             List<OffsetRecord> offsets = createOffsets(5);
             MockImageReader reader1 = new MockImageReader(areas, offsets);
             MockImageReader reader2 = new MockImageReader(areas, offsets);
 
-            // Act — construct without cache (simulates CLI/test usage)
+            // Act - construct without cache (simulates CLI/test usage)
             using ImageBuilder builder1 = new ImageBuilder(reader1, cachedOffsets: null);
             using ImageBuilder builder2 = new ImageBuilder(reader2, cachedOffsets: null);
 
-            // Assert — each queried its own reader independently
+            // Assert - each queried its own reader independently
             Assert.Equal(2, reader1.GetAreasCallCount);
             Assert.Equal(2, reader1.GetOffsetsCallCount);
             Assert.Equal(2, reader2.GetAreasCallCount);
@@ -1079,7 +1079,7 @@ namespace NKitDataStore.Tests
             OffsetsManagerCacheResult final = manager.AcquireOffsetsManager("set1", 42, 0x200000, 0x10000);
             Assert.NotNull(final);
 
-            // Assert — construction happened only once across all cycles
+            // Assert - construction happened only once across all cycles
             Assert.Equal(2, mockReader.GetAreasCallCount);
         }
 
@@ -1097,11 +1097,11 @@ namespace NKitDataStore.Tests
             MockDataStore dataStore = new MockDataStore(_ => mockReader);
             using MountResourceManager manager = new MountResourceManager(dataStore, _ReaderCapacity, _TestTtlMs);
 
-            // Act — same image ID but different set names
+            // Act - same image ID but different set names
             OffsetsManagerCacheResult result1 = manager.AcquireOffsetsManager("setA", 42, 0x200000, 0x10000);
             OffsetsManagerCacheResult result2 = manager.AcquireOffsetsManager("setB", 42, 0x200000, 0x10000);
 
-            // Assert — different instances (different cache keys)
+            // Assert - different instances (different cache keys)
             Assert.NotSame(result1, result2);
         }
 

@@ -73,7 +73,7 @@ public static class PathResolver
         if (string.IsNullOrWhiteSpace(absolutePath))
             return absolutePath;
 
-        // If not rooted, it's already relative — return as-is
+        // If not rooted, it's already relative - return as-is
         if (!Path.IsPathRooted(absolutePath))
             return absolutePath;
 
@@ -99,7 +99,7 @@ public static class PathResolver
         if (string.IsNullOrWhiteSpace(storedPath))
             return storedPath;
 
-        // If already relative, it's under App_Directory by convention — display as relative
+        // If already relative, it's under App_Directory by convention - display as relative
         if (!Path.IsPathRooted(storedPath))
             return storedPath;
 

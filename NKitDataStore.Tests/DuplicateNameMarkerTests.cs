@@ -10,7 +10,7 @@ namespace NKitDataStore.Tests
     ///
     /// The marker is a curly-brace <c>{id}</c> / <c>{set_id}</c> suffix. It replaced a bare
     /// <c>(id)</c> convention that COLLIDED with legitimate dump-name suffixes such as
-    /// "(2003)" / "(Rev 1)" — which caused verify to strip the real suffix and fail to locate the
+    /// "(2003)" / "(Rev 1)" - which caused verify to strip the real suffix and fail to locate the
     /// image (the FreeLoader (2003)/(2004) bug). These tests lock in the two properties that make
     /// the marker safe: (a) format-then-parse round-trips, and (b) a real name ending in a
     /// parenthesised token is NEVER mistaken for an id marker.
@@ -35,7 +35,7 @@ namespace NKitDataStore.Tests
         }
 
         [Theory]
-        // Real dump-name suffixes that the OLD "(id)" scheme wrongly treated as an id — these must
+        // Real dump-name suffixes that the OLD "(id)" scheme wrongly treated as an id - these must
         // NOT be parsed as a duplicate marker now (this is the exact bug the {id} marker fixes).
         [InlineData("FreeLoader for GameCube (Europe) (Unl) (v1.06B) (2003)")]
         [InlineData("Some Game (2004)")]

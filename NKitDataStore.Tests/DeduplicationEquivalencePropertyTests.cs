@@ -22,7 +22,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.3**
         ///
-        /// Property 3: Deduplication equivalence — Same TrimOffset for sub-BlockSize shifts.
+        /// Property 3: Deduplication equivalence - Same TrimOffset for sub-BlockSize shifts.
         ///
         /// For any two audio partitions with identical audio content where leading zero
         /// regions differ by less than BlockSize bytes (both exceeding BlockSize), both
@@ -64,7 +64,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.3**
         ///
-        /// Property 3: Deduplication equivalence — Blocks after TrimOffset are identical.
+        /// Property 3: Deduplication equivalence - Blocks after TrimOffset are identical.
         ///
         /// For any two audio partitions with identical audio content where leading zero
         /// regions differ by less than BlockSize (both exceeding BlockSize), the stored
@@ -149,7 +149,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.3**
         ///
-        /// Property 3: Deduplication equivalence — BlockKeys match for identical block content.
+        /// Property 3: Deduplication equivalence - BlockKeys match for identical block content.
         ///
         /// For any two audio partitions with identical audio content where leading zero
         /// regions differ by less than BlockSize (both exceeding BlockSize), computing
@@ -236,7 +236,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 6.1, 6.3**
         ///
-        /// Property 3: Deduplication equivalence — Realistic scenario with actual FindFirstNonZero.
+        /// Property 3: Deduplication equivalence - Realistic scenario with actual FindFirstNonZero.
         ///
         /// Constructs two full partitions with different leading zero lengths (both > BlockSize,
         /// differing by &lt; BlockSize), runs FindFirstNonZero on each, computes TrimOffset,

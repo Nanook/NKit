@@ -7,7 +7,7 @@ namespace Nanook.NKit.App.Cli
 {
     /// <summary>
     /// Minimal, comment-preserving reader/writer for the nkit YAML config. It does NOT re-serialize
-    /// (which would strip the hand-written comments) — it reads a key's RAW value and, on write,
+    /// (which would strip the hand-written comments) - it reads a key's RAW value and, on write,
     /// surgically replaces just that key's value on its existing line, or inserts the key under the
     /// right block. AOT-safe (no YAML library); understands the two-level shape this config uses:
     /// root keys at column 0, and per-system keys indented under <c>sys: &lt;system&gt;:</c>.
@@ -55,7 +55,7 @@ namespace Nanook.NKit.App.Cli
             {
                 string l = _lines[j];
                 if (isBlank(l) || l.TrimStart().StartsWith("#")) continue;
-                if (indentOf(l) == 0) break; // back at root — no list belonged to the key
+                if (indentOf(l) == 0) break; // back at root - no list belonged to the key
 
                 string t = l.TrimStart();
                 if (t.StartsWith("-"))
@@ -100,7 +100,7 @@ namespace Nanook.NKit.App.Cli
         {
             string[] keys = withPrimary(primaryKey, altKeys);
             int block = findSystemBlock(system, out int blockIndent);
-            if (block < 0) return; // system block not present — skip (do not invent structure)
+            if (block < 0) return; // system block not present - skip (do not invent structure)
             int i = findKeyInBlock(block, blockIndent, keys);
             if (i >= 0) { _lines[i] = replaceValue(_lines[i], value); return; }
             // insert a new key line right after the block header, indented one level deeper.

@@ -515,7 +515,7 @@ namespace NKit.Tests.Configuration.ConfigSettings
             // Arrange & Act
             IReadOnlyList<string> supportedFormats = ConfigSettingsRanges.GetSupportedFormats(systemType);
 
-            // Assert — GameCube has 5 formats (includes nkitiso), Wii has 4
+            // Assert - GameCube has 5 formats (includes nkitiso), Wii has 4
             int expectedCount = systemType == SystemType.GameCube ? 5 : 4;
             Assert.Equal(expectedCount, supportedFormats.Count);
             Assert.Contains(ConfigSettingsConstants.FormatIso, supportedFormats);

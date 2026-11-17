@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Nanook.NKit.Iso.Iso9660
@@ -59,7 +59,7 @@ namespace Nanook.NKit.Iso.Iso9660
                 FstFile f = _ahead[0];
                 long fOffset = FsOffToOff(f.FsOffset);
                 if (fOffset >= buffer.ImageOffset + buffer.Size)
-                    break; // the next pending extent starts beyond this buffer — wait for next block
+                    break; // the next pending extent starts beyond this buffer - wait for next block
 
                 // Guard: if this entry's FS offset is beyond the physical volume (truncated disc /
                 // malformed PVD sector count), TestFsRange could overflow (now handled by
@@ -67,7 +67,7 @@ namespace Nanook.NKit.Iso.Iso9660
                 // entry if its FS offset lies so far beyond the volume start that even the
                 // offset-from-buffer would overflow int.  Entries whose f.FsOffset is simply
                 // BEFORE buffer.FsOffset are normal ongoing multi-section files (e.g. BIG.DAT
-                // started in section 0 but continues here) — leave them in _ahead.
+                // started in section 0 but continues here) - leave them in _ahead.
                 long bufferOffsetL = f.FsOffset - buffer.FsOffset;
                 if (bufferOffsetL > int.MaxValue)
                 {
@@ -115,7 +115,7 @@ namespace Nanook.NKit.Iso.Iso9660
                         return f;
                     }
                 }
-                break; // entry is in this buffer's range but not yet complete — wait for more data
+                break; // entry is in this buffer's range but not yet complete - wait for more data
             }
             return null;
         }
@@ -225,7 +225,7 @@ namespace Nanook.NKit.Iso.Iso9660
                 // Case-insensitive name match = same logical file from different FS view
                 // (e.g., ISO9660 uppercase vs UDF/Joliet mixed case). Always merge these
                 // regardless of size differences (CDXA sectors cause size discrepancies).
-                // However, do NOT override largerOverlapsNext — if the larger size genuinely
+                // However, do NOT override largerOverlapsNext - if the larger size genuinely
                 // overlaps the next file (e.g., PS1 CDXA extended data), it must go to collision.
                 bool isSameLogicalFile = string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase);
 
@@ -243,7 +243,7 @@ namespace Nanook.NKit.Iso.Iso9660
                     if (f.Parent != null)
                         ((FstFolder)f.Parent).Files.Add(f);
                 }
-                else // collision — genuinely different file at same offset (smaller size or overlapping larger size)
+                else // collision - genuinely different file at same offset (smaller size or overlapping larger size)
                 {
                     // Maintain VFS reference for the existing file (matches original unconditional merge behavior).
                     if (f.Parent != null)

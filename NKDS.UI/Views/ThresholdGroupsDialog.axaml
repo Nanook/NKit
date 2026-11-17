@@ -9,7 +9,7 @@
         Width="700" Height="500"
         MinWidth="500" MinHeight="350"
         CanResize="True"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         WindowStartupLocation="CenterOwner"
         Title="Threshold Groups">
 

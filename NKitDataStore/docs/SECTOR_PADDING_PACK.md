@@ -4,7 +4,7 @@
 
 The Sector Padding Pack is a compact, variable-length binary format that stores only the **non-recreatable bytes** of each raw ISO 9660 sector within a section. It is persisted as a single `BlockType.BlockPadding` record per section in the NKit DataStore.
 
-Most Mode1 sectors are fully conforming — their sync pattern, MSF address, mode byte, EDC, and ECC can all be deterministically regenerated from the stored user data and the area's starting LBA. For these sectors, the pack stores nothing. Only sectors with non-standard components (copy protection, intentional errors, Mode2 subheaders, extended user data) consume storage.
+Most Mode1 sectors are fully conforming - their sync pattern, MSF address, mode byte, EDC, and ECC can all be deterministically regenerated from the stored user data and the area's starting LBA. For these sectors, the pack stores nothing. Only sectors with non-standard components (copy protection, intentional errors, Mode2 subheaders, extended user data) consume storage.
 
 This format replaces the legacy `FinaliseSectionAndPersistBlockPadding` approach, which stored fixed-size header blocks for every non-conforming sector and could not handle EDC/ECC mismatches or Mode2Form2 extended user data.
 
@@ -45,7 +45,7 @@ The first byte of every Sector Padding Pack is a format version number:
 | Version | Meaning |
 |---------|---------|
 | `0x01`  | Current format (described in this document) |
-| Other   | Unsupported — the Unpacker throws `InvalidDataException` |
+| Other   | Unsupported - the Unpacker throws `InvalidDataException` |
 
 Future format revisions increment this byte. Readers that encounter an unrecognized version must reject the pack rather than attempting to parse it. This ensures forward compatibility without silent data corruption.
 
@@ -141,7 +141,7 @@ Offset  Size  Component
 
 ### Audio Sector
 
-Audio sectors within a data area have no internal structure (no sync, MSF, EDC, or ECC). The Packer sets bits 0-1 to `11` and stores no payload. In practice, audio section types are skipped entirely — no pack is produced for audio sections.
+Audio sectors within a data area have no internal structure (no sync, MSF, EDC, or ECC). The Packer sets bits 0-1 to `11` and stores no payload. In practice, audio section types are skipped entirely - no pack is produced for audio sections.
 
 ## Unconditional Storage Rules
 
@@ -195,7 +195,7 @@ Each data area in the DataStore stores a `PhysicalOffset` value in its area meta
    ```
    (Values are BCD-encoded in the sector header.)
 
-4. Because the LBA is deterministic from position, most sectors do **not** need their MSF stored — the Packer only sets bit 3 when the actual MSF/mode bytes differ from the computed values.
+4. Because the LBA is deterministic from position, most sectors do **not** need their MSF stored - the Packer only sets bit 3 when the actual MSF/mode bytes differ from the computed values.
 
 **When MSF is stored (bit 3 set)**:
 - Pregap sectors with intentional MSF offsets

@@ -141,7 +141,7 @@ namespace NKit.Tests.Engine.Output
                 string imagePath = System.IO.Path.Combine(
                     si.FsFile.Path.Trim('\\', '/'), si.FsFile.Name);
 
-                // Step 1: writeFs routing — skip if in _primaryOverlapPaths
+                // Step 1: writeFs routing - skip if in _primaryOverlapPaths
                 if (primaryOverlapPaths == null || !primaryOverlapPaths.Contains(imagePath))
                 {
                     record.WriteFsCalled = true;
@@ -299,7 +299,7 @@ namespace NKit.Tests.Engine.Output
                     OffsetInItem = 0
                 }).ToList();
 
-                // No overlap candidates (empty list) — the graceful degradation case
+                // No overlap candidates (empty list) - the graceful degradation case
                 List<IFsFile> overlapCandidates = new List<IFsFile>();
                 HashSet<string> primaryOverlapPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 HashSet<IFsFile> candidateSet = new HashSet<IFsFile>(files);
@@ -556,7 +556,7 @@ namespace NKit.Tests.Engine.Output
                     OffsetInItem = 0
                 }).ToList();
 
-                // Null overlap candidates — graceful degradation
+                // Null overlap candidates - graceful degradation
                 List<IFsFile> overlapCandidates = null;
                 HashSet<string> primaryOverlapPaths = null;
                 HashSet<IFsFile> candidateSet = new HashSet<IFsFile>(files);
@@ -589,7 +589,7 @@ namespace NKit.Tests.Engine.Output
         }
 
         /// <summary>
-        /// Property 6e: Mixed scenario — non-overlap files extract identically to pre-feature
+        /// Property 6e: Mixed scenario - non-overlap files extract identically to pre-feature
         /// path even when overlap candidates exist and active overlaps are present for other files.
         ///
         /// Generates a scenario with both overlap candidates (containing files) and normal

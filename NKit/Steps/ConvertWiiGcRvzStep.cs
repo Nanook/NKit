@@ -737,6 +737,7 @@ namespace Nanook.NKit
             }
             finally
             {
+                try { _threads?.Dispose(); } catch { }
                 try { _compressor.Dispose(); } catch { }
             }
             if (headerSize > _headerSize)

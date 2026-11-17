@@ -75,7 +75,7 @@ namespace NKitDataStore
 
         /// <summary>
         /// When non-null, buffer lookups delegate to this shared per-image cache instead of the local LRU.
-        /// The shared cache is NOT disposed by this ImageBuilder — the caller (MountResourceManager) manages its lifetime.
+        /// The shared cache is NOT disposed by this ImageBuilder - the caller (MountResourceManager) manages its lifetime.
         /// </summary>
         private readonly ImageBufferCache? _sharedCache;
 
@@ -100,7 +100,7 @@ namespace NKitDataStore
 
             if (cachedOffsets != null)
             {
-                // Use pre-built data directly — skip SQLite queries and OffsetsManager construction
+                // Use pre-built data directly - skip SQLite queries and OffsetsManager construction
                 _areas = cachedOffsets.Areas;
                 _offsetsByPosition = cachedOffsets.OffsetsByPosition;
                 _offsetsManager = cachedOffsets.OffsetsManager;
@@ -163,7 +163,7 @@ namespace NKitDataStore
                     catch (Exception ex)
                     {
                         Trace.TraceWarning($"MergeAuxOffsets failed for image '{_reader.Image?.Name}': {ex}");
-                        // Continue without aux offsets — blocks in aux produce zeros
+                        // Continue without aux offsets - blocks in aux produce zeros
                     }
                 }
             }
@@ -445,20 +445,20 @@ namespace NKitDataStore
                         bool ready = sharedEntry.WaitReady();
                         if (!ready || sharedEntry.IsFailed)
                         {
-                            // Timed out or failed — retry (the cache internally removes failed entries)
+                            // Timed out or failed - retry (the cache internally removes failed entries)
                             continue;
                         }
                     }
                     else if (sharedEntry.IsFailed)
                     {
-                        // Entry was marked failed before we checked — retry
+                        // Entry was marked failed before we checked - retry
                         continue;
                     }
 
                     return sharedEntry;
                 }
 
-                // Exhausted retries — make one final attempt that will throw on failure
+                // Exhausted retries - make one final attempt that will throw on failure
                 BufferCacheEntry finalEntry = _sharedCache.GetOrCreate(cacheKey, () =>
                 {
                     BufferCacheEntry entry = new BufferCacheEntry(_bufferSize, factoryArea.GetDataStride())
@@ -687,7 +687,7 @@ namespace NKitDataStore
                 // Directory table records must not overwrite actual file data.
                 if (isFileSystem && src.Type == BlockType.FileSystem && fileRanges != null && fileRanges.Count > 0)
                 {
-                    // Handle the gap BEFORE this segment — same logic as the standard path below.
+                    // Handle the gap BEFORE this segment - same logic as the standard path below.
                     // Without this, the pre-segment gap is skipped by the 'continue', so gapRanges
                     // never gets the entry and the second-pass BlockType.Other overlay for that gap
                     // (non-null, non-file stored content) is silently dropped. This breaks round-trip
@@ -710,7 +710,7 @@ namespace NKitDataStore
                     {
                         if (fStart >= writeEnd) break;
                         if (fEnd <= cursor) continue;
-                        // Write [cursor, min(fStart, writeEnd)) — the gap before this file range
+                        // Write [cursor, min(fStart, writeEnd)) - the gap before this file range
                         long subEnd = Math.Min(fStart, writeEnd);
                         if (cursor < subEnd)
                             populatePhysicalData(src, cursor, subEnd, context);
@@ -1025,7 +1025,7 @@ namespace NKitDataStore
                 (_blockProvider as IDisposable)?.Dispose();
 
                 // Clear local cache entries when using local cache (no global release is necessary).
-                // When using shared cache, do NOT dispose it — the caller manages its lifetime.
+                // When using shared cache, do NOT dispose it - the caller manages its lifetime.
                 _localCache?.Clear();
                 if (_disposeReader)
                 {

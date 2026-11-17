@@ -146,7 +146,7 @@ public class ExportCommandHandler : ICommandHandler
     /// <summary>
     /// Determines whether any selected image needs the Dreamcast fix yaml (audio-offset) info for
     /// export. True when a Dreamcast image is converted CUE↔GDI, or when the source is a CHD
-    /// (GD-ROM stored verbatim) being exported to cue or gdi — both drive the GdRomWriter path
+    /// (GD-ROM stored verbatim) being exported to cue or gdi - both drive the GdRomWriter path
     /// that consults the fix yaml for audio alignment.
     /// </summary>
     private static bool RequiresDreamcastFixInfo(
@@ -172,7 +172,7 @@ public class ExportCommandHandler : ICommandHandler
             }
 
             // A CHD source (GD-ROM stored verbatim) synthesises cue OR gdi on export via the
-            // GdRomWriter, which uses the Dreamcast fix yaml for audio alignment — so make the
+            // GdRomWriter, which uses the Dreamcast fix yaml for audio alignment - so make the
             // fix info available for either target, exactly as for a cross-format conversion.
             if (sourceFormat == "chd" && (targetBase == "cue" || targetBase == "gdi"))
                 return true;

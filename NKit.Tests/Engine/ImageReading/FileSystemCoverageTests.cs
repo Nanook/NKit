@@ -54,7 +54,7 @@ namespace NKit.Tests.Engine.ImageReading
             public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
         }
 
-        // Minimal IBuffer for the coverage loop — only Decrypted + Update are exercised.
+        // Minimal IBuffer for the coverage loop - only Decrypted + Update are exercised.
         private sealed class StubBuffer : IBuffer
         {
             public byte[] Decrypted { get; }
@@ -207,7 +207,7 @@ namespace NKit.Tests.Engine.ImageReading
         public void OutOfReach_DegradesGracefully_NoThrow()
         {
             BufferStream s = forwardOnly(); // forward-only: CanSeekTo false beyond reach limit
-            // A region far beyond the 8.5 GiB reach limit from floor 0 — CanSeekTo returns false.
+            // A region far beyond the 8.5 GiB reach limit from floor 0 - CanSeekTo returns false.
             long farOffset = 9L * 1024 * 1024 * 1024;
             StubReader r = new StubReader(true, new FsRegionRequest(farOffset, 0x800));
             // Must not throw; the region is skipped and the loop ends (no progress).
@@ -221,7 +221,7 @@ namespace NKit.Tests.Engine.ImageReading
         {
             BufferStream s = forwardOnly();
             StuckReader r = new StuckReader(new FsRegionRequest(0x1000, 0x800));
-            // Reader never drains its pending on ProcessBlock — loop must break, not spin.
+            // Reader never drains its pending on ProcessBlock - loop must break, not spin.
             FileSystemCoverage.ResolveThrough(r, s, area(), long.MaxValue, 0, () => new StubBuffer(0x1000));
             // It made at most one pass (fed once) then saw no progress and stopped.
             Assert.True(r.ProcessCalls <= 1);

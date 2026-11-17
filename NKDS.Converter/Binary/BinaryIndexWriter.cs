@@ -168,7 +168,7 @@ namespace NKDS.Converter.Binary
             }
             else
             {
-                // Directory too large for initial 4 KiB region — append at end of file.
+                // Directory too large for initial 4 KiB region - append at end of file.
                 // Set capacity = compressed size + 4096 so future in-place updates have headroom.
                 directoryRegionCapacity = compressedDirectory.Length + DefaultDirectoryRegionCapacity;
                 _stream.Position = _baseOffset + fileEndOffset;

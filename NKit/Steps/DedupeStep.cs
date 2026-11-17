@@ -163,7 +163,7 @@ namespace Nanook.NKit
                 }
             }
 
-            // Aux discovery — convention-based, no explicit path needed.
+            // Aux discovery - convention-based, no explicit path needed.
             // Check for {setName}.aux.nkds in the same directory as the primary set.
             // When the primary set already exists, validate block sizes match.
             // When the primary set is new, just check if the aux set exists (the formatter
@@ -177,7 +177,7 @@ namespace Nanook.NKit
                     string candidateAux = DataStore.ResolveAuxSetName(_dataStorePath);
                     if (candidateAux != null)
                     {
-                        // Validate block sizes match — hard error if they don't
+                        // Validate block sizes match - hard error if they don't
                         auxSetName = DataStore.ResolveAuxSetNameWithBlockSizeValidation(_dataStorePath, primaryBlockSize);
                         if (auxSetName == null)
                             throw new HandledException($"Aux store block size does not match primary store block size ({primaryBlockSize}). All stores in the same directory must use the same block size.");
@@ -185,7 +185,7 @@ namespace Nanook.NKit
                 }
                 else
                 {
-                    // Primary doesn't exist yet — still discover aux by convention.
+                    // Primary doesn't exist yet - still discover aux by convention.
                     // Block size validation will happen implicitly: the formatter creates
                     // the primary set with the configured block size, and the aux set was
                     // already created by the user with a matching block size.
@@ -214,7 +214,7 @@ namespace Nanook.NKit
                 string existingAux = DataStore.ResolveAuxSetName(_dataStorePath);
                 if (existingAux != null)
                 {
-                    // A shared aux store already exists — reuse it regardless of case/naming.
+                    // A shared aux store already exists - reuse it regardless of case/naming.
                     // Xbox always uses one shared aux per directory; don't create duplicates.
                     auxSetName = existingAux;
                 }
@@ -237,7 +237,7 @@ namespace Nanook.NKit
                     }
                     catch (InvalidOperationException)
                     {
-                        // Shared aux set was created concurrently — reuse without modification
+                        // Shared aux set was created concurrently - reuse without modification
                         auxSetName = sharedAuxName;
                     }
                     catch (Exception ex)
@@ -260,7 +260,7 @@ namespace Nanook.NKit
                 string existingSplit = DataStore.ResolveSplitSetName(dedupeDirectory, gameBaseName);
                 if (existingSplit != null)
                 {
-                    // Split store already exists — reuse without modification
+                    // Split store already exists - reuse without modification
                     splitSetName = existingSplit;
                 }
                 else
@@ -278,7 +278,7 @@ namespace Nanook.NKit
                     }
                     catch (InvalidOperationException)
                     {
-                        // Split set was created concurrently — reuse without modification
+                        // Split set was created concurrently - reuse without modification
                         splitSetName = splitName;
                     }
                     catch (Exception ex)
@@ -321,7 +321,7 @@ namespace Nanook.NKit
                         }
                         catch (InvalidOperationException)
                         {
-                            // Aux set already exists — reuse without modification
+                            // Aux set already exists - reuse without modification
                             auxSetName = auxName;
                         }
                         catch (Exception ex)
@@ -331,7 +331,7 @@ namespace Nanook.NKit
                         break;
 
                     default:
-                        // Other systems (GameCube, PS1, PS2, Dreamcast, etc.) — no aux store created
+                        // Other systems (GameCube, PS1, PS2, Dreamcast, etc.) - no aux store created
                         break;
                 }
             }
@@ -466,7 +466,7 @@ namespace Nanook.NKit
                 if (_dataStoreFormatter.AlreadyExists)
                 {
                     // The image was already in the set (same name + checksums) so FinalizeImage rolled
-                    // it back rather than storing a duplicate. Do NOT wire up the post-step verify — the
+                    // it back rather than storing a duplicate. Do NOT wire up the post-step verify - the
                     // image no longer exists in the store, so verifying it would read a zero/absent image
                     // (the historic "CRC 0" / stuck-row symptom). Flag it so the result reports AlreadyExists.
                     if (_context is NKitStepContext sc)
@@ -619,7 +619,7 @@ namespace Nanook.NKit
                 }
             }
 
-            // Persist block padding once per section — section contains all block padding encoded to be stored at the section position.
+            // Persist block padding once per section - section contains all block padding encoded to be stored at the section position.
             if (section.Status == CompletionStatus.Complete) //only when not to be patched or has being patched
                 _dataStoreFormatter.FinaliseSectionAndPersistBlockPadding(section.ImageOffset, section, section.Type == AreaType.FileSystem, stride);
         }

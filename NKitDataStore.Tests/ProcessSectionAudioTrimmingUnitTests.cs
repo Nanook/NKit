@@ -78,14 +78,14 @@ namespace NKitDataStore.Tests
                 return result;
             }
 
-            // CUE/GDI audio — apply leading-zero trimming logic
+            // CUE/GDI audio - apply leading-zero trimming logic
             int size = data.Length;
             long firstNonZero = LeadingZeroScanner.FindFirstNonZero(data, 0, size);
             long trimOffset = LeadingZeroScanner.ComputeAlignedTrimOffset(firstNonZero, dataStoreBlockSize);
 
             if (firstNonZero == size)
             {
-                // All bytes are zero — store TrimOffset = partition size, write no blocks
+                // All bytes are zero - store TrimOffset = partition size, write no blocks
                 result.TrimOffsetStored = true;
                 result.TrimOffsetValue = size;
                 result.DataWritten = false;
@@ -102,7 +102,7 @@ namespace NKitDataStore.Tests
             }
             else
             {
-                // No trimming needed (leading zeros < BlockSize) — store verbatim
+                // No trimming needed (leading zeros < BlockSize) - store verbatim
                 result.TrimOffsetStored = false;
                 result.DataWritten = true;
                 result.WriteOffset = imageOffset;

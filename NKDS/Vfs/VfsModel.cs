@@ -474,7 +474,7 @@ namespace Nanook.NKit.Vfs
             {
                 // Collect ONLY the main SQLite database path for connection pre-warming.
                 // In the hybrid design (shardSize > 0), _NNNN.nkds files are binary shard
-                // data (raw block storage), NOT SQLite databases — never pre-warm those.
+                // data (raw block storage), NOT SQLite databases - never pre-warm those.
                 // When a specific .nkds file is specified (scoped set), only that file needs warming.
                 if (set.Info?.FilePaths != null && set.Info.FilePaths.Count > 0)
                     shardPaths.Add(set.Info.FilePaths[0]); // First entry is always the main SQLite DB
@@ -531,7 +531,7 @@ namespace Nanook.NKit.Vfs
                             }
                             else
                             {
-                                // YAML text — convert to NkFs
+                                // YAML text - convert to NkFs
                                 FsYaml fsYaml = FsYaml.FromBytes(fsData);
                                 nkfs = NkFs.FromFsYaml(fsYaml);
                             }
@@ -565,7 +565,7 @@ namespace Nanook.NKit.Vfs
                 int itemDsIndex = recordWithYaml.DataStoreIndex;
                 // ImageRecord.Name is always stored without extension; ImageFormat provides it
                 string fileExtension = imageRecord.Format.GetFileExtension();
-                // Sanitize the name for the OS filesystem — stored names may contain ':' if they
+                // Sanitize the name for the OS filesystem - stored names may contain ':' if they
                 // were added before the dat-verification rename sanitization was in place.
                 string safeName = DatVerificationService.SanitizeDatName(imageRecord.Name);
                 string mountName = safeName + fileExtension;
@@ -594,7 +594,7 @@ namespace Nanook.NKit.Vfs
             _lastLoadedEagerNkfsCount = Images.Count(i => i.FileSystemNkfsLoaded);
             _lastLoadedDeferredNkfsCount = Images.Count(i => !i.FileSystemNkfsLoaded);
 
-            // Collect base names that have a TmdAppFolder — used later in mount index
+            // Collect base names that have a TmdAppFolder - used later in mount index
             // to hide individual [tmd.X] App images from Image-kind listings.
             HashSet<string> tmdAppFolderBaseNames = new HashSet<string>(
                 Images.Where(i => i.ImageRecord?.Format == NKitDataStore.ImageFormat.TmdAppFolder)
@@ -760,7 +760,7 @@ namespace Nanook.NKit.Vfs
                             && tmdAppFolderBaseNames.Contains(NKitDataStore.DataStore.ExtractBaseName(img.ImageRecord.Name));
 
                         // Image-kind entry (iso) under root==""
-                        // Skip merged secondaries for Image kind — the primary represents the group
+                        // Skip merged secondaries for Image kind - the primary represents the group
                         // Skip [tmd.X] App images when a TmdAppFolder covers them
                         // Skip Image-kind entries entirely for the "Directories" system (folder-based storage has no ISO images)
                         bool isDirectoriesSystem = string.Equals(system, VfsConstants.SystemDirectories, StringComparison.OrdinalIgnoreCase);

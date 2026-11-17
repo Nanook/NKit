@@ -40,7 +40,7 @@ public class RestoreCommandHandler : ICommandHandler
             {
                 progressVm.TotalItems = selectedRows.Count;
 
-                // Suppress filter updates during session close/reopen — Restore only changes
+                // Suppress filter updates during session close/reopen - Restore only changes
                 // a property in-place, the list shouldn't visually rebuild
                 ctx.ImageList.SuppressFilters();
 
@@ -70,7 +70,7 @@ public class RestoreCommandHandler : ICommandHandler
 
                 ctx.ImageList.ResumeFilters();
 
-                // No reconcile needed — MarkRestored() updates the row's Removed property in-place
+                // No reconcile needed - MarkRestored() updates the row's Removed property in-place
                 // and the DataGrid picks up the change via INotifyPropertyChanged binding.
 
                 // Re-evaluate whether there are still removed images

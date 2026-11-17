@@ -5,7 +5,7 @@ namespace NkdsUi.Services;
 
 /// <summary>
 /// Writes image list data as a YAML 1.2 document using direct StreamWriter output.
-/// No reflection APIs are used — fully AOT and trimming compatible.
+/// No reflection APIs are used - fully AOT and trimming compatible.
 /// Follows the same pattern as <see cref="PairwiseMatrixYamlWriter"/>.
 /// </summary>
 public static class YamlImageListWriter

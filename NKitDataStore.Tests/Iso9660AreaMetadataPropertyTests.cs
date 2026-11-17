@@ -54,7 +54,7 @@ namespace NKitDataStore.Tests
             switch (track.AreaType)
             {
                 case AreaType.FileSystem:
-                    // PhysicalOffset — starting LBA for sector address computation
+                    // PhysicalOffset - starting LBA for sector address computation
                     metadata.Set(AreaValueType.PhysicalOffset, track.PhysicalOffset);
 
                     // Track type info from mode
@@ -82,7 +82,7 @@ namespace NKitDataStore.Tests
         {
             if (track.BlockSize == 0x800)
             {
-                // Cooked sectors — no striding needed
+                // Cooked sectors - no striding needed
                 return null;
             }
 
@@ -109,7 +109,7 @@ namespace NKitDataStore.Tests
                 };
             }
 
-            // Unrecognized block size — no stride
+            // Unrecognized block size - no stride
             return null;
         }
 
@@ -186,7 +186,7 @@ namespace NKitDataStore.Tests
                     }
                 }
 
-                // Physical offset (LBA) — typically starts at 0 or 150 for first track
+                // Physical offset (LBA) - typically starts at 0 or 150 for first track
                 long physicalOffset = (i == 0) ? 0 : (long)rng.Next(150, 500000);
 
                 tracks.Add(new TrackConfig(
@@ -211,7 +211,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.8, 7.2**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — Track number correctness.
+        /// Property 5: ISO9660 Area Metadata Completeness - Track number correctness.
         ///
         /// For any multi-track ISO9660 image with N tracks, BuildAreaMetadata SHALL produce
         /// metadata with Track set to the 1-based track index for each area.
@@ -241,7 +241,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.7, 7.6**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — BlockSize correctness.
+        /// Property 5: ISO9660 Area Metadata Completeness - BlockSize correctness.
         ///
         /// For any multi-track ISO9660 image, BuildAreaMetadata SHALL produce
         /// metadata with BlockSize matching the track's block size (0x930 for raw, 0x800 for cooked).
@@ -271,7 +271,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.8**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — Session correctness.
+        /// Property 5: ISO9660 Area Metadata Completeness - Session correctness.
         ///
         /// For any multi-track ISO9660 image, BuildAreaMetadata SHALL produce
         /// metadata with Session set to the track's session number.
@@ -301,7 +301,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.6**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — PhysicalOffset correctness.
+        /// Property 5: ISO9660 Area Metadata Completeness - PhysicalOffset correctness.
         ///
         /// For any multi-track ISO9660 image with data tracks (FileSystem areas),
         /// BuildAreaMetadata SHALL produce metadata with PhysicalOffset set to the
@@ -335,7 +335,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.6**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — Stride metadata correctness.
+        /// Property 5: ISO9660 Area Metadata Completeness - Stride metadata correctness.
         ///
         /// For any multi-track ISO9660 image with raw-sector tracks, the stride computed
         /// by the model SHALL match the expected values for the track's sector mode:
@@ -361,7 +361,7 @@ namespace NKitDataStore.Tests
 
                 if (track.BlockSize == 0x800)
                 {
-                    // Cooked sectors — no stride expected
+                    // Cooked sectors - no stride expected
                     if (stride != null)
                         return false;
                 }
@@ -380,7 +380,7 @@ namespace NKitDataStore.Tests
                     }
                     else
                     {
-                        // Data track — stride should match BlockFsOffset/BlockFsSize
+                        // Data track - stride should match BlockFsOffset/BlockFsSize
                         if (stride.Value.SourceBlockSize != 0x930)
                             return false;
                         if (stride.Value.DataOffset != track.BlockFsOffset)
@@ -397,7 +397,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.6, 2.7, 2.8, 2.10, 7.2, 7.6**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — Full multi-track image.
+        /// Property 5: ISO9660 Area Metadata Completeness - Full multi-track image.
         ///
         /// For any ISO9660 multi-track image with N tracks, CreateAreas produces N area
         /// records where each area's metadata contains correct Track, BlockSize, Session,
@@ -454,7 +454,7 @@ namespace NKitDataStore.Tests
                 (int SourceBlockSize, int DataOffset, int DataLength)? stride = ModelGetStride(track);
                 if (track.BlockSize == 0x930 && track.AreaType != AreaType.Audio)
                 {
-                    // Raw data track — stride must exist and match
+                    // Raw data track - stride must exist and match
                     if (stride == null)
                         return false;
                     if (stride.Value.SourceBlockSize != 0x930)
@@ -466,7 +466,7 @@ namespace NKitDataStore.Tests
                 }
                 else if (track.BlockSize == 0x800)
                 {
-                    // Cooked — no stride
+                    // Cooked - no stride
                     if (stride != null)
                         return false;
                 }
@@ -478,7 +478,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.10**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — PS3 encryption metadata.
+        /// Property 5: ISO9660 Area Metadata Completeness - PS3 encryption metadata.
         ///
         /// For any ISO9660 data track where encryption is active, BuildAreaMetadata SHALL
         /// store the Encrypted flag and TitleKeyCrc in the area metadata.
@@ -538,7 +538,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.8, 7.2**
         ///
-        /// Property 5: ISO9660 Area Metadata Completeness — Audio track type stored.
+        /// Property 5: ISO9660 Area Metadata Completeness - Audio track type stored.
         ///
         /// For any audio track in a multi-track image, BuildAreaMetadata SHALL produce
         /// metadata with Type set to "Audio".

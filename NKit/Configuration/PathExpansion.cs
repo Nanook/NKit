@@ -57,7 +57,7 @@ namespace Nanook.NKit.Configuration
 
             // Replace task and system variables if provided.
             // Both are lowercased so config paths (keys/$system$, dats/$system$, fix/$system$)
-            // resolve to lowercase directory names on all platforms — consistent with the
+            // resolve to lowercase directory names on all platforms - consistent with the
             // all-lowercase folder structure EnsureConfiguration creates, and safe on Linux
             // where the filesystem is case-sensitive.
             if (!string.IsNullOrEmpty(taskType))

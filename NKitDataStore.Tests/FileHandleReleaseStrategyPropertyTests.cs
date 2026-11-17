@@ -30,7 +30,7 @@ public class FileHandleReleaseStrategyPropertyTests
     ///   the outcome non-deterministic, so we accept either result. The zone extends
     ///   past 550ms because the strategy issues four Task.Delay calls (50/100/200/150ms)
     ///   and each can overshoot by up to ~1 timer tick (~16ms) on Windows, so the last
-    ///   probe's real wall-clock time can drift ~50-60ms past the nominal 500ms cap —
+    ///   probe's real wall-clock time can drift ~50-60ms past the nominal 500ms cap -
     ///   letting a lock released just after 500ms still be observed as released.
     /// Timing: the method should not take significantly longer than max(N, ~500ms) + tolerance.
     /// </summary>
@@ -89,22 +89,22 @@ public class FileHandleReleaseStrategyPropertyTests
             // Verify correctness based on lock duration.
             // Values near the 500ms boundary are inherently racy due to Task.Delay
             // imprecision and OS scheduling jitter, so we use a buffer zone.
-            const int lowerBound = 450; // Well below 500ms — must succeed
-            const int upperBound = 650; // Far enough above 500ms to absorb Task.Delay overshoot — must fail
+            const int lowerBound = 450; // Well below 500ms - must succeed
+            const int upperBound = 650; // Far enough above 500ms to absorb Task.Delay overshoot - must fail
 
             if (lockDurationMs < lowerBound)
             {
-                // Lock released well before timeout — must return true
+                // Lock released well before timeout - must return true
                 if (!result)
                     return false;
             }
             else if (lockDurationMs >= upperBound)
             {
-                // Lock held well past the cumulative wait — must return false
+                // Lock held well past the cumulative wait - must return false
                 if (result)
                     return false;
             }
-            // else: boundary zone [450..550ms] — accept either result
+            // else: boundary zone [450..550ms] - accept either result
 
             // Verify timing: method should not take excessively long
             // Allow generous tolerance for CI/scheduling jitter (300ms tolerance)

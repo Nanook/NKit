@@ -7,7 +7,7 @@ namespace NKit.Tests.Engine.ImageReading
 {
     /// <summary>
     /// Detection tests for the IAsIso container factories. Each container is identified by its
-    /// static <c>Create(byte[] header)</c> from a small header buffer — no instantiation of the
+    /// static <c>Create(byte[] header)</c> from a small header buffer - no instantiation of the
     /// heavy decode path, no stream reads beyond the header. These tests pin the magic-byte
     /// detection and the precedence edges (WBFS vs the 0x200 NKit marker; CISO vs CSO) that the
     /// production chain in <c>NKitInput.createImageContainer</c> relies on.
@@ -127,7 +127,7 @@ namespace NKit.Tests.Engine.ImageReading
         public void NKit_NotClaimedWhenWbfsMagicPresentAtZero()
         {
             // A WBFS that stores an NKit-encoded image also has the 0x200 NKit marker, but the
-            // "WBFS" magic at offset 0 must take precedence — NKitAsIso must NOT claim it.
+            // "WBFS" magic at offset 0 must take precedence - NKitAsIso must NOT claim it.
             byte[] wbfsWithNkitMarker = WithAscii(0, "WBFS");
             for (int i = 0; i < 4; i++)
                 wbfsWithNkitMarker[0x200 + i] = (byte)"NKIT"[i];

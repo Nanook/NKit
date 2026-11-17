@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -132,7 +132,7 @@ namespace Nanook.NKit.Iso.Iso9660
                 if (sectorCount > 0)
                 {
                     // Derive the start LBA from the area's physical offset and the section's
-                    // position within the area — this is always correct regardless of whether
+                    // position within the area - this is always correct regardless of whether
                     // the first sector has a valid MSF. Falling back to the first sector's MSF
                     // is unreliable for null/zero sectors (MSF 00:00:00 → LBA -150).
                     object physOffObj = base.Buffer.AreaInfo.Properties?["PhysicalOffset"];

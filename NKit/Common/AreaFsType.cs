@@ -6,7 +6,7 @@ namespace Nanook.NKit
     ///
     /// <para>
     /// The DataStore formatters write <c>AreaValueType.FsType</c> as <c>ScanArea.Type.ToString()</c>
-    /// — i.e. the name of the <see cref="AreaType"/> enum member. The ImageBuilder streams then read
+    /// - i.e. the name of the <see cref="AreaType"/> enum member. The ImageBuilder streams then read
     /// that string back and branch on it. These consts are the single source of truth for those
     /// string values so a reader and a writer can never drift apart, and so the values are NOT tied
     /// to any one system (they were previously duplicated as raw literals in the Wii/GC/Xbox builders

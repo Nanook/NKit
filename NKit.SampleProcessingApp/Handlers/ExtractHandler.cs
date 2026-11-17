@@ -5,7 +5,7 @@ using System.IO;
 namespace Nanook.NKit.SampleProcessingApp.Handlers
 {
     /// <summary>
-    /// FILE EXTRACT handler — mirrors the DedupeStep extraction pattern.
+    /// FILE EXTRACT handler - mirrors the DedupeStep extraction pattern.
     ///
     /// Key insight from DedupeStep.saveFileData:
     ///   - Stream key is f.FsOffset (the file's disc position), NOT path+name.
@@ -27,10 +27,10 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
     {
         private readonly string _outputRoot;
 
-        // Keyed by FsOffset (disc offset) — same as DedupeStep._activeFileStreams.
+        // Keyed by FsOffset (disc offset) - same as DedupeStep._activeFileStreams.
         private readonly Dictionary<long, OpenFile> _activeStreams =
             new Dictionary<long, OpenFile>();
-        // Completed offsets — skip gap-reference items for already-finished files.
+        // Completed offsets - skip gap-reference items for already-finished files.
         private readonly HashSet<long> _doneOffsets = new HashSet<long>();
         // Map FsOffset → output path for FST entries (populated at area start).
         private readonly Dictionary<long, string> _fsOffsetToPath =
@@ -83,7 +83,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
                             data++;
                             // Register FsOffset → output path mapping.
                             // If two entries share the same FsOffset, last writer wins
-                            // (same bytes on disc, same content — either path is valid).
+                            // (same bytes on disc, same content - either path is valid).
                             if (!_fsOffsetToPath.ContainsKey(f.FsOffset))
                                 _fsOffsetToPath[f.FsOffset] = this.MapFilePath(f);
                         }
@@ -94,7 +94,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
                 }
             }
 
-            // ── Accumulate items — mirrors DedupeStep.saveFileData ───────────────────
+            // ── Accumulate items - mirrors DedupeStep.saveFileData ───────────────────
             foreach (IReadOnlySectionItem item in block.Items)
             {
                 IFsFile fsFile = item.FsFile;
@@ -128,7 +128,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
                     catch { _doneOffsets.Add(fsOffset); continue; }
                 }
 
-                // Write — sequential append (stream position is at end of last write)
+                // Write - sequential append (stream position is at end of last write)
                 block.Read((int)item.FileOffsetInSection, (int)item.Size, of.Stream);
                 of.Written += item.Size;
 

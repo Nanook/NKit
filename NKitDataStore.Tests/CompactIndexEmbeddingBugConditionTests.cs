@@ -12,7 +12,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 1.1, 1.2, 1.3**
     ///
-    /// Property 1: Bug Condition — Separate-Mode Sets Incorrectly Route to compactSetEmbedded
+    /// Property 1: Bug Condition - Separate-Mode Sets Incorrectly Route to compactSetEmbedded
     ///
     /// This test is EXPECTED TO FAIL on unfixed code. Failure confirms the bug exists:
     /// when CompactSet is called on a set with shardSize > 0 (separate mode) and the
@@ -42,7 +42,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 1.3**
         ///
-        /// Property 1: Bug Condition — For any separate-mode set (shardSize > 0) where
+        /// Property 1: Bug Condition - For any separate-mode set (shardSize > 0) where
         /// _embeddedMode cache contains a stale `true` value, calling CompactSet must
         /// leave the index as a standalone separate file (route to compactSetSeparate).
         ///
@@ -57,7 +57,7 @@ namespace NKitDataStore.Tests
         [Property(MaxTest = 10)]
         public bool CompactSet_SeparateMode_WithStaleCacheTrue_MustNotEmbedIndex(PositiveInt shardSizeMultiplier)
         {
-            // Choose a shardSize > 0 (separate mode) — vary between 64KiB and 512KiB
+            // Choose a shardSize > 0 (separate mode) - vary between 64KiB and 512KiB
             long shardSize = (long)((shardSizeMultiplier.Get % 8) + 1) * 65536;
 
             // Create a unique subdirectory per iteration to avoid collisions
@@ -109,7 +109,7 @@ namespace NKitDataStore.Tests
                 // reEmbedAfterCommit) incorrectly set the cache to true for a separate-mode set
                 embeddedModeDict[setName] = true;
 
-                // Step 4: Call CompactSet — on unfixed code, this will route to compactSetEmbedded
+                // Step 4: Call CompactSet - on unfixed code, this will route to compactSetEmbedded
                 store.CompactSet(setName);
             }
 
@@ -136,7 +136,7 @@ namespace NKitDataStore.Tests
             }
 
             // Assert 4: The header's ShardSize field must remain > 0 (unchanged)
-            // If the file was corrupted by compactSetEmbedded, opening it will throw —
+            // If the file was corrupted by compactSetEmbedded, opening it will throw -
             // that corruption IS proof of the bug
             bool headerShardSizePreserved = false;
             if (indexFileExists)
@@ -148,7 +148,7 @@ namespace NKitDataStore.Tests
                 }
                 catch (InvalidDataException ex)
                 {
-                    // The index file is corrupted — compactSetEmbedded destroyed it
+                    // The index file is corrupted - compactSetEmbedded destroyed it
                     _output.WriteLine(
                         $"COUNTEREXAMPLE: shardSize={shardSize}. " +
                         $"Index file is CORRUPTED after CompactSet: {ex.Message}. " +

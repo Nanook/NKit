@@ -8,14 +8,14 @@ namespace NKit.Tests.NKDS
     /// <summary>
     /// Tests the additive nkds interactive builder via the scripted prompter: assert the assembled
     /// argv and that it round-trips through the existing NkdsCommandLine.Parse to the expected
-    /// command/options — proving the interactive path reuses the real CLI unchanged.
+    /// command/options - proving the interactive path reuses the real CLI unchanged.
     /// </summary>
     [Trait("Area", "NKDS")]
     public class NkdsInteractiveTests
     {
         // Assert on the assembled argv directly. Round-tripping through NkdsCommandLine.Parse would
         // hit its filesystem-existence validation (a separate concern), so we verify the builder's
-        // job — producing the correct tokens — here.
+        // job - producing the correct tokens - here.
         private static string ValueAfter(string[] argv, string opt)
         {
             for (int i = 0; i < argv.Length - 1; i++)

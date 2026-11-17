@@ -89,7 +89,7 @@ namespace NKit.Tests.Logging
             ILogScope s = bus.CreateScope("root");
 
             // Detail is wanted by the file sink, so IsEnabled(Detail) must be true and the event
-            // reaches the file sink but not the (Info-only) console — console filters internally.
+            // reaches the file sink but not the (Info-only) console - console filters internally.
             Assert.True(s.IsEnabled(LogLevel.Detail));
             s.Log(LogLevel.Detail, "detail-line");
 

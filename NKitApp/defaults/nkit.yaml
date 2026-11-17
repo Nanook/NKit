@@ -28,7 +28,7 @@
 #                       e.g. portable: /opt/nkit  |  linux: ~/.local/state  |  macOS: ~/Documents
 #                       Note: scan-out / log / results-out below use $userPath$/nkit/ which resolves
 #                       to ~/.local/state/nkit/ on Linux, ~/Documents/nkit on macOS
-#                       — keeping large output data separate from config files
+#                       - keeping large output data separate from config files
 #     $task$          - task being performed
 #     $system$        - system being processed
 #     $date$          - Current date as yyyymmdd

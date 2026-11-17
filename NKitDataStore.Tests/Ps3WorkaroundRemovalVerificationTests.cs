@@ -17,7 +17,7 @@ namespace NKitDataStore.Tests
         {
             // Navigate from test assembly location up to the solution root, then into NKit/defaults/fix
             string assemblyDir = Path.GetDirectoryName(typeof(Ps3WorkaroundRemovalVerificationTests).Assembly.Location)!;
-            // Assembly is in NKitDataStore.Tests/bin/{Config}/{TFM}/ — go up 4 levels to solution root
+            // Assembly is in NKitDataStore.Tests/bin/{Config}/{TFM}/ - go up 4 levels to solution root
             string solutionRoot = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", ".."));
             string yamlPath = Path.Combine(solutionRoot, "NKit", "defaults", "fix", "fix_ps3.yaml");
             return yamlPath;
@@ -111,7 +111,7 @@ namespace NKitDataStore.Tests
         }
 
         /// <summary>
-        /// Test that FstIsoUdf.processFileEntry does not contain skip logic —
+        /// Test that FstIsoUdf.processFileEntry does not contain skip logic -
         /// verified by ensuring no field or method references _skipFstItems-like patterns.
         /// Also verifies the class has no "excluded offsets" collection of any kind.
         /// Validates: Requirement 7.3
@@ -121,7 +121,7 @@ namespace NKitDataStore.Tests
         {
             Type type = typeof(FstIsoUdf);
 
-            // Check all fields — none should be related to skipping/excluding UDF entries
+            // Check all fields - none should be related to skipping/excluding UDF entries
             FieldInfo[] allFields = type.GetFields(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 

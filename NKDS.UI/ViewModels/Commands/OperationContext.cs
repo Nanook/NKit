@@ -22,7 +22,7 @@ public record OperationContext(
     SharedObservableState SharedState,
     MountOrchestrator MountOrchestrator,
     ObservableCollection<OperationProgressViewModel> ActiveOperations,
-    // Dialog interactions — passed from MainWindowViewModel
+    // Dialog interactions - passed from MainWindowViewModel
     Interaction<AddImagesDialogViewModel, bool> ShowAddImagesDialog,
     Interaction<ExportDialogViewModel, bool> ShowExportDialog,
     Interaction<CompactDialogViewModel, CompactDialogResult> ShowCompactDialog,

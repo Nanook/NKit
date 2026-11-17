@@ -4,7 +4,7 @@ namespace NKitDataStore.Binary
 {
     /// <summary>
     /// Encapsulates the rename-based state machine for transitioning between embedded
-    /// and separate modes during writes/compaction. Each step is a rename or append —
+    /// and separate modes during writes/compaction. Each step is a rename or append -
     /// never an in-place truncate of the main file. Handles crash recovery by detecting
     /// which files exist on startup.
     /// </summary>
@@ -233,7 +233,7 @@ namespace NKitDataStore.Binary
             // Separate-mode guard: a "test_0000.nkds.tmp" is ambiguous. In EMBEDDED mode it is a
             // re-embed artifact (handled below). In SEPARATE mode it is the deferred-rename temp
             // produced by shard compaction of shard 0, and must NOT be treated as an embedded
-            // re-embed — doing so would append the index to it and rename it to the embedded file,
+            // re-embed - doing so would append the index to it and rename it to the embedded file,
             // destroying the compacted shard AND the standalone index. We recognise separate mode
             // by: a standalone index file (test.nkds exists and is NOT an embedded file) AND a
             // real shard (test_0000.nkds) present. In that case leave the temp for the separate
@@ -257,7 +257,7 @@ namespace NKitDataStore.Binary
                 }
                 else
                 {
-                    // Append was interrupted — re-append index from test.nkds
+                    // Append was interrupted - re-append index from test.nkds
                     if (embeddedExists)
                     {
                         // Read index from test.nkds (the standalone index file)
@@ -296,7 +296,7 @@ namespace NKitDataStore.Binary
                     }
                     else
                     {
-                        // No index file to recover from — cannot complete recovery
+                        // No index file to recover from - cannot complete recovery
                         // This is an edge case; treat as no file found
                         return EmbeddedRecoveryResult.NoFileFound;
                     }
@@ -333,7 +333,7 @@ namespace NKitDataStore.Binary
 
                     if (indexFileSize >= MinIndexSize && shardFileSize > indexFileSize)
                     {
-                        // The shard is larger than the index — it likely has block data + appended index.
+                        // The shard is larger than the index - it likely has block data + appended index.
                         // Compute the presumed shard boundary: shardFileSize - indexFileSize
                         // Verify by checking if the bytes at that offset match the index file content.
                         long presumedShardBoundary = shardFileSize - indexFileSize;
@@ -376,7 +376,7 @@ namespace NKitDataStore.Binary
                 }
                 else
                 {
-                    // File exists but no footer magic — could be a standalone index (separate mode)
+                    // File exists but no footer magic - could be a standalone index (separate mode)
                     // or a corrupted file. Treat as separate mode (the caller will handle).
                     return EmbeddedRecoveryResult.InSeparateMode;
                 }

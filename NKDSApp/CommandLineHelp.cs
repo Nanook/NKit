@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Spectre.Console;
@@ -10,7 +10,7 @@ namespace Nanook.NKit.Vfs
         // ── Colour scheme (matches the nkit CLI / log / interactive scheme) ─────────────
         //   app name (nkds)      -> green
         //   version              -> yellow
-        //   section titles       -> cyan   (a line that is just "Word:" — Usage:/Options:/…)
+        //   section titles       -> cyan   (a line that is just "Word:" - Usage:/Options:/…)
         //   option long names    -> bold white   ("--name")
         //   option shorthand     -> yellow       (", -x")
         // Everything else is left uncoloured. The raw help strings stay plain and readable; this
@@ -22,7 +22,7 @@ namespace Nanook.NKit.Vfs
 
         // A whole-line "section title": optional indent then a word/phrase ending in ':' with nothing
         // after it (e.g. "Usage:", "Global options:", "OGMR YAML format:").
-        // Section titles sit at column 0 (no leading whitespace) — e.g. "Usage:", "Options:",
+        // Section titles sit at column 0 (no leading whitespace) - e.g. "Usage:", "Options:",
         // "OGMR YAML format:". Indented "word:" lines (YAML sample keys) are NOT titles.
         private static readonly Regex _titleLine = new Regex(@"^([A-Za-z][A-Za-z0-9 /()]*:)\s*$", RegexOptions.Compiled);
         // An option line: indent then "--long[, -s]" then the rest (value hint + help).
@@ -85,7 +85,7 @@ namespace Nanook.NKit.Vfs
                 }
                 else if (inYaml)
                 {
-                    // Blank line — ends the YAML sample block.
+                    // Blank line - ends the YAML sample block.
                     inYaml = false;
                     sb.Append(line);
                 }
@@ -325,7 +325,7 @@ namespace Nanook.NKit.Vfs
 
             Notes:
               - Each input directory becomes one Folder image named after the directory.
-              - Files are stored directly via block deduplication — no NKit pipeline is used.
+              - Files are stored directly via block deduplication - no NKit pipeline is used.
               - If `--set` is omitted, the set is resolved from the `.nkds` set path or defaults to "folders".
               - Non-existent input directories are reported as errors; remaining directories are still processed.
 

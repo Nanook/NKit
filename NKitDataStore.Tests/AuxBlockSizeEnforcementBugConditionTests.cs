@@ -12,7 +12,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 1.1, 2.1, 2.2**
     ///
-    /// Property 1: Bug Condition — Block Size Not Forced to Aux Value on Creation
+    /// Property 1: Bug Condition - Block Size Not Forced to Aux Value on Creation
     ///
     /// This test is EXPECTED TO FAIL on unfixed code. Failure confirms the bug exists:
     /// when a primary set is created in a directory containing an aux store with a
@@ -39,7 +39,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 2.1, 2.2**
         ///
-        /// Property 1: Bug Condition — For any set creation where an aux store exists
+        /// Property 1: Bug Condition - For any set creation where an aux store exists
         /// with a different block size, the created primary set's BlockSize must equal
         /// the aux store's block size (the system should override the user's value).
         ///
@@ -84,7 +84,7 @@ namespace NKitDataStore.Tests
             {
                 _output.WriteLine(
                     $"COUNTEREXAMPLE: Created primary set with requested block size {primaryBlockSize / 1024}KiB " +
-                    $"in directory with aux store block size {auxBlockSize / 1024}KiB — " +
+                    $"in directory with aux store block size {auxBlockSize / 1024}KiB - " +
                     $"primary got {primaryInfo.BlockSize / 1024}KiB instead of expected {auxBlockSize / 1024}KiB. " +
                     $"Bug confirmed: system does not override block size to match aux store.");
             }
@@ -95,7 +95,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 2.1, 2.2**
         ///
-        /// Property 1 (ExecuteCreate path): Bug Condition — For any CLI-based set creation
+        /// Property 1 (ExecuteCreate path): Bug Condition - For any CLI-based set creation
         /// where an aux store exists with a different block size, the created primary set's
         /// BlockSize must equal the aux store's block size.
         ///
@@ -167,7 +167,7 @@ namespace NKitDataStore.Tests
             {
                 _output.WriteLine(
                     $"COUNTEREXAMPLE (ExecuteCreate): Created primary set with --block-size {primaryBlockSizeText} " +
-                    $"in directory with aux store block size {auxBlockSize / 1024}KiB — " +
+                    $"in directory with aux store block size {auxBlockSize / 1024}KiB - " +
                     $"primary got {primaryInfo.BlockSize / 1024}KiB instead of expected {auxBlockSize / 1024}KiB. " +
                     $"Bug confirmed: ExecuteCreate does not override block size to match aux store.");
             }

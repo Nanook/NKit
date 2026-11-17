@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Nanook.NKit
 {
@@ -20,7 +20,7 @@ namespace Nanook.NKit
 
         // Read-time discovery: scan THIS section's buffer for end-of-image system markers (UDF backup
         // anchor / partition mirror, mkisofs) that are only identifiable once read, and add them to
-        // the FST. Runs on the serial pre-process stage as each FileSystem section streams past — no
+        // the FST. Runs on the serial pre-process stage as each FileSystem section streams past - no
         // seek, exactly as the legacy sequential read did. No-op for formats without gap markers.
         void DiscoverMarkers(IFileSystemInfo fsInfo, IBuffer buffer);
 

@@ -116,7 +116,7 @@ namespace NKitDataStore.Binary
             }
             catch
             {
-                // Corrupt or unreadable — treat as no progress file
+                // Corrupt or unreadable - treat as no progress file
                 return null;
             }
         }

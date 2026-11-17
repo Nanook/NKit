@@ -143,7 +143,7 @@ namespace NKitDataStore.Interfaces
 
         /// <summary>
         /// Returns a lightweight snapshot of the index file health for the specified set.
-        /// Reads only the in-memory header — no disk I/O. Safe to call at any time.
+        /// Reads only the in-memory header - no disk I/O. Safe to call at any time.
         /// </summary>
         IndexHealthInfo GetIndexHealth(string setName);
 
@@ -276,7 +276,8 @@ namespace NKitDataStore.Interfaces
         /// <param name="compressor">The compressor to use if the block doesn't exist.</param>
         /// <param name="compressionParallelism">The level of parallelism for compression,controls number of threads.</param>
         void InsertBlockWithCompression(string setName, IDataStoreTransaction transaction, BlockKey key,
-            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism);
+            byte[] uncompressedData, int offset, int length, IBlockCompressor compressor, int compressionParallelism,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Waits for any background compression tasks for the specified set to complete.

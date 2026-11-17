@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -216,7 +216,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
         // Overload that also reports (via 'diag') the signal values and which decision branch fired,
         // so a wrong encrypted/plaintext verdict can be explained from a Detail log. The decision
-        // logic is unchanged — 'diag' is pure instrumentation.
+        // logic is unchanged - 'diag' is pure instrumentation.
         private static bool isEnc(byte[] key, long imageOffset, byte[] src, int size, out string diag)
         {
             if (key == null)
@@ -324,7 +324,7 @@ namespace Nanook.NKit.Iso.Iso9660
 
         /// <summary>Human-readable trail of the last <see cref="Ps3FileTest"/> key brute-force, for
         /// Detail logging by the caller (which owns the Log). Keys are masked (first 4 ASCII chars +
-        /// "...") — never the raw key material. Null until a test with a key search runs.</summary>
+        /// "...") - never the raw key material. Null until a test with a key search runs.</summary>
         internal string LastKeyTestDiag { get; private set; }
 
         public void Ps3FileTest(byte[] buffer, long imageOffset, string fileName, int offset)

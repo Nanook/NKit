@@ -12,11 +12,11 @@ namespace Nanook.NKit
     /// Converts a WUA (.wua ZArchive) or Loadiine folder (code/content/meta on disk)
     /// into an encrypted NUS/TmdApp installable title:
     ///
-    ///   title.cert  — certificate chain (CA, CP, XS)
-    ///   title.tik   — ticket containing the encrypted title key
-    ///   title.tmd   — title metadata with per-content SHA-1 hashes
-    ///   xxxxxxxx.app — AES-128-CBC encrypted content file(s)
-    ///   xxxxxxxx.h3  — H3 hash table for each hashed content
+    ///   title.cert  - certificate chain (CA, CP, XS)
+    ///   title.tik   - ticket containing the encrypted title key
+    ///   title.tmd   - title metadata with per-content SHA-1 hashes
+    ///   xxxxxxxx.app - AES-128-CBC encrypted content file(s)
+    ///   xxxxxxxx.h3  - H3 hash table for each hashed content
     ///
     /// The source already contains a signed tmd/tik/cert.  If any are missing they are
     /// synthesised (fake-signed, same as NUSPacker) using the existing SiData helpers.
@@ -112,7 +112,7 @@ namespace Nanook.NKit
 
             base.ProcessingComplete();
             Context.Result.ProgressSummary = $"Wrote {_appFiles} app file{_appFiles.s()}";
-            // Assign scan directly — base.ProcessResults() validates OutStream has an index
+            // Assign scan directly - base.ProcessResults() validates OutStream has an index
             // file which doesn't apply here (we write directly to disk, not via OutStream).
             if (Context.StepInfo.FullScan)
                 Context.Result.Scan = Context.Scan;
@@ -151,7 +151,7 @@ namespace Nanook.NKit
                        ?? readEntry(files, "title.cert")
                        ?? readEntry(files, "cert");
 
-            // Locate the first hashless content — its app file provides the FST bytes
+            // Locate the first hashless content - its app file provides the FST bytes
             // needed for key derivation when a ticket is absent.
             TmdInfo tmdInfo = new TmdInfo(tmd);
             Content fstContent = tmdInfo.Content.FirstOrDefault(c => !c.Type.HasFlag(AppContentType.Hashed))
@@ -165,7 +165,7 @@ namespace Nanook.NKit
 
             // Derive the title key: use a zero raw key so the encrypted form in the ticket
             // is deterministic and the console can always decrypt the .app files.
-            // This replaces the PBKDF2-based brute-force approach — a zero raw key encrypted
+            // This replaces the PBKDF2-based brute-force approach - a zero raw key encrypted
             // with the common key is simpler and equally valid for fake-signed content.
             byte[] key = TmdInfo.EncryptKey(new byte[16], tmdInfo.TitleId, WiiUConsts.KeyCommon);
 
@@ -252,16 +252,16 @@ namespace Nanook.NKit
         /// into NUS AppTmd format.
         ///
         /// Content layout:
-        ///   Index 0 — FST binary (hashless, AppType.Fst)
-        ///   Index 1 — code/app.xml (hashless, AppType.Code) — OS reads at boot
-        ///   Index 2 — code/cos.xml (hashless, AppType.Code) — OS reads at boot
-        ///   Index 3 — meta/meta.xml (hashed, AppType.Files) — metadata shown in menu
-        ///   Index 4 — meta/ boot visuals + icon (hashed, AppType.Files)
-        ///   Index 5 — meta/bootMovie.h264 (hashed, AppType.Files)
-        ///   Index 6 — meta/bootLogoTex.tga (hashed, AppType.Files)
-        ///   Index 7 — meta/Manual.bfma (hashed, AppType.Files)
-        ///   Index 8 — RPX executable (hashless, AppType.Code)
-        ///   Index 9 — remaining content/ + other code/ files (hashed, AppType.Files)
+        ///   Index 0 - FST binary (hashless, AppType.Fst)
+        ///   Index 1 - code/app.xml (hashless, AppType.Code) - OS reads at boot
+        ///   Index 2 - code/cos.xml (hashless, AppType.Code) - OS reads at boot
+        ///   Index 3 - meta/meta.xml (hashed, AppType.Files) - metadata shown in menu
+        ///   Index 4 - meta/ boot visuals + icon (hashed, AppType.Files)
+        ///   Index 5 - meta/bootMovie.h264 (hashed, AppType.Files)
+        ///   Index 6 - meta/bootLogoTex.tga (hashed, AppType.Files)
+        ///   Index 7 - meta/Manual.bfma (hashed, AppType.Files)
+        ///   Index 8 - RPX executable (hashless, AppType.Code)
+        ///   Index 9 - remaining content/ + other code/ files (hashed, AppType.Files)
         ///
         /// This matches the per-file content structure produced by disc→AppTmd conversion
         /// (ConvertWiiUAppTmdStep), which installs and runs correctly on hardware.
@@ -274,13 +274,13 @@ namespace Nanook.NKit
             ulong titleId = tmdInfo.TitleId;
 
             // ── Derive title key ─────────────────────────────────────────────────────
-            // Use a zero raw key — the encrypted form is stored in the generated ticket,
+            // Use a zero raw key - the encrypted form is stored in the generated ticket,
             // so the console always has what it needs to decrypt the .app files.
             byte[] encKey = TmdInfo.EncryptKey(new byte[16], titleId, WiiUConsts.KeyCommon);
 
             const int GRP_CODE  = 0x0000;
             const int GRP_FILES = 0x0400;
-            // Content groupId for content/ data — lower 16 bits of the title type word
+            // Content groupId for content/ data - lower 16 bits of the title type word
             int contentGroupId = (int)((titleId >> 8) & 0xFFFF);
 
             // ── Partition files by folder ─────────────────────────────────────────────
@@ -345,7 +345,7 @@ namespace Nanook.NKit
                 idx++;
             }
 
-            // meta/ files — each gets its own hashed content; files aligned to 32 bytes within content
+            // meta/ files - each gets its own hashed content; files aligned to 32 bytes within content
             const long fsAlign = 32L; // FST multiplier=32 → offsets stored as byteOffset/32
             var metaContents = new List<(int Idx, string Path, long Size)>();
             foreach (var path in metaFiles)
@@ -357,7 +357,7 @@ namespace Nanook.NKit
                 idx++;
             }
 
-            // content/ — all files in one hashed content, 32-byte aligned
+            // content/ - all files in one hashed content, 32-byte aligned
             int contentIdx = idx++;
             long cOff = 0;
             var contentAligned = new List<(string Path, long AlignedOff, long Size)>();
@@ -377,7 +377,7 @@ namespace Nanook.NKit
             static long hashless(long n) => n > 0 ? ((n + 0x7FFF) / 0x8000) * 0x8000 : 0;
             static long hashedSz(long n) => n > 0 ? ((n + 0xFC00 - 1) / 0xFC00) * 0x10000 : 0;
 
-            // ── FST first pass — get size for content[0] rawSz ───────────────────────
+            // ── FST first pass - get size for content[0] rawSz ───────────────────────
             byte[] fstBytes = fstBuilder.ToArray(32);
 
             fstBuilder.SetEncryptedSize(0, hashless(fstBytes.Length));
@@ -399,18 +399,18 @@ namespace Nanook.NKit
                 groupId:    tmdInfo.GroupId    != 0 ? (ushort)tmdInfo.GroupId
                                                     : (ushort)((titleId >> 8) & 0xFFFF));
 
-            // content[0] FST — hashless
+            // content[0] FST - hashless
             TmdInfo.WriteContentRecord(newTmd, 0, 0, 0, 0x2001, hashless(fstBytesWithSizes.Length));
-            // code non-RPX — hashless
+            // code non-RPX - hashless
             foreach (var (i, _, sz) in codeContents)
                 TmdInfo.WriteContentRecord(newTmd, i, (uint)i, i, 0x2001, hashless(sz));
-            // RPX — hashless
+            // RPX - hashless
             foreach (var (i, _, sz) in rpxContents)
                 TmdInfo.WriteContentRecord(newTmd, i, (uint)i, i, 0x2001, hashless(sz));
-            // meta — hashed
+            // meta - hashed
             foreach (var (i, _, sz) in metaContents)
                 TmdInfo.WriteContentRecord(newTmd, i, (uint)i, i, 0x2003, hashedSz(sz));
-            // content/ — hashed
+            // content/ - hashed
             TmdInfo.WriteContentRecord(newTmd, contentIdx, (uint)contentIdx, contentIdx, 0x2003, hashedSz(contentTotalSz));
 
             SiData newSiData = new SiData(encKey, newTmd, null, null, null);

@@ -162,7 +162,7 @@ namespace NKit.Tests.NKDS
 
         /// <summary>
         /// Models the Xbox formatter's GetStrideForPartition behavior.
-        /// Xbox uses cooked 0x800 sectors — always returns null (no striding).
+        /// Xbox uses cooked 0x800 sectors - always returns null (no striding).
         /// </summary>
         private static DataStride ModelGetStrideForPartition(int partitionId) => null;
 
@@ -381,7 +381,7 @@ namespace NKit.Tests.NKDS
                 ImageOffset = 0x100000
             };
 
-            // Gap with fill byte 0x00 and DataType.Fill — should be excluded
+            // Gap with fill byte 0x00 and DataType.Fill - should be excluded
             MockSectionData gapData = new MockSectionData
             {
                 FillByte = 0x00,
@@ -416,7 +416,7 @@ namespace NKit.Tests.NKDS
                 ImageOffset = 0x100000
             };
 
-            // Gap with non-zero fill byte — should be included
+            // Gap with non-zero fill byte - should be included
             MockSectionData gapData = new MockSectionData
             {
                 FillByte = 0xFF,
@@ -453,7 +453,7 @@ namespace NKit.Tests.NKDS
                 ImageOffset = 0x200000
             };
 
-            // Gap with fill byte 0x00 but DataType.Other (not NJunk) — should be included
+            // Gap with fill byte 0x00 but DataType.Other (not NJunk) - should be included
             MockSectionData gapData = new MockSectionData
             {
                 FillByte = 0x00,

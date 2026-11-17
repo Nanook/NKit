@@ -233,11 +233,17 @@ for dir in "publish/console/$PUBLISH_RID" "publish/gui/$PUBLISH_RID" "publish/nk
     if [ -d "$dir" ]; then
         rm -f "$dir"/*.pdb "$dir"/*.dbg "$dir"/*.deps.json "$dir"/*.crproj "$dir"/rd.xml 2>/dev/null || true
         rm -rf "$dir"/*.dSYM 2>/dev/null || true
-        # AOT builds are statically linked — remove native shared libs from output
+        # AOT builds are statically linked - remove native shared libs from output
         rm -f "$dir"/libGrindCore.so "$dir"/libGrindCore.dylib "$dir"/GrindCore.dll 2>/dev/null || true
-        # Also remove the static lib itself — injected into the NuGet cache for the AOT linker,
+        # Also remove the static lib itself - injected into the NuGet cache for the AOT linker,
         # it may get copied to publish output but is already baked into the native binary.
         rm -f "$dir"/libGrindCore.a "$dir"/GrindCore.lib 2>/dev/null || true
+        # Remove runtime-created directories. These appear when the app is run in
+        # portable mode from the publish dir (EnsureConfiguration creates them).
+        # The publish dir is not cleaned between builds so they persist across runs.
+        for runtimeDir in dats keys fix out scans temp logs dedupe; do
+            rm -rf "$dir/$runtimeDir" 2>/dev/null || true
+        done
     fi
 done
 
@@ -258,11 +264,9 @@ add_config_files() {
         fi
     fi
 
-    # GUI: nkit-ui.yaml + defaults directory
+    # GUI: defaults directory and ConfigInfo.txt
+    # nkit-ui.yaml is included via NKit.UI.csproj CopyToPublishDirectory - no manual copy needed.
     if [[ "$BUILD_GUI" == true ]] && [ -d "publish/gui/$rid" ]; then
-        if [ -f "NKit.UI/nkit-ui.yaml" ]; then
-            cp "NKit.UI/nkit-ui.yaml" "publish/gui/$rid/"
-        fi
         if [ -d "NKit/defaults" ]; then
             cp -r "NKit/defaults" "publish/gui/$rid/"
         fi

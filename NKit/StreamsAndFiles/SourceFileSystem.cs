@@ -212,7 +212,7 @@ namespace Nanook.NKit
 
                 foreach (ImageRecord image in images)
                 {
-                    // Skip TmdAppFolder and CueFolder images — these are index-based aggregation
+                    // Skip TmdAppFolder and CueFolder images - these are index-based aggregation
                     // containers that can't be processed through the normal pipeline.
                     if (image.Format == ImageFormat.TmdAppFolder || image.Format == ImageFormat.CueFolder)
                         continue;
@@ -235,7 +235,7 @@ namespace Nanook.NKit
 
                     // For CUE/GDI folder entries, add the folder as a non-matching parent
                     // and enumerate only the index file and track files inside. The folder
-                    // entry itself is not a processable image — only the .cue/.gdi index is.
+                    // entry itself is not a processable image - only the .cue/.gdi index is.
                     // This mirrors how TmdApp folders work: the folder is a container, not an image.
                     if (image.Format == ImageFormat.Cue || image.Format == ImageFormat.Gdi)
                     {

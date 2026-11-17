@@ -8,7 +8,7 @@ namespace Nanook.NKit.Nintendo.WiiGc
     /// <summary>
     /// The proven Wii partition-table layout fixes, factored out of WiiGc.Image so both the Image
     /// (legacy in-pipeline path) and WiiFixAsIso (up-front layout decorator) share the exact same
-    /// algorithm — no duplication, no divergence.
+    /// algorithm - no duplication, no divergence.
     ///
     /// These operate only on an ImageHeader + FixData (partition-table entries and FixPartition
     /// recovery references); they never read source disc bytes. The caller supplies the source

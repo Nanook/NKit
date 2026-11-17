@@ -19,8 +19,8 @@ namespace Nanook.NKit
     /// keeping a clean separation from <see cref="ExtractWiiUStep"/> which is the Extract task.
     ///
     /// Format strings:
-    ///   "loadiine"  — write decrypted files to a folder (code/content/meta)
-    ///   "wua"       — write decrypted files into a ZArchive (.wua)
+    ///   "loadiine"  - write decrypted files to a folder (code/content/meta)
+    ///   "wua"       - write decrypted files into a ZArchive (.wua)
     /// </summary>
     internal class ConvertWiiULoadiineStep : WiiUFileExtractBase
     {

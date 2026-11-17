@@ -21,4 +21,13 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Suppress NU1903: Microsoft.DotNet.ILCompiler 10.0.11 (Brotli decoder OOB write,
+         GHSA-p3jp-9v83-76w9). The patched version is 10.0.14, shipped with SDK 10.0.114 /
+         10.0.403. The installed SDK (10.0.3xx feature band) does not have a patched release
+         yet. NKit processes local files, not untrusted Brotli network streams, so the
+         practical risk is negligible. Remove this suppression when the SDK is updated. -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
+  </PropertyGroup>
+
 </Project>

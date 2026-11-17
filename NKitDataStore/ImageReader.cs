@@ -231,7 +231,7 @@ namespace NKitDataStore
             (compressionType, compressedData) = _dataAccess.GetBlockData(Image.SetName, key);
             if (compressedData == null || compressedData.Length == 0)
             {
-                // The read returned null — this could be because the block doesn't exist,
+                // The read returned null - this could be because the block doesn't exist,
                 // or because an IOException occurred due to an invalidated file handle
                 // (shard replaced during compaction). If we can resolve the block's shard
                 // location, invalidate the cached stream and retry once.
@@ -285,7 +285,7 @@ namespace NKitDataStore
             if (data != null)
                 return data;
 
-            // The read returned null — this could be because the block doesn't exist,
+            // The read returned null - this could be because the block doesn't exist,
             // or because an IOException occurred due to an invalidated file handle.
             // If we can resolve the block's shard location, invalidate the cached stream
             // and retry once.
@@ -330,7 +330,7 @@ namespace NKitDataStore
         /// <summary>
         /// Decompresses rawData[rawOffset..rawOffset+rawLength] directly into dest[destOffset..].
         /// Used by ImageReadStream when reading from the start of a block into a caller-supplied
-        /// output buffer that is large enough to hold the full decompressed block — eliminates
+        /// output buffer that is large enough to hold the full decompressed block - eliminates
         /// the _decompressionBuffer intermediate and the subsequent Array.Copy.
         /// </summary>
         internal int DecompressBlockDirect(byte[] rawData, int rawOffset, int rawLength, int expectedBlockLength, byte[] dest, int destOffset)
@@ -349,7 +349,7 @@ namespace NKitDataStore
         /// consecutive blocks in the same OffsetRecord are typically physically adjacent in the
         /// shard, so one large read replaces N individual reads.
         ///
-        /// Returns default when the run length is ≤ 1 — caller should fall back to GetRawBlockData.
+        /// Returns default when the run length is ≤ 1 - caller should fall back to GetRawBlockData.
         /// </summary>
         internal (byte[]? rawData, int runLength, int[] blockOffsets, int[] blockSizes) ReadBlockRun(
             OffsetRecord offsetRecord, int startBlockIndex, int maxBlocks = _MaxReadAheadBlocks)

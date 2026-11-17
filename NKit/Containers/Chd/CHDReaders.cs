@@ -110,17 +110,44 @@ namespace Nanook.NKit.Chd
             //codec.FLAC_audioDecoder ??= new AudioDecoder(codec.FLAC_settings);
             //codec.FLAC_audioBuffer ??= new AudioBuffer(codec.FLAC_settings, buffOutLength); //audio CiBuffer to take decoded samples and read them to bytes.
 
-
             srcPos = buffInStart;
             int dstPos = 0;
-            //this may require some error handling. Hopefully the while condition is reliable
-            while (dstPos < buffOutLength)
+
+            try
             {
-                int read = codec.FlacAudioDecoder.DecodeFrame(buffIn, srcPos, buffInLength - srcPos);
-                codec.FlacAudioDecoder.Read(codec.FlacAudioBuffer, (int)codec.FlacAudioDecoder.Remaining);
-                Array.Copy(codec.FlacAudioBuffer.Bytes, 0, buffOut, dstPos, codec.FlacAudioBuffer.ByteLength);
-                dstPos += codec.FlacAudioBuffer.ByteLength;
-                srcPos += read;
+                while (dstPos < buffOutLength)
+                {
+                    // Check for input exhaustion before attempting decode
+                    if (srcPos >= buffInLength)
+                        return ChdError.CHDERR_DECOMPRESSION_ERROR;
+
+                    int read = codec.FlacAudioDecoder.DecodeFrame(buffIn, srcPos, buffInLength - srcPos);
+
+                    // DecodeFrame returning 0 means no bytes consumed - would loop forever on damaged data
+                    if (read <= 0)
+                        return ChdError.CHDERR_DECOMPRESSION_ERROR;
+
+                    codec.FlacAudioDecoder.Read(codec.FlacAudioBuffer, (int)codec.FlacAudioDecoder.Remaining);
+
+                    int produced = codec.FlacAudioBuffer.ByteLength;
+
+                    // No samples produced - would loop forever
+                    if (produced <= 0)
+                        return ChdError.CHDERR_DECOMPRESSION_ERROR;
+
+                    // Produced more than expected - buffer overflow protection
+                    if (dstPos + produced > buffOutLength)
+                        return ChdError.CHDERR_DECOMPRESSION_ERROR;
+
+                    Array.Copy(codec.FlacAudioBuffer.Bytes, 0, buffOut, dstPos, produced);
+                    dstPos += produced;
+                    srcPos += read;
+                }
+            }
+            catch
+            {
+                // FLAC decoder can throw on damaged frames (e.g. "unsupported subframe coding")
+                return ChdError.CHDERR_DECOMPRESSION_ERROR;
             }
 
             //Nanook - hack to support 16bit byte flipping - tested passes hunk CRC test

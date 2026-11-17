@@ -1,4 +1,4 @@
-// Self-contained WUA inspector — no NKit types needed.
+// Self-contained WUA inspector - no NKit types needed.
 // Parses the ZArchive footer and file tree directly.
 
 static uint  U32BE(byte[] b, int o) => ((uint)b[o]<<24)|((uint)b[o+1]<<16)|((uint)b[o+2]<<8)|b[o+3];
@@ -41,7 +41,7 @@ static void Inspect(string path)
     fs.Seek(recOff, SeekOrigin.Begin);
     fs.ReadExactly(recBuf);
 
-    int totalBlocks = recCount * EntriesPerRecord; // approximate — last record may be partial
+    int totalBlocks = recCount * EntriesPerRecord; // approximate - last record may be partial
     long sumCompSizes = 0;
     int nonTrivial = 0;
     for (int r = 0; r < recCount; r++)

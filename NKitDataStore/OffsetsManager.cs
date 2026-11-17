@@ -1,4 +1,4 @@
-﻿using NKitDataStore.Interfaces;
+using NKitDataStore.Interfaces;
 
 namespace NKitDataStore
 {
@@ -65,7 +65,7 @@ namespace NKitDataStore
                 HashSet<long> existingOffsets = new HashSet<long>(_offsets.Select(o => o.Offset));
 
                 // Add aux offsets that aren't already in the primary and belong to a known area.
-                // Skip BlockPadding records — they contain security/hash data that is specific to
+                // Skip BlockPadding records - they contain security/hash data that is specific to
                 // the store's internal format and can cause overflow in reconstruction.
                 foreach (OffsetRecord auxOffset in auxReader.GetOffsets())
                 {
@@ -148,14 +148,14 @@ namespace NKitDataStore
                 if (_byArea.TryGetValue(area.Offset, out List<OffsetRecord>? offs) && offs.Count > 0)
                 {
                     // Precompute file-like groups for gap calculations. We need group's image end and stored start/size.
-                    // Exclude zero-size groups — a 0-byte file/directory entry doesn't end any data range
+                    // Exclude zero-size groups - a 0-byte file/directory entry doesn't end any data range
                     // and must not advance prevEndFs, otherwise the continuation data after it would
                     // be treated as a gap and zero-filled during reconstruction.
                     List<(long StartImage, long TotalStored, long StoredStart)> groups = offs
                         .Where(o => o.Type == BlockType.File || o.Type == BlockType.FileSystem)
                         .GroupBy(o => o.OffsetStart)
                         .Select(g => (StartImage: g.Key, TotalStored: g.Sum(o => o.Size), StoredStart: g.Key - area.Offset))
-                        .Where(g => g.TotalStored > 0)   // skip zero-size entries — they don't bound any gap
+                        .Where(g => g.TotalStored > 0)   // skip zero-size entries - they don't bound any gap
                         .OrderBy(x => x.StartImage)
                         .ToList();
 

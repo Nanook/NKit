@@ -1,4 +1,4 @@
-﻿using Nanook.NKit.Configuration;
+using Nanook.NKit.Configuration;
 using Nanook.NKit.Nintendo;
 using Nanook.NKit.Nintendo.WiiU;
 using Nanook.NKit.Steps.Shared;
@@ -80,7 +80,7 @@ namespace Nanook.NKit
                 // Only validate missing files when the source is a genuine TmdApp/CDN
                 // folder image. Disc images stored in the DataStore (Format=Iso) may
                 // have a reconstructed IndexFile from metadata, but the actual content
-                // is in the disc stream — missing loose app files are expected in that
+                // is in the disc stream - missing loose app files are expected in that
                 // case and the Process method handles disc sections directly.
                 bool isDiscImage = _context.SourceFile.ArchiveFiles?.FirstOrDefault()?.Extension?.Equals(
                     NKitDataStore.DataStore.DatabaseFileExtension, StringComparison.OrdinalIgnoreCase) == true

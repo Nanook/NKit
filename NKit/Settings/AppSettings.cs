@@ -56,7 +56,7 @@ namespace Nanook.NKit
             if (string.IsNullOrWhiteSpace(raw))
                 return "0.0.0";
 
-            // Drop SemVer build metadata (+...) entirely — this is where the commit hash lives.
+            // Drop SemVer build metadata (+...) entirely - this is where the commit hash lives.
             int plus = raw.IndexOf('+');
             if (plus >= 0) raw = raw.Substring(0, plus);
 
@@ -242,7 +242,7 @@ namespace Nanook.NKit
                 }
 
                 // Register the dat collections supplied as root params / command-line overrides
-                // (redumpDatsPath/noIntroDatsPath/tosecDatsPath — the CLI --dats-redump/-nointro/-tosec
+                // (redumpDatsPath/noIntroDatsPath/tosecDatsPath - the CLI --dats-redump/-nointro/-tosec
                 // options). These are equivalent to the nested 'dats:' section above but flow through
                 // the flat param/override path. Override value wins over the root config value.
                 registerDatCollectionsFromParams(rootParams);
@@ -414,7 +414,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Gets the base directory where user data (scans, logs, results, dedupe) is stored.
         /// Portable mode: same as the config directory (exe directory).
-        /// System mode: UserDataDirectory/nkit — e.g. ~/nkit on Linux/Windows, ~/Documents/nkit on macOS.
+        /// System mode: UserDataDirectory/nkit - e.g. ~/nkit on Linux/Windows, ~/Documents/nkit on macOS.
         /// </summary>
         public static string GetUserDataDirectory()
         {
@@ -491,7 +491,7 @@ namespace Nanook.NKit
             if (string.IsNullOrWhiteSpace(tmp))
             {
                 string outPath = this[system].Out;
-                // Don't use an .nkds file as a temp directory — fall through to defaultPath
+                // Don't use an .nkds file as a temp directory - fall through to defaultPath
                 if (!string.IsNullOrWhiteSpace(outPath) && !outPath.EndsWith(NKitDataStore.DataStore.DatabaseFileExtension, StringComparison.OrdinalIgnoreCase))
                     tmp = outPath;
             }
@@ -597,7 +597,7 @@ namespace Nanook.NKit
         /// Dispose this AppSettings' Log (flushing + tearing down its NKitLog bus, which owns the
         /// async FileLogSink's background drain thread and its BlockingCollection wait handles).
         /// A host that creates a FRESH AppSettings PER IMAGE (the UI does) must call this once the
-        /// image is done — otherwise each image's log sink thread + OS handles leak for the life of
+        /// image is done - otherwise each image's log sink thread + OS handles leak for the life of
         /// the (long-lived) process, showing up as steadily climbing thread/handle counts and working
         /// set even though the managed heap stays flat. A host that REUSES one AppSettings across all
         /// images (the CLI) should NOT call this until the whole run ends. Idempotent-safe: after
@@ -720,7 +720,7 @@ namespace Nanook.NKit
         /// <param name="l"></param>
         public bool Check(ILogScope l)
         {
-            l.Info(() => $"NKit v{this.Version} :: Help & Usage - https://github.com/Nanook/NKit/wiki"); // header — no tag
+            l.Info(() => $"NKit v{this.Version} :: Help & Usage - https://github.com/Nanook/NKit/wiki"); // header - no tag
             l.Info(() => Log.Divider);
             l.Info(() => $"Config [{this.ConfigSource}]" + (this.ConfigFile == null ? "" : $" {this.ConfigFile.Name}"));
             l.Info(() => $"Config: {GetConfigDirectory()}");
@@ -864,7 +864,7 @@ namespace Nanook.NKit
                 }
                 catch (Exception ex)
                 {
-                    // Log but don't fail — same behaviour as the preset/YAML paths.
+                    // Log but don't fail - same behaviour as the preset/YAML paths.
                     System.Diagnostics.Debug.WriteLine($"Failed to register dat collection '{collectionType}': {ex.Message}");
                 }
             }

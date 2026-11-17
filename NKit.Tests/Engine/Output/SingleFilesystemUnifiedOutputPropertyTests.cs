@@ -108,7 +108,7 @@ namespace NKit.Tests.Engine.Output
         ///
         /// Property 2 (supplementary): For any random set of FsType values that happen to
         /// all resolve to the same target type, the distinct resolved count is exactly 1.
-        /// This uses a different generation strategy — generate random FsType values with
+        /// This uses a different generation strategy - generate random FsType values with
         /// appropriate parent types, filter to those resolving to the same target, and verify
         /// the invariant holds.
         /// </summary>

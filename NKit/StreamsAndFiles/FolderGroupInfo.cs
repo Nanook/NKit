@@ -49,7 +49,7 @@ namespace Nanook.NKit
         /// </summary>
         public SourceFileItem[] ArchiveFiles { get; set; }
         /// <summary>
-        /// True when this group is a WUA file or Loadiine folder — sources that are fed
+        /// True when this group is a WUA file or Loadiine folder - sources that are fed
         /// through <see cref="Containers.FolderFilesAsIso"/> and
         /// <see cref="Formats.FolderFiles.FolderFilesImage"/> as <c>AreaType.Other</c>
         /// sections rather than as a disc image with partition tables and an FST.

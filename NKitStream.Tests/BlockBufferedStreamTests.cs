@@ -145,7 +145,7 @@ namespace NKitStream.Tests
             Assert.Equal(10, n);
             Assert.Equal(0L, stream.Position);
 
-            // Peek again — same data
+            // Peek again - same data
             var buf2 = new byte[10];
             n = await stream.PeekAsync(buf2, CancellationToken.None);
             Assert.Equal(10, n);
@@ -205,7 +205,7 @@ namespace NKitStream.Tests
         {
             // Source is 200 bytes, block size 32.
             // Read 50, mark, read 50 more (to 100), rewind to 50, then read 150
-            // — the first 50 come from cache, the last 100 from source seamlessly.
+            // - the first 50 come from cache, the last 100 from source seamlessly.
             var source = MakeSequential(200);
             using var stream = new MemorySourceStream(source, blockSize: 32);
             stream.BeginBuffering();
@@ -295,11 +295,11 @@ namespace NKitStream.Tests
             using var stream = new MemorySourceStream(source, blockSize: 32);
             stream.BeginBuffering();
 
-            // Read 128 bytes — blocks 0..3 (4 blocks)
+            // Read 128 bytes - blocks 0..3 (4 blocks)
             var buf = new byte[128];
             await stream.ReadAsync(buf, CancellationToken.None);
 
-            // Release up to 96 — blocks 0,1,2 (offsets 0..95) are entirely below 96
+            // Release up to 96 - blocks 0,1,2 (offsets 0..95) are entirely below 96
             stream.Release(96);
             Assert.Equal(96L, stream.Floor);
 
@@ -376,7 +376,7 @@ namespace NKitStream.Tests
             stream.Rewind(mark);
             Assert.Equal(50L, stream.Position);
 
-            // Continue sequential read — first chunk is from cache, rest from source
+            // Continue sequential read - first chunk is from cache, rest from source
             var rest = new byte[250];
             int totalRead = 0;
             while (totalRead < 250)
@@ -472,7 +472,7 @@ namespace NKitStream.Tests
             await stream.ReadAsync(buf, CancellationToken.None);
             int readsAfterFirstPass = stream.SourceReadCount;
 
-            // Rewind and re-read — should come from cache, no new source reads
+            // Rewind and re-read - should come from cache, no new source reads
             stream.Seek(0);
             var buf2 = new byte[50];
             await stream.ReadAsync(buf2, CancellationToken.None);
@@ -512,7 +512,7 @@ namespace NKitStream.Tests
             using var stream = new MemorySourceStream(source, blockSize: 32);
             Assert.False(stream.IsBuffering);
 
-            // Peek without buffering — temporarily caches data
+            // Peek without buffering - temporarily caches data
             var peekBuf = new byte[10];
             int n = await stream.PeekAsync(peekBuf, CancellationToken.None);
             Assert.Equal(10, n);
@@ -586,7 +586,7 @@ namespace NKitStream.Tests
             stream.Rewind(mark);
             Assert.Equal(40L, stream.Position);
 
-            // Phase 3: end buffering — remaining cached data is drained
+            // Phase 3: end buffering - remaining cached data is drained
             stream.EndBuffering();
             Assert.False(stream.IsBuffering);
 
@@ -659,7 +659,7 @@ namespace NKitStream.Tests
 
             int sourceReadsBefore = stream.SourceReadCount;
 
-            // Read the cached portion [50..150) — should NOT hit source
+            // Read the cached portion [50..150) - should NOT hit source
             var cached = new byte[100];
             int total = 0;
             while (total < 100)
@@ -785,7 +785,7 @@ namespace NKitStream.Tests
             await stream.ReadAsync(new byte[30], CancellationToken.None);
             Assert.Equal(80L, stream.Position);
 
-            // Seek backward to 64 — blocks still cover this range,
+            // Seek backward to 64 - blocks still cover this range,
             // and Floor should still allow it (auto-release advances floor
             // to position on each read, but in block-aligned steps)
             long floor = stream.Floor;
@@ -824,7 +824,7 @@ namespace NKitStream.Tests
             // Rewind to 100
             stream.Rewind(mark);
 
-            // Read 200 bytes — first 100 from cache, next 100 from source.
+            // Read 200 bytes - first 100 from cache, next 100 from source.
             // Since buffering is still active, new source data is also cached.
             var buf = new byte[200];
             int total = 0;
@@ -1017,7 +1017,7 @@ namespace NKitStream.Tests
     }
 
     /// <summary>
-    /// Subclass that only supports async reads — does NOT override ReadSource.
+    /// Subclass that only supports async reads - does NOT override ReadSource.
     /// Used to verify the default NotSupportedException.
     /// </summary>
     internal sealed class AsyncOnlySourceStream : BlockBufferedStream

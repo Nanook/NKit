@@ -14,7 +14,7 @@ namespace NKitDataStore
     {
         // Read diagnostics. Off by default; flip to true to log strided-read positions/bytes
         // (code-controlled, no environment variable). Accessed via diagEnabled() so the const does
-        // not make the `if` body compile-time-unreachable (CS0162) — mirrors DataStore.shouldProfile().
+        // not make the `if` body compile-time-unreachable (CS0162) - mirrors DataStore.shouldProfile().
         private const bool _diag = false;
         private static bool diagEnabled() => _diag;
 

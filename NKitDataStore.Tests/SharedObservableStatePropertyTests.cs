@@ -48,7 +48,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — Boolean properties.
+    /// Property 7: SharedObservableState Reactive Propagation - Boolean properties.
     /// For any random boolean values written to HasSelectedImages, HasRemovedImages,
     /// HasDataStoreOpen, IsOperationActive, IsGroupWindowOpen, IsDatWindowOpen,
     /// IsMountActive, and ShowFilterBar, all WhenAnyValue subscribers receive the value.
@@ -118,7 +118,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — Int property.
+    /// Property 7: SharedObservableState Reactive Propagation - Int property.
     /// For any random int value written to FilteredImageCount, all WhenAnyValue
     /// subscribers receive the value.
     /// </summary>
@@ -139,7 +139,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — Nullable string property.
+    /// Property 7: SharedObservableState Reactive Propagation - Nullable string property.
     /// For any random string value written to OperationInProgressOnSet, all WhenAnyValue
     /// subscribers receive the value (including null).
     /// </summary>
@@ -161,7 +161,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — SelectedSetName property.
+    /// Property 7: SharedObservableState Reactive Propagation - SelectedSetName property.
     /// For any random non-null string value written to SelectedSetName, all WhenAnyValue
     /// subscribers receive the value.
     /// </summary>
@@ -182,7 +182,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — AvailableSetNames property.
+    /// Property 7: SharedObservableState Reactive Propagation - AvailableSetNames property.
     /// For any random list of strings written to AvailableSetNames, all WhenAnyValue
     /// subscribers receive the value.
     /// </summary>
@@ -204,7 +204,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — Multiple subscribers.
+    /// Property 7: SharedObservableState Reactive Propagation - Multiple subscribers.
     /// For any random property value, multiple independent subscribers all receive
     /// the same updated value, confirming broadcast semantics.
     /// </summary>
@@ -231,7 +231,7 @@ public class SharedObservableStatePropertyTests : IDisposable
     /// <summary>
     /// **Validates: Requirements 4.3**
     ///
-    /// Property 7: SharedObservableState Reactive Propagation — All properties together.
+    /// Property 7: SharedObservableState Reactive Propagation - All properties together.
     /// For any random combination of all 12 property values written simultaneously,
     /// all subscribers receive the correct values for their respective properties.
     /// </summary>

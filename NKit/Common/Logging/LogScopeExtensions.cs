@@ -5,7 +5,7 @@ namespace Nanook.NKit
 {
     /// <summary>
     /// Shorthand methods so callers don't have to spell out <see cref="LogLevel"/> on every call.
-    /// Classification is by SCOPE (the bracketed source tag) and LEVEL only — there is no category
+    /// Classification is by SCOPE (the bracketed source tag) and LEVEL only - there is no category
     /// axis. Use <see cref="ILogScope.ScopeFor(string)"/> to obtain a prefix-tagged stage/phase
     /// scope (e.g. a "Core" scope renders "[Core]").
     /// </summary>
@@ -42,7 +42,7 @@ namespace Nanook.NKit
             => scope.Log(LogLevel.Detail, message, properties);
 
         // ── Deferred (Func<string>) level shortcuts ────────────────
-        // Prefer these whenever the message interpolates or computes — the delegate is invoked only
+        // Prefer these whenever the message interpolates or computes - the delegate is invoked only
         // when the level is enabled. Use the plain-string overloads above only for literals.
 
         public static void Error(this ILogScope scope, Func<string> message)

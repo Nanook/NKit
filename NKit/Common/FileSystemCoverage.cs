@@ -14,7 +14,7 @@ namespace Nanook.NKit
     /// This centralises the seek/cache/retain machinery both ISO9660 and XBox use, generalising
     /// WiiGc's <c>readFileSystemUpFront</c> to the pending-region model:
     /// <list type="bullet">
-    /// <item>The stream cursor is preserved — regions are read with the negative-count PEEK idiom
+    /// <item>The stream cursor is preserved - regions are read with the negative-count PEEK idiom
     /// and the cursor is restored on return, so the caller's normal sequential read is unaffected.</item>
     /// <item>The cache floor is pinned (<c>Retain</c>) for the duration so an end-of-read
     /// <c>ReleaseTo</c> cannot evict a region the walk or a later backward seek still needs.</item>
@@ -78,14 +78,14 @@ namespace Nanook.NKit
                     foreach (FsRegionRequest region in inRange(pending, full, throughImageOffset))
                     {
                         if (!stream.CanSeekTo(region.ImageOffset))
-                            continue; // out of reach — graceful degrade (Req 1.4 / 2.5)
+                            continue; // out of reach - graceful degrade (Req 1.4 / 2.5)
 
                         int want = clampLength(region.Length);
                         if (want <= 0)
                             continue;
 
                         IBuffer buf = makeBuffer();
-                        buf.ReInitialise(area, true); // set the buffer's AreaInfo before Update — parse reads AreaInfo (block sizes, Type)
+                        buf.ReInitialise(area, true); // set the buffer's AreaInfo before Update - parse reads AreaInfo (block sizes, Type)
                         stream.Position = region.ImageOffset;
                         int r = stream.Read(buf.Decrypted, 0, -want); // PEEK: leaves cursor at region start
                         if (r <= 0)
@@ -101,7 +101,7 @@ namespace Nanook.NKit
                         break; // nothing in range could be read (all out of reach / truncated)
 
                     // Did the reader actually resolve something? If the pending set is unchanged
-                    // after feeding it, it is not making progress (malformed FS) — stop.
+                    // after feeding it, it is not making progress (malformed FS) - stop.
                     bool shrank = reader.Complete;
                     if (!shrank)
                     {
@@ -117,7 +117,7 @@ namespace Nanook.NKit
                         }
                     }
                     if (!shrank)
-                        break; // no progress — malformed pending set
+                        break; // no progress - malformed pending set
 
                     if (++guard > MaxIterations)
                         break; // safety: never spin forever
@@ -145,7 +145,7 @@ namespace Nanook.NKit
         /// feeding each region EXACTLY ONCE. It still supports NON-LINEAR directories: after each
         /// block, if the parser is not yet complete and every remaining pending directory lies
         /// beyond the contiguous cursor (a scattered extent), the cursor jumps forward (block
-        /// aligned) to the lowest pending offset and resumes contiguous feeding there — never
+        /// aligned) to the lowest pending offset and resumes contiguous feeding there - never
         /// re-covering an already-fed region. Uses the PEEK idiom and restores the cursor / clears
         /// the retain floor on return, so the caller's normal sequential read (served from the
         /// BufferStream cache, incl. zip/7z) is unaffected.
@@ -181,10 +181,10 @@ namespace Nanook.NKit
                 while (!reader.Complete)
                 {
                     if (covered >= areaUpperBound)
-                        break; // reached the area/track boundary — do not read into the next track
+                        break; // reached the area/track boundary - do not read into the next track
 
                     if (!stream.CanSeekTo(covered))
-                        break; // out of cache reach on a forward-only source — graceful degrade
+                        break; // out of cache reach on a forward-only source - graceful degrade
 
                     int want = (int)System.Math.Min(blockLength, areaUpperBound - covered);
                     if (want <= 0)
@@ -193,7 +193,7 @@ namespace Nanook.NKit
                     IBuffer buf = makeBuffer();
                     buf.ReInitialise(area, true);
                     stream.Position = covered;
-                    int r = stream.Read(buf.Decrypted, 0, -want); // PEEK — cursor unmoved
+                    int r = stream.Read(buf.Decrypted, 0, -want); // PEEK - cursor unmoved
                     if (r <= 0)
                         break; // truncated / end of source
 
@@ -243,7 +243,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Feed an explicit TAIL region <c>[tailStart, tailEnd)</c> to the reader's gap scan so
         /// markers that are only identifiable once read (UDF backup anchor / partition mirror, a late
-        /// mkisofs signature) are discovered and added to the file system UP FRONT — before the
+        /// mkisofs signature) are discovered and added to the file system UP FRONT - before the
         /// area's view is published and its sections are dispatched to the parallel stage. Runs after
         /// the FS body parse (so the UDF signature references are captured); the caller supplies the
         /// exact region and an <paramref name="area"/> whose geometry (BlockSize / BaseOffset / block
@@ -254,7 +254,7 @@ namespace Nanook.NKit
         /// The region is fed as adjacent <paramref name="blockLength"/> blocks (block-aligned to the
         /// area grid). Each seek is guarded by <see cref="BufferStream.CanSeekTo"/>: local/seekable is
         /// free; a forward-only source (large image in an archive) whose tail is beyond the cache
-        /// reach limit is skipped (graceful degrade) — exactly as the legacy sequential read would
+        /// reach limit is skipped (graceful degrade) - exactly as the legacy sequential read would
         /// have missed it. Uses the PEEK idiom and restores the cursor / clears the retain floor on
         /// return, so the caller's normal sequential read (served from the BufferStream cache, incl.
         /// zip/7z) is unaffected.
@@ -289,7 +289,7 @@ namespace Nanook.NKit
                 while (covered < tailEnd)
                 {
                     if (!stream.CanSeekTo(covered))
-                        break; // out of cache reach on a forward-only source — graceful degrade
+                        break; // out of cache reach on a forward-only source - graceful degrade
 
                     int want = (int)System.Math.Min(blockLength, tailEnd - covered);
                     if (want <= 0)
@@ -298,7 +298,7 @@ namespace Nanook.NKit
                     IBuffer buf = makeBuffer();
                     buf.ReInitialise(area, true);
                     stream.Position = covered;
-                    int r = stream.Read(buf.Decrypted, 0, -want); // PEEK — cursor unmoved
+                    int r = stream.Read(buf.Decrypted, 0, -want); // PEEK - cursor unmoved
                     if (r <= 0)
                         break; // truncated / end of source
 

@@ -16,7 +16,7 @@ namespace NKitDataStore.Tests
     /// block data.
     ///
     /// The key property: When TrimOffset metadata is absent (legacy area), reconstruction
-    /// produces output identical to the stored blocks — no zeros are prepended, no data
+    /// produces output identical to the stored blocks - no zeros are prepended, no data
     /// is shifted.
     /// </summary>
     public class BackwardCompatibilityPropertyTests
@@ -26,7 +26,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.2**
         ///
-        /// Property 5: Backward compatibility — AreaMetadata without TrimOffset returns null.
+        /// Property 5: Backward compatibility - AreaMetadata without TrimOffset returns null.
         ///
         /// For any AreaMetadata blob that does not contain a TrimOffset key,
         /// querying GetLong(AreaValueType.TrimOffset) returns null, confirming
@@ -65,7 +65,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.2**
         ///
-        /// Property 5: Backward compatibility — Empty AreaMetadata returns null for TrimOffset.
+        /// Property 5: Backward compatibility - Empty AreaMetadata returns null for TrimOffset.
         ///
         /// An empty metadata blob (no keys at all) returns null for TrimOffset,
         /// confirming the absence-means-zero convention for the simplest legacy case.
@@ -83,7 +83,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.2**
         ///
-        /// Property 5: Backward compatibility — Serialized blob without TrimOffset returns null.
+        /// Property 5: Backward compatibility - Serialized blob without TrimOffset returns null.
         ///
         /// For any AreaMetadata that is serialized to a blob and deserialized back,
         /// if TrimOffset was never set, it remains absent after round-trip.
@@ -124,11 +124,11 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.4**
         ///
-        /// Property 5: Backward compatibility — Legacy reconstruction is byte-identical to stored data.
+        /// Property 5: Backward compatibility - Legacy reconstruction is byte-identical to stored data.
         ///
         /// For any arbitrary audio partition byte array (representing stored block data),
         /// when no TrimOffset metadata exists, reconstruction produces output identical
-        /// to the stored blocks — no zeros are prepended, no data is shifted.
+        /// to the stored blocks - no zeros are prepended, no data is shifted.
         /// </summary>
         [Property(MaxTest = 100)]
         public bool LegacyReconstruction_OutputIdenticalToStoredBlocks(
@@ -174,7 +174,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.4**
         ///
-        /// Property 5: Backward compatibility — Legacy reconstruction with multi-block data.
+        /// Property 5: Backward compatibility - Legacy reconstruction with multi-block data.
         ///
         /// For any audio partition spanning multiple blocks (length is a multiple of BlockSize),
         /// when no TrimOffset metadata exists, reconstruction produces output byte-identical
@@ -189,7 +189,7 @@ namespace NKitDataStore.Tests
             int blockCount = (blockCountSeed.Get % 10) + 1;
             int partitionSize = blockCount * DefaultBlockSize;
 
-            // Create arbitrary stored block data (may contain leading zeros — doesn't matter for legacy)
+            // Create arbitrary stored block data (may contain leading zeros - doesn't matter for legacy)
             byte[] storedBlockData = new byte[partitionSize];
             Random rng = new Random(dataSeed.Get);
             rng.NextBytes(storedBlockData);
@@ -206,7 +206,7 @@ namespace NKitDataStore.Tests
 
             // Model legacy reconstruction: blocks are served directly.
             // The ImageBuilder reads each block at its stored offset and writes
-            // it to the output at the same position — no zero prefix, no shift.
+            // it to the output at the same position - no zero prefix, no shift.
             byte[] reconstructed = new byte[partitionSize];
             for (int blockIdx = 0; blockIdx < blockCount; blockIdx++)
             {
@@ -227,11 +227,11 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.2, 8.4**
         ///
-        /// Property 5: Backward compatibility — Legacy data with leading zeros is NOT trimmed on reconstruction.
+        /// Property 5: Backward compatibility - Legacy data with leading zeros is NOT trimmed on reconstruction.
         ///
         /// For any stored block data that happens to start with leading zeros,
         /// when no TrimOffset metadata exists, reconstruction still serves the data
-        /// verbatim (including those leading zeros) — the absence of TrimOffset means
+        /// verbatim (including those leading zeros) - the absence of TrimOffset means
         /// no trimming was applied during ingestion, so reconstruction must not alter the data.
         /// </summary>
         [Property(MaxTest = 100)]
@@ -256,7 +256,7 @@ namespace NKitDataStore.Tests
                 storedBlockData[i] = (byte)rng.Next(1, 256); // non-zero bytes
             }
 
-            // Create legacy metadata (no TrimOffset — this data was stored before trimming feature)
+            // Create legacy metadata (no TrimOffset - this data was stored before trimming feature)
             AreaMetadata metadata = new AreaMetadata();
             metadata.Set(AreaValueType.Track, "1");
 
@@ -292,7 +292,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.2, 8.4**
         ///
-        /// Property 5: Backward compatibility — GetValueFromBlob returns null for absent TrimOffset.
+        /// Property 5: Backward compatibility - GetValueFromBlob returns null for absent TrimOffset.
         ///
         /// For any serialized metadata blob that does not contain TrimOffset,
         /// the efficient single-value lookup GetValueFromBlob also returns null,
@@ -332,7 +332,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 8.1, 8.2, 8.4**
         ///
-        /// Property 5: Backward compatibility — Null/empty blob means legacy (no TrimOffset).
+        /// Property 5: Backward compatibility - Null/empty blob means legacy (no TrimOffset).
         ///
         /// For null or empty metadata blobs (representing areas stored before any metadata
         /// was recorded), TrimOffset is absent and reconstruction is pass-through.

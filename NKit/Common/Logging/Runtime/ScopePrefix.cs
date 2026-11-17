@@ -4,7 +4,7 @@ namespace Nanook.NKit.Runtime
 {
     /// <summary>
     /// Resolves a scope to its short bracketed source tag (e.g. <c>[Wii]</c>, <c>[Convert]</c>) for
-    /// sink rendering. The tag is derived from the scope — never hand-typed into message text — so
+    /// sink rendering. The tag is derived from the scope - never hand-typed into message text - so
     /// it stays consistent and cannot drift per call site (Req 9 / design P4).
     /// <para>
     /// Resolution order: a well-known <c>"prefix"</c> property on the scope (or any ancestor),

@@ -9,7 +9,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 1.1, 1.2, 1.3**
     ///
-    /// Property 1: Bug Condition — Multi-Extent Continuation Extent Read Failure
+    /// Property 1: Bug Condition - Multi-Extent Continuation Extent Read Failure
     ///
     /// This test is EXPECTED TO FAIL on unfixed code. Failure confirms the bug exists:
     /// when a multi-extent file is read via VFS, continuation extents (index >= 1) use
@@ -59,7 +59,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Simulates the offset computation as done by BuildPerTypeFsYaml (the NkFs STORAGE path).
         /// AFTER FIX (Task 3.1): BuildPerTypeFsYaml now uses ToImageOffsetFromFsOffsets(area.ImageOffset, partFile.FsOffset)
-        /// which handles AddressMode.Relative and BaseOffset adjustments correctly — matching DedupeStep.
+        /// which handles AddressMode.Relative and BaseOffset adjustments correctly - matching DedupeStep.
         ///   result = (areaImageOffset - baseOffset) + stride.CleanToOffset(fsOffset, false)  [if strided]
         ///   result = (areaImageOffset - baseOffset) + fsOffset                                [if not strided]
         /// </summary>
@@ -76,7 +76,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 1.3**
         ///
-        /// Property 1: Bug Condition — For any multi-extent file in an AddressMode.Relative
+        /// Property 1: Bug Condition - For any multi-extent file in an AddressMode.Relative
         /// partition (BaseOffset != 0), continuation extents (index >= 1) MUST be readable
         /// via OpenStream using the NkFs-stored FileOffset.
         ///
@@ -104,7 +104,7 @@ namespace NKitDataStore.Tests
             long writeOffset0 = ComputeWriteOffset_DedupeStyle(partitionImageOffset, extent0FsOffset, baseOffset, null);
             long writeOffset1 = ComputeWriteOffset_DedupeStyle(partitionImageOffset, extent1FsOffset, baseOffset, null);
 
-            // Compute offsets as BuildPerTypeFsYaml would (the NkFs STORAGE path — now fixed to match DedupeStep)
+            // Compute offsets as BuildPerTypeFsYaml would (the NkFs STORAGE path - now fixed to match DedupeStep)
             long nkfsOffset0 = ComputeNkFsStoredOffset_BuildPerTypeFsYamlStyle(partitionImageOffset, extent0FsOffset, baseOffset, null);
             long nkfsOffset1 = ComputeNkFsStoredOffset_BuildPerTypeFsYamlStyle(partitionImageOffset, extent1FsOffset, baseOffset, null);
 
@@ -182,7 +182,7 @@ namespace NKitDataStore.Tests
                     $"Difference (BaseOffset): 0x{baseOffset:X}. " +
                     $"extent0Readable={extent0Readable}, extent1Readable={extent1Readable}. " +
                     $"Bug confirmed: OpenStream(0x{nkfsOffset1:X}) fails because OffsetStart was stored as " +
-                    $"0x{writeOffset1:X} during writing — the 0x{baseOffset:X} difference is the BaseOffset.");
+                    $"0x{writeOffset1:X} during writing - the 0x{baseOffset:X} difference is the BaseOffset.");
             }
 
             return allExtentsReadable;
@@ -191,7 +191,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 1.3**
         ///
-        /// Property 1: Bug Condition — Strided 3-extent file in Mode1Raw
+        /// Property 1: Bug Condition - Strided 3-extent file in Mode1Raw
         /// (CD-based systems with 2352-byte sectors containing 2048 bytes of data)
         ///
         /// When stride is applied AND AddressMode is Relative, the offset mismatch
@@ -217,12 +217,12 @@ namespace NKitDataStore.Tests
 
             int extentSize = 0x800; // 2KiB per extent (one CD sector of data)
 
-            // Compute offsets as DedupeStep would (the WRITE path) — handles AddressMode.Relative
+            // Compute offsets as DedupeStep would (the WRITE path) - handles AddressMode.Relative
             long writeOffset0 = ComputeWriteOffset_DedupeStyle(partitionImageOffset, extent0FsOffset, baseOffset, stride);
             long writeOffset1 = ComputeWriteOffset_DedupeStyle(partitionImageOffset, extent1FsOffset, baseOffset, stride);
             long writeOffset2 = ComputeWriteOffset_DedupeStyle(partitionImageOffset, extent2FsOffset, baseOffset, stride);
 
-            // Compute offsets as BuildPerTypeFsYaml would (NkFs STORAGE path — now fixed to match DedupeStep)
+            // Compute offsets as BuildPerTypeFsYaml would (NkFs STORAGE path - now fixed to match DedupeStep)
             long nkfsOffset0 = ComputeNkFsStoredOffset_BuildPerTypeFsYamlStyle(partitionImageOffset, extent0FsOffset, baseOffset, stride);
             long nkfsOffset1 = ComputeNkFsStoredOffset_BuildPerTypeFsYamlStyle(partitionImageOffset, extent1FsOffset, baseOffset, stride);
             long nkfsOffset2 = ComputeNkFsStoredOffset_BuildPerTypeFsYamlStyle(partitionImageOffset, extent2FsOffset, baseOffset, stride);
@@ -297,7 +297,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 1.1, 1.2, 1.3**
         ///
-        /// Property 1: Bug Condition — Block-aligned FsOffset edge case at stride boundary
+        /// Property 1: Bug Condition - Block-aligned FsOffset edge case at stride boundary
         ///
         /// When FsOffset is exactly at a stride block boundary (fsOffset % DataLength == 0),
         /// stride.CleanToOffset adds DataOffset (due to blockPin=false). Combined with
@@ -394,7 +394,7 @@ namespace NKitDataStore.Tests
                     $"Write offset1=0x{writeOffset1:X}, NkFs stored offset1=0x{nkfsOffset1:X}. " +
                     $"Mismatch=0x{mismatch:X} (expected BaseOffset=0x{baseOffset:X}). " +
                     $"extent0Readable={extent0Readable}, extent1Readable={extent1Readable}. " +
-                    $"Bug: FsOffset at stride boundary — OpenStream(0x{nkfsOffset1:X}) throws because " +
+                    $"Bug: FsOffset at stride boundary - OpenStream(0x{nkfsOffset1:X}) throws because " +
                     $"OffsetStart was stored as 0x{writeOffset1:X} during writing.");
             }
 

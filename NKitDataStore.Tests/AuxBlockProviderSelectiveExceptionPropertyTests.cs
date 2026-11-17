@@ -55,7 +55,7 @@ namespace NKitDataStore.Tests
                 return _blocks.TryGetValue(key, out BlockRecord record) ? record : null;
             }
 
-            // Unused members — AuxBlockProvider only calls GetBlock(BlockKey)
+            // Unused members - AuxBlockProvider only calls GetBlock(BlockKey)
             public ImageRecord Image => throw new NotImplementedException();
             public InfoRecord Info => throw new NotImplementedException();
             public Stream OpenStream(long offsetStart) => throw new NotImplementedException();
@@ -226,7 +226,7 @@ namespace NKitDataStore.Tests
             Dictionary<BlockKey, BlockRecord> auxBlocks = new Dictionary<BlockKey, BlockRecord> { { key, expectedRecord } };
             StubImageReader auxReader = new StubImageReader(auxBlocks);
 
-            // No split reader — simulates Wii/WiiU two-tier config
+            // No split reader - simulates Wii/WiiU two-tier config
             AuxBlockProvider provider = new AuxBlockProvider(throwingPrimary, splitReader: null, auxReader: auxReader);
             OffsetRecord offsetRecord = makeOffset(key);
 

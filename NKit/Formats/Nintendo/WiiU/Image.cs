@@ -127,7 +127,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                 //_iso.Read((int)(Math.Min(WiiUConsts.DefaultSectorSize, si.TmdInfo.Content[0].Size - pos)), _cache);
                 _header.Update(0, si);
                 _header.EncryptedNoKeyMode = key == null && _context.Settings.AllKeys.Length == 0; //don't attempt to decrypt anything. Dumb read
-                // For CDN (TmdApp) format the AllKeys disc-key cache is irrelevant — CDN uses
+                // For CDN (TmdApp) format the AllKeys disc-key cache is irrelevant - CDN uses
                 // a per-title key from the cetk ticket. If that key wasn't found, there is nothing
                 // to brute-force and we must treat it as no-key mode.
                 if (_isIdx && si.KeyTitle == null)
@@ -149,14 +149,14 @@ namespace Nanook.NKit.Nintendo.WiiU
                         {
                             // Fallback: try an all-zeros title key. This covers test/homebrew titles
                             // that were intentionally packed with a zero key (no real common-key
-                            // dependency) — their ticket encrypts zeros with the common key, and the
+                            // dependency) - their ticket encrypts zeros with the common key, and the
                             // content is encrypted with the raw zero key directly.
                             byte[] zeroKey = new byte[0x10];
                             byte[] zeroProbe = WiiUSecurity.DecryptFst(idxFst, null, 16, zeroKey);
                             if (Encoding.ASCII.GetString(zeroProbe, 0, 3) == "FST")
                                 si.KeyTitle = zeroKey; // use zeros for the rest of the session
                             else
-                                _header.EncryptedNoKeyMode = true; // raw system binary — store as-is
+                                _header.EncryptedNoKeyMode = true; // raw system binary - store as-is
                         }
                     }
                 }
@@ -213,7 +213,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                 _fsInfo = new FileSystemInfo(0, Size, _header, _header.SiData[0], idxFstSize);
 
             _info.SourceAreas = _areas?.ToArray();
-            _info.IsFolderIndex = _isIdx; // TmdApp (CDN) has one content file per area — treat as folder-index
+            _info.IsFolderIndex = _isIdx; // TmdApp (CDN) has one content file per area - treat as folder-index
 
             // [In] Detail: reader identity + resolved geometry (once per image).
             ILogScope inScope = _context.Log?.ScopeFor(Nanook.NKit.LogScopes.In);
@@ -325,7 +325,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                                     bool found = false;
                                     int tried = 0;
                                     System.Diagnostics.Stopwatch keySw = System.Diagnostics.Stopwatch.StartNew();
-                                    // NOTE: no per-candidate log line — a key cache can hold 100k+
+                                    // NOTE: no per-candidate log line - a key cache can hold 100k+
                                     // keys, so logging each attempt floods even Trace. The Detail
                                     // summary below (matched-at / no-match + count + timing) is the
                                     // useful signal.
@@ -381,7 +381,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                         _fsInfo = new FileSystemInfo(_position, Size, _header, buf.Read(0, pos));
 
                         // Set partition properties on the area immediately so they're available
-                        // during dedupe (ProcessSection) — not just in SetScanProperties().
+                        // during dedupe (ProcessSection) - not just in SetScanProperties().
                         PartitionInfo ptn = _header.GetPartition(_position);
                         if (ptn != null && _area.Properties != null)
                         {
@@ -476,7 +476,7 @@ namespace Nanook.NKit.Nintendo.WiiU
 
                             if (paddedFstSize <= buf.Length)
                             {
-                                // FST fits in the buffer — read directly (no replay needed)
+                                // FST fits in the buffer - read directly (no replay needed)
                                 readBuf(buf, ref pos, paddedFstSize - pos);
                                 fstEndPos = paddedFstSize;
                                 dec = isEncypted ? WiiUSecurity.DecryptFst(buf, null, paddedFstSize, key) : buf.Read(0, fstSize);
@@ -494,7 +494,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                             }
                             else
                             {
-                                // FST larger than buffer — read into work buffer, seek back for engine replay
+                                // FST larger than buffer - read into work buffer, seek back for engine replay
                                 int originalPos = pos;
                                 byte[] workBuf = new byte[paddedFstSize];
                                 Array.Copy(buf, 0, workBuf, 0, originalPos);
@@ -607,7 +607,7 @@ namespace Nanook.NKit.Nintendo.WiiU
                 skip(); //after providing current data check if we can skip some of the current filesystem
 
                 // Bound the shared cache: release cached blocks below the returned-data mark on
-                // both layers — Layer-B (this _stream over the decoder) and, for a pass-through
+                // both layers - Layer-B (this _stream over the decoder) and, for a pass-through
                 // container reading a raw archive entry, Layer-A (the raw source) via IReleasable.
                 // Without the Layer-A release the raw-source cache grows to hold the whole image
                 // (a WiiU image inside an archive OOM'd here).
@@ -625,7 +625,7 @@ namespace Nanook.NKit.Nintendo.WiiU
         }
 
         // Reposition to a skip target through the stream reads actually flow through (_stream), not
-        // _iso directly — seeking _iso alone desyncs it from the BufferStream cursor and delivers
+        // _iso directly - seeking _iso alone desyncs it from the BufferStream cursor and delivers
         // wrong bytes at the skipped-to boundary. Skips are always forward.
         private void skipStreamTo(long imageOffset) => _stream.SafeSeek(imageOffset, System.IO.SeekOrigin.Begin);
 

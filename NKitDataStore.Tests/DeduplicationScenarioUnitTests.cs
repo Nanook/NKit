@@ -133,7 +133,7 @@ namespace NKitDataStore.Tests
             // starts at different positions within the first block.
             //
             // Per Requirement 6.4: "the first block after the Trim_Offset contains a mixture of
-            // leading zeros and audio content that differs between two masterings" — only THAT block
+            // leading zeros and audio content that differs between two masterings" - only THAT block
             // differs. All SUBSEQUENT blocks with byte-identical content share BlockKeys.
             //
             // The key insight: the audio content after the first full block boundary past the audio
@@ -152,7 +152,7 @@ namespace NKitDataStore.Tests
             // shift propagates through all subsequent blocks.
             //
             // CORRECTION: The design doc says "blocks at the same relative offset after TrimOffset
-            // produce identical BlockKeys" — this is true when the audio content is ALIGNED the same
+            // produce identical BlockKeys" - this is true when the audio content is ALIGNED the same
             // way. The deduplication works because both partitions store data starting at the same
             // TrimOffset, so if the audio content is byte-identical at those positions, the blocks match.
             //
@@ -162,7 +162,7 @@ namespace NKitDataStore.Tests
             // different positions within the first block, but the SUBSEQUENT full blocks of audio
             // will be identical because the audio content itself is the same continuous stream.
             //
-            // Wait — that's not right either. If audio starts at 66000 in A and 66500 in B,
+            // Wait - that's not right either. If audio starts at 66000 in A and 66500 in B,
             // and both are trimmed to 65536, then:
             //   A stores from offset 65536: [464 zeros][audioContent from byte 0]
             //   B stores from offset 65536: [964 zeros][audioContent from byte 0]
@@ -176,13 +176,13 @@ namespace NKitDataStore.Tests
             //
             // So the deduplication benefit is that MOST blocks share content, but with a sub-block
             // shift, the block boundaries don't align perfectly. The design doc's Property 3 says:
-            // "the computed TrimOffset SHALL be identical for both partitions" — which we verify.
+            // "the computed TrimOffset SHALL be identical for both partitions" - which we verify.
             // Requirement 6.2 says blocks with "byte-identical content" share BlockKeys.
             // Requirement 6.4 says the first block may differ.
             //
             // The TRUE deduplication scenario is when the shift is small enough that after the
             // first partial block, the remaining audio aligns. This happens when both partitions
-            // have the SAME total size and the audio fills to the end — then the last blocks align.
+            // have the SAME total size and the audio fills to the end - then the last blocks align.
             //
             // For this test, let's verify:
             // 1. Both get the same TrimOffset (verified above)
@@ -223,7 +223,7 @@ namespace NKitDataStore.Tests
                 partitionA[i] = (byte)(((i * 7) + 13) & 0xFF);
 
             // Mastering B: 1200 leading zeros, then the SAME audio content
-            // (same bytes at same positions — this simulates same disc content)
+            // (same bytes at same positions - this simulates same disc content)
             byte[] partitionB = new byte[totalPartitionSize];
             for (int i = 1200; i < totalPartitionSize; i++)
                 partitionB[i] = (byte)(((i * 7) + 13) & 0xFF);
@@ -239,7 +239,7 @@ namespace NKitDataStore.Tests
             Assert.Equal(0L, trimOffsetA);
             Assert.Equal(0L, trimOffsetB);
 
-            // Extract blocks — both start from offset 0 (no trimming)
+            // Extract blocks - both start from offset 0 (no trimming)
             List<byte[]> blocksA = ExtractBlocks(partitionA, trimOffsetA);
             List<byte[]> blocksB = ExtractBlocks(partitionB, trimOffsetB);
 
@@ -256,16 +256,16 @@ namespace NKitDataStore.Tests
             //                    B has zeros[0..1199] + audio[1200..65535]
             //                    Different content → different BlockKeys
             //
-            // But wait — the audio content at position i is (i*7+13)&0xFF for both.
+            // But wait - the audio content at position i is (i*7+13)&0xFF for both.
             // So at positions >= 1200, both A and B have the same bytes.
             // At positions 500-1199, A has audio but B has zeros → block 0 differs.
             //
             // Blocks 1, 2, 3 (65536+): Both A and B have identical content because
             // both have audio content (i*7+13)&0xFF at all positions >= 1200, and
             // positions 65536+ are all >= 1200.
-            // Block 1: positions 65536-131071 — both have (i*7+13)&0xFF → IDENTICAL
-            // Block 2: positions 131072-196607 — both have (i*7+13)&0xFF → IDENTICAL
-            // Block 3: positions 196608-262143 — both have (i*7+13)&0xFF → IDENTICAL
+            // Block 1: positions 65536-131071 - both have (i*7+13)&0xFF → IDENTICAL
+            // Block 2: positions 131072-196607 - both have (i*7+13)&0xFF → IDENTICAL
+            // Block 3: positions 196608-262143 - both have (i*7+13)&0xFF → IDENTICAL
 
             // Verify blocks 1, 2, 3 are identical (share BlockKeys)
             for (int i = 1; i < blocksA.Count; i++)
@@ -378,7 +378,7 @@ namespace NKitDataStore.Tests
 
             Assert.Equal(blocksA.Count, blocksB.Count);
 
-            // All blocks should be identical — perfect deduplication
+            // All blocks should be identical - perfect deduplication
             for (int i = 0; i < blocksA.Count; i++)
             {
                 AssertBlocksEqual(blocksA[i], blocksB[i], i);
@@ -423,7 +423,7 @@ namespace NKitDataStore.Tests
             List<byte[]> blocksA = ExtractBlocks(partitionA, trimOffsetA);
             List<byte[]> blocksB = ExtractBlocks(partitionB, trimOffsetB);
 
-            // First block differs (Requirement 6.4) — different zero/audio mix
+            // First block differs (Requirement 6.4) - different zero/audio mix
             bool firstBlockDiffers = false;
             for (int i = 0; i < Math.Min(blocksA[0].Length, blocksB[0].Length); i++)
             {
@@ -436,7 +436,7 @@ namespace NKitDataStore.Tests
             Assert.True(firstBlockDiffers, "First block after TrimOffset should differ due to sub-block shift");
 
             // Note: Due to the sub-block shift (500 bytes difference), subsequent blocks
-            // also contain different slices of audioContent. This is expected behavior —
+            // also contain different slices of audioContent. This is expected behavior -
             // the deduplication benefit comes from having the same TrimOffset, which means
             // the block BOUNDARIES are at the same absolute positions. When the actual disc
             // content at those positions is identical (which happens for most of the disc

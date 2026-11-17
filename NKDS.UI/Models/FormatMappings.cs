@@ -48,8 +48,8 @@ public static class FormatMappings
             // GDI source (Dreamcast)
             ("dreamcast", "gdi") => ["gdi", "cue"],
 
-            // CHD source (Dreamcast GD-ROM). A GD-ROM CHD has no inherent cue/gdi form — it is
-            // stored verbatim with its CHD metadata — so export can produce either representation
+            // CHD source (Dreamcast GD-ROM). A GD-ROM CHD has no inherent cue/gdi form - it is
+            // stored verbatim with its CHD metadata - so export can produce either representation
             // on demand via the CHD reader + GdRomWriter. Offer both (cue first as the redump default).
             ("dreamcast", "chd") => ["cue", "gdi"],
 

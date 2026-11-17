@@ -17,7 +17,7 @@ namespace NKit.Ui.Services
 
         // Hard ceiling on the backing line lists. The UI only ever DISPLAYS the last
         // UiSettings.ConsoleOutputBuffer lines (see Messages), but Append/AppendLine used to grow
-        // these lists forever — every progress tick and log line from every processed image was
+        // these lists forever - every progress tick and log line from every processed image was
         // retained for the whole session. Over a large run that is an unbounded climb (the UI-only
         // memory leak). Keep generous headroom over the display buffer so scroll-back is unaffected,
         // then trim the oldest lines so the backing store is bounded.

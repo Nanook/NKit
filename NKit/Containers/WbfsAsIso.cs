@@ -111,7 +111,7 @@ namespace Nanook.NKit.Container
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Emit removed-block marks as ABSOLUTE image offsets (invariant of whichever buffer the
-            // block reader filled — under BufferStream that is the manager's cache block, not the
+            // block reader filled - under BufferStream that is the manager's cache block, not the
             // Image's section). The Image rebases to section-relative when building MissingData.
             // The _nkitState index keeps using the buffer-local `off` (its per-block mapping).
             int callOffset = offset;

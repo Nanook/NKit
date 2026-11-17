@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Tmds.Fuse;
 
-/// <summary>Timespec — identical layout on Linux and macOS (64-bit).</summary>
+/// <summary>Timespec - identical layout on Linux and macOS (64-bit).</summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct timespec
 {
@@ -12,7 +12,7 @@ public struct timespec
     public long tv_nsec;
 }
 
-/// <summary>Mode type — 32-bit unsigned on both platforms in FUSE context.</summary>
+/// <summary>Mode type - 32-bit unsigned on both platforms in FUSE context.</summary>
 public enum mode_t : uint { }
 
 #pragma warning restore IDE1006 // Naming Styles

@@ -104,7 +104,7 @@ namespace NKitDataStore.Tests
             // Video partition data (written to primary)
             byte[] videoData = MakeBlockData(seed: 1, size: (int)videoPartitionSize);
 
-            // ── Step 1: Ingest — write to primary and aux sets ────────────
+            // ── Step 1: Ingest - write to primary and aux sets ────────────
             using (DataStore store = new DataStore(_tempDir))
             {
                 store.CreateSet(primarySetName, blockSize: blockSize);
@@ -175,7 +175,7 @@ namespace NKitDataStore.Tests
 
             using IImageReader primaryReader = store2.OpenImageReader(new GlobalImageKey(primarySetName, images[0].Id));
 
-            // Create a plain ReaderBlockProvider (no aux) — simulates aux being unavailable
+            // Create a plain ReaderBlockProvider (no aux) - simulates aux being unavailable
             IBlockProvider blockProvider = new ReaderBlockProvider(primaryReader);
 
             // Reconstruct using ImageBuilderXboxStream with NO aux block provider
@@ -313,7 +313,7 @@ namespace NKitDataStore.Tests
             IBlockProvider provider = DataStore.CreateBlockProvider(reader, _tempDir, primarySetName);
             Assert.IsType<ReaderBlockProvider>(provider);
 
-            // Reconstruct — no aux available
+            // Reconstruct - no aux available
             using ImageBuilderXboxStream stream = new ImageBuilderXboxStream(reader, blockProvider: provider, auxBlockProvider: null);
 
             // ── Verify game data ─────────────────────────────────────────

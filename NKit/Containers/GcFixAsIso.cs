@@ -176,7 +176,7 @@ namespace Nanook.NKit.Container
         public long RealPosition => _inner.RealPosition;
         public long RealSize => _inner.RealSize;
         // Report estimated size so the GameCube Image sizes the output to the full GC disc size
-        // (lenCalc => FullSizeGameCube) rather than the smaller compacted source size — otherwise
+        // (lenCalc => FullSizeGameCube) rather than the smaller compacted source size - otherwise
         // reads are truncated at the source length and the reordered tail is lost.
         public bool SizeEstimated => true;
         public Checksums Checksums => _inner.Checksums;
@@ -219,7 +219,7 @@ namespace Nanook.NKit.Container
             }
 
             // Minimal GameCube ImageInfo for the FS parse + FST recovery (Multiplier 1, Fix mode, no
-            // hashes). This is self-contained — the decorator does not depend on the Image's
+            // hashes). This is self-contained - the decorator does not depend on the Image's
             // ImageInfo (which is not yet created at wrap time).
             ImageInfo gcInfo = new ImageInfo
             {
@@ -239,14 +239,14 @@ namespace Nanook.NKit.Container
                 return;
             }
 
-            // 2. Build the corrected system-area FST (deterministic, from fix data) — see
+            // 2. Build the corrected system-area FST (deterministic, from fix data) - see
             //    GetCorrectedFstData below.
             //    Setup() must run first: it resolves FixData.FixPath from the fixFiles folder, which
             //    is what enables GcBinFiles to scan and load the fst/appldr .bin files. Without it
             //    FixPath is null and GcBinFiles is silently empty (mirrors WiiFixAsIso.Setup(Id8)).
             _fixData.Setup(srcFs.Id8);
 
-            //    Filter fix files by the source disc Id8 and include apploaders — mirrors
+            //    Filter fix files by the source disc Id8 and include apploaders - mirrors
             //    FsProcessor.Create so we only try the candidates that apply to THIS disc (trying a
             //    foreign fst throws "not enough space for AppLoader").
             List<FixFileItem> allGcFix = _fixData.GcBinFiles ?? new List<FixFileItem>();
@@ -262,7 +262,7 @@ namespace Nanook.NKit.Container
                 .Concat(allGcFix.Where(a => a is ApploaderFileItem));
 
             // Collect the "Fix file '...' applied" / scrub messages into our buffer (pass a
-            // list so they are NOT written to the log inline during construction — FlushLog emits
+            // list so they are NOT written to the log inline during construction - FlushLog emits
             // them later, after the banner).
             List<string> appliedLog = new List<string>();
             byte[] correctedFst = GetCorrectedFstData(gcFixFiles, srcFs, gcInfo, _log, out bool alreadyValid, appliedLog);
@@ -271,7 +271,7 @@ namespace Nanook.NKit.Container
             if (correctedFst == null)
             {
                 // No fix file matched: pass through (the Fix step will still DAT-match / report).
-                logFix($"[GC Fix] No matching fix file for disc Id8 '{srcFs.Id8}' — nothing to recover (passing source through)");
+                logFix($"[GC Fix] No matching fix file for disc Id8 '{srcFs.Id8}' - nothing to recover (passing source through)");
                 _passThrough = true;
                 return;
             }
@@ -461,7 +461,7 @@ namespace Nanook.NKit.Container
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Fix data is wired (at Open) before the Image reads anything, so build the corrected
-            // layout on the very first read — the Image then reads a fully corrected GameCube ISO
+            // layout on the very first read - the Image then reads a fully corrected GameCube ISO
             // (including the corrected system-area header).
             if (!_prepared)
                 prepare();

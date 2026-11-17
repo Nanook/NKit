@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace Nanook.NKit.App.Cli
 {
     /// <summary>
-    /// Pure argv → <see cref="ParsedCommand"/> parser. No console, no engine, deterministic — so it
+    /// Pure argv → <see cref="ParsedCommand"/> parser. No console, no engine, deterministic - so it
     /// is fully unit-testable. Understands: leading verb (or alias), --long / -short options with
     /// value by space or '=', presence switches, the '--' end-of-options marker, positional inputs,
     /// and a system value-prefix on prefixable options (e.g. --format wii:rvz:19).
     /// <para>
     /// Path/mask values are carried through VERBATIM (including '//' archive masks and * ? wildcards)
-    /// — the parser never reinterprets them; downstream <c>FileMask</c> owns that.
+    /// - the parser never reinterprets them; downstream <c>FileMask</c> owns that.
     /// </para>
     /// </summary>
     public static class CliParser

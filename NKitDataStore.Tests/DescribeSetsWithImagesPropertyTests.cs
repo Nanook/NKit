@@ -44,7 +44,7 @@ namespace NKitDataStore.Tests
         /// For any set containing images with filesystem.yaml data, calling
         /// DescribeSetsWithImages with includeFileSystemYaml = true SHALL return
         /// non-empty FileSystemYamlData for those images. The store_fs column
-        /// was removed — filesystem storage is now unconditionally on.
+        /// was removed - filesystem storage is now unconditionally on.
         /// </summary>
         [Property(MaxTest = 100)]
         public bool DescribeSetsWithImages_AlwaysLoadsFileSystemYaml(

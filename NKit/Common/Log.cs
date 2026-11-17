@@ -133,7 +133,7 @@ namespace Nanook.NKit
         /// <summary>
         /// When true the console sink owns its own live/in-place progress rendering (the dynamic
         /// Spectre console), so this Log does NOT buffer messages during a step and does NOT emit
-        /// the legacy ".1.2.3" progress dots — messages are written through immediately and the
+        /// the legacy ".1.2.3" progress dots - messages are written through immediately and the
         /// sink interleaves them with its footer. When false (redirected / piped / file), the
         /// legacy behaviour applies: cache messages while a progress line owns the console and emit
         /// the dot stream. The file log is unaffected either way.
@@ -174,7 +174,7 @@ namespace Nanook.NKit
                 this.FileLevel = fileLevel;
 
                 // Subscribe the first-chance diagnostic ONCE (the AppDomain event is process-wide and
-                // Initialise is called per image on a reused Log — an unconditional += leaked a
+                // Initialise is called per image on a reused Log - an unconditional += leaked a
                 // closure every image). If Debug is no longer enabled on a later Initialise, drop it.
                 bool wantFirstChance = this.ConsoleLevel == LogLevel.Trace || this.FileLevel == LogLevel.Trace;
                 if (wantFirstChance && _firstChanceHandler == null)
@@ -184,7 +184,7 @@ namespace Nanook.NKit
                         // Cooperative cancellation propagates VIA exceptions in .NET
                         // (OperationCanceledException / TaskCanceledException from awaited tokens and
                         // SemaphoreSlim.WaitAsync). They fire on every normal end-of-run pool
-                        // shutdown and are always caught — pure noise, so the first-chance
+                        // shutdown and are always caught - pure noise, so the first-chance
                         // diagnostic skips them. Genuine first-chance exceptions are still logged.
                         if (ea.Exception is OperationCanceledException)
                             return;
@@ -227,7 +227,7 @@ namespace Nanook.NKit
         // both the console (via ConsoleCallbackSink wrapping the host callback) and the file (via
         // FileLogSink) are bus sinks, each carrying its own level so the bus routes per-sink. The
         // bus minimum is the more-verbose of the two levels so neither sink is starved. Never throws
-        // — logging must not break processing.
+        // - logging must not break processing.
         private void initialiseBus(LogLevel fileLevel, string fileLog)
         {
             try
@@ -237,7 +237,7 @@ namespace Nanook.NKit
                 // down and recreated the async FileLogSink (background drain thread + BlockingCollection
                 // wait handles) per image, leaking those OS handles/threads to finalization and growing
                 // unbounded over a large multi-image run. When the console level, file level, file path
-                // and console callback are unchanged, the current bus is already correct — keep it.
+                // and console callback are unchanged, the current bus is already correct - keep it.
                 if (_busBuilt
                     && _busConsoleLevel == this.ConsoleLevel
                     && _busFileLevel == this.FileLevel
@@ -258,7 +258,7 @@ namespace Nanook.NKit
                 _busBuilt = false;
 
                 if (this.ConsoleLevel == LogLevel.None && this.FileLevel == LogLevel.None)
-                    return; // default/disabled state — no bus
+                    return; // default/disabled state - no bus
 
                 LogLevel min = maxVerbosity(this.ConsoleLevel, this.FileLevel);
                 _bus = new LogBus(min);
@@ -310,9 +310,9 @@ namespace Nanook.NKit
 
             // CENTRALISED ROUTING: everything now flows through the NKitLog bus. The bus fans out to
             // the ConsoleCallbackSink (console level) and FileLogSink (file level), each honouring
-            // its own level — so the independent console/file thresholds are preserved, centrally.
+            // its own level - so the independent console/file thresholds are preserved, centrally.
             if (_rootScope == null)
-                return; // bus unavailable (shouldn't happen once Initialised) — drop silently
+                return; // bus unavailable (shouldn't happen once Initialised) - drop silently
 
             // Non-dynamic console buffering: while a legacy dot-progress line owns the console, hold
             // console-bound messages so they don't corrupt the dot line. This is a CONSOLE-only
@@ -331,7 +331,7 @@ namespace Nanook.NKit
             }
 
             // Normal path: one bus emit routes to every sink at/under its level. Classification is
-            // scope + level only — legacy callers have no stage scope, so they log on the root scope
+            // scope + level only - legacy callers have no stage scope, so they log on the root scope
             // (rendered without a tag). New code that wants a tag calls ScopeFor(...).Log(...) directly.
             try { _rootScope.Log(level, message); }
             catch { }

@@ -123,7 +123,7 @@ public class ServiceRegistryPropertyTests
     /// <summary>
     /// **Validates: Requirements 2.6, 2.8**
     ///
-    /// Property 2: ServiceRegistry Dispose Safety — Partial Construction.
+    /// Property 2: ServiceRegistry Dispose Safety - Partial Construction.
     /// For any failure position N (0..ServiceCount-1), when construction fails at position N,
     /// services 0..N-1 are disposed in reverse order before the exception propagates.
     /// </summary>
@@ -178,7 +178,7 @@ public class ServiceRegistryPropertyTests
     /// <summary>
     /// **Validates: Requirements 2.6, 2.8**
     ///
-    /// Property 2: ServiceRegistry Dispose Safety — Full Disposal Ordering.
+    /// Property 2: ServiceRegistry Dispose Safety - Full Disposal Ordering.
     /// For any fully-constructed registry, calling Dispose disposes all services
     /// in reverse order of construction (index ServiceCount-1 first, index 0 last).
     /// </summary>
@@ -224,7 +224,7 @@ public class ServiceRegistryPropertyTests
     /// <summary>
     /// **Validates: Requirements 2.6, 2.8**
     ///
-    /// Property 2: ServiceRegistry Dispose Safety — Dispose is idempotent.
+    /// Property 2: ServiceRegistry Dispose Safety - Dispose is idempotent.
     /// Calling Dispose multiple times does not dispose services more than once.
     /// </summary>
     [Property(MaxTest = 100)]

@@ -1,4 +1,4 @@
-﻿namespace Nanook.NKit
+namespace Nanook.NKit
 {
     //CsqThread safe readonly data for section processor
     public interface IFileSystemData
@@ -13,7 +13,7 @@
         FidelityFileList FidelityFiles { get; }
 
         /// <summary>
-        /// A safe, read-only view of this area's file system for parallel read consumers — a
+        /// A safe, read-only view of this area's file system for parallel read consumers - a
         /// collection of per-file-system views plus System and merged Primary projections over an
         /// immutable snapshot. Null until the file system is fully parsed (<see cref="AllFoldersParsed"/>).
         /// The element type stays <see cref="IFsFile"/>; the snapshot LIST is frozen once published,

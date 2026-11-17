@@ -129,7 +129,7 @@ namespace Nanook.NKit
 
                     if (match == null)
                     {
-                        // No fast dat match — fall back to the slow region/header/update-partition
+                        // No fast dat match - fall back to the slow region/header/update-partition
                         // brute-force. Report it so the pause is visible (real-time in the dynamic
                         // console, cached otherwise) rather than looking like a hang.
                         _log.Info(() => "Brute Forcing Update Partition...");
@@ -357,7 +357,7 @@ namespace Nanook.NKit
 
         // CRC32 of a recovery update-partition's actual bytes (the on-disc update partition), cached
         // by filename. Returns 0 when there is no backing file (fileless redumpUpdateCrcs
-        // placeholder) — such candidates cannot be reproduced/inserted and are skipped.
+        // placeholder) - such candidates cannot be reproduced/inserted and are skipped.
         private uint recoveryFileCrc(FixPartition upd)
         {
             if (upd?.Filename == null || !File.Exists(upd.Filename))
@@ -417,8 +417,8 @@ namespace Nanook.NKit
                             // region as ONE null gap (_headers[1].Size covers 0x50000..0xF800000).
                             // On disc the fix writes the update partition (upd.Length bytes) then
                             // zero-fills to the data-partition offset. So the region CRC must be
-                            // combined in two parts — the update data over its REAL length, then the
-                            // trailing null padding over the remainder — otherwise the candidate CRC
+                            // combined in two parts - the update data over its REAL length, then the
+                            // trailing null padding over the remainder - otherwise the candidate CRC
                             // is shifted by the whole gap and can never reproduce the redump CRC.
                             if (i == 1 && upd != null)
                             {
@@ -426,12 +426,12 @@ namespace Nanook.NKit
                                 // the CRC of the recovery FILE's actual on-disc bytes, not
                                 // FixPartition.Crc (which is the update-IDENTITY CRC parsed from the
                                 // filename / NKit header 0x218, used only to MATCH a removed update
-                                // to its recovery file — it is NOT the CRC of the file bytes). The
+                                // to its recovery file - it is NOT the CRC of the file bytes). The
                                 // brute-force reproduces the real disc, which contains the file
                                 // bytes, so it must combine their real CRC. Then the trailing null
                                 // padding fills the rest of the update region to the data offset.
                                 uint updBytesCrc = recoveryFileCrc(upd);
-                                if (updBytesCrc == 0) // no file bytes available (fileless placeholder) — cannot reproduce
+                                if (updBytesCrc == 0) // no file bytes available (fileless placeholder) - cannot reproduce
                                     break;
                                 crc = ~Crc.Combine(~crc, ~updBytesCrc, upd.Length);
                                 long pad = _headers[i].Size - upd.Length;

@@ -361,7 +361,7 @@ namespace NKitDataStore.Tests
             Assert.Equal(2, entryCount);
 
             // String table starts at 12 + 2*12 = 36
-            // No StringTableOffset field at offset 12 — that's where the entry table starts
+            // No StringTableOffset field at offset 12 - that's where the entry table starts
             int expectedStringTableOffset = 12 + (entryCount * 12);
             Assert.Equal(36, expectedStringTableOffset);
         }
@@ -577,7 +577,7 @@ namespace NKitDataStore.Tests
             FsYaml fsYaml = new FsYaml();
             FsYamlNode root = fsYaml.AddFileSystem(".", 0);
             FsYamlNode dir = root.AddDirectory("CONTENT");
-            // Only one file with this name — should NOT have the flag
+            // Only one file with this name - should NOT have the flag
             dir.AddFile("single.bin", 0x2000, 0x5000, 0xFEDC9876, 0xABCD);
 
             NkFs nkfs = NkFs.FromFsYaml(fsYaml);
@@ -715,10 +715,10 @@ namespace NKitDataStore.Tests
             // GetTotalFileSize from first extent
             Assert.Equal(expectedTotal, nkfs.GetTotalFileSize(children[0].index));
 
-            // GetTotalFileSize from middle extent — should still return the full sum
+            // GetTotalFileSize from middle extent - should still return the full sum
             Assert.Equal(expectedTotal, nkfs.GetTotalFileSize(children[1].index));
 
-            // GetTotalFileSize from last extent — should still return the full sum
+            // GetTotalFileSize from last extent - should still return the full sum
             Assert.Equal(expectedTotal, nkfs.GetTotalFileSize(children[2].index));
         }
 

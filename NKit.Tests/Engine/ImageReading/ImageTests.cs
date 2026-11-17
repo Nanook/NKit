@@ -8,7 +8,7 @@ namespace NKit.Tests.Engine.ImageReading
 {
     [Trait("Area", "Engine")]
     [Trait("Group", "ImageReading")]
-    [Trait("Speed", "Slow")] // requires real disc image files in NKitExternalTestFiles — excluded from the fast CI gate
+    [Trait("Speed", "Slow")] // requires real disc image files in NKitExternalTestFiles - excluded from the fast CI gate
     public class ImageTests
     {
 

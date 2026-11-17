@@ -41,7 +41,7 @@
 
             <!-- Right side: Operation progress OR error OR filter bar (mutually exclusive) -->
             <Panel Grid.Column="2" VerticalAlignment="Center">
-                <!-- Operation progress bar (shown when an operation is active — takes priority) -->
+                <!-- Operation progress bar (shown when an operation is active - takes priority) -->
                 <ContentControl Content="{Binding CurrentOperation}"
                                 IsVisible="{Binding HasActiveOperations}"
                                 VerticalAlignment="Center">

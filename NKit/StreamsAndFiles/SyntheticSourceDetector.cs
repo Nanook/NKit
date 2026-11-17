@@ -66,7 +66,7 @@ namespace Nanook.NKit
                 }
 
                 // Step 2b (WUA): each .wua file becomes a standalone WuaFolder group.
-                // WUA files are self-contained ZArchives with Loadiine content — one image per file.
+                // WUA files are self-contained ZArchives with Loadiine content - one image per file.
                 foreach (SourceFile wua in dirGroup.Where(sf => sf.ImageType == SourceImageType.Wua && !sf.IsArchived))
                 {
                     result.Add(new FolderGroupInfo
@@ -193,7 +193,7 @@ namespace Nanook.NKit
 
             if (!hasCode || (!hasContent && !hasMeta)) return false;
 
-            // Reject if any tmd or .wua file exists — that means it's a TmdApp/WUA source
+            // Reject if any tmd or .wua file exists - that means it's a TmdApp/WUA source
             foreach (string f in System.IO.Directory.EnumerateFiles(path))
             {
                 string fn = System.IO.Path.GetFileName(f).ToLowerInvariant();

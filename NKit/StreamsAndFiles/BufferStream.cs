@@ -72,9 +72,9 @@ namespace Nanook.NKit
         public override bool CanRead => true;
 
         // CanSeek reflects the underlying source's true random-access capability:
-        //   true  — a genuinely seekable source (local file). Nothing is cached; Seek works
+        //   true  - a genuinely seekable source (local file). Nothing is cached; Seek works
         //           directly and a consumer may freely seek anywhere at no cost.
-        //   false — a forward-only source (archive entry). The manager buffers it, so arbitrary
+        //   false - a forward-only source (archive entry). The manager buffers it, so arbitrary
         //           seeks are not "free": a consumer deciding whether to jump to a far offset must
         //           instead ask CanSeekTo(offset), which allows near seeks (served from cache) but
         //           refuses ones that would force the cache to hold an unreasonable span.
@@ -85,7 +85,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Whether the consumer should seek to <paramref name="offset"/>. Always true for a
-        /// seekable source (<see cref="CanSeek"/> is true — the seek is free). For a forward-only
+        /// seekable source (<see cref="CanSeek"/> is true - the seek is free). For a forward-only
         /// (cached) source it is true only when reaching the offset would not force the shared
         /// cache to hold an unreasonable span (see <see cref="BufferStreamManager.CanSeekTo"/>).
         /// When false the consumer should fall back to a calculated value rather than triggering a

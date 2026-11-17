@@ -123,11 +123,10 @@ public sealed class ConfigServicePropertyTests : IDisposable
     public bool WindowState_RoundTrip_ReturnsExactValues(int width, int height, int x, int y)
     {
         string configPath = Path.Combine(_tempDir, $"cfg-ws-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-ws-{Guid.NewGuid():N}.json");
 
         try
         {
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            ConfigService service = new ConfigService(configPath);
             service.SetWindowState(width, height, x, y);
 
             WindowStateConfig state = service.WindowState;
@@ -311,7 +310,6 @@ public sealed class ConfigServicePropertyTests : IDisposable
     public bool CorruptConfig_RandomBytes_FallsBackToDefaults(byte[] randomBytes, NonEmptyString queryKey)
     {
         string configPath = Path.Combine(_tempDir, $"corrupt-bytes-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-{Guid.NewGuid():N}.json");
 
         try
         {
@@ -319,8 +317,8 @@ public sealed class ConfigServicePropertyTests : IDisposable
             byte[] content = randomBytes ?? Array.Empty<byte>();
             File.WriteAllBytes(configPath, content);
 
-            // Construct ConfigService — should gracefully fall back to defaults
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            // Construct ConfigService - should gracefully fall back to defaults
+            ConfigService service = new ConfigService(configPath);
 
             // Assert defaults
             if (service.MountPathHistory.Count != 0)
@@ -338,8 +336,6 @@ public sealed class ConfigServicePropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -360,15 +356,14 @@ public sealed class ConfigServicePropertyTests : IDisposable
         string invalidContent = prefix + randomContent.Get;
 
         string configPath = Path.Combine(_tempDir, $"corrupt-str-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-str-{Guid.NewGuid():N}.json");
 
         try
         {
             // Write invalid content to the config file
             File.WriteAllText(configPath, invalidContent);
 
-            // Construct ConfigService — should gracefully fall back to defaults
-            ConfigService service = new ConfigService(configPath, legacyPath);
+            // Construct ConfigService - should gracefully fall back to defaults
+            ConfigService service = new ConfigService(configPath);
 
             // Assert defaults
             if (service.MountPathHistory.Count != 0)
@@ -386,8 +381,6 @@ public sealed class ConfigServicePropertyTests : IDisposable
         {
             if (File.Exists(configPath))
                 File.Delete(configPath);
-            if (File.Exists(legacyPath))
-                File.Delete(legacyPath);
         }
     }
 
@@ -452,8 +445,7 @@ public sealed class ConfigServicePropertyTests : IDisposable
 
         // Create isolated service with temp paths
         string configPath = Path.Combine(_tempDir, $"cfg-export-{Guid.NewGuid():N}.json");
-        string legacyPath = Path.Combine(_tempDir, $"legacy-export-{Guid.NewGuid():N}.json");
-        ConfigService service = new ConfigService(configPath, legacyPath);
+        ConfigService service = new ConfigService(configPath);
 
         // Set all export format preferences
         foreach ((string system, string sourceFormat, string targetFormat) in triples)

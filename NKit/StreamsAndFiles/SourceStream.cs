@@ -41,7 +41,7 @@ namespace Nanook.NKit
 
             IArchive archive = ArchiveFactory.OpenArchive(arcs);
 
-            // [Input] [Archive] Detail: what archive was opened, once — type, solidity, part count.
+            // [Input] [Archive] Detail: what archive was opened, once - type, solidity, part count.
             ILogScope arcScope = log?.ScopeFor(LogScopes.Input);
             if (arcScope != null && arcScope.IsEnabled(LogLevel.Detail))
                 arcScope.Log(LogLevel.Detail,
@@ -89,7 +89,7 @@ namespace Nanook.NKit
             _prevSizeTotal = 0;
             _log = log;
 
-            // [Input] [SplitStream] Detail: report a multi-part / split source once — part count and
+            // [Input] [SplitStream] Detail: report a multi-part / split source once - part count and
             // total size. Single-part local files are unremarkable, so only log when split.
             if (_isSplit)
             {
@@ -111,7 +111,7 @@ namespace Nanook.NKit
             _idx = idx;
             _partPos = 0;
 
-            // [Input] [SplitStream] Trace: each part switch — chatty on a many-part split, so Trace
+            // [Input] [SplitStream] Trace: each part switch - chatty on a many-part split, so Trace
             // (only visible at --console-level debug), not Detail.
             if (_isSplit && _log != null)
             {

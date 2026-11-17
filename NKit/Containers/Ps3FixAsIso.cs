@@ -13,7 +13,7 @@ namespace Nanook.NKit.Container
     ///
     /// <para>
     /// A PS3 "JB" (jailbroken/extracted) source is a folder of the game's files plus PS3_DISC.SFB /
-    /// PARAM.SFO — NOT a disc image. The full ISO is reconstructed from a matching IRD: the IRD
+    /// PARAM.SFO - NOT a disc image. The full ISO is reconstructed from a matching IRD: the IRD
     /// header supplies the disc header + full file-system directory tree, the game files supply the
     /// content at their file-system offsets, and the IRD footer supplies the tail. Missing/mismatched
     /// files are substituted from the fix-file store; every file is MD5-verified against the IRD and
@@ -23,7 +23,7 @@ namespace Nanook.NKit.Container
     /// <para>
     /// Previously this was a bespoke <c>ImagePs3IrdFix : IImage</c> that duplicated the ISO9660
     /// area/scan/section pipeline. As a decorator it REBUILDS the ISO on demand into the read
-    /// stream, so the standard <see cref="Iso9660.Image"/> consumes it like any other PS3 ISO —
+    /// stream, so the standard <see cref="Iso9660.Image"/> consumes it like any other PS3 ISO -
     /// getting the up-front file-system resolve, gap-marker discovery, scan and section processing
     /// for free (matching the Wii/GC Fix decorator model).
     /// </para>
@@ -111,7 +111,7 @@ namespace Nanook.NKit.Container
         public long RealSize => _inner.RealSize;
         public bool SizeEstimated => false;         // size is exact (from the IRD PS3 regions)
         // Expose the IRD's expected full-image CRC (when the IRD carries one) so the pipeline's
-        // StepImageInfo.Checksums gets it — this is what drives the Fix step's InChecksums verify
+        // StepImageInfo.Checksums gets it - this is what drives the Fix step's InChecksums verify
         // method (matching the old ImagePs3IrdFix, which set StepImageInfo.Checksums.Crc = ImageCrc).
         public Checksums Checksums
         {
@@ -192,7 +192,7 @@ namespace Nanook.NKit.Container
 
             // Parse the IRD header's file system: the header (0x8000) is the system area; the PVDs
             // (ISO9660/Joliet/UDF descriptors) follow and MUST be parsed (SetPvd loop) so
-            // Fst.SetFsData can walk the whole directory tree — without them only the baseline
+            // Fst.SetFsData can walk the whole directory tree - without them only the baseline
             // system entries are produced. Mirrors ImagePs3IrdFix.readHeaders.
             AreaInfo area = makeArea();
             ImageHeader header = new ImageHeader(_ird.Header.Read(0, 0x8000), area);

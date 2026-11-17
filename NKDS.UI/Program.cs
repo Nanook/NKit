@@ -23,12 +23,12 @@ static class Program
 
         if (!guard.IsFirstInstance())
         {
-            // Another instance is running — forward args and exit
+            // Another instance is running - forward args and exit
             guard.SendArgsToRunningInstance(args);
             return;
         }
 
-        // We are the first instance — start listening for args from future instances
+        // We are the first instance - start listening for args from future instances
         guard.StartListening(remoteArgs =>
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(async () =>

@@ -335,7 +335,7 @@ namespace NKit.Tests.NKDS.Binary
                     transaction.AddPendingBlockLocation(
                         new BlockKey(0xFEDCBA9876543210, 0xABCD1234), fileId: 0, offset: 0, size: 0x10000);
 
-                    // Do NOT call Commit() — let Dispose() handle it
+                    // Do NOT call Commit() - let Dispose() handle it
                 }
                 // transaction is now disposed
 

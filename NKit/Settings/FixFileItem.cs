@@ -20,14 +20,14 @@ namespace Nanook.NKit
 
         /// <summary>Inner archive entry name when this fix file is stored inside a streamable
         /// archive (convention: single entry named as the archive without its extension). Null for
-        /// a plain on-disk file — then <see cref="Filename"/> is the data path. When set,
+        /// a plain on-disk file - then <see cref="Filename"/> is the data path. When set,
         /// <see cref="Filename"/> is the archive path.</summary>
         public string InnerEntryName { get; set; }
 
         /// <summary>True when the fix-file data lives inside a streamable archive.</summary>
         public bool IsArchived => this.InnerEntryName != null;
 
-        /// <summary>The fix file's logical name for display/logging — the base name with no archive
+        /// <summary>The fix file's logical name for display/logging - the base name with no archive
         /// extension. Archive-backed: the inner entry name; plain file: the file name.</summary>
         public string DisplayName => this.InnerEntryName ?? (this.Filename == null ? null : Path.GetFileName(this.Filename));
 

@@ -377,7 +377,7 @@ namespace NKitDataStore.Tests
                     // If there are no live chunks, CompactShard returns WasCompacted=false
                     // and doesn't modify the file. Skip this degenerate case.
                     if (liveChunks.Count == 0)
-                        return true.ToProperty().Label("No live chunks — trivial case");
+                        return true.ToProperty().Label("No live chunks - trivial case");
 
                     // Check if compaction is actually needed
                     long expectedOutputSize = liveChunks.Sum(c => c.Size);
@@ -386,11 +386,11 @@ namespace NKitDataStore.Tests
 
                     if (!hasDeadChunks && actualFileSize == expectedOutputSize)
                     {
-                        // All chunks are live and contiguous — verify CompactShard returns no-op
+                        // All chunks are live and contiguous - verify CompactShard returns no-op
                         ShardCompactResult noOpResult = BinaryDataStoreDataAccess.CompactShard(shardPath, liveChunks);
                         if (noOpResult.WasCompacted)
                             return false.ToProperty().Label("CompactShard compacted when no compaction was needed");
-                        return true.ToProperty().Label("All live, contiguous — no-op confirmed");
+                        return true.ToProperty().Label("All live, contiguous - no-op confirmed");
                     }
 
                     // Call CompactShard
@@ -764,7 +764,7 @@ namespace NKitDataStore.Tests
 
                     if (originalOffset != expectedNewOffset)
                     {
-                        // This chunk moved — verify it's in the BlockOffsetUpdates
+                        // This chunk moved - verify it's in the BlockOffsetUpdates
                         if (!result.BlockOffsetUpdates.TryGetValue(chunk.BlockKey, out long mappedOffset))
                         {
                             return false.ToProperty().Label(
@@ -778,7 +778,7 @@ namespace NKitDataStore.Tests
                     }
                     else
                     {
-                        // Chunk didn't move — should NOT be in offset updates
+                        // Chunk didn't move - should NOT be in offset updates
                         if (result.BlockOffsetUpdates.ContainsKey(chunk.BlockKey))
                         {
                             return false.ToProperty().Label(
@@ -896,7 +896,7 @@ namespace NKitDataStore.Tests
                 rnd.NextBytes(shardData);
                 File.WriteAllBytes(shardPath, shardData);
 
-                // Call CompactShard — should detect no compaction needed
+                // Call CompactShard - should detect no compaction needed
                 ShardCompactResult result = BinaryDataStoreDataAccess.CompactShard(shardPath, liveChunks);
 
                 if (result.WasCompacted)

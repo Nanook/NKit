@@ -6,8 +6,8 @@ using System.Text;
 namespace Nanook.NKit
 {
     /// <summary>Scan YAML verbosity. <see cref="Verbose"/> writes every offset (a faithful superset
-    /// of the XML). <see cref="Compact"/> writes only the two anchors per line — <c>ImageOffset</c>
-    /// (raw) and <c>AreaFsOffset</c> (fs-space) — from which every other offset is recomputed on
+    /// of the XML). <see cref="Compact"/> writes only the two anchors per line - <c>ImageOffset</c>
+    /// (raw) and <c>AreaFsOffset</c> (fs-space) - from which every other offset is recomputed on
     /// read using the area block geometry.</summary>
     public enum ScanYamlMode { Compact, Verbose }
 
@@ -27,10 +27,10 @@ namespace Nanook.NKit
     /// <item>A file and its trailing gap are ONE <c>Items</c> entry (the model already pairs them),
     /// with the gap nested as <c>Gap: {}</c>.</item>
     /// <item>The whole-item (section-spanning) summary is a nested <c>Full: {Size, CRC[, XxHash]}</c>
-    /// present only on the FIRST part — so "list the filesystem" = items whose part has a
+    /// present only on the FIRST part - so "list the filesystem" = items whose part has a
     /// <c>Full</c>.</item>
     /// <item>A non-uniform gap's / Other-section's internal breakdown is a nested <c>Parts: []</c>
-    /// list on the owner — one consistent shape (no separate, re-parenting element).</item>
+    /// list on the owner - one consistent shape (no separate, re-parenting element).</item>
     /// </list>
     /// Values are formatted identically to the XML (hex X8/X9/X16, bool true/false, DataType tokens)
     /// so the two encode the same facts and round-trip to the identical <see cref="Scan"/> model.
@@ -47,11 +47,11 @@ namespace Nanook.NKit
         //
         // The new YAML structure differs from the XML (folded Info, File+Gap+Parts as one item,
         // nested Full/Combined), so ParseYaml translates it into the XML shape that the existing,
-        // battle-tested ScanParser.Parse consumes — reusing ALL of ScanParser's model construction
+        // battle-tested ScanParser.Parse consumes - reusing ALL of ScanParser's model construction
         // and (brittle, per-system) getAreaProperties typing with zero duplication.
         //
         // In Compact mode the offsets that were dropped are recomputed here purely by subtraction of
-        // the two anchors (ImageOffset raw, AreaFsOffset fs) against their parent — no block geometry
+        // the two anchors (ImageOffset raw, AreaFsOffset fs) against their parent - no block geometry
         // is needed, because one raw + one fs anchor per line is a lossless minimal set.
 
         public static Scan ParseYaml(string filePathName)
@@ -79,7 +79,7 @@ namespace Nanook.NKit
         // reading sniffs the content so either format loads regardless of how it was written.
 
         /// <summary>The on-disk file extension (without leading dot) for a scan in the given format:
-        /// <c>nkit</c> for XML, <c>nkit.yaml</c> for the YAML formats — so YAML scans are recognised
+        /// <c>nkit</c> for XML, <c>nkit.yaml</c> for the YAML formats - so YAML scans are recognised
         /// as YAML by editors and tools while both remain "nkit" scans. This is the single source of
         /// truth for the scan extension; callers must NOT pre/append their own ".yaml".</summary>
         public static string ScanExtension(ScanFormat format)
@@ -112,7 +112,7 @@ namespace Nanook.NKit
             return i < scanText.Length && scanText[i] != '<';
         }
 
-        /// <summary>Parse a scan from a stream regardless of format — sniffs XML vs YAML.</summary>
+        /// <summary>Parse a scan from a stream regardless of format - sniffs XML vs YAML.</summary>
         public static Scan Parse(Stream scanData, string name)
         {
             string text;
@@ -121,7 +121,7 @@ namespace Nanook.NKit
             return Parse(text, name);
         }
 
-        /// <summary>Parse a scan from text regardless of format — sniffs XML vs YAML.</summary>
+        /// <summary>Parse a scan from text regardless of format - sniffs XML vs YAML.</summary>
         public static Scan Parse(string scanText, string name)
         {
             if (IsYaml(scanText))
@@ -258,7 +258,7 @@ namespace Nanook.NKit
                         }
                     case "Info":
                         {
-                            // Area Info on its own line — emit <AreaInfo> now (before the deferred <Area>).
+                            // Area Info on its own line - emit <AreaInfo> now (before the deferred <Area>).
                             xml.Append("  <AreaInfo");
                             foreach (KeyValuePair<string, string> kv in ParseFlowMapping(rest))
                                 WriteAttr(xml, kv.Key, kv.Value);
@@ -315,7 +315,7 @@ namespace Nanook.NKit
                         }
                     default:
                         {
-                            // A bare flow mapping "{...}" — a Parts entry (Info) when inside a Parts block,
+                            // A bare flow mapping "{...}" - a Parts entry (Info) when inside a Parts block,
                             // otherwise a normal one-line File/Gap item.
                             if (!line.StartsWith("{"))
                                 break;
@@ -525,7 +525,7 @@ namespace Nanook.NKit
                 string val;
                 if (i < n && (s[i] == '{' || s[i] == '['))
                 {
-                    // Nested map/sequence — capture verbatim, balancing brackets (quote-aware).
+                    // Nested map/sequence - capture verbatim, balancing brackets (quote-aware).
                     char open = s[i], close = open == '{' ? '}' : ']';
                     int depth = 0, start = i; bool inQ = false;
                     for (; i < n; i++)
@@ -600,7 +600,7 @@ namespace Nanook.NKit
             bool verbose = mode == ScanYamlMode.Verbose;
             StringBuilder sb = new StringBuilder(0x400 * 0x400);
 
-            // Header — Version + Mode drive the reader; then the scan Properties.
+            // Header - Version + Mode drive the reader; then the scan Properties.
             List<string> hdr = new List<string> { Kv("Version", ScanVersion), Kv("Mode", mode.ToString()) };
             foreach (string key in scan.Properties.Keys)
             {
@@ -631,10 +631,10 @@ namespace Nanook.NKit
                 if (ai.IsEncrypted)
                     area.Add(Kv("DecryptedCRC", Hex(sra.CrcDecrypted, 8)));
                 if (fs)
-                    area.Add(Kv("Fs", "true")); // area uses fs-space offsets (hash gaps) — drives the reader
+                    area.Add(Kv("Fs", "true")); // area uses fs-space offsets (hash gaps) - drives the reader
                 sb.Append("  - Area: ").Append(Flow(area)).Append('\n');
 
-                // Area Info on its OWN line (still part of the area — a sibling mapping key of the
+                // Area Info on its OWN line (still part of the area - a sibling mapping key of the
                 // list item, indented to 4 spaces like Sections:), so the area header stays short.
                 if ((ai.Properties?.Keys?.Length ?? 0) != 0)
                 {
@@ -666,7 +666,7 @@ namespace Nanook.NKit
                             {
                                 if (line.Parts == null)
                                 {
-                                    // Normal item — a one-line flow mapping sequence element.
+                                    // Normal item - a one-line flow mapping sequence element.
                                     sb.Append("          - ").Append(Flow(line.Fields)).Append('\n');
                                 }
                                 else
@@ -674,7 +674,7 @@ namespace Nanook.NKit
                                     // A gap WITH a non-uniform breakdown. YAML can't hang a nested
                                     // block sequence off a flow-mapping element, so this item is a
                                     // block mapping: the gap's fields stay on one line under Item:,
-                                    // and Parts is a sibling block — one aligned line per part.
+                                    // and Parts is a sibling block - one aligned line per part.
                                     sb.Append("          - Item: ").Append(Flow(line.Fields)).Append('\n');
                                     sb.Append("            Parts:\n");
                                     foreach (List<string> p in line.Parts)
@@ -685,7 +685,7 @@ namespace Nanook.NKit
                     }
                     else if (sra.Type == AreaType.Other && srs.Items.Count == 1 && (lastItm?.GapInfo.Count ?? 0) > 1)
                     {
-                        // Non-FS section whose own data is a non-uniform breakdown — Parts on the section.
+                        // Non-FS section whose own data is a non-uniform breakdown - Parts on the section.
                         sb.Append("        Parts:\n");
                         foreach (ISectionData gd in lastItm.GapInfo)
                             sb.Append("          - ").Append(Flow(PartFields(gd, ai, fs, verbose))).Append('\n');
@@ -804,8 +804,8 @@ namespace Nanook.NKit
                 if (fs)
                     f.Add(Kv("SectionFsOffset", Hex(itm.FsOffset, 8)));
             }
-            // Position (OffsetInItem) is NOT derivable across section boundaries — a file's first
-            // part can live in a prior section — so it is always emitted, even in compact mode.
+            // Position (OffsetInItem) is NOT derivable across section boundaries - a file's first
+            // part can live in a prior section - so it is always emitted, even in compact mode.
             if (itm.OffsetInItem != 0)
                 f.Add(Kv("Position", Hex(itm.OffsetInItem, 9)));
 
@@ -814,7 +814,7 @@ namespace Nanook.NKit
 
             bool writeXxHash = !file && item.Gap.DataType == DataType.Other && item.GapInfo.Count == 0;
 
-            // Whole-item summary (first part only) — the "unique filesystem row" marker.
+            // Whole-item summary (first part only) - the "unique filesystem row" marker.
             if (fsFile != null && itm.OffsetInItem == 0)
             {
                 List<string> full = new List<string>
@@ -847,7 +847,7 @@ namespace Nanook.NKit
                 f.Add("Combined: " + Flow(comb));
             }
 
-            // Name last — the jagged, variable-length tail.
+            // Name last - the jagged, variable-length tail.
             f.Add(Kv(file ? "File" : "Gap", fsFile?.FullName ?? ""));
         }
 

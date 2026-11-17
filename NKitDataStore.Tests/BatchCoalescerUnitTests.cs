@@ -33,7 +33,7 @@ public class BatchCoalescerUnitTests
         collection.Add("item3");
         collection.Remove("item2");
 
-        // Assert — no events fired while batch is active
+        // Assert - no events fired while batch is active
         Assert.Empty(events);
     }
 
@@ -85,15 +85,15 @@ public class BatchCoalescerUnitTests
         List<NotifyCollectionChangedEventArgs> events = new List<NotifyCollectionChangedEventArgs>();
         collection.CollectionChanged += (_, e) => events.Add(e);
 
-        // Act — add after batch ended
+        // Act - add after batch ended
         collection.Add("after-batch");
 
-        // Assert — normal Add notification fires
+        // Assert - normal Add notification fires
         Assert.Single(events);
         Assert.Equal(NotifyCollectionChangedAction.Add, events[0].Action);
     }
 
-    // ── 5.1, 5.2: Exception safety — EndBatch in finally ─────────────────
+    // ── 5.1, 5.2: Exception safety - EndBatch in finally ─────────────────
 
     /// <summary>
     /// Validates Requirements 5.1, 5.2: EndBatch in a finally block ensures
@@ -108,7 +108,7 @@ public class BatchCoalescerUnitTests
         List<NotifyCollectionChangedEventArgs> events = new List<NotifyCollectionChangedEventArgs>();
         collection.CollectionChanged += (_, e) => events.Add(e);
 
-        // Act — simulate exception during batch with EndBatch in finally
+        // Act - simulate exception during batch with EndBatch in finally
         coalescer.BeginBatch();
         try
         {
@@ -125,7 +125,7 @@ public class BatchCoalescerUnitTests
             coalescer.EndBatch();
         }
 
-        // Assert — Reset was raised despite exception
+        // Assert - Reset was raised despite exception
         Assert.Single(events);
         Assert.Equal(NotifyCollectionChangedAction.Reset, events[0].Action);
 
@@ -172,7 +172,7 @@ public class BatchCoalescerUnitTests
         // Act
         coalescer.EndBatch();
 
-        // Assert — no events raised
+        // Assert - no events raised
         Assert.Empty(events);
     }
 
@@ -222,7 +222,7 @@ public class BatchCoalescerUnitTests
         // Act
         coalescer.Dispose();
 
-        // Assert — Reset raised on dispose
+        // Assert - Reset raised on dispose
         Assert.Single(events);
         Assert.Equal(NotifyCollectionChangedAction.Reset, events[0].Action);
         Assert.False(coalescer.IsBatching);

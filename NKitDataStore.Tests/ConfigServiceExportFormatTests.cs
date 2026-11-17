@@ -11,14 +11,12 @@ namespace NKitDataStore.Tests
     {
         private readonly string _tempDir;
         private readonly string _configPath;
-        private readonly string _legacyPath;
 
         public ConfigServiceExportFormatTests()
         {
             _tempDir = Path.Combine(Path.GetTempPath(), $"nkds-test-{Guid.NewGuid():N}");
             Directory.CreateDirectory(_tempDir);
             _configPath = Path.Combine(_tempDir, "nkds-ui.json");
-            _legacyPath = Path.Combine(_tempDir, "export-format-preferences.json");
         }
 
         public void Dispose()
@@ -31,7 +29,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Creates a ConfigService that operates in an isolated temp directory.
         /// </summary>
-        private ConfigService CreateFreshService() => new ConfigService(_configPath, _legacyPath);
+        private ConfigService CreateFreshService() => new ConfigService(_configPath);
 
         // --- Requirement 4.1, 4.3: SetExportFormat then GetExportFormat returns the correct value ---
 

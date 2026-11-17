@@ -170,7 +170,7 @@ namespace NKit.Tests.NKDS.Binary
                 BinaryPrimitives.WriteUInt32BigEndian(fileData.AsSpan(fileSize - 4, 4), EmbeddedFooter.FooterMagic);
             }
 
-            // Attempt to deserialize the entire file as a footer — should return null
+            // Attempt to deserialize the entire file as a footer - should return null
             EmbeddedFooter? result = EmbeddedFooter.Deserialize(fileData.AsSpan());
             return result == null;
         }
@@ -201,7 +201,7 @@ namespace NKit.Tests.NKDS.Binary
             // Write non-magic value as the last 4 bytes
             BinaryPrimitives.WriteUInt32BigEndian(fileData.AsSpan(totalSize - 4, 4), nonMagicValue);
 
-            // Detection: check last 4 bytes with IsMagicValid — should be false
+            // Detection: check last 4 bytes with IsMagicValid - should be false
             ReadOnlySpan<byte> lastFour = fileData.AsSpan(totalSize - 4, 4);
             return !EmbeddedFooter.IsMagicValid(lastFour);
         }
@@ -261,7 +261,7 @@ namespace NKit.Tests.NKDS.Binary
                     // The file is created with valid pointers relative to index start
                 }
 
-                // Open with the same baseOffset — should succeed because pointers are valid
+                // Open with the same baseOffset - should succeed because pointers are valid
                 // relative to IndexSize, regardless of total file size (baseOffset + indexSize)
                 using (BinaryIndexFile file = BinaryIndexFile.Open(path, baseOffset: baseOffset))
                 {
@@ -407,7 +407,7 @@ namespace NKit.Tests.NKDS.Binary
         [Property(MaxTest = 100)]
         public bool ValidationIndependentOfFileSizeAndBaseOffset(NonNegativeInt offsetASeed, NonNegativeInt offsetBSeed)
         {
-            // Two different baseOffsets — the index content is identical, only the
+            // Two different baseOffsets - the index content is identical, only the
             // total file size differs
             long baseOffsetA = (long)(offsetASeed.Get % 50_000);
             long baseOffsetB = (long)(offsetBSeed.Get % 50_000) + 50_000; // Ensure different from A
@@ -424,7 +424,7 @@ namespace NKit.Tests.NKDS.Binary
                 {
                 }
 
-                // Both should open successfully — validation uses IndexSize, not total file size
+                // Both should open successfully - validation uses IndexSize, not total file size
                 long indexSizeA, indexSizeB;
                 using (BinaryIndexFile fileA = BinaryIndexFile.Open(pathA, baseOffset: baseOffsetA))
                 {

@@ -63,7 +63,7 @@ namespace NKit.Tests.Engine.ImageReading
         public Property DifferentSizeCollision_Creates_SeparateFidelityEntry()
         {
             // Generate pairs: first file at offset O with size S1, second file at same offset O
-            // with SMALLER size S2 (S2 < S1) — only smaller-size entries create collisions
+            // with SMALLER size S2 (S2 < S1) - only smaller-size entries create collisions
             Gen<(long Offset, long Size1, long Size2)> collisionPairGen =
                 from offset in Gen.Choose(1, 10000).Select(o => (long)o * 0x800)
                 from size1 in Gen.Choose(2, 5000).Select(s => (long)s * 0x800)
@@ -151,7 +151,7 @@ namespace NKit.Tests.Engine.ImageReading
                 ctx.AddFile(root, "file0.bin", FsType.Iso9660,
                     data.Offset, data.FirstSize, FsItemType.File);
 
-                // Insert smaller files — each should create a collision
+                // Insert smaller files - each should create a collision
                 for (int i = 0; i < data.SmallerSizes.Count; i++)
                 {
                     ctx.AddFile(root, $"file{i + 1}.bin", FsType.Iso9660,

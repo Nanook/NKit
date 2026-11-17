@@ -11,7 +11,7 @@ namespace NKit.Tests
     /// known container mount points so the same tests can run without copying files.
     ///
     /// Environment variables (set by build/test.sh):
-    ///   NKIT_FILES_CONTAINER_PATH  — root mount for C:\Temp\NKDS (default: /NKDS)
+    ///   NKIT_FILES_CONTAINER_PATH  - root mount for C:\Temp\NKDS (default: /NKDS)
     /// </summary>
     public static class TestPaths
     {

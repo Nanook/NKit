@@ -22,7 +22,7 @@ namespace NKitDataStore.Tests
     public class NonInterferencePropertyTests
     {
         /// <summary>
-        /// All AreaType values that are NOT Audio — trimming must never apply to these.
+        /// All AreaType values that are NOT Audio - trimming must never apply to these.
         /// </summary>
         private static readonly AreaType[] NonAudioAreaTypes = new[]
         {
@@ -37,7 +37,7 @@ namespace NKitDataStore.Tests
         };
 
         /// <summary>
-        /// IndexFileType values that are NOT CUE or GDI — trimming must never apply for these.
+        /// IndexFileType values that are NOT CUE or GDI - trimming must never apply for these.
         /// </summary>
         private static readonly IndexFileType[] NonCueGdiFormats = new[]
         {
@@ -61,7 +61,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.3**
         ///
-        /// Property 4: Non-interference — Non-audio areas never trigger trimming.
+        /// Property 4: Non-interference - Non-audio areas never trigger trimming.
         ///
         /// For any area type other than AreaType.Audio and any IndexFileType,
         /// the trimming guard condition is never satisfied.
@@ -72,7 +72,7 @@ namespace NKitDataStore.Tests
             // Pick a non-audio area type
             AreaType areaType = NonAudioAreaTypes[areaTypeSeed.Get % NonAudioAreaTypes.Length];
 
-            // Pick any IndexFileType (including CUE and GDI — trimming still shouldn't apply)
+            // Pick any IndexFileType (including CUE and GDI - trimming still shouldn't apply)
             IndexFileType[] allFormats = (IndexFileType[])Enum.GetValues(typeof(IndexFileType));
             IndexFileType format = allFormats[formatSeed.Get % allFormats.Length];
 
@@ -84,7 +84,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.2, 7.3**
         ///
-        /// Property 4: Non-interference — Audio areas from non-CUE/non-GDI formats never trigger trimming.
+        /// Property 4: Non-interference - Audio areas from non-CUE/non-GDI formats never trigger trimming.
         ///
         /// For AreaType.Audio with any IndexFileType other than Cue or Gdi,
         /// the trimming guard condition is never satisfied.
@@ -103,7 +103,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 7.3, 7.4**
         ///
-        /// Property 4: Non-interference — Data stored verbatim when trimming is not applied.
+        /// Property 4: Non-interference - Data stored verbatim when trimming is not applied.
         ///
         /// For any arbitrary data buffer and any non-trimming configuration (non-audio area type
         /// or non-CUE/GDI format), the output data is byte-identical to the input.
@@ -149,7 +149,7 @@ namespace NKitDataStore.Tests
             int writeDataOffset = 0;
             int writeLength = arbitraryData.Length;
 
-            // Simulate reading back the stored data — it should be identical to input
+            // Simulate reading back the stored data - it should be identical to input
             byte[] outputData = new byte[writeLength];
             Array.Copy(arbitraryData, writeDataOffset, outputData, 0, writeLength);
 
@@ -166,7 +166,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.2, 7.3, 7.4**
         ///
-        /// Property 4: Non-interference — No TrimOffset metadata stored for non-trimming paths.
+        /// Property 4: Non-interference - No TrimOffset metadata stored for non-trimming paths.
         ///
         /// For any non-trimming configuration, the LeadingZeroScanner is never invoked
         /// and no TrimOffset metadata is stored. This models the fact that the code path
@@ -225,7 +225,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.1, 7.4**
         ///
-        /// Property 4: Non-interference — Even data with leading zeros is stored verbatim
+        /// Property 4: Non-interference - Even data with leading zeros is stored verbatim
         /// when the area type is not Audio.
         ///
         /// For any non-audio area type, even if the data starts with leading zeros that
@@ -274,7 +274,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 7.2, 7.4**
         ///
-        /// Property 4: Non-interference — Audio data with leading zeros from non-CUE/GDI
+        /// Property 4: Non-interference - Audio data with leading zeros from non-CUE/GDI
         /// format is stored verbatim without trimming.
         ///
         /// For AreaType.Audio from a non-CUE/non-GDI format, even if the data has significant

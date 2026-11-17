@@ -241,7 +241,7 @@ namespace NKitDataStore.Tests
             Assert.False(images[0].Removed); // Folder format
             Assert.False(images[1].Removed); // App format
             Assert.False(images[2].Removed); // Iso format
-            Assert.True(images[3].Removed);  // TmdAppFolder — deleted
+            Assert.True(images[3].Removed);  // TmdAppFolder - deleted
         }
 
         #endregion

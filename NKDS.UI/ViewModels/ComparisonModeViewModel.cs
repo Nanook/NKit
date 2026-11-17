@@ -369,7 +369,7 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
         return _imageList.FilteredImages.Select(row => row.Image).ToList();
     }
 
-    // Command Execute stubs — actual logic will be implemented in tasks 7.3-7.6
+    // Command Execute stubs - actual logic will be implemented in tasks 7.3-7.6
 
     private async Task ExecuteEnterComparisonModeAsync()
     {
@@ -475,7 +475,7 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
 
     private async Task ExecuteExportSimilarityGroupsAsync()
     {
-        // Step 1: Show save file dialog — if user cancels, return
+        // Step 1: Show save file dialog - if user cancels, return
         string? filePath = await ShowSaveFileDialog.Handle(".yaml");
         if (filePath is null)
             return;
@@ -506,8 +506,8 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
             // Step 4: Handle results
             if (groups.Count == 0)
             {
-                // All images are singletons — show informational message, do not write file
-                StatusText = "No similarity groups detected — all images are unique.";
+                // All images are singletons - show informational message, do not write file
+                StatusText = "No similarity groups detected - all images are unique.";
             }
             else
             {
@@ -518,7 +518,7 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
         }
         catch (OperationCanceledException)
         {
-            // Cancelled — return silently
+            // Cancelled - return silently
         }
         catch (IOException ex)
         {
@@ -647,7 +647,7 @@ public class ComparisonModeViewModel : ViewModelBase, IDisposable
                     .ToList();
             }, ct);
 
-            // 8. Update comparison panel with results — use first selected image as reference display
+            // 8. Update comparison panel with results - use first selected image as reference display
             _comparisonPanel.SetComparisonModeResults(selectedInCache.First(), results);
         }
         catch (OperationCanceledException)

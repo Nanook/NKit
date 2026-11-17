@@ -264,7 +264,7 @@ namespace NKit.Tests.Steps
             Assert.Equal(1u << 30, ReadU32BE(enc, 4) & (3u << 30)); // NonJunk
         }
 
-        // ── Test 10: JunkBlockSize boundary — exact junk across boundary ───────────────
+        // ── Test 10: JunkBlockSize boundary - exact junk across boundary ───────────────
 
         [Fact]
         public void JunkCacheBoundary_BlockStraddle_ClassifiedCorrectly()
@@ -280,7 +280,7 @@ namespace NKit.Tests.Steps
             Assert.Equal(0u, ReadU32BE(enc, 0) & 3u); // AllJunk
         }
 
-        // ── Test 11: JunkBlockSize boundary — leading zeros then real data ────────────
+        // ── Test 11: JunkBlockSize boundary - leading zeros then real data ────────────
 
         [Fact]
         public void JunkCacheBoundary_LeadingZerosThenRealData_IsNonJunk()
@@ -335,7 +335,7 @@ namespace NKit.Tests.Steps
 
             byte[] resultA = Encode(blocks, discStart, gapLength);
 
-            // Encode the same gap feeding blocks in two batches — result must be identical.
+            // Encode the same gap feeding blocks in two batches - result must be identical.
             System.Collections.Generic.List<byte> outputB = new System.Collections.Generic.List<byte>();
             void write(byte[] buf, int off, int cnt) { for (int i = off; i < off + cnt; i++) outputB.Add(buf[i]); }
             GcNkitGapEncoder enc = new GcNkitGapEncoder();
@@ -350,7 +350,7 @@ namespace NKit.Tests.Steps
             Assert.Equal(resultA, resultB);
         }
 
-        // ── Test 14: Large AllJunk gap — 4 bytes output ────────────────────────────────
+        // ── Test 14: Large AllJunk gap - 4 bytes output ────────────────────────────────
 
         [Fact]
         public void LargeAllJunkGap_ProducesExactly4BytesOutput()

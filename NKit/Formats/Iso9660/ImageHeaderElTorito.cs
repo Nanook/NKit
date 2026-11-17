@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nanook.NKit.Iso.Iso9660
 {
@@ -19,8 +19,8 @@ namespace Nanook.NKit.Iso.Iso9660
             // Section Header indicators (El Torito 1.0 / EDK2 ElTorito.h): 0x90 = header with more
             // headers to follow, 0x91 = final header. This walk handles the multi-header chain and
             // returns incomplete only if the last header seen was 0x90 (promised a header that never
-            // arrived) — i.e. it already matches the spec. (Only lightly exercised against multi-section
-            // catalogs, e.g. UEFI+BIOS hybrid ISOs — verified by inspection, sample confirmation pending.)
+            // arrived) - i.e. it already matches the spec. (Only lightly exercised against multi-section
+            // catalogs, e.g. UEFI+BIOS hybrid ISOs - verified by inspection, sample confirmation pending.)
             fileSizeOut = size;
 
             int sz = 0x60 + (data.ReadUInt16L(offset + 0x42) * 0x20); //0x20 for Validation Entry + 0x20 for Initial/Default Entry + 0x20 for Section Header Entry

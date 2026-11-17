@@ -80,7 +80,7 @@ public class ImageRowViewModel : ViewModelBase
     public string Crc32Hex => Image.Crc32 == 0 ? string.Empty : Image.Crc32.ToString("X8");
     public string XxHash64Hex => Image.XxHash64 == 0 ? string.Empty : Image.XxHash64.ToString("X16");
 
-    // Stats properties (nullable — null means not yet computed)
+    // Stats properties (nullable - null means not yet computed)
     public long? UniqueRawSize
     {
         get => _uniqueRawSize;

@@ -18,7 +18,7 @@ public class YamlExportCommandHandler : ICommandHandler
             try
             {
                 // 1. Show save file dialog
-                string filePath = await ctx.ShowSaveFilePicker.Handle(RxVoid.Default);
+                string? filePath = await ctx.ShowSaveFilePicker.Handle(RxVoid.Default);
                 if (string.IsNullOrEmpty(filePath)) return RxVoid.Default;
 
                 // 2. Snapshot current state on UI thread

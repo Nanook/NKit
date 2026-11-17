@@ -80,7 +80,7 @@ public partial class DatVerificationWindow : Window
                         suggestedStart = await StorageProvider.TryGetFolderFromPathAsync(dir);
                 }
             }
-            catch { /* Ignore — open picker without suggested location */ }
+            catch { /* Ignore - open picker without suggested location */ }
 
             IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {

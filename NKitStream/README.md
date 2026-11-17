@@ -1,10 +1,10 @@
 # NKitStream
 
-A block-based buffering layer for sequential data sources. `BlockBufferedStream` wraps any forward-only source and adds **peek**, **seek**, **rewind** and **explicit memory release** — all without requiring the source itself to support seeking.
+A block-based buffering layer for sequential data sources. `BlockBufferedStream` wraps any forward-only source and adds **peek**, **seek**, **rewind** and **explicit memory release** - all without requiring the source itself to support seeking.
 
 ## Design
 
-Reads pass straight through to the source by default with **zero overhead** — no blocks allocated, no copies made. When you know a rewind is coming, call `BeginBuffering()` to start caching reads into fixed-size blocks rented from `ArrayPool<byte>.Shared`. Call `EndBuffering()` when done; cached data ahead of the read cursor drains automatically, then the stream returns to pass-through mode.
+Reads pass straight through to the source by default with **zero overhead** - no blocks allocated, no copies made. When you know a rewind is coming, call `BeginBuffering()` to start caching reads into fixed-size blocks rented from `ArrayPool<byte>.Shared`. Call `EndBuffering()` when done; cached data ahead of the read cursor drains automatically, then the stream returns to pass-through mode.
 
 Three cursors track the stream state:
 
@@ -14,7 +14,7 @@ Three cursors track the stream state:
 | **Floor**    | `Floor`            | Earliest retained offset. Seeking before this throws.          |
 | **Buffered** | `Buffered`         | One past the highest byte fetched from the source into cache.  |
 
-`Floor` is the single safety gate — there are no separate mode checks on `Seek` or `Peek`. In pass-through mode `Floor` tracks `Position`, so backward seeks naturally fail. In buffered mode `Floor` stays where you last released, allowing full backward access to cached data.
+`Floor` is the single safety gate - there are no separate mode checks on `Seek` or `Peek`. In pass-through mode `Floor` tracks `Position`, so backward seeks naturally fail. In buffered mode `Floor` stays where you last released, allowing full backward access to cached data.
 
 ## Getting started
 
@@ -82,13 +82,13 @@ using var stream = new MyStream(source);
 
 var buf = new byte[4096];
 int n = await stream.ReadAsync(buf, ct);
-// Data came straight from the source — zero overhead.
+// Data came straight from the source - zero overhead.
 
 // Synchronous equivalent (requires ReadSource override):
 int n2 = stream.Read(buf);
 ```
 
-In pass-through mode `Floor` advances with `Position` after every read, so backward seeks are not possible. This is by design — no data is cached, so there is nothing to re-read.
+In pass-through mode `Floor` advances with `Position` after every read, so backward seeks are not possible. This is by design - no data is cached, so there is nothing to re-read.
 
 ### Peek
 
@@ -97,7 +97,7 @@ Read bytes at the current position without advancing it. `Position` is never cha
 ```csharp
 var header = new byte[4];
 int n = await stream.PeekAsync(header, ct);
-// stream.Position is unchanged — the same bytes come back on the next read.
+// stream.Position is unchanged - the same bytes come back on the next read.
 
 // Synchronous equivalent:
 int n2 = stream.Peek(header);
@@ -107,7 +107,7 @@ int n2 = stream.Peek(header);
 
 **Pass-through mode:** Because the source is forward-only, peeked data must be cached somewhere. `PeekAsync` temporarily allocates blocks to hold the data. Those blocks are auto-released on the very next `ReadAsync` call (which reads from the cache and then frees it), so the stream returns to zero-block pass-through immediately.
 
-**Buffered mode:** The peeked data lives in the normal block cache and follows the same lifetime as any other buffered read — it stays until `Release`, `EndBuffering`, or `Dispose`.
+**Buffered mode:** The peeked data lives in the normal block cache and follows the same lifetime as any other buffered read - it stays until `Release`, `EndBuffering`, or `Dispose`.
 
 ### Buffered mode with rewind
 
@@ -118,7 +118,7 @@ stream.BeginBuffering();
 
 long mark = stream.Mark();       // snapshot Position
 await stream.ReadAsync(buf, ct); // cached in blocks
-stream.Rewind(mark);             // restore Position — next read serves cached data
+stream.Rewind(mark);             // restore Position - next read serves cached data
 await stream.ReadAsync(buf, ct); // same bytes, no source hit
 
 stream.EndBuffering();
@@ -136,7 +136,7 @@ stream.Seek(1024);
 // If the data is cached it comes from blocks; otherwise from the source.
 ```
 
-Forward seeks beyond `Buffered` are allowed — data between the old `Buffered` and the seek target is fetched from the source on the next read. Backward seeks are allowed as long as the target is at or above `Floor`.
+Forward seeks beyond `Buffered` are allowed - data between the old `Buffered` and the seek target is fetched from the source on the next read. Backward seeks are allowed as long as the target is at or above `Floor`.
 
 ### Explicit memory release
 
@@ -156,7 +156,7 @@ Calling `Release` with the same or lower offset a second time is a no-op.
 
 ### Seek-ahead-and-rewind pattern
 
-A common pattern for format parsers — peek at data further in the stream, then rewind and continue sequentially:
+A common pattern for format parsers - peek at data further in the stream, then rewind and continue sequentially:
 
 ```csharp
 stream.BeginBuffering();
@@ -171,7 +171,7 @@ var preview = new byte[20];
 await stream.ReadAsync(preview, ct); // read at 200
 
 stream.Rewind(mark);                 // back to 50
-// Continue sequential reading — cached data serves first, then source resumes.
+// Continue sequential reading - cached data serves first, then source resumes.
 ```
 
 ### Multiple buffering cycles
@@ -212,24 +212,24 @@ The sync (`Read`/`Peek`) and async (`ReadAsync`/`PeekAsync`) methods behave iden
 | Source is fully consumed | `0` | `0` | `true` |
 | Empty buffer passed | `0` (no source call made) | `0` | Unchanged |
 
-Both `Read` and `ReadAsync` may return fewer bytes than `buffer.Length` even when the source is not exhausted — callers should always loop until 0 is returned or the desired count is reached.
+Both `Read` and `ReadAsync` may return fewer bytes than `buffer.Length` even when the source is not exhausted - callers should always loop until 0 is returned or the desired count is reached.
 
 ### Position advancement
 
 | Method | Advances `Position`? |
 |--------|----------------------|
-| `ReadAsync` / `Read` | Yes — by the number of bytes returned |
-| `PeekAsync` / `Peek` | **No** — never changes `Position` |
-| `Seek` | Yes — sets `Position` to the given offset |
-| `Rewind` | Yes — equivalent to `Seek(mark)` |
-| `Mark` | No — returns current `Position` as a `long` |
+| `ReadAsync` / `Read` | Yes - by the number of bytes returned |
+| `PeekAsync` / `Peek` | **No** - never changes `Position` |
+| `Seek` | Yes - sets `Position` to the given offset |
+| `Rewind` | Yes - equivalent to `Seek(mark)` |
+| `Mark` | No - returns current `Position` as a `long` |
 
 ### Floor tracking (when can I seek/rewind backward?)
 
 | Mode | `Floor` behaviour | Backward seek possible? |
 |------|-------------------|-------------------------|
-| **Pass-through** (default) | Auto-advances to `Position` after every `ReadAsync` / `Read` | **No** — `Floor == Position`, so any backward `Seek` throws `InvalidOperationException` |
-| **Buffered** | Stays where last set by `Release` (or 0 if never released) | **Yes** — as long as the target is ≥ `Floor` |
+| **Pass-through** (default) | Auto-advances to `Position` after every `ReadAsync` / `Read` | **No** - `Floor == Position`, so any backward `Seek` throws `InvalidOperationException` |
+| **Buffered** | Stays where last set by `Release` (or 0 if never released) | **Yes** - as long as the target is ≥ `Floor` |
 | **Draining** (after `EndBuffering` with cached blocks ahead) | Auto-advances to `Position` after each `ReadAsync` / `Read` | Only within the not-yet-drained cached range (shrinks on each read) |
 
 ### When is memory freed?
@@ -237,11 +237,11 @@ Both `Read` and `ReadAsync` may return fewer bytes than `buffer.Length` even whe
 | Trigger | What happens | Automatic or manual? |
 |---------|--------------|----------------------|
 | `ReadAsync` / `Read` in **pass-through** mode | `Floor` advances to `Position`; blocks behind it are returned to `ArrayPool` | **Automatic** |
-| `ReadAsync` / `Read` **draining** cached blocks after `EndBuffering` | Same — blocks are freed as `Position` passes them | **Automatic** |
+| `ReadAsync` / `Read` **draining** cached blocks after `EndBuffering` | Same - blocks are freed as `Position` passes them | **Automatic** |
 | `PeekAsync` / `Peek` in **pass-through** mode | Blocks are allocated to hold peeked data; freed automatically on the *next* read | **Automatic** (deferred to next read) |
-| Any read/peek in **buffered** mode | Blocks are **retained** — nothing is freed | N/A — must release manually |
+| Any read/peek in **buffered** mode | Blocks are **retained** - nothing is freed | N/A - must release manually |
 | `Release(offset)` | Blocks entirely before `offset` freed; `Floor` set to `offset` | **Manual** |
-| `EndBuffering()` | Calls `Release(Position)` — frees blocks behind current position | **Automatic** (one-time on call) |
+| `EndBuffering()` | Calls `Release(Position)` - frees blocks behind current position | **Automatic** (one-time on call) |
 | `Dispose()` | All remaining blocks returned to `ArrayPool` | **Manual** (or `using`) |
 
 ### Error conditions
@@ -260,11 +260,11 @@ Both `Read` and `ReadAsync` may return fewer bytes than `buffer.Length` even whe
 
 ### Block alignment
 
-`Buffered` may overshoot the number of bytes you requested because `ensureBufferedAsync` fills in block-sized chunks. For example, reading 100 bytes with a 64-byte block size buffers up to offset 128 (two full blocks). This is an implementation detail — `ReadAsync` and `PeekAsync` still return only the bytes you asked for (or fewer).
+`Buffered` may overshoot the number of bytes you requested because `ensureBufferedAsync` fills in block-sized chunks. For example, reading 100 bytes with a 64-byte block size buffers up to offset 128 (two full blocks). This is an implementation detail - `ReadAsync` and `PeekAsync` still return only the bytes you asked for (or fewer).
 
 ### Seek beyond `Buffered`
 
-`Seek` only moves the cursor — it does **not** fetch data from the source. The gap between the old `Buffered` and the new `Position` is filled lazily on the next `ReadAsync` or `PeekAsync`. Any source data between the old `Buffered` and the seek target that was never read is **skipped** — it is consumed from the source (to advance the source's internal position) but the bytes are stored in blocks.
+`Seek` only moves the cursor - it does **not** fetch data from the source. The gap between the old `Buffered` and the new `Position` is filled lazily on the next `ReadAsync` or `PeekAsync`. Any source data between the old `Buffered` and the seek target that was never read is **skipped** - it is consumed from the source (to advance the source's internal position) but the bytes are stored in blocks.
 
 ## API reference
 
@@ -307,16 +307,16 @@ Both `Read` and `ReadAsync` may return fewer bytes than `buffer.Length` even whe
 protected BlockBufferedStream(int blockSize = 65536)
 ```
 
-`blockSize` must be a positive integer. It controls the granularity of `ArrayPool<byte>` rentals. Every block is exactly this size — blocks do not grow. The default of 65536 (64 KB) is a good general-purpose choice.
+`blockSize` must be a positive integer. It controls the granularity of `ArrayPool<byte>` rentals. Every block is exactly this size - blocks do not grow. The default of 65536 (64 KB) is a good general-purpose choice.
 
 ## Memory management
 
 Blocks are rented from `ArrayPool<byte>.Shared` and returned when:
 
-- `Release(offset)` is called — blocks whose data is entirely before `offset` are freed. **Manual.**
-- `EndBuffering()` is called — immediately frees blocks behind `Position`. Blocks *ahead* of `Position` (from a prior seek-ahead or over-read) are retained and drained automatically by subsequent `ReadAsync` calls. **One-time automatic on call, then auto-drain.**
-- `Dispose()` is called — all blocks returned regardless of cursors. **Manual** (use `using`).
-- Every `ReadAsync` in **pass-through** mode — auto-releases blocks behind `Position`, ensuring the stream transitions cleanly back to zero-block pass-through once cached data is fully consumed. **Automatic.**
+- `Release(offset)` is called - blocks whose data is entirely before `offset` are freed. **Manual.**
+- `EndBuffering()` is called - immediately frees blocks behind `Position`. Blocks *ahead* of `Position` (from a prior seek-ahead or over-read) are retained and drained automatically by subsequent `ReadAsync` calls. **One-time automatic on call, then auto-drain.**
+- `Dispose()` is called - all blocks returned regardless of cursors. **Manual** (use `using`).
+- Every `ReadAsync` in **pass-through** mode - auto-releases blocks behind `Position`, ensuring the stream transitions cleanly back to zero-block pass-through once cached data is fully consumed. **Automatic.**
 
 ### Lifecycle example
 

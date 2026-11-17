@@ -78,7 +78,7 @@ public class StatsCalculationViewModel : ViewModelBase, IDisposable
 
     /// <summary>
     /// Total summary: sum of all image sizes vs sum of shard file sizes on disk.
-    /// Fast computation — no DB queries, just filesystem + already-loaded data.
+    /// Fast computation - no DB queries, just filesystem + already-loaded data.
     /// Shown always when sessions are open.
     /// </summary>
     public string TotalSummaryText
@@ -390,7 +390,7 @@ public class StatsCalculationViewModel : ViewModelBase, IDisposable
 
     /// <summary>
     /// Selected summary: computed from per-image stats after Calculate Stats completes.
-    /// Uses the deduplicated stored size — unique blocks across filtered images per set.
+    /// Uses the deduplicated stored size - unique blocks across filtered images per set.
     /// </summary>
     private async Task ComputeSelectedSummaryAsync(CancellationToken ct)
     {

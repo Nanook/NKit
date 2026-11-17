@@ -12,14 +12,14 @@ namespace Nanook.NKit.Nintendo.WiiU
     ///
     /// Hash-tree structure (per 0x10000-byte chunk):
     ///   [0x000..0x140) H0: 16 × SHA-1 of each 0xFC0-byte sub-block of this chunk's data
-    ///   [0x140..0x280) H1: 16 × SHA-1 of H0 tables — one per chunk in the H1 group (16 chunks)
-    ///   [0x280..0x3C0) H2: 16 × SHA-1 of H1 tables — one per H1 group (16 groups = 256 chunks)
+    ///   [0x140..0x280) H1: 16 × SHA-1 of H0 tables - one per chunk in the H1 group (16 chunks)
+    ///   [0x280..0x3C0) H2: 16 × SHA-1 of H1 tables - one per H1 group (16 groups = 256 chunks)
     ///   [0x3C0..0x400) reserved zeros
     ///   [0x400..0x10000) 0xFC00 bytes plaintext data
     ///
     ///   H1 group  = 16 consecutive chunks; all share the same H1 and H2 tables.
     ///   H2 group  = 16 H1 groups = 256 chunks; all share the same H2 table.
-    ///   H3 entry  = SHA-1(H2 table of one H2 group) — H3Count = ceil(chunks / 4096)
+    ///   H3 entry  = SHA-1(H2 table of one H2 group) - H3Count = ceil(chunks / 4096)
     ///   H3 group  = 16 H2 groups = 256 H1 groups = 4096 chunks (H2Full = H0Count³).
     ///
     /// Unused slots in partial groups are filled with SHA-1 of zero-data so the full
@@ -87,7 +87,7 @@ namespace Nanook.NKit.Nintendo.WiiU
             //   Cache the block's dec buffer
             //
             // After H2Count blocks (or at content end):
-            //   H2[i] = SHA-1(cachedBlock[i], H1Offset, H1Len)  — one per cached block
+            //   H2[i] = SHA-1(cachedBlock[i], H1Offset, H1Len)  - one per cached block
             //   Broadcast full H2 table into every sector of every cached block
             //   H3 entry = SHA-1(H2 table)
             //   Per cached block: Populate(rebuild=false) + Encrypt() → output
@@ -106,7 +106,7 @@ namespace Nanook.NKit.Nintendo.WiiU
             WiiUSecurity  security  = new WiiUSecurity(header);
             SiData        siData    = new SiData() { KeyTitle = _siData.KeyTitle };
 
-            // enc scratch buffer — same size as one H2 block, reused per Encrypt() call
+            // enc scratch buffer - same size as one H2 block, reused per Encrypt() call
             byte[] enc = new byte[h2BlockSize];
 
             // H2 set: up to H2Count cached dec blocks

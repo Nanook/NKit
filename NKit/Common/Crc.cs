@@ -187,7 +187,7 @@ namespace Nanook.NKit
             // O(log length) via the CRC "combine" zero-shift. Combine(0,0,N) shifts the empty-data
             // CRC through N zero bytes; the outer complement yields the finalised CRC32 of N zero
             // bytes (verified against byte-computed values, incl. the 0x200000 null block 8D89877E).
-            // This avoids O(N) byte processing — the brute-force calls this for large padding
+            // This avoids O(N) byte processing - the brute-force calls this for large padding
             // regions across many candidate updates.
             return ~Combine(0u, 0u, length);
         }

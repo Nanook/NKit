@@ -3,14 +3,14 @@ using NKDS.DatVerification;
 namespace NKDS.Tests;
 
 /// <summary>
-/// Unit tests for DatVerificationService — covers the three bugs fixed in this session:
+/// Unit tests for DatVerificationService - covers the three bugs fixed in this session:
 ///
 /// Bug 1: Dat entry names must NOT be processed with Path.GetFileNameWithoutExtension.
 ///        Titles like "New Super Mario Bros. Wii" or "FreeLoader for GameCube (Europe) (Unl) (v1.06B) (2003)"
 ///        contain dots as part of the name, not as extension separators. The old code would truncate them.
 ///
 /// Bug 2: When renaming a badly-named image to its dat name, if the target name already exists
-///        with the SAME CRC the image is a redundant duplicate — it should be removed, not blocked.
+///        with the SAME CRC the image is a redundant duplicate - it should be removed, not blocked.
 ///        (The ExecuteRename / conflict-resolution path; tested here via Verify() result classification.)
 ///
 /// Bug 3: Verify correctly identifies multiple images with the same CRC as duplicates,
@@ -21,7 +21,7 @@ public class DatVerificationServiceTests
     private readonly DatVerificationService _svc = new DatVerificationService();
 
     // -------------------------------------------------------------------------
-    // Bug 1 — names with dots must not be truncated
+    // Bug 1 - names with dots must not be truncated
     // -------------------------------------------------------------------------
 
     [Theory]
@@ -31,7 +31,7 @@ public class DatVerificationServiceTests
     [InlineData("Super Mario Bros. 3 (USA)")]
     public void DatEntryNameStem_EqualsDatEntryName_NoTruncation(string datEntryName)
     {
-        // DatEntryInfo.NameStem must equal the full Name — no dot-based truncation.
+        // DatEntryInfo.NameStem must equal the full Name - no dot-based truncation.
         // Simulate what LoadDat produces for a single entry.
         DatEntryInfo entry = BuildDatEntry(datEntryName, 0xABCDEF01);
         Assert.Equal(datEntryName, entry.NameStem);
@@ -73,7 +73,7 @@ public class DatVerificationServiceTests
     [Fact]
     public void Verify_FreeLoaderFullName_NotTruncated()
     {
-        // The exact name from the bug report — must not be cut at "(v1." → "v1".
+        // The exact name from the bug report - must not be cut at "(v1." → "v1".
         string name = "FreeLoader for GameCube (Europe) (Unl) (v1.06B) (2003)";
         DatEntryInfo entry = BuildDatEntry(name, 0x40647E85);
         ImageInfo image = BuildImageInfo(1, name, 0x40647E85);
@@ -85,14 +85,14 @@ public class DatVerificationServiceTests
     }
 
     // -------------------------------------------------------------------------
-    // Bug 2 — same-CRC duplicate detection
+    // Bug 2 - same-CRC duplicate detection
     // -------------------------------------------------------------------------
 
     [Fact]
     public void Verify_TwoCopiesOfSameImage_BothClassified()
     {
         // Add image, rename to A, add same image again → two entries with same CRC but different names.
-        // Both should appear in Verify results — one Correct (named A matching the dat),
+        // Both should appear in Verify results - one Correct (named A matching the dat),
         // one BadlyNamed (still has the original name).
         string datName = "Image A";
         string originalName = "Image 1";
@@ -137,7 +137,7 @@ public class DatVerificationServiceTests
     }
 
     // -------------------------------------------------------------------------
-    // Bug 3 — each entry has its own ID so delete-by-ID targets the right one
+    // Bug 3 - each entry has its own ID so delete-by-ID targets the right one
     // -------------------------------------------------------------------------
 
     [Fact]
@@ -185,7 +185,7 @@ public class DatVerificationServiceTests
     }
 
     // -------------------------------------------------------------------------
-    // Regression — existing correct-name matching still works
+    // Regression - existing correct-name matching still works
     // -------------------------------------------------------------------------
 
     [Fact]

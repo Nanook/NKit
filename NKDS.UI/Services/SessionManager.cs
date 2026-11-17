@@ -30,7 +30,7 @@ public class SessionManager : ReactiveObject, IDisposable
     /// disposed. Wired by the owner (MainWindowViewModel) to unmount any active virtual-filesystem
     /// mounts first. A mount holds its OWN DataStore open on a background host thread; disposing the
     /// session (and the process-wide caches its readers share) while that host is still serving reads
-    /// crashes. Running this first — and it blocks until each mount's host thread has fully exited —
+    /// crashes. Running this first - and it blocks until each mount's host thread has fully exited -
     /// guarantees the correct teardown ORDER for EVERY close path: explicit Close, the implicit close
     /// when opening a new session, and WithExclusiveAccessAsync. Defaults to a no-op so SessionManager
     /// has no hard dependency on the mount layer and stays unit-testable.
@@ -164,7 +164,7 @@ public class SessionManager : ReactiveObject, IDisposable
             }
             else
             {
-                // Open failed (e.g., no sets in folder) — still show the path
+                // Open failed (e.g., no sets in folder) - still show the path
                 _currentSession = new SessionInfo("", path, null, OpenState.Directory, path);
                 CurrentState = OpenState.Directory;
                 OpenStateText = path;
@@ -262,7 +262,7 @@ public class SessionManager : ReactiveObject, IDisposable
         }
         catch
         {
-            // A mount teardown failure must never block the session close — the DataStore still needs
+            // A mount teardown failure must never block the session close - the DataStore still needs
             // to be released. The mount layer logs its own errors.
         }
 

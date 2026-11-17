@@ -36,7 +36,7 @@ namespace Nanook.NKit
         /// <summary>
         /// Optional per-section callback for EMBEDDING consumers. When set, every processed section
         /// block is delivered here IN IMAGE ORDER as a restricted, read-only <see cref="IReadOnlySection"/>
-        /// view — letting a consumer read the processed data (extract, convert, stream) without NKit
+        /// view - letting a consumer read the processed data (extract, convert, stream) without NKit
         /// writing to disk. The callback does not replace the configured task's own output; it is an
         /// additional observation hook over the same ordered block feed the output steps consume.
         /// See NKitVault/10 Refactor/Public API and Embedding Model.md.
@@ -82,7 +82,7 @@ namespace Nanook.NKit
             SourceFile sourceFile = _taskContext.Steps[0].SourceFile;
 
             // Synthetic folder sources are handled differently by task type and group type:
-            // - TmdAppFolder / WuaFolder: DataStore build operations — Dedupe only.
+            // - TmdAppFolder / WuaFolder: DataStore build operations - Dedupe only.
             //   For all other task types, skip them silently.
             // - LoadiineFolder / CueFolder / GdiFolder: for Dedupe → DataStore write.
             //   For Convert/Extract/Scan → fall through to the normal pipeline.
@@ -94,7 +94,7 @@ namespace Nanook.NKit
 
                 if (isDataStoreOnly && _taskContext.AppSettings.TaskType != TaskType.Dedupe)
                 {
-                    // TmdAppFolder/WuaFolder outside Dedupe — skip silently
+                    // TmdAppFolder/WuaFolder outside Dedupe - skip silently
                     NKitTask skipTask = new NKitTask(_taskContext);
                     skipTask.CompleteSkipped(SystemType.WiiU);
                     return skipTask.Results;
@@ -138,7 +138,7 @@ namespace Nanook.NKit
 
                 //open the src image to get the initial details
                 input = new NKitInput(_taskContext.Steps[0]); //reads source format and marks missing/removed blocks of data
-                // Synthetic folder sources (LoadiineFolder) have no image files on disk —
+                // Synthetic folder sources (LoadiineFolder) have no image files on disk -
                 // FolderFilesAsIso.Construct() stores the stream but never reads from it,
                 // so pass an empty stream rather than calling OpenFileStream() which requires ImageFiles.
                 readStream = sourceFile.IsSyntheticFolder
@@ -412,7 +412,7 @@ namespace Nanook.NKit
             _taskContext.Initialise(group.SystemType);
 
             // Resolve datastore path from settings.
-            // For WuaFolder, group.SourceFolder is the WUA file path — use its parent dir
+            // For WuaFolder, group.SourceFolder is the WUA file path - use its parent dir
             // as the default fallback.
             string groupDefaultPath = (group.GroupType == FolderGroupType.WuaFolder && File.Exists(group.SourceFolder))
                 ? Path.GetDirectoryName(group.SourceFolder) ?? group.SourceFolder

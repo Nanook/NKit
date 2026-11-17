@@ -208,7 +208,7 @@ namespace NKitDataStore.Tests
         /// **Validates: Requirements 11.3**
         ///
         /// For any filename and for any case variation of that filename, the FileRouter.Match()
-        /// function SHALL produce the same routing result — i.e., if a filename matches a game
+        /// function SHALL produce the same routing result - i.e., if a filename matches a game
         /// entry, then any case variation of that filename also matches the same game entry.
         ///
         /// Strategy: Create game entries with simple prefix patterns, generate a filename that

@@ -26,7 +26,7 @@ namespace Nanook.NKit.Vfs
                     if (!string.IsNullOrEmpty(mountPoint) && !System.IO.Directory.Exists(mountPoint))
                         System.IO.Directory.CreateDirectory(mountPoint);
                 }
-                catch { /* best-effort — don't crash if we can't recreate it */ }
+                catch { /* best-effort - don't crash if we can't recreate it */ }
             }
             catch { }
         }

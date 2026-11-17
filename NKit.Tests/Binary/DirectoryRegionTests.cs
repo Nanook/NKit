@@ -278,7 +278,7 @@ namespace NKit.Tests.NKDS.Binary
             string compactedPath = Path.Combine(_tempDir, "overflow_compact_test_compacted.nkds");
             int imageCount = 100; // Enough images with long names to exceed 4096 bytes compressed
 
-            // Step 1: Create a file that has overflowed (reuse the overflow scenario — add many images)
+            // Step 1: Create a file that has overflowed (reuse the overflow scenario - add many images)
             using (BinaryIndexFile file = BinaryIndexFile.Create(path, shardSize: 0, blockSize: 0x10000, maxOffsetBlocks: 336))
             {
                 for (int i = 1; i <= imageCount; i++)

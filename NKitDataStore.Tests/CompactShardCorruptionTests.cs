@@ -41,7 +41,7 @@ namespace NKitDataStore.Tests
         /// 
         /// Bug Condition: Image 1's blocks are at offset 0 in the shard. Image 2's blocks follow.
         /// When image 1 is removed, image 2's blocks don't need to move (they're already contiguous
-        /// after the removed blocks are gone — but the shard DOES need rewriting to remove the gap).
+        /// after the removed blocks are gone - but the shard DOES need rewriting to remove the gap).
         /// However, if the shard doesn't require compaction (e.g., blocks are already contiguous
         /// from the perspective of live data), `anyShardModified` stays false and block index
         /// pruning is skipped.
@@ -374,7 +374,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Verifies that an image's data can be fully read back and matches the expected data.
-        /// This is the "full verification" — block data integrity check.
+        /// This is the "full verification" - block data integrity check.
         /// </summary>
         private void VerifyImageData(DataStore store, string setName, long imageId, byte[] expectedData)
         {

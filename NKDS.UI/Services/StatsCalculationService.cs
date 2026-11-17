@@ -215,7 +215,7 @@ public class StatsCalculationService : IStatsCalculationService
 
                 if (setImages.Count == allSetImages.Count)
                 {
-                    // All images in set are included — use TotalPhysicalBlockStorage (fast, no per-image query)
+                    // All images in set are included - use TotalPhysicalBlockStorage (fast, no per-image query)
                     try
                     {
                         DataStoreStatistics? stats = session.DataStore.GetSetStatistics(setName, includePerImageStats: false);
@@ -226,7 +226,7 @@ public class StatsCalculationService : IStatsCalculationService
                 }
                 else
                 {
-                    // Filtered subset — need to get unique blocks for only these images
+                    // Filtered subset - need to get unique blocks for only these images
                     // Load block sizes for this set, then get unique blocks per filtered image
                     try
                     {
@@ -249,7 +249,7 @@ public class StatsCalculationService : IStatsCalculationService
                         // that belong to filtered images. But this is imprecise.
                         //
                         // Correct approach: sum TotalPhysicalBlockStorage (all blocks in set are shared
-                        // among all images anyway — the block table IS the deduplicated set).
+                        // among all images anyway - the block table IS the deduplicated set).
                         // If only a subset of images is filtered, the true deduplicated size
                         // is still bounded by TotalPhysicalBlockStorage.
                         //

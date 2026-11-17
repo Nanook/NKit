@@ -20,7 +20,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.5**
         ///
-        /// Property 7: Leading zeros are never stored as blocks — FindFirstNonZero returns correct position.
+        /// Property 7: Leading zeros are never stored as blocks - FindFirstNonZero returns correct position.
         ///
         /// For any byte array with leading zeros of length L > BlockSize followed by non-zero data,
         /// FindFirstNonZero returns L.
@@ -60,7 +60,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.5**
         ///
-        /// Property 7: Leading zeros are never stored as blocks — TrimOffset is positive when leading zeros exceed BlockSize.
+        /// Property 7: Leading zeros are never stored as blocks - TrimOffset is positive when leading zeros exceed BlockSize.
         ///
         /// For any byte array with leading zeros of length L > BlockSize,
         /// ComputeAlignedTrimOffset(L, BlockSize) returns a value T where T > 0.
@@ -85,7 +85,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.5**
         ///
-        /// Property 7: Leading zeros are never stored as blocks — TrimOffset never exceeds first non-zero position.
+        /// Property 7: Leading zeros are never stored as blocks - TrimOffset never exceeds first non-zero position.
         ///
         /// For any byte array with leading zeros of length L > BlockSize,
         /// ComputeAlignedTrimOffset(L, BlockSize) returns T where T &lt;= L.
@@ -111,7 +111,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.5**
         ///
-        /// Property 7: Leading zeros are never stored as blocks — All bytes before TrimOffset are zeros.
+        /// Property 7: Leading zeros are never stored as blocks - All bytes before TrimOffset are zeros.
         ///
         /// For any audio partition with leading zeros exceeding BlockSize followed by non-zero data,
         /// all bytes in the region [0, TrimOffset) are zero-valued. This confirms that no
@@ -162,7 +162,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 2.5**
         ///
-        /// Property 7: Leading zeros are never stored as blocks — No block boundary before TrimOffset contains non-zero data.
+        /// Property 7: Leading zeros are never stored as blocks - No block boundary before TrimOffset contains non-zero data.
         ///
         /// For any audio partition with leading zeros exceeding BlockSize, verify that
         /// every BlockSize-aligned chunk before TrimOffset is entirely zero-valued.

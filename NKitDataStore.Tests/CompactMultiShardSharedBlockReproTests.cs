@@ -95,7 +95,7 @@ namespace NKitDataStore.Tests
 
             LogShards(setName);
 
-            // After compact: EVERY image must still verify — especially the later-added ones.
+            // After compact: EVERY image must still verify - especially the later-added ones.
             using (DataStore store = new DataStore(_tempDir))
                 foreach ((long id, byte[] data) in images)
                     VerifyImageData(store, setName, id, data);
@@ -103,7 +103,7 @@ namespace NKitDataStore.Tests
 
         /// <summary>
         /// Same multi-shard cross-dedup build, but now remove a couple of EARLY images (creating
-        /// holes in early shards) before compacting — forcing real relocation of blocks that
+        /// holes in early shards) before compacting - forcing real relocation of blocks that
         /// later images reference cross-shard.
         /// </summary>
         [Fact]
@@ -130,7 +130,7 @@ namespace NKitDataStore.Tests
 
             LogShards(setName);
 
-            // Remove two early images (ids 2 and 4) — their unique blocks become dead, but their
+            // Remove two early images (ids 2 and 4) - their unique blocks become dead, but their
             // shared-pool blocks are still referenced by later images. Compact must relocate.
             using (DataStore store = new DataStore(_tempDir))
             {
@@ -152,7 +152,7 @@ namespace NKitDataStore.Tests
         }
 
         /// <summary>
-        /// THE user-reported "add more images AFTER a compact" scenario — the gap the Test Suite Audit
+        /// THE user-reported "add more images AFTER a compact" scenario - the gap the Test Suite Audit
         /// flagged as untested and the likely home of the compaction-corruption bug.
         ///
         /// Build a multi-shard set with cross-session/cross-shard dedup, COMPACT it, then ADD MORE
@@ -161,7 +161,7 @@ namespace NKitDataStore.Tests
         /// (the FileId-blind offset remap in compactShards/UpdateBlockMaps) makes the newly-added
         /// images inherit a bad (FileId, Offset) for the deduped block and read garbage.
         ///
-        /// Every image — the pre-compact set AND the post-compact additions — must verify byte-for-byte.
+        /// Every image - the pre-compact set AND the post-compact additions - must verify byte-for-byte.
         /// Written to FAIL on the buggy code and PASS once the offset remap is FileId-aware. No
         /// production changes.
         /// </summary>
@@ -196,7 +196,7 @@ namespace NKitDataStore.Tests
 
             // Guard: the whole point of this test is a MULTI-shard layout (blocks spread across several
             // shard FileIds). If the layout ever degenerates to a single shard the cross-shard aliasing
-            // check below would be vacuous — assert we really have >1 shard FileId in the block index.
+            // check below would be vacuous - assert we really have >1 shard FileId in the block index.
             AssertMultipleShardsUsed(setName);
 
             // Sanity: everything verifies before we touch anything.
@@ -230,7 +230,7 @@ namespace NKitDataStore.Tests
 
             LogShards(setName);
 
-            // --- Phase 4: EVERY image must verify — the pre-compact set and the post-compact adds ---
+            // --- Phase 4: EVERY image must verify - the pre-compact set and the post-compact adds ---
             // Structural check first (fails on FileId/offset aliasing even if bytes read back OK),
             // then full byte-for-byte content verify of the whole store.
             AssertBlockMapMatchesIndex(setName, images.Select(x => x.id));
@@ -252,7 +252,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Diagnostic (no correctness assertions beyond basic sanity): prints how many shards were
         /// created, whether the same-CRC duplicate actually deduped (shared block keys), and which
-        /// FileId the block index vs each image's block map hold for the shared keys — before and
+        /// FileId the block index vs each image's block map hold for the shared keys - before and
         /// after compact. This tells us whether the preconditions for the cross-shard aliasing bug
         /// are even being produced by this setup.
         /// </summary>
@@ -489,7 +489,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// Structural integrity check: for every live image, assert that each block in its per-image
         /// block map resolves to the SAME (FileId, Offset) as the canonical block index. This catches
-        /// the suspected cross-shard aliasing bug directly — the moment compaction stamps a block's new
+        /// the suspected cross-shard aliasing bug directly - the moment compaction stamps a block's new
         /// offset onto an image while keeping the image's own (different) FileId, the block map and the
         /// block index disagree for that key. It fails even if the bytes happen to read back correctly.
         /// Reads only small index-file metadata (no image decode), so it's near-instant.

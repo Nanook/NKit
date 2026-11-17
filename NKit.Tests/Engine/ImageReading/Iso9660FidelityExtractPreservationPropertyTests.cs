@@ -14,10 +14,10 @@ namespace NKit.Tests.Engine.ImageReading
     ///
     /// These tests capture the CURRENT behavior of the ExtractIsoStep.saveFileData
     /// extraction loop for non-buggy inputs BEFORE any fix is applied.
-    /// They MUST PASS on the unfixed code — if they don't pass, the test is wrong.
+    /// They MUST PASS on the unfixed code - if they don't pass, the test is wrong.
     /// After the fix, these tests confirm no regressions for preserved behavior.
     ///
-    /// Property 2: Preservation — Non-Shared-Offset ISO9660 Extraction Unchanged
+    /// Property 2: Preservation - Non-Shared-Offset ISO9660 Extraction Unchanged
     ///
     /// For any file layouts where NO candidate has additional smaller-size entries
     /// in the FidelityFileList at the same offset, extraction output is byte-identical
@@ -147,7 +147,7 @@ namespace NKit.Tests.Engine.ImageReading
 
                             string imagePath = System.IO.Path.Combine(path, si.FsFile.Name);
 
-                            // writeFs logic — mirrors ExtractIsoStep.writeFs exactly
+                            // writeFs logic - mirrors ExtractIsoStep.writeFs exactly
                             long splitFullSize = si.FsFile.SplitParts?.Size ?? si.FsFile.FsSize;
                             bool isSplit = splitFullSize != si.FsFile.FsSize;
                             bool newFile = si.OffsetInItem == 0;
@@ -306,7 +306,7 @@ namespace NKit.Tests.Engine.ImageReading
         /// once via the OrderedList candidate.
         ///
         /// When multiple files share the same offset AND the same size, FstContext.AddFile
-        /// merges them via FstLink — only one entry exists in the OrderedList (and thus in
+        /// merges them via FstLink - only one entry exists in the OrderedList (and thus in
         /// _candidates). The extraction writes that single entry once. This test verifies
         /// the behavior is preserved: exactly one writeFs call for the merged candidate.
         ///

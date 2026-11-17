@@ -50,7 +50,7 @@ namespace NKit.Tests.NKDS
             Gen<FsType> fsTypeGen = Gen.Elements(AllFsTypes);
 
             // Parent types are always non-extension types (or null) because extension
-            // types cannot be parents — they augment other filesystems.
+            // types cannot be parents - they augment other filesystems.
             Gen<FsType?> parentFsTypeGen = Gen.OneOf(
                 Gen.Constant<FsType?>(null),
                 Gen.Elements(NonExtensionFsTypes).Select(f => (FsType?)f));

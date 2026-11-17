@@ -5,35 +5,36 @@ namespace NkdsUi.Services;
 
 /// <summary>
 /// Unified configuration persistence service that consolidates all user preferences
-/// into a single nkds-ui.json file stored next to the application executable.
+/// into a single nkds-ui.json file. The file location respects portable vs system mode:
+///   Portable mode (nkds-ui.yaml next to exe, directory writable): saved next to the executable.
+///   System mode (Arch Linux, etc.): saved to the platform config directory (~/.config/nkds/).
+/// PathResolver.AppDirectory handles this distinction via the NKit ConfigurationManager.
 /// </summary>
 public sealed class ConfigService : IConfigService
 {
-    internal static readonly string ConfigPath = Path.Combine(
-        AppContext.BaseDirectory, "nkds-ui.json");
-
-    internal static readonly string LegacyPreferencesPath = Path.Combine(
-        AppContext.BaseDirectory, "export-format-preferences.json");
+    // Use PathResolver.AppDirectory (not AppContext.BaseDirectory) so the JSON config goes to
+    // the correct location in both portable mode and system mode installations.
+    // AppContext.BaseDirectory is always the exe directory (/usr/bin on Arch), which causes
+    // "access denied" errors on system installs where /usr/bin is not user-writable.
+    internal static string ConfigPath => Path.Combine(
+        PathResolver.AppDirectory, "nkds-ui.json");
 
     private readonly string _configPath;
-    private readonly string _legacyPath;
     private AppConfig _config;
     private ErrorNotificationService? _errorNotification;
 
     public ConfigService()
-        : this(ConfigPath, LegacyPreferencesPath)
+        : this(ConfigPath)
     {
     }
 
     /// <summary>
     /// Internal constructor for testing with isolated file paths.
     /// </summary>
-    internal ConfigService(string configPath, string legacyPath)
+    internal ConfigService(string configPath)
     {
         _configPath = configPath;
-        _legacyPath = legacyPath;
         _config = Load();
-        MigrateLegacyPreferences();
     }
 
     /// <summary>
@@ -283,6 +284,12 @@ public sealed class ConfigService : IConfigService
     {
         try
         {
+            // Ensure the directory exists - required when saving to a system-mode config
+            // directory (~/.config/nkds/) that may not have been created yet on first run.
+            string? dir = Path.GetDirectoryName(_configPath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
             string json = JsonSerializer.Serialize(_config, ConfigJsonContext.Default.AppConfig);
             string tempPath = _configPath + ".tmp";
             File.WriteAllText(tempPath, json);
@@ -294,34 +301,4 @@ public sealed class ConfigService : IConfigService
         }
     }
 
-    /// <summary>
-    /// Migrates legacy export-format-preferences.json into the unified config.
-    /// Merges entries without overwriting existing keys, saves, then deletes the legacy file.
-    /// On any failure, logs the error and leaves the legacy file in place.
-    /// </summary>
-    private void MigrateLegacyPreferences()
-    {
-        if (!File.Exists(_legacyPath))
-            return;
-
-        try
-        {
-            string json = File.ReadAllText(_legacyPath);
-            Dictionary<string, string>? legacy = JsonSerializer.Deserialize(json, FormatPreferencesJsonContext.Default.DictionaryStringString);
-            if (legacy != null)
-            {
-                foreach (KeyValuePair<string, string> kvp in legacy)
-                {
-                    if (!_config.ExportFormatDefaults.ContainsKey(kvp.Key))
-                        _config.ExportFormatDefaults[kvp.Key] = kvp.Value;
-                }
-                Save();
-            }
-            File.Delete(_legacyPath);
-        }
-        catch (Exception ex)
-        {
-            _errorNotification?.PublishOperationError($"Failed to migrate legacy preferences: {ex.Message}");
-        }
-    }
 }

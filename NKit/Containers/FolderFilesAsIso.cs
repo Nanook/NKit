@@ -14,9 +14,9 @@ namespace Nanook.NKit.Container
     /// consumers (the Image layer) can expose per-file <see cref="AreaInfo"/> properties.
     ///
     /// Detection:
-    ///   WUA       — created by <see cref="Create(SourceImageType)"/> when the source
+    ///   WUA       - created by <see cref="Create(SourceImageType)"/> when the source
     ///               image type is <see cref="SourceImageType.Wua"/>.
-    ///   Loadiine  — created when the source is a synthetic <see cref="FolderGroupType.LoadiineFolder"/>.
+    ///   Loadiine  - created when the source is a synthetic <see cref="FolderGroupType.LoadiineFolder"/>.
     /// Both are detected before the normal container chain in <c>NKitInput.createImageContainer</c>
     /// because they are flagged on the SourceFile before open, not by magic bytes.
     /// </summary>
@@ -68,7 +68,7 @@ namespace Nanook.NKit.Container
 
         public int Construct(Stream stream, bool allowSeek)
         {
-            _stream = stream;  // not used directly — files opened per-entry
+            _stream = stream;  // not used directly - files opened per-entry
             return 0;
         }
 
@@ -124,7 +124,7 @@ namespace Nanook.NKit.Container
                 total     += got;
                 _position += got;
                 count     -= got;
-                if (got < toRead) break; // short read — EOF of this file
+                if (got < toRead) break; // short read - EOF of this file
             }
             return total;
         }

@@ -201,7 +201,7 @@ namespace NKit.Ui.Services
                             else if (nKitResults.ImageAlreadyExists)
                             {
                                 // Dedupe add found the image already in the set; it was rolled back
-                                // rather than stored a second time. Not a failure — report it plainly
+                                // rather than stored a second time. Not a failure - report it plainly
                                 // so the row lands on a real terminal state instead of getting stuck.
                                 file.ProcessingStatus = ProcessingStatus.AlreadyExists;
                                 file.AppendProcessingMessage("Image already exists in the set - not added.");
@@ -227,7 +227,7 @@ namespace NKit.Ui.Services
                             // reads Scan or Source, yet for a Wii/GC image Scan transitively roots the
                             // parsed filesystem + every ScanArea/ScanSection + section buffers (tens of
                             // MiB per image). ReleaseHeavyReferences alone only freed StepResults and
-                            // KEPT Scan/Source, so those still accumulated across rows — the dominant
+                            // KEPT Scan/Source, so those still accumulated across rows - the dominant
                             // UI memory climb. Release ALL heavy references now that the scalars are
                             // captured.
                             nKitResults.ReleaseAllReferences();
@@ -256,7 +256,7 @@ namespace NKit.Ui.Services
                             // A FRESH AppSettings (and its Log -> NKitLog bus -> async FileLogSink
                             // background thread + BlockingCollection wait handles) is created PER IMAGE
                             // here. Dispose it now that the image is done, or each image leaks a sink
-                            // thread + OS handles for the life of this long-lived process — the UI's
+                            // thread + OS handles for the life of this long-lived process - the UI's
                             // climbing thread/handle count and working set even when managed is flat.
                             try { fileSettings?.DisposeLog(); } catch { }
 

@@ -1,4 +1,4 @@
-﻿using Nanook.GrindCore.Lzma;
+using Nanook.GrindCore.Lzma;
 using Nanook.GrindCore.ZStd;
 using Nanook.NKit.Nintendo.WiiGc;
 using SharpCompress.Compressors.BZip2;
@@ -15,7 +15,7 @@ namespace Nanook.NKit
     {
         private const int _NkitHeaderLen = 0x8 + 0x4 + 0x10 + 0x14 + 0x8;
 
-        // Thread-local ZStd decompressor — one context per thread, reused across all blocks.
+        // Thread-local ZStd decompressor - one context per thread, reused across all blocks.
         // unpack() is called from parallel worker threads (decodeBlock), so thread-local
         // ensures each thread has its own isolated, reusable ZSTD_DCtx with no locking.
         [ThreadStatic]
@@ -272,7 +272,7 @@ namespace Nanook.NKit
             long gBase = ptn.Offset + ((_position - ptn.Offset) / WiiConsts.WiiGroupSize * WiiConsts.WiiGroupSize);
             int groupSize = (int)Math.Min(WiiConsts.WiiGroupSize, ptn.Size - (gBase - ptn.Offset));
 
-            if (_groupBuffBase != gBase) //not already decoded — decode + process the whole group once
+            if (_groupBuffBase != gBase) //not already decoded - decode + process the whole group once
             {
                 int gRead = _blockReader.Read(gBase, _stream, _groupBuff, 0, groupSize, null, decodeBlock, out firstGroup);
                 processGroup(_groupBuff, 0, gRead, ptn, gBase - ptn.Offset, firstGroup.Index);
@@ -422,7 +422,7 @@ namespace Nanook.NKit
         // a group (e.g. an up-front FST peek followed by the real sequential read of the same group)
         // restores the same exceptions and produces identical bytes. (The old forward-only path
         // nulled ExceptionData on last use as a memory optimisation, which made a group re-read drop
-        // its exceptions and return wrong hashes — only exposed on RVZ where reads are group-decoded.
+        // its exceptions and return wrong hashes - only exposed on RVZ where reads are group-decoded.
         // The exception data is small and RefIndex-deduped, so retaining it for the image lifetime is
         // a negligible, bounded cost in exchange for correct re-reads.)
         private void restoreExceptions(byte[] buffer, int offset, int size, int blockIndex)
@@ -504,7 +504,7 @@ namespace Nanook.NKit
             // group, each able to cache a decompressed group), plus the group/enc scratch buffers,
             // the Wii hasher, the block cache (dictionary of cached decompressed chunks) and the
             // partition list. Dispose did none of this, so an .rvz image's buffers lingered past
-            // completion — a large residual that never dropped between images in a long-lived
+            // completion - a large residual that never dropped between images in a long-lived
             // process (the UI). Release them here so image completion frees them deterministically.
             if (disposing)
             {

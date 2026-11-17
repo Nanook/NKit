@@ -70,7 +70,7 @@ namespace NKitDataStore.Tests
                 return _blocks.TryGetValue(key, out BlockRecord record) ? record : null;
             }
 
-            // Unused members — AuxBlockProvider only calls GetBlock(BlockKey)
+            // Unused members - AuxBlockProvider only calls GetBlock(BlockKey)
             public ImageRecord Image => throw new NotImplementedException();
             public InfoRecord Info => throw new NotImplementedException();
             public Stream OpenStream(long offsetStart) => throw new NotImplementedException();
@@ -98,7 +98,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.6**
         ///
-        /// Property 9: Two-Tier Resolution Chain Order (Wii) — GetBlock by BlockKey.
+        /// Property 9: Two-Tier Resolution Chain Order (Wii) - GetBlock by BlockKey.
         /// For any Wii/WiiU image (splitReader=null), the resolution chain remains:
         /// Primary → Shared Aux → null. No split reader is involved.
         ///
@@ -207,7 +207,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.6**
         ///
-        /// Property 9: Two-Tier Resolution Chain Order (Wii) — GetBlock by OffsetRecord.
+        /// Property 9: Two-Tier Resolution Chain Order (Wii) - GetBlock by OffsetRecord.
         /// Same property exercised through the GetBlock(OffsetRecord, int) overload.
         /// For Wii/WiiU (splitReader=null), chain is: Primary → Shared Aux → null.
         /// </summary>
@@ -284,7 +284,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.6**
         ///
-        /// Property 9: Two-Tier Resolution Chain Order (Wii) — Async GetBlockAsync.
+        /// Property 9: Two-Tier Resolution Chain Order (Wii) - Async GetBlockAsync.
         /// For Wii/WiiU (splitReader=null), the async path also resolves as:
         /// Primary → Shared Aux → null, preserving the same two-tier behavior.
         /// </summary>
@@ -335,7 +335,7 @@ namespace NKitDataStore.Tests
                 if (result.Data[0] != AUX_MARKER) return false;
             }
 
-            // Neither keys via async path — must return null
+            // Neither keys via async path - must return null
             foreach (BlockKey key in neitherKeys)
             {
                 BlockRecord result = provider.GetBlockAsync(key).GetAwaiter().GetResult();

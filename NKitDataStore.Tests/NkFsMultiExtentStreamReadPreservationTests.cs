@@ -11,7 +11,7 @@ namespace NKitDataStore.Tests
     ///
     /// **Validates: Requirements 3.1, 3.2, 3.3, 3.4**
     ///
-    /// Property 2: Preservation — Single-Extent and Non-Multi-Extent Read Behavior
+    /// Property 2: Preservation - Single-Extent and Non-Multi-Extent Read Behavior
     ///
     /// These tests are EXPECTED TO PASS on unfixed code. They confirm baseline behavior
     /// that must be preserved after the fix is applied:
@@ -132,7 +132,7 @@ namespace NKitDataStore.Tests
                 TestDataStoreHelper.WaitForSetIdle(store, setName);
             }
 
-            // Read back using OpenStream(offsetStart) — the single-extent code path
+            // Read back using OpenStream(offsetStart) - the single-extent code path
             using (DataStore store = new DataStore(testDir))
             {
                 using (IImageReader reader = store.OpenImageReader(new GlobalImageKey(setName, 1)))
@@ -142,7 +142,7 @@ namespace NKitDataStore.Tests
                         if (stream == null || stream.Length != fileSize)
                         {
                             _output.WriteLine(
-                                $"FAILURE: Single-extent read at offset 0x{offsetStart:X} with size {fileSize} — " +
+                                $"FAILURE: Single-extent read at offset 0x{offsetStart:X} with size {fileSize} - " +
                                 $"got stream length {stream?.Length ?? -1} instead of {fileSize}.");
                             return false;
                         }
@@ -160,7 +160,7 @@ namespace NKitDataStore.Tests
                         if (totalRead != fileSize)
                         {
                             _output.WriteLine(
-                                $"FAILURE: Single-extent read at offset 0x{offsetStart:X} — " +
+                                $"FAILURE: Single-extent read at offset 0x{offsetStart:X} - " +
                                 $"read {totalRead} bytes instead of expected {fileSize}.");
                             return false;
                         }
@@ -170,7 +170,7 @@ namespace NKitDataStore.Tests
                             if (readData[i] != originalData[i])
                             {
                                 _output.WriteLine(
-                                    $"FAILURE: Single-extent data mismatch at byte {i} — " +
+                                    $"FAILURE: Single-extent data mismatch at byte {i} - " +
                                     $"expected 0x{originalData[i]:X2}, got 0x{readData[i]:X2}.");
                                 return false;
                             }
@@ -220,7 +220,7 @@ namespace NKitDataStore.Tests
             if (!passed)
             {
                 _output.WriteLine(
-                    $"FAILURE: Zero-byte file at offset 0x{fsOffset:X} — " +
+                    $"FAILURE: Zero-byte file at offset 0x{fsOffset:X} - " +
                     $"expected empty read-only MemoryStream, got stream={stream != null}, length={stream?.Length ?? -1}.");
             }
 
@@ -270,7 +270,7 @@ namespace NKitDataStore.Tests
             if (!passed)
             {
                 _output.WriteLine(
-                    $"FAILURE: Type routing logic violated — NkFs items should use NkFs path, " +
+                    $"FAILURE: Type routing logic violated - NkFs items should use NkFs path, " +
                     $"non-NkFs items should not.");
             }
 
@@ -298,7 +298,7 @@ namespace NKitDataStore.Tests
             //   BuildPerTypeFsYaml: area.ImageOffset + fsOffset
             //   ToImageOffsetFromFsOffsets: (partitionImageOffset - 0) + fsOffset = partitionImageOffset + fsOffset
             long partitionImageOffset = 0x100000; // 1MiB into disc
-            long baseOffset = 0; // Non-relative — no BaseOffset adjustment
+            long baseOffset = 0; // Non-relative - no BaseOffset adjustment
 
             int extentSize = ((extentSizeMult.Get % 8) + 1) * 0x1000; // 4KiB to 32KiB per extent
             long extent0FsOffset = (long)(offsetMult.Get % 16) * 0x2000;
@@ -356,7 +356,7 @@ namespace NKitDataStore.Tests
                             if (stream0 == null || stream0.Length != extentSize)
                             {
                                 _output.WriteLine(
-                                    $"FAILURE: Extent 0 at offset 0x{nkfsOffset0:X} — " +
+                                    $"FAILURE: Extent 0 at offset 0x{nkfsOffset0:X} - " +
                                     $"expected length {extentSize}, got {stream0?.Length ?? -1}.");
                                 return false;
                             }
@@ -384,7 +384,7 @@ namespace NKitDataStore.Tests
                     catch (ArgumentException ex) when (ex.Message.Contains("No offset records"))
                     {
                         _output.WriteLine(
-                            $"FAILURE: Extent 0 at offset 0x{nkfsOffset0:X} — " +
+                            $"FAILURE: Extent 0 at offset 0x{nkfsOffset0:X} - " +
                             $"OpenStream threw: {ex.Message}");
                         return false;
                     }
@@ -397,7 +397,7 @@ namespace NKitDataStore.Tests
                             if (stream1 == null || stream1.Length != extentSize)
                             {
                                 _output.WriteLine(
-                                    $"FAILURE: Extent 1 at offset 0x{nkfsOffset1:X} — " +
+                                    $"FAILURE: Extent 1 at offset 0x{nkfsOffset1:X} - " +
                                     $"expected length {extentSize}, got {stream1?.Length ?? -1}.");
                                 return false;
                             }
@@ -425,7 +425,7 @@ namespace NKitDataStore.Tests
                     catch (ArgumentException ex) when (ex.Message.Contains("No offset records"))
                     {
                         _output.WriteLine(
-                            $"FAILURE: Extent 1 at offset 0x{nkfsOffset1:X} — " +
+                            $"FAILURE: Extent 1 at offset 0x{nkfsOffset1:X} - " +
                             $"OpenStream threw: {ex.Message}");
                         return false;
                     }
@@ -471,7 +471,7 @@ namespace NKitDataStore.Tests
                 TestDataStoreHelper.WaitForSetIdle(store, setName);
             }
 
-            // Read back — single-extent path uses cachedReader.OpenStream(fsItem.FsOffset) directly
+            // Read back - single-extent path uses cachedReader.OpenStream(fsItem.FsOffset) directly
             using (DataStore store = new DataStore(testDir))
             {
                 using (IImageReader reader = store.OpenImageReader(new GlobalImageKey(setName, 1)))
@@ -481,7 +481,7 @@ namespace NKitDataStore.Tests
                         if (stream == null || stream.Length != fileSize)
                         {
                             _output.WriteLine(
-                                $"FAILURE: Strided single-extent at offset 0x{offsetStart:X} — " +
+                                $"FAILURE: Strided single-extent at offset 0x{offsetStart:X} - " +
                                 $"expected length {fileSize}, got {stream?.Length ?? -1}.");
                             return false;
                         }

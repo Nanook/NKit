@@ -59,13 +59,13 @@ namespace Nanook.NKit.Container
         // possibly forward-only archive entry) directly at its own _position, so the stream's
         // absolute offset equals _position. A consumer reading through this container (e.g. the PS3
         // Fix path) calls ReleaseTo(position) after each forward read to free cached blocks below
-        // it — otherwise a 40+ GiB PS3 image inside an archive caches whole and OOMs.
+        // it - otherwise a 40+ GiB PS3 image inside an archive caches whole and OOMs.
         // A no-op for a seekable source (nothing is cached) or a non-BufferStream source.
         //
         // Clamp the release to this container's OWN read position: as a pass-through the raw source
         // is read strictly forward through every byte, so it must never release past what it has
         // physically read. The consuming Image's release mark is its IMAGE-space position, which
-        // can run AHEAD of the raw read — e.g. Iso9660 skip() advances the image position over a
+        // can run AHEAD of the raw read - e.g. Iso9660 skip() advances the image position over a
         // skipped filesystem region and releases to the skip target, but the source must still be
         // read forward THROUGH that region to reach it. Releasing those not-yet-read blocks would
         // free data the source has to traverse next, throwing on the catch-up read. (This clamp is

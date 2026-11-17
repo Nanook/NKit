@@ -77,7 +77,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
         // Act
         await handler.Execute(ctx).FirstAsync();
 
-        // Assert — dialog was opened with null path (empty FolderPath from null dataStorePath)
+        // Assert - dialog was opened with null path (empty FolderPath from null dataStorePath)
         Assert.NotNull(capturedVm);
         // When dataStorePath is null and MRU is empty, FolderPath should be empty
         Assert.Equal("", capturedVm.FolderPath);
@@ -127,7 +127,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
             // Act
             await handler.Execute(ctx).FirstAsync();
 
-            // Assert — dialog was opened with the session's resolved path
+            // Assert - dialog was opened with the session's resolved path
             Assert.NotNull(capturedVm);
             Assert.Equal(testDir, capturedVm.FolderPath);
         }
@@ -144,7 +144,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
     [Fact]
     public async Task Execute_SessionsObservableError_PublishesErrorAndAborts()
     {
-        // Arrange — Sessions observable throws an exception
+        // Arrange - Sessions observable throws an exception
         IObservable<IReadOnlyList<ImageSessionModel>> errorObservable = Signal.Create<IReadOnlyList<ImageSessionModel>>(observer =>
         {
             observer.OnError(new InvalidOperationException("Sessions unavailable"));
@@ -174,7 +174,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
         // Act
         await handler.Execute(ctx).FirstAsync();
 
-        // Assert — error was published and dialog was NOT shown
+        // Assert - error was published and dialog was NOT shown
         Assert.Single(publishedErrors);
         Assert.Contains("Sessions unavailable", publishedErrors[0].Message);
         Assert.False(publishedErrors[0].IsCancellation);
@@ -188,7 +188,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
     [Fact]
     public async Task Execute_DialogInteractionFailure_PublishesError()
     {
-        // Arrange — Sessions works fine, but dialog interaction throws
+        // Arrange - Sessions works fine, but dialog interaction throws
         ReplaySignal<IReadOnlyList<ImageSessionModel>> sessionsSubject = new ReplaySignal<IReadOnlyList<ImageSessionModel>>(1);
         sessionsSubject.OnNext(Array.Empty<ImageSessionModel>());
         FakeDataStoreService fakeDataStoreService = new FakeDataStoreService(sessionsSubject);
@@ -214,7 +214,7 @@ public class CreateSetInlineFolderCommandHandlerTests : IDisposable
         // Act
         await handler.Execute(ctx).FirstAsync();
 
-        // Assert — error was published
+        // Assert - error was published
         Assert.Single(publishedErrors);
         Assert.Contains("Dialog rendering failed", publishedErrors[0].Message);
         Assert.False(publishedErrors[0].IsCancellation);

@@ -31,9 +31,9 @@ public class KeysFixFilesTabViewModel : ViewModelBase
 
         _suppressPersist = true;
         LoadFromConfig();
-        // Keep persistence suppressed — the parent ViewModel commits on OK
+        // Keep persistence suppressed - the parent ViewModel commits on OK
 
-        // Browse commands — folder picker for keys and fix files directories, file picker for fix info files
+        // Browse commands - folder picker for keys and fix files directories, file picker for fix info files
         BrowseWiiUKeysCommand = ReactiveCommand.CreateFromTask(BrowseWiiUKeysAsync);
         BrowseWiiUKeysArchiveCommand = ReactiveCommand.CreateFromTask(BrowseWiiUKeysArchiveAsync);
         BrowsePs3KeysCommand = ReactiveCommand.CreateFromTask(BrowsePs3KeysAsync);
@@ -301,77 +301,77 @@ public class KeysFixFilesTabViewModel : ViewModelBase
 
     private async Task BrowseWiiUKeysAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             WiiUKeysPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseWiiUKeysArchiveAsync()
     {
-        string path = await ShowKeysArchivePicker.Handle(RxVoid.Default);
+        string? path = await ShowKeysArchivePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             WiiUKeysPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowsePs3KeysAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             Ps3KeysPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowsePs3KeysArchiveAsync()
     {
-        string path = await ShowKeysArchivePicker.Handle(RxVoid.Default);
+        string? path = await ShowKeysArchivePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             Ps3KeysPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseGameCubeFixInfoAsync()
     {
-        string path = await ShowFilePicker.Handle(RxVoid.Default);
+        string? path = await ShowFilePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             GameCubeFixInfoPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseGameCubeFixFilesAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             GameCubeFixFilesPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseWiiFixInfoAsync()
     {
-        string path = await ShowFilePicker.Handle(RxVoid.Default);
+        string? path = await ShowFilePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             WiiFixInfoPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseWiiFixFilesAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             WiiFixFilesPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowsePs3FixInfoAsync()
     {
-        string path = await ShowFilePicker.Handle(RxVoid.Default);
+        string? path = await ShowFilePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             Ps3FixInfoPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowsePs3FixFilesAsync()
     {
-        string path = await ShowFolderPicker.Handle(RxVoid.Default);
+        string? path = await ShowFolderPicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             Ps3FixFilesPath = PathResolver.ToStorable(path);
     }
 
     private async Task BrowseDreamcastFixInfoAsync()
     {
-        string path = await ShowFilePicker.Handle(RxVoid.Default);
+        string? path = await ShowFilePicker.Handle(RxVoid.Default);
         if (!string.IsNullOrEmpty(path))
             DreamcastFixInfoPath = PathResolver.ToStorable(path);
     }

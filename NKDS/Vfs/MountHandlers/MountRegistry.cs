@@ -113,7 +113,7 @@ namespace Nanook.NKit.Vfs
         {
             if (item == null || item.FileSystemNkfsLoaded)
             {
-                // Already loaded — just touch the LRU cache to keep it fresh
+                // Already loaded - just touch the LRU cache to keep it fresh
                 if (item?.FileSystemNkfsLoaded == true && item.ImageRecord != null)
                     model.TouchNkfsCache(item.ImageRecord.Id);
                 return;
@@ -171,7 +171,7 @@ namespace Nanook.NKit.Vfs
                         }
                         else
                         {
-                            // All per-type files were corrupt — fall through to unified fallback
+                            // All per-type files were corrupt - fall through to unified fallback
                             Trace.WriteLine($"[LazyLoad] All per-type nkfs files corrupt for '{item.ImageRecord.Name}', "
                                 + "falling back to unified filesystem.nkfs");
                         }
@@ -193,7 +193,7 @@ namespace Nanook.NKit.Vfs
                             }
                             catch
                             {
-                                // Corrupt NkFs — fall through to YAML fallback
+                                // Corrupt NkFs - fall through to YAML fallback
                                 nkfs = null;
                                 Trace.WriteLine($"[LazyLoad] Corrupt filesystem.nkfs for '{item.ImageRecord.Name}', "
                                     + "falling back to filesystem.yaml");
@@ -416,7 +416,7 @@ namespace Nanook.NKit.Vfs
                 .ToList();
 
             if (nonSystemKeys.Count == 0)
-                return; // Only system exists — retain it for fallback presentation
+                return; // Only system exists - retain it for fallback presentation
 
             foreach (string key in nonSystemKeys)
             {
@@ -434,7 +434,7 @@ namespace Nanook.NKit.Vfs
             List<MountSpec> specs = GetMountSpecsForSystem(systemName) ?? new List<MountSpec>();
             List<MountSpec> augmented = new List<MountSpec>(specs);
 
-            // "Directories" system is folder-based storage — no named roots (Images/Filesystems).
+            // "Directories" system is folder-based storage - no named roots (Images/Filesystems).
             // Items appear directly under the system folder.
             if (string.Equals(systemName, VfsConstants.SystemDirectories, StringComparison.OrdinalIgnoreCase))
                 return augmented;

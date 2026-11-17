@@ -19,7 +19,7 @@ namespace Nanook.NKit.Container
     ///
     ///   - Rebuild the partition table: Game @ 0xF800000, remaining partitions slid to follow.
     ///   - MOVE each existing partition's data to its corrected offset (served from the source
-    ///     offset — a partition-granularity remap).
+    ///     offset - a partition-granularity remap).
     ///   - Leave the Update partition region BLANK in place at 0x50000; the downstream Fix step
     ///     brute-forces / fills it if the CRC match fails (unchanged behaviour).
     ///   - (Follow-up) insert missing channels/VC from recovery files and apply the ID-based fixes.
@@ -56,27 +56,27 @@ namespace Nanook.NKit.Container
 
         /// <summary>The wrapped source container. Lets a consumer reach the real underlying
         /// container (e.g. RvzAsIso) for container-specific probes when this decorator is in the
-        /// chain — otherwise a `_iso as RvzAsIso` cast would see the decorator and return null.</summary>
+        /// chain - otherwise a `_iso as RvzAsIso` cast would see the decorator and return null.</summary>
         internal IAsIso Inner => _inner;
 
         private List<WiiSeg> _segments;
         private byte[] _correctedHeader; // corrected 0x50000 disc header (partition table rebuilt)
 
         // Output offset ranges of moved existing partitions, so the downstream reader can mark
-        // them appropriately if needed (not currently required — SectionProcessor reads the
+        // them appropriately if needed (not currently required - SectionProcessor reads the
         // corrected table and processes each partition normally at its new offset).
 
         // Injected before the first read (from NKitInput.Open, before the Image is constructed).
         private FixData _fixData;
         private long _fixSize;      // caller's pre-parse size hint (SetFixData shares its shape with
-                                    // GcFixAsIso); NOT used for Wii sizing — _discSize is derived
+                                    // GcFixAsIso); NOT used for Wii sizing - _discSize is derived
                                     // from the corrected partition layout in buildLayout instead.
         private long _discSize;     // corrected disc size derived from the actual partition layout
         private ILogScope _log;
         private bool _prepared;
         private bool _fixRequested;
 
-        // The corrected layout (partition-table reflow) is built during Image construction — the
+        // The corrected layout (partition-table reflow) is built during Image construction - the
         // header read happens before the task prints its params banner / starts the progress bar,
         // so logging the fixes inline there makes them appear ABOVE the banner. Buffer them and
         // flush once real processing starts (WiiGc.Image.Read calls FlushLog), landing them inside
@@ -85,7 +85,7 @@ namespace Nanook.NKit.Container
         private bool _logFlushed;
 
         // A capturing Log passed into the WiiPartitionLayout.Apply* helpers (which log via a Log,
-        // and are also used by the non-decorator path with a live log — so we must NOT change their
+        // and are also used by the non-decorator path with a live log - so we must NOT change their
         // API). Messages land in _pendingLog and are replayed by FlushLog through the real _log.
         private Log buildCaptureLog()
         {
@@ -135,18 +135,18 @@ namespace Nanook.NKit.Container
         // Wraps ONLY on the actual fix step: the verify step (StepType == Verify) re-reads the
         // already-corrected output and must pass through un-wrapped.
         //
-        // The size passed here is only a nominal — WiiFixAsIso derives the exact single-/dual-layer
+        // The size passed here is only a nominal - WiiFixAsIso derives the exact single-/dual-layer
         // size from the corrected partition layout in buildLayout. (The shared SetFixData shape is
         // meaningful for GcFixAsIso, where the size is the fixed FullSizeGameCube.)
         public static IAsIso Create(IAsIso iso, SystemType detectedSystem, IImageContext context)
         {
             // A decoded NKitAsIso source is NOT wrapped (mirrors GcFixAsIso): NKitAsIso already
-            // returns the correct decoded disc — partition table reflowed, offsets repacked, the
+            // returns the correct decoded disc - partition table reflowed, offsets repacked, the
             // update partition reinserted from recovery (or null-filled when the recovery file is
             // missing). The decoded NKitAsIso stays the outer IAsIso and the proven in-pipeline
             // reflow (WiiGc.Image.applyWiiPartitionTableFixes / applyDataPartitionFixes) does the
             // layout, with the Fix step brute-forcing the (null-filled) update partition. This is
-            // the single-step decoded-NKit Wii Fix (no separate Expand) — the same shape GameCube
+            // the single-step decoded-NKit Wii Fix (no separate Expand) - the same shape GameCube
             // already uses. Wrapping here as well would DOUBLE-CORRECT the layout (both this
             // decorator and the in-pipeline reflow authoring partition offsets), shifting per-area
             // CRCs and producing a VerifyFailed.
@@ -250,7 +250,7 @@ namespace Nanook.NKit.Container
 
             // Target the fix data to THIS disc so WiiChannels (recovery files, needs FixPath) and
             // ChannelCount (redumpChannels[id8] from the fix yaml) are populated. The decorator
-            // resolves FixData at NKitInput.Open — before the disc Id8 is known — so it must be set
+            // resolves FixData at NKitInput.Open - before the disc Id8 is known - so it must be set
             // up here with the header Id8 now that we have parsed the header.
             _fixData.Setup(header.Id8);
 
@@ -289,8 +289,8 @@ namespace Nanook.NKit.Container
             //
             // The RSB/WBM quirk is that channel/VC partitions sit in table 0; once they are in
             // table 1 (which our re-add produces, and which a genuinely-correct disc already has)
-            // there is nothing left to fix. Detecting the residual table-0 condition — rather than
-            // the disc ID alone — lets an already-correct RSB output pass through on verify while a
+            // there is nothing left to fix. Detecting the residual table-0 condition - rather than
+            // the disc ID alone - lets an already-correct RSB output pass through on verify while a
             // still-broken WBM source is routed into the fix path.
             bool wbmTablePending = header.Data.ReadString(0, 4).StartsWith("RSB") &&
                 header.Partitions.Any(a =>
@@ -317,7 +317,7 @@ namespace Nanook.NKit.Container
             }
 
             // User rule: do NOT edit the update partition or channels when their fix (recovery)
-            // versions do not exist — the image may already be fine as-is (e.g. a scrubbed but
+            // versions do not exist - the image may already be fine as-is (e.g. a scrubbed but
             // otherwise-complete WBFS that has its own valid update + channels). WiiFixAsIso always
             // REPLACES channels/update from recovery (it never copies them from the source), so if
             // there is NO recovery available at all we must not drop them. When the disc already
@@ -335,7 +335,7 @@ namespace Nanook.NKit.Container
             }
 
             // Committed to building the corrected layout. Only now read the Game partition header
-            // far forward in the source — the segment path serves offset 0 from _correctedHeader
+            // far forward in the source - the segment path serves offset 0 from _correctedHeader
             // and never re-reads the source head, so advancing the forward-only source here is
             // safe. (All pass-through exits above are header-only and leave the source at 0.)
             // Header-block = field 0x2b8 x4; data = field 0x2bc x4.
@@ -347,7 +347,7 @@ namespace Nanook.NKit.Container
             long gameSpan = (gameHdrBlocks * 4L) + (gameDataBlocks * 4L);
             long gameSrcOffset = game.ImageOffset;
 
-            // Disc-type detection. Fix does not support RVT (non-retail) images — the existing
+            // Disc-type detection. Fix does not support RVT (non-retail) images - the existing
             // pipeline rejects them explicitly (WiiGc.Image: "RVT ... not currently supported for
             // Fix"). RVT-R uses the RVT issuer; RVT-H additionally has no hashed partition data
             // (H3/partition-size zero). Detect from the Game partition header and pass through so
@@ -363,7 +363,7 @@ namespace Nanook.NKit.Container
 
             // 3. Apply ALL deterministic Wii layout/header fixes here (owned by WiiFixAsIso):
             //    a) the disc-ID swap quirk (010E->4 for a RELS game);
-            //    b) ALWAYS replace channels/VC — drop existing non-update/non-game partitions and
+            //    b) ALWAYS replace channels/VC - drop existing non-update/non-game partitions and
             //       re-add from recovery (source is never read for those regions). Re-adding VC as
             //       table 1 also subsumes the RSB/WBM "table 0->1" fix, so no separate table move
             //       is needed;
@@ -434,7 +434,7 @@ namespace Nanook.NKit.Container
 
             // Every non-update partition in its corrected order/offset. Existing partitions are
             // served from their source span (a move); inserted channel/VC placeholders are served
-            // from their recovery file. Gaps (and the blank update region) are zero-filled — the
+            // from their recovery file. Gaps (and the blank update region) are zero-filled - the
             // downstream fills/brute-forces the update region. Reads past the (compacted) source
             // EOF zero-fill safely, which is what makes a full-size image from a compacted source.
             foreach (PartitionInfo p in header.Partitions
@@ -450,9 +450,9 @@ namespace Nanook.NKit.Container
                 long span;
                 if (srcSpan.TryGetValue(p, out (long srcOffset, long span) s))
                 {
-                    // Game partition — move its bytes from the source offset. If the source is
+                    // Game partition - move its bytes from the source offset. If the source is
                     // truncated (compacted WBFS shorter than the partition span), serve only what
-                    // the source actually contains and PAD the remainder with zeros — never read
+                    // the source actually contains and PAD the remainder with zeros - never read
                     // past the source's real content (which would overrun the block reader).
                     span = s.span;
                     long avail = Math.Max(0, _inner.Size - s.srcOffset);
@@ -464,9 +464,9 @@ namespace Nanook.NKit.Container
                 }
                 else if (p.IsPlaceholder && p.FixPartition?.Filename != null && System.IO.File.Exists(p.FixPartition.Filename))
                 {
-                    // inserted channel/VC — serve raw bytes from the recovery file. Filename is the
+                    // inserted channel/VC - serve raw bytes from the recovery file. Filename is the
                     // on-disk path (a plain data file, or a streamable archive when InnerEntryName
-                    // is set — the single entry named as the archive without its extension).
+                    // is set - the single entry named as the archive without its extension).
                     span = p.FixPartition.Length;
                     _segments.Add(new WiiSeg { Offset = p.ImageOffset, Length = span, Type = WiiSegType.File, FilePath = p.FixPartition.Filename, InnerEntryName = p.FixPartition.InnerEntryName });
                 }
@@ -576,13 +576,13 @@ namespace Nanook.NKit.Container
 
             if (innerName == null)
             {
-                // Plain file — random access.
+                // Plain file - random access.
                 _recoveryStream.Position = fileOffset;
                 readExact(_recoveryStream, buffer, bufOffset, count); // zero-fills past EOF
                 return;
             }
 
-            // Archive entry — forward-only. Segments for a given inserted partition are walked
+            // Archive entry - forward-only. Segments for a given inserted partition are walked
             // forward, so fileOffset is monotonic; skip forward if the caller jumped ahead, and
             // re-open (rewind) only on the rare backward request.
             if (fileOffset < _recoveryPos)
@@ -685,7 +685,7 @@ namespace Nanook.NKit.Container
         // (rather than returning a short read) because the underlying array copy overruns. The Game
         // partition's real content lies within the mapped blocks; anything past that is padding for
         // a truncated/compacted disc, which the SectionProcessor re-derives (unscrub/hash/encrypt)
-        // downstream. So on a read failure past the mapped source we zero-fill the remainder — the
+        // downstream. So on a read failure past the mapped source we zero-fill the remainder - the
         // same outcome a raw .iso reaches naturally via a short read.
         private static void readSrcSafe(Stream s, byte[] buffer, int offset, int count)
         {

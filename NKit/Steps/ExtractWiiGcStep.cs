@@ -409,7 +409,7 @@ namespace Nanook.NKit
             }
             else
             {
-                // No FidelityFileList — identify overlap candidates from _candidates themselves
+                // No FidelityFileList - identify overlap candidates from _candidates themselves
                 // (files sharing FsOffset with another candidate where the other is larger)
                 IEnumerable<IGrouping<long, IFsFile>> offsetGroups = _candidates.GroupBy(a => a.FsOffset).Where(g => g.Count() > 1);
                 foreach (IGrouping<long, IFsFile> group in offsetGroups)
@@ -431,7 +431,7 @@ namespace Nanook.NKit
                         }
 
                         overlapCandidates.Add(f);
-                        _candidates.Remove(f); // Remove from primary candidates — will be handled via overlap tracking
+                        _candidates.Remove(f); // Remove from primary candidates - will be handled via overlap tracking
                     }
                 }
             }

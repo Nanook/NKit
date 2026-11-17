@@ -1,4 +1,4 @@
-> **Development Build** — automated build from development branch.
+> **Development Build** - automated build from development branch.
 
 ### Console Applications
 

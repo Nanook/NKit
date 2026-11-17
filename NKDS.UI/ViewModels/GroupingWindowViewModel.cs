@@ -376,7 +376,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         }
         _hasMultipleSystems = distinctSystems.Count > 1;
 
-        // Sort pairs descending by match % — allows early exit in ReFilterGroups
+        // Sort pairs descending by match % - allows early exit in ReFilterGroups
         _sortedIndexPairs = _pairResults
             .Select(p => (nameToIndex[p.ImageA], nameToIndex[p.ImageB], p.MatchPercent))
             .OrderByDescending(p => p.Item3)
@@ -404,7 +404,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         for (int i = 0; i < _sortedIndexPairs.Length; i++)
         {
             (int a, int b, double pct) = _sortedIndexPairs[i];
-            if (pct < threshold) break; // sorted desc — everything after is below threshold
+            if (pct < threshold) break; // sorted desc - everything after is below threshold
 
             // Union
             int ra = Find(a), rb = Find(b);
@@ -542,7 +542,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowSaveFileDialog.Handle("yaml");
+        string? filePath = await ShowSaveFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try
@@ -578,7 +578,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowSaveFileDialog.Handle("yaml");
+        string? filePath = await ShowSaveFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try
@@ -607,7 +607,7 @@ public class GroupingWindowViewModel : ViewModelBase, IDisposable
         ErrorMessage = null;
         WarningMessage = null;
 
-        string filePath = await ShowOpenFileDialog.Handle("yaml");
+        string? filePath = await ShowOpenFileDialog.Handle("yaml");
         if (filePath == null) return;
 
         try

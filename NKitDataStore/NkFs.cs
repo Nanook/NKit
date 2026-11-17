@@ -222,7 +222,7 @@ namespace NKitDataStore
     /// <summary>
     /// Represents a binary filesystem in the NkFs format.
     /// Holds raw byte arrays (entry table + string table) and reads entries on demand.
-    /// No in-memory tree is built — navigation operates directly on the flat data.
+    /// No in-memory tree is built - navigation operates directly on the flat data.
     /// </summary>
     public class NkFs
     {
@@ -389,10 +389,10 @@ namespace NKitDataStore
             List<NkFsEntry> entries = new List<NkFsEntry>();
             List<byte> stringTable = new List<byte>();
 
-            // 1. Create root entry (index 0) — placeholder, will be backpatched
+            // 1. Create root entry (index 0) - placeholder, will be backpatched
             entries.Add(new NkFsEntry(0x01, 0, 0, 0)); // is_directory=1, placeholder
 
-            // Write root name (empty string) to string table — directories have no prefix byte
+            // Write root name (empty string) to string table - directories have no prefix byte
             int rootNameByteOffset = stringTable.Count;
             stringTable.Add(0); // null terminator for empty root name
             Align2(stringTable); // 2-byte align
@@ -490,7 +490,7 @@ namespace NKitDataStore
 
             if (node.IsDirectory)
             {
-                // Directory entry — no prefix byte in string table, just name\0 + pad
+                // Directory entry - no prefix byte in string table, just name\0 + pad
                 byte flags = 0x01; // is_directory
                 if (node.IsSystem)
                     flags |= 0x02; // system_flag
@@ -545,7 +545,7 @@ namespace NKitDataStore
             }
             else
             {
-                // File entry — prefix byte + variable-width fields + name\0 + pad
+                // File entry - prefix byte + variable-width fields + name\0 + pad
                 byte flags = 0x00; // file
                 if (node.IsSystem)
                     flags |= 0x02; // system_flag
@@ -822,7 +822,7 @@ namespace NKitDataStore
                     break;
                 }
 
-                // HasMoreExtents is set — there must be a valid continuation
+                // HasMoreExtents is set - there must be a valid continuation
                 currentPos++;
 
                 // Validate that a valid continuation exists
@@ -958,7 +958,7 @@ namespace NKitDataStore
                 if (candidate.IsDirectory && candidate.NextEntryIndex > entryIndex)
                     return i;
             }
-            // Should not happen in a valid NkFs — root directory (index 0) covers all entries
+            // Should not happen in a valid NkFs - root directory (index 0) covers all entries
             throw new InvalidDataException($"No parent directory found for entry at index {entryIndex}.");
         }
 
@@ -1022,7 +1022,7 @@ namespace NKitDataStore
             int pos;
             if (entry.IsDirectory)
             {
-                // Directories have no prefix byte — name starts directly at byteOffset
+                // Directories have no prefix byte - name starts directly at byteOffset
                 pos = byteOffset;
             }
             else

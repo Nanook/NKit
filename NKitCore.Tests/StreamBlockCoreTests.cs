@@ -218,7 +218,7 @@ namespace NKitCore.Tests
 
             long total = TestHarness.ExpectedSectionCount(1, areaSize, sectionSize);
             // The admission window (workers + look-ahead) bounds the total live sections, so ReadyHeld
-            // (finished sections awaiting their in-order Out turn) can never exceed it — far below the
+            // (finished sections awaiting their in-order Out turn) can never exceed it - far below the
             // whole image. Allow the full window as the ceiling.
             Assert.True(maxReadyHeld <= workers + lookAhead, $"ready-held peaked at {maxReadyHeld} (workers {workers}, lookAhead {lookAhead}; total sections {total})");
             Assert.True(maxReadyHeld < total, "ready-held should be far below the whole image");

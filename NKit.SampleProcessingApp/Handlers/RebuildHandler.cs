@@ -34,7 +34,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
     {
         /// <summary>
         /// Loads a replacements manifest written by DiscBuilder.
-        /// Format: one entry per line — <c>discpath|localpath</c>
+        /// Format: one entry per line - <c>discpath|localpath</c>
         /// </summary>
         public static Dictionary<string, string> LoadReplacements(string filePath)
         {
@@ -186,7 +186,7 @@ namespace Nanook.NKit.SampleProcessingApp.Handlers
                         if (f.FsSize == 0) zeroCount++; else dataCount++;
                     }
                     _fstSorted.Sort((a, b) => a.FsOffset.CompareTo(b.FsOffset));
-                    L($"[rebuild] FST: {_fstFileCount} entries — {dataCount} data, {zeroCount} zero-size");
+                    L($"[rebuild] FST: {_fstFileCount} entries - {dataCount} data, {zeroCount} zero-size");
                 }
 
                 // Sys-file size registration (for DOL multi-section accumulation)

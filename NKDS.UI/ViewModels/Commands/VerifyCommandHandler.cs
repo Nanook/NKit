@@ -21,7 +21,7 @@ public class VerifyCommandHandler : ICommandHandler
         {
             List<ImageRowViewModel> selectedRows = ctx.ImageList.SelectedImages.ToList();
 
-            // Determine what to verify — group by set to handle multi-set selections
+            // Determine what to verify - group by set to handle multi-set selections
             List<(string SetName, string DataStorePath, List<long>? ImageIds)> verifyGroups = new();
 
             if (selectedRows.Count > 0)
@@ -104,7 +104,7 @@ public class VerifyCommandHandler : ICommandHandler
                             _ = ctx.SyncService.UpdateImageProgressAsync(evt);
                             // This callback fires on the VerifyAsync background (Task.Run) thread.
                             // progressVm is a data-bound ReactiveObject and ImageList.FindRow walks
-                            // the UI-owned _allImages collection — touching either from the background
+                            // the UI-owned _allImages collection - touching either from the background
                             // thread raises PropertyChanged off-thread (forcing Avalonia to marshal it)
                             // and races the UI thread's own collection mutation. At the high frequency
                             // this callback fires that live-locks the UI dispatcher (the Verify hang;
@@ -156,7 +156,7 @@ public class VerifyCommandHandler : ICommandHandler
             {
                 // Drain any in-flight per-image UI posts (verify-thread callbacks marshalled via
                 // Dispatcher.UIThread.Post) before the grid reset, so the reset does not fight a
-                // still-arriving callback storm — mirrors the drain the Add path uses.
+                // still-arriving callback storm - mirrors the drain the Add path uses.
                 await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
 
                 // Force DataGrid to refresh cells (Avalonia DataGridTemplateColumn doesn't always

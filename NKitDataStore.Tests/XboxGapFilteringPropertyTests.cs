@@ -402,7 +402,7 @@ namespace NKitDataStore.Tests
             {
                 FsOffset = 0x1000,
                 FsSize = 0x2000,
-                FillByte = 0xFF, // Non-zero fill byte — would be persisted in FileSystem
+                FillByte = 0xFF, // Non-zero fill byte - would be persisted in FileSystem
                 DataType = DataType.Other,
                 Offset = 0x1000,
                 ImageOffset = 0x11000

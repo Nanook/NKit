@@ -13,7 +13,7 @@
         MinWidth="480" MinHeight="400"
         CanResize="True"
         WindowStartupLocation="CenterOwner"
-        Icon="/Assets/NkdsIcon.ico"
+        Icon="/Assets/NKDS.png"
         Title="Settings">
 
     <DockPanel Margin="16">
@@ -88,7 +88,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -98,7 +98,7 @@
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
                                                     <!-- Stale warning -->
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
@@ -142,7 +142,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -150,7 +150,7 @@
                                                               Content="{Binding Label}"
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
@@ -192,7 +192,7 @@
                                                                 IsVisible="{Binding IsLoading}">
                                                         <TextBlock Text="{Binding Label}"
                                                                    Opacity="0.6"/>
-                                                        <TextBlock Text="— Querying..."
+                                                        <TextBlock Text="- Querying..."
                                                                    Opacity="0.5"
                                                                    FontStyle="Italic"/>
                                                     </StackPanel>
@@ -200,7 +200,7 @@
                                                               Content="{Binding Label}"
                                                               IsEnabled="{Binding CanToggle}"
                                                               IsVisible="{Binding !IsLoading}"/>
-                                                    <TextBlock Text="⚠ Points to a different app path — will be re-registered on OK"
+                                                    <TextBlock Text="⚠ Points to a different app path - will be re-registered on OK"
                                                                Foreground="Orange"
                                                                FontSize="11"
                                                                IsVisible="{Binding IsStale}"
@@ -350,8 +350,7 @@
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource PrimaryHueMidBrush}"
                                    Margin="0,6,0,0"/>
-                        <!-- Wii Fix Info - hidden (not currently used by NKDS) -->
-                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
+                        <Grid ColumnDefinitions="*, 40">
                             <TextBox Grid.Column="0" Text="{Binding WiiFixInfoPath}"
                                      PlaceholderText="fix/fix_wii.yaml"
                                      ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixInfoTooltip}"/>
@@ -360,7 +359,8 @@
                                 <materialIcons:MaterialIcon Kind="FileOutline" Width="18" Height="18"/>
                             </Button>
                         </Grid>
-                        <Grid ColumnDefinitions="*, 40">
+                        <!-- Wii Fix Files - hidden (not currently used by NKDS) -->
+                        <Grid ColumnDefinitions="*, 40" IsVisible="False">
                             <TextBox Grid.Column="0" Text="{Binding WiiFixFilesPath}"
                                      PlaceholderText="fix/wii"
                                      ToolTip.Tip="{x:Static vm:KeysFixFilesTabViewModel.WiiFixFilesTooltip}"/>

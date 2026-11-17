@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # =============================================================================
-# Container test script — runs INSIDE the Docker container.
+# Container test script - runs INSIDE the Docker container.
 # Called by test.sh via:
 #   docker run ... bash -c "sed 's/\r//' /src/build/container-test.sh | bash"
 # All paths are container-internal: /src (repo, read-only), /ngc (NuGet cache).
@@ -113,7 +113,7 @@ if [ -f "$GC_LEGACY_SO" ]; then
     cp "$GC_LEGACY_SO" "$GC_DEST/libGrindCore.so"
     echo "Injected GrindCore legacy .so ($GC_VER) -> $GC_DEST"
 else
-    echo "WARNING: legacy GrindCore .so not found at $GC_LEGACY_SO — tests requiring GrindCore will fail"
+    echo "WARNING: legacy GrindCore .so not found at $GC_LEGACY_SO - tests requiring GrindCore will fail"
 fi
 
 echo ""

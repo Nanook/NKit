@@ -46,7 +46,7 @@ namespace NKitDataStore.Tests
 
             // Act
             original.Write(indexPath);
-            CompactProgressFile? loaded = CompactProgressFile.Read(indexPath);
+            CompactProgressFile loaded = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.NotNull(loaded);
@@ -65,7 +65,7 @@ namespace NKitDataStore.Tests
             string indexPath = Path.Combine(_tempDir, "nonexistent.nkds");
 
             // Act
-            CompactProgressFile? result = CompactProgressFile.Read(indexPath);
+            CompactProgressFile result = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.Null(result);
@@ -123,7 +123,7 @@ namespace NKitDataStore.Tests
             progress.SetPendingShard(1, indexPath);
 
             // Assert
-            CompactProgressFile? reloaded = CompactProgressFile.Read(indexPath);
+            CompactProgressFile reloaded = CompactProgressFile.Read(indexPath);
             Assert.NotNull(reloaded);
             Assert.Equal(1, reloaded.PendingShard);
         }
@@ -145,7 +145,7 @@ namespace NKitDataStore.Tests
             progress.MarkShardComplete(1, indexPath);
 
             // Assert
-            CompactProgressFile? reloaded = CompactProgressFile.Read(indexPath);
+            CompactProgressFile reloaded = CompactProgressFile.Read(indexPath);
             Assert.NotNull(reloaded);
             Assert.Null(reloaded.PendingShard);
             Assert.Contains(1, reloaded.CompletedShards);
@@ -205,7 +205,7 @@ namespace NKitDataStore.Tests
             File.WriteAllText(progressPath, "This is not valid progress file content\nNo version field");
 
             // Act
-            CompactProgressFile? result = CompactProgressFile.Read(indexPath);
+            CompactProgressFile result = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.Null(result);
@@ -220,7 +220,7 @@ namespace NKitDataStore.Tests
             File.WriteAllText(progressPath, "Version: 999\nSetName: test\nShardsToCompact: 0,1\nCompletedShards: \nPendingShard: \nExpectedSizes: 0:100,1:200");
 
             // Act
-            CompactProgressFile? result = CompactProgressFile.Read(indexPath);
+            CompactProgressFile result = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.Null(result);
@@ -241,7 +241,7 @@ namespace NKitDataStore.Tests
             original.Write(indexPath);
 
             // Act
-            CompactProgressFile? loaded = CompactProgressFile.Read(indexPath);
+            CompactProgressFile loaded = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.NotNull(loaded);
@@ -264,7 +264,7 @@ namespace NKitDataStore.Tests
             original.Write(indexPath);
 
             // Act
-            CompactProgressFile? loaded = CompactProgressFile.Read(indexPath);
+            CompactProgressFile loaded = CompactProgressFile.Read(indexPath);
 
             // Assert
             Assert.NotNull(loaded);

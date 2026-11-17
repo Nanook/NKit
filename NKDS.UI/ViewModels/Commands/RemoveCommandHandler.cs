@@ -8,7 +8,7 @@ namespace NkdsUi.ViewModels.Commands;
 /// <summary>
 /// Handles the Remove toolbar operation.
 /// Lifecycle: resolve session → create progress → exclusive access → NkdsOperations.Remove per-image → update UI.
-/// No dialog is shown — Remove operates on the currently selected (non-removed) images directly.
+/// No dialog is shown - Remove operates on the currently selected (non-removed) images directly.
 /// </summary>
 public class RemoveCommandHandler : ICommandHandler
 {
@@ -39,7 +39,7 @@ public class RemoveCommandHandler : ICommandHandler
             {
                 progressVm.TotalItems = selectedRows.Count;
 
-                // Suppress filter updates during session close/reopen — Remove only changes
+                // Suppress filter updates during session close/reopen - Remove only changes
                 // a property in-place, the list shouldn't visually rebuild
                 ctx.ImageList.SuppressFilters();
                 await ctx.SessionManager.WithExclusiveAccessAsync(async () =>

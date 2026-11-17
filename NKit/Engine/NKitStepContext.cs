@@ -229,7 +229,7 @@ namespace Nanook.NKit
                     // Ensure the per-system settings are initialised so paths (fixFiles/fixInfo/dat)
                     // and Lookup are resolved. This may be accessed before NKitTaskContext.Initialise
                     // (e.g. during image construction for Wii update-partition reinsertion), so
-                    // initialise on demand when the system is known. Idempotent — Initialise just
+                    // initialise on demand when the system is known. Idempotent - Initialise just
                     // re-resolves the paths and rebuilds Lookup.
                     if (s.Lookup == null && this.SystemType != SystemType.NotSet)
                         s.Initialise(this.SystemType, _parent.AppSettings.TaskType, this.Log, this.DatManager);

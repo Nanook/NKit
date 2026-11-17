@@ -24,7 +24,7 @@ namespace NKit.Tests
 
             //load the csv
             // inputBasePath = the Tests/ directory itself (data paths use ../ to reference files
-            // in the parent NKitExternalTestFiles/ directory — "1 level below working folder").
+            // in the parent NKitExternalTestFiles/ directory - "1 level below working folder").
             // outputBasePath = where test output dirs are created (may differ when inputs are read-only).
             string inputBasePath = new FileInfo(filename).DirectoryName;
             string basePath = outputBasePath ?? new FileInfo(filename).Directory.Parent.FullName;

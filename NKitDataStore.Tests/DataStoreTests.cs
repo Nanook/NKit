@@ -258,7 +258,7 @@ namespace NKitDataStore.Tests
                 Assert.Equal(1048576, setInfoFromDescribe.ShardSize);
                 Assert.Equal(65536, setInfoFromDescribe.BlockSize);
                 Assert.Equal(336, setInfoFromDescribe.MaxOffsetBlocks);
-                Assert.Equal(0, setInfoFromDescribe.ImageCount); // DescribeSets uses includeStats=false by default
+                Assert.Equal(1, setInfoFromDescribe.ImageCount); // DescribeSets always includes stats (always passes includeStats=true internally)
 
                 // Verify null is returned for non-existent set
                 SetInfo nonExistentSetInfo = store.GetSetInfo("NonExistentSet");

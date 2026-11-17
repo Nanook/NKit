@@ -131,7 +131,7 @@ public partial class ImageListControl : UserControl
             }
             else if (column.Header is Avalonia.Controls.TextBlock tb)
             {
-                // Stats columns use TextBlock headers — capture the original text
+                // Stats columns use TextBlock headers - capture the original text
                 _originalHeaders[tag] = tb.Text ?? "";
             }
         }
@@ -204,7 +204,7 @@ public partial class ImageListControl : UserControl
                 break;
 
             case NotifyCollectionChangedAction.Reset:
-                // Reset events come from batch operations (EndBatch) — no scroll adjustment needed.
+                // Reset events come from batch operations (EndBatch) - no scroll adjustment needed.
                 // The batch operation handles scroll state externally if needed.
                 break;
         }
@@ -250,7 +250,7 @@ public partial class ImageListControl : UserControl
         if (Math.Abs(delta.X) > 5 || Math.Abs(delta.Y) > 5)
             return;
 
-        // If any column width changed, this was a resize drag — don't sort
+        // If any column width changed, this was a resize drag - don't sort
         if (_columnWidthsAtPress != null)
         {
             ObservableCollection<DataGridColumn> columns = ImageDataGrid.Columns;

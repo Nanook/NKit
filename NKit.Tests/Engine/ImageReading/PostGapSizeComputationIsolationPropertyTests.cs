@@ -239,7 +239,7 @@ namespace NKit.Tests.Engine.ImageReading
                     // Ensure collision size is strictly smaller than the existing entry
                     long collisionSize = data.Sizes[targetIdx] - 0x800;
                     if (collisionSize <= 0)
-                        collisionSize = 0x800; // minimum valid size — still smaller since Sizes min is 2*0x800
+                        collisionSize = 0x800; // minimum valid size - still smaller since Sizes min is 2*0x800
 
                     // Only insert if truly smaller (skip if it would be equal or larger)
                     if (collisionSize >= data.Sizes[targetIdx])

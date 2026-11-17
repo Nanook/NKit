@@ -105,7 +105,7 @@ namespace NKitDataStore
         {
             // 1. Try primary provider first.
             // The offset record may have come from the aux store (via MergeAuxOffsets),
-            // in which case the primary provider won't find it — that's expected.
+            // in which case the primary provider won't find it - that's expected.
             BlockRecord? result = null;
             try
             {

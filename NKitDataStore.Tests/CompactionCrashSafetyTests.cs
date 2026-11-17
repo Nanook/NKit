@@ -10,7 +10,7 @@ namespace NKitDataStore.Tests
     /// the block index. The original implementation renamed each compacted shard into place
     /// one-by-one BEFORE committing the index, so a failure part-way through the shard loop
     /// left already-rewritten shards on disk while the committed index still pointed at the old
-    /// offsets — corrupting SURVIVING images, not just the removed ones. It could also orphan a
+    /// offsets - corrupting SURVIVING images, not just the removed ones. It could also orphan a
     /// "&lt;set&gt;_NNNN.nkds.tmp" file.
     ///
     /// The fix defers all shard renames until AFTER the index is durably committed. A failure
@@ -232,7 +232,7 @@ namespace NKitDataStore.Tests
         /// Recovery-promote regression: simulate a crash AFTER the index was durably committed
         /// for the compacted layout but BEFORE the deferred shard renames completed. On next open,
         /// recovery must PROMOTE the leftover compacted ".tmp" shards (rename them over the
-        /// originals) because the committed index expects the compacted size — NOT delete them.
+        /// originals) because the committed index expects the compacted size - NOT delete them.
         /// Deleting them would leave the (compacted) index pointing at un-compacted originals and
         /// corrupt every surviving image.
         ///
@@ -278,7 +278,7 @@ namespace NKitDataStore.Tests
             Assert.True(shardFiles.Count > 1, "Test needs multiple shards to be meaningful");
 
             // Snapshot the pre-compact (original) shard bytes so we can reconstruct the exact
-            // "crash between index commit and shard rename" on-disk state faithfully — without
+            // "crash between index commit and shard rename" on-disk state faithfully - without
             // racing file locks (which would create handle/inode artifacts that don't occur in a
             // real process crash).
             Dictionary<string, byte[]> originalShardBytes = shardFiles.ToDictionary(f => f, File.ReadAllBytes);
@@ -303,7 +303,7 @@ namespace NKitDataStore.Tests
                     continue;
                 long compactedLen = new FileInfo(shard).Length;
                 if (compactedLen == kvp.Value.Length)
-                    continue; // shard was not compacted (unchanged) — nothing to stage
+                    continue; // shard was not compacted (unchanged) - nothing to stage
                 // Move compacted content to the ".tmp" the deferred rename would have promoted.
                 File.Move(shard, shard + ".tmp");
                 // Restore the original pre-compact bytes as the "un-renamed" shard.

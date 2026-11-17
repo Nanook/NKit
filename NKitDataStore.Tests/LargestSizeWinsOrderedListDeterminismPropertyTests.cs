@@ -256,7 +256,7 @@ namespace NKitDataStore.Tests
                     long existingSize = orderedList[decl.Offset];
                     if (decl.Size == existingSize || decl.Size == 0 || existingSize == 0)
                     {
-                        // Merge — not a collision
+                        // Merge - not a collision
                     }
                     else if (decl.Size > existingSize)
                     {

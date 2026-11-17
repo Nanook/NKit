@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Nanook.NKit
 {
@@ -23,7 +23,7 @@ namespace Nanook.NKit
 
         /// <summary>
         /// Human-readable step completion detail, set only on the final (Progress==1) event for a
-        /// step — e.g. "[CRC 4C7A0149]", "[Combined CRC ...]", "[Partial Read]", "[Failed!]". Mirrors
+        /// step - e.g. "[CRC 4C7A0149]", "[Combined CRC ...]", "[Partial Read]", "[Failed!]". Mirrors
         /// the text the non-dynamic console appends after the progress dots. Null while in progress.
         /// </summary>
         public string CompleteMessage { get; internal set; }

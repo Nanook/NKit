@@ -49,7 +49,7 @@ namespace NKit.Tests.Engine.Output
                     // Try aux writer
                     if (i == failAtIndex)
                     {
-                        // Aux fails — fall back to primary for this block and all subsequent
+                        // Aux fails - fall back to primary for this block and all subsequent
                         auxFailed = true;
                         primaryWrites.Add(new WriteRecord(gapOffset, fsOffset, size));
                     }
@@ -60,7 +60,7 @@ namespace NKit.Tests.Engine.Output
                 }
                 else
                 {
-                    // Aux already failed — all subsequent go to primary
+                    // Aux already failed - all subsequent go to primary
                     primaryWrites.Add(new WriteRecord(gapOffset, fsOffset, size));
                 }
             }
@@ -90,7 +90,7 @@ namespace NKit.Tests.Engine.Output
                     // Try split writer
                     if (i == failAtIndex)
                     {
-                        // Split fails — fall back to primary for this block and all subsequent
+                        // Split fails - fall back to primary for this block and all subsequent
                         splitFailed = true;
                         primaryWrites.Add(new WriteRecord(imageOffset, fsOffset, size));
                     }
@@ -101,7 +101,7 @@ namespace NKit.Tests.Engine.Output
                 }
                 else
                 {
-                    // Split already failed — all subsequent go to primary
+                    // Split already failed - all subsequent go to primary
                     primaryWrites.Add(new WriteRecord(imageOffset, fsOffset, size));
                 }
             }
@@ -288,7 +288,7 @@ namespace NKit.Tests.Engine.Output
                 totalAux = splitWrites.Count;
             }
 
-            // Property: no data loss — total blocks across both writers equals input count
+            // Property: no data loss - total blocks across both writers equals input count
             return totalPrimary + totalAux == gapCount;
         }
 

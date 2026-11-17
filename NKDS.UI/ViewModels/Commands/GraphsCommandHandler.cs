@@ -8,7 +8,7 @@ namespace NkdsUi.ViewModels.Commands;
 
 /// <summary>
 /// Handles the Graphs toolbar operation.
-/// Read-only operation — does NOT use ExclusiveAccessManager.
+/// Read-only operation - does NOT use ExclusiveAccessManager.
 /// Lifecycle: resolve session → check if stats already computed →
 ///   if yes: show brief progress → build graph VM → show dialog
 ///   if no: create progress → calculate stats with progress → build graph VM → show dialog
@@ -32,7 +32,7 @@ public class GraphsCommandHandler : ICommandHandler
 
             if (_statsCalculation.HasComputedStats)
             {
-                // Stats already computed — show a brief progress indicator while gathering graph data
+                // Stats already computed - show a brief progress indicator while gathering graph data
                 OperationProgressViewModel graphProgressVm = new OperationProgressViewModel
                 {
                     OperationName = "Stats",
@@ -63,7 +63,7 @@ public class GraphsCommandHandler : ICommandHandler
                 return RxVoid.Default;
             }
 
-            // 2. Stats not yet computed — calculate first, then show graphs
+            // 2. Stats not yet computed - calculate first, then show graphs
             OperationProgressViewModel progressVm = new OperationProgressViewModel { OperationName = "Stats" };
             ctx.ActiveOperations.Add(progressVm);
             Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();

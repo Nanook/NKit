@@ -3,7 +3,7 @@ namespace Nanook.NKit.Engine.Core
     /// <summary>
     /// Static tuning values for the NKitCore pipeline and the shared BufferStream cache.
     ///
-    /// These replace the former NKIT_CORE_* environment variables — every value is now a
+    /// These replace the former NKIT_CORE_* environment variables - every value is now a
     /// compile-time constant with no runtime override. Adjust here to retune; there is no
     /// external switch.
     /// </summary>
@@ -15,7 +15,7 @@ namespace Nanook.NKit.Engine.Core
         public const int MinWorkers = 1;
 
         /// <summary>
-        /// Hard SAFETY ceiling for the autoscaler — a bound, NOT a target. Section processing is
+        /// Hard SAFETY ceiling for the autoscaler - a bound, NOT a target. Section processing is
         /// often I/O- or decode-latency-bound (workers spend time waiting, not saturating a core).
         /// The autoscaler's throughput brake is what actually stops the climb; this only caps a
         /// pathological runaway.
@@ -23,7 +23,7 @@ namespace Nanook.NKit.Engine.Core
         /// Previously this was ProcessorCount*2, which let the pool climb to ~18-26 workers on a
         /// typical box even though real workloads (e.g. a decode-bound Wii verify) only ever keep
         /// 2-3 busy. Each worker is a thread-pool Task, so the pool inflated to ~87 threads (+~1MB
-        /// stack each) and ~1500 OS handles that the pool retires only slowly — a high, slow-to-
+        /// stack each) and ~1500 OS handles that the pool retires only slowly - a high, slow-to-
         /// release memory/handle plateau in a long-lived host (the UI). Capping at the logical-
         /// processor count keeps ample headroom (the autoscaler settles far below it here) while
         /// roughly halving the thread/handle plateau. Floor of 4 so small boxes still parallelise.
@@ -50,7 +50,7 @@ namespace Nanook.NKit.Engine.Core
         public const int PoolFreeMargin = 2;
 
         // Note: MaxWorkers defaults to Environment.ProcessorCount and StartWorkers to the step's
-        // parallelism — both are runtime values computed in NKitCoreRunner, not constants.
+        // parallelism - both are runtime values computed in NKitCoreRunner, not constants.
 
         // ── Diagnostics (NKitCoreRunner stats sink) ─────────────────────────────
         // Off by default. Set a path to append the per-interval core stats to a file, and/or
@@ -82,7 +82,7 @@ namespace Nanook.NKit.Engine.Core
         /// <summary>
         /// A view <c>Seek</c> is only logged when it is NOTABLE: a backward seek (any size) or a
         /// forward jump of at least this many bytes (a real reposition). Smaller forward seeks are
-        /// the per-read padding/alignment steps that happen constantly and are NOT logged at all —
+        /// the per-read padding/alignment steps that happen constantly and are NOT logged at all -
         /// they flooded the output. A zero-distance seek is never logged.
         /// </summary>
         public const long SeekLogDetailThreshold = 64 * 1024; // 64 KiB

@@ -45,7 +45,7 @@ public class StatsCommandHandler : ICommandHandler
                     {
                         if (hasStarted)
                         {
-                            // Calculation finished — show 100% briefly before panel is removed
+                            // Calculation finished - show 100% briefly before panel is removed
                             progressVm.CurrentItem = "Complete";
                             progressVm.Percentage = 100;
                         }

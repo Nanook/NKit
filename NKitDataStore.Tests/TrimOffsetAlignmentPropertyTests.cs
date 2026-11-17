@@ -19,7 +19,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
         ///
-        /// Property 2: TrimOffset is always BlockSize-aligned — General alignment.
+        /// Property 2: TrimOffset is always BlockSize-aligned - General alignment.
         ///
         /// For any first-non-zero byte position P ≥ 0 and any valid BlockSize B > 0
         /// (power of two), ComputeAlignedTrimOffset(P, B) equals floor(P / B) * B.
@@ -41,7 +41,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.1, 5.2**
         ///
-        /// Property 2: TrimOffset is always BlockSize-aligned — Result is zero when P &lt; B.
+        /// Property 2: TrimOffset is always BlockSize-aligned - Result is zero when P &lt; B.
         ///
         /// When the first non-zero byte position is less than BlockSize,
         /// the TrimOffset is always 0.
@@ -64,7 +64,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.1, 5.3**
         ///
-        /// Property 2: TrimOffset is always BlockSize-aligned — Result equals P on boundary.
+        /// Property 2: TrimOffset is always BlockSize-aligned - Result equals P on boundary.
         ///
         /// When the first non-zero byte position falls exactly on a BlockSize boundary,
         /// the TrimOffset equals that position without further adjustment.
@@ -88,7 +88,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.1, 5.4**
         ///
-        /// Property 2: TrimOffset is always BlockSize-aligned — Result is always a multiple of BlockSize.
+        /// Property 2: TrimOffset is always BlockSize-aligned - Result is always a multiple of BlockSize.
         ///
         /// For any inputs, the result is always evenly divisible by BlockSize.
         /// </summary>
@@ -107,7 +107,7 @@ namespace NKitDataStore.Tests
         /// <summary>
         /// **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
         ///
-        /// Property 2: TrimOffset is always BlockSize-aligned — Result never exceeds position.
+        /// Property 2: TrimOffset is always BlockSize-aligned - Result never exceeds position.
         ///
         /// The aligned TrimOffset is always less than or equal to the input position
         /// (rounding down never produces a value greater than the input).

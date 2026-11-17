@@ -174,7 +174,7 @@ namespace Nanook.NKit
                 step.WritePath = this.OutPath;
             if (step.StepInfo.WriteImage)
             {
-                // For FileStore (dedupe), OutPath may be a .nkds file — create its parent directory instead
+                // For FileStore (dedupe), OutPath may be a .nkds file - create its parent directory instead
                 string dirToCreate = step.WritePath;
                 if (step.StepInfo.OutputType == OutputType.FileStore
                     && dirToCreate.EndsWith(DataStore.DatabaseFileExtension, StringComparison.OrdinalIgnoreCase))
@@ -347,7 +347,7 @@ namespace Nanook.NKit
                                 prms.Set("DataStore", $"{dataStorePath} [Shard: {FormatSize(sizes.Value.ShardSize)}, Block: {FormatSize(sizes.Value.BlockSize)}]");
                             else
                             {
-                                // Set doesn't exist yet — show config defaults
+                                // Set doesn't exist yet - show config defaults
                                 long cfgShard = dedupeCfg?.ShardSize ?? Configuration.DedupeConfiguration.DefaultShardSize;
                                 int cfgBlock = dedupeCfg?.BlockSize > 0 ? dedupeCfg.BlockSize : 0x10000;
                                 prms.Set("DataStore", $"{dataStorePath} [Shard: {FormatSize(cfgShard)}, Block: {FormatSize(cfgBlock)}] (new)");
@@ -464,7 +464,7 @@ namespace Nanook.NKit
             if (results.DatMatch != null)
                 _context.Log.InfoOutParam(() => $"DatName   : {results.DatMatch}");
 
-            // Progress summary (file count etc.) from the main step — emitted here after the
+            // Progress summary (file count etc.) from the main step - emitted here after the
             // timing line so it doesn't interleave with the progress dots.
             NKitStepContext mainStep = NKitTaskResults.GetCompletionStep(_context.TaskType, _context.Steps);
             string progressSummary = mainStep?.Result?.ProgressSummary;
